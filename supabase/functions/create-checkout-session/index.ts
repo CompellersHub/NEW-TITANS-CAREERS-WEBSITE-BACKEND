@@ -45,8 +45,8 @@ serve(async (req) => {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/course/${courseSlug}?success=true`,
-      cancel_url: `${req.headers.get('origin')}/course/${courseSlug}?canceled=true`,
+      success_url: `${req.headers.get('origin')}/thank-you`,
+      cancel_url: `${req.headers.get('origin')}/courses`,
       metadata: {
         courseSlug,
         courseTitle,
