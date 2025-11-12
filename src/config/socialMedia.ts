@@ -1,0 +1,17 @@
+export const socialMediaLinks = {
+  facebook: 'https://www.facebook.com/profile.php?id=61573103226117',
+  tiktok: 'https://www.tiktok.com/@titans.careers',
+  instagram: 'https://www.instagram.com/titans.careers/',
+  linkedin: 'https://www.linkedin.com/in/aml-pro-trainer-22ab41347/',
+  twitter: 'https://x.com/TitansCareers',
+  youtube: 'https://www.youtube.com/channel/UCNUE2QZemJ4vlsvirzJ71kw'
+};
+
+export const socialMediaDisplay = [
+  { name: 'Facebook', icon: 'Facebook', url: socialMediaLinks.facebook, color: '#1877F2' },
+  { name: 'TikTok', icon: 'TikTok', url: socialMediaLinks.tiktok, color: '#000000' },
+  { name: 'Instagram', icon: 'Instagram', url: socialMediaLinks.instagram, color: '#E4405F' },
+  { name: 'LinkedIn', icon: 'Linkedin', url: socialMediaLinks.linkedin, color: '#0A66C2' },
+  { name: 'Twitter', icon: 'Twitter', url: socialMediaLinks.twitter, color: '#000000' },
+  { name: 'YouTube', icon: 'Youtube', url: socialMediaLinks.youtube, color: '#FF0000' },
+];
