@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      enrollments: {
+        Row: {
+          course_slug: string
+          course_title: string
+          created_at: string
+          customer_email: string
+          id: string
+          price: number
+          stripe_session_id: string | null
+        }
+        Insert: {
+          course_slug: string
+          course_title: string
+          created_at?: string
+          customer_email: string
+          id?: string
+          price: number
+          stripe_session_id?: string | null
+        }
+        Update: {
+          course_slug?: string
+          course_title?: string
+          created_at?: string
+          customer_email?: string
+          id?: string
+          price?: number
+          stripe_session_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

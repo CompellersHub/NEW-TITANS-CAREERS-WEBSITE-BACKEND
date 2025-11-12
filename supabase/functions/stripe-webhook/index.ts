@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from 'https://esm.sh/stripe@14.21.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,14 +16,18 @@ serve(async (req) => {
     const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
     const resendKey = Deno.env.get('RESEND_API_KEY');
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!stripeKey || !resendKey) {
+    if (!stripeKey || !resendKey || !supabaseUrl || !supabaseServiceKey) {
       throw new Error('Missing required environment variables');
     }
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
     });
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     const signature = req.headers.get('stripe-signature');
     const body = await req.text();
@@ -58,8 +63,25 @@ serve(async (req) => {
       const customerEmail = session.customer_details?.email;
       const courseTitle = session.metadata?.courseTitle || 'Your Course';
       const courseSlug = session.metadata?.courseSlug || '';
+      const price = session.amount_total ? session.amount_total / 100 : 0;
 
       if (customerEmail) {
+        // Save enrollment to database
+        const { error: enrollmentError } = await supabase
+          .from('enrollments')
+          .insert({
+            customer_email: customerEmail,
+            course_slug: courseSlug,
+            course_title: courseTitle,
+            price: price,
+            stripe_session_id: session.id,
+          });
+
+        if (enrollmentError) {
+          console.error('Failed to save enrollment:', enrollmentError);
+        } else {
+          console.log('Enrollment saved successfully');
+        }
         // Send confirmation email using Resend API
         const emailResponse = await fetch('https://api.resend.com/emails', {
           method: 'POST',
