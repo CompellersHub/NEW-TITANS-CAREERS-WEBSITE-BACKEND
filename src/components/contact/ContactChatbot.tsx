@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck, ThumbsUp, ThumbsDown, BarChart3 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck, ThumbsUp, ThumbsDown, BarChart3, Zap } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -21,6 +21,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+
+interface QuickReply {
+  category: 'courses' | 'pricing' | 'contact' | 'general';
+  question: string;
+  label: string;
+}
 
 interface Message {
   role: 'user' | 'assistant';
@@ -69,10 +76,33 @@ export const ContactChatbot = () => {
     return saved ? new Map(JSON.parse(saved)) : new Map();
   });
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { toast } = useToast();
+
+  const quickReplies: QuickReply[] = [
+    // Courses
+    { category: 'courses', question: 'What courses do you offer?', label: '📚 Available Courses' },
+    { category: 'courses', question: 'How long are the courses?', label: '⏱️ Course Duration' },
+    { category: 'courses', question: 'Do you provide certifications?', label: '🎓 Certifications' },
+    { category: 'courses', question: 'What are the prerequisites for your courses?', label: '📋 Prerequisites' },
+    
+    // Pricing
+    { category: 'pricing', question: 'What are your course prices?', label: '💰 Pricing Info' },
+    { category: 'pricing', question: 'Do you offer discounts or payment plans?', label: '💳 Payment Options' },
+    { category: 'pricing', question: 'Is there a refund policy?', label: '↩️ Refund Policy' },
+    
+    // Contact
+    { category: 'contact', question: 'How can I contact you?', label: '📞 Contact Methods' },
+    { category: 'contact', question: 'Where are you located?', label: '📍 Location' },
+    { category: 'contact', question: 'What are your operating hours?', label: '🕐 Business Hours' },
+    
+    // General
+    { category: 'general', question: 'How do I enroll in a course?', label: '✅ Enrollment Process' },
+    { category: 'general', question: 'Do you offer online or in-person training?', label: '💻 Training Format' },
+  ];
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -565,6 +595,16 @@ export const ContactChatbot = () => {
     }
   };
 
+  const handleQuickReply = (question: string) => {
+    setInput(question);
+    setShowQuickReplies(false);
+    // Auto-send the message
+    setTimeout(() => {
+      const syntheticEvent = new KeyboardEvent('keypress', { key: 'Enter' });
+      sendMessage();
+    }, 100);
+  };
+
   const clearHistory = async () => {
     try {
       // Create new conversation
@@ -1014,6 +1054,52 @@ export const ContactChatbot = () => {
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Quick Replies */}
+          {showQuickReplies && messages.length <= 2 && (
+            <div className="border-t bg-muted/30 p-3">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-medium">Quick Replies</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => setShowQuickReplies(false)}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
+                {quickReplies.map((reply, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="secondary"
+                    className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors text-xs py-1 px-2"
+                    onClick={() => handleQuickReply(reply.question)}
+                  >
+                    {reply.label}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {!showQuickReplies && messages.length <= 2 && (
+            <div className="border-t px-4 py-2 bg-muted/20">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full text-xs"
+                onClick={() => setShowQuickReplies(true)}
+              >
+                <Zap className="h-3 w-3 mr-2" />
+                Show Quick Replies
+              </Button>
+            </div>
+          )}
 
           {/* Input */}
           <div className="p-4 border-t">
