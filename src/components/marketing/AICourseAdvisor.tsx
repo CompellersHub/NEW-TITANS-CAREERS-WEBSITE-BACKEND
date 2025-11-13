@@ -1,12 +1,16 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock } from "lucide-react";
+import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock, Search, Filter } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 interface Message {
   role: "user" | "assistant";
@@ -18,6 +22,11 @@ interface Conversation {
   title: string | null;
   last_message_at: string;
   message_count: number;
+  lead_captured: boolean;
+}
+
+interface ConversationWithMessages extends Conversation {
+  messages?: { content: string }[];
 }
 
 export function AICourseAdvisor() {
@@ -36,10 +45,19 @@ export function AICourseAdvisor() {
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [sessionId, setSessionId] = useState<string>("");
   const [conversationId, setConversationId] = useState<string | null>(null);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversations, setConversations] = useState<ConversationWithMessages[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState<{ from?: Date; to?: Date }>({});
+  const [courseFilter, setCourseFilter] = useState<string[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const courseOptions = [
+    "Power BI", "SQL", "Python", "Tableau", "Excel", 
+    "Azure", "AWS", "Data Science"
+  ];
 
   // Initialize or load session
   useEffect(() => {
@@ -127,18 +145,33 @@ export function AICourseAdvisor() {
   };
 
   const loadConversationHistory = async (userEmail: string) => {
+    setIsLoadingHistory(true);
     try {
       const { data, error } = await supabase
         .from("ai_advisor_conversations")
-        .select("id, title, last_message_at, message_count")
+        .select(`
+          id,
+          title,
+          last_message_at,
+          message_count,
+          lead_captured,
+          ai_advisor_messages(content)
+        `)
         .eq("email", userEmail)
-        .order("last_message_at", { ascending: false })
-        .limit(10);
+        .order("last_message_at", { ascending: false });
 
       if (error) throw error;
-      setConversations(data || []);
+      
+      const conversationsWithMessages = (data || []).map((conv: any) => ({
+        ...conv,
+        messages: conv.ai_advisor_messages || []
+      }));
+      
+      setConversations(conversationsWithMessages as any);
     } catch (error) {
       console.error("Error loading history:", error);
+    } finally {
+      setIsLoadingHistory(false);
     }
   };
 
@@ -155,6 +188,53 @@ export function AICourseAdvisor() {
       setIsLoadingHistory(false);
     }
   };
+
+  const toggleCourseFilter = (course: string) => {
+    setCourseFilter(prev => 
+      prev.includes(course) 
+        ? prev.filter(c => c !== course)
+        : [...prev, course]
+    );
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setDateFilter({});
+    setCourseFilter([]);
+  };
+
+  const filteredConversations = useMemo(() => {
+    return conversations.filter(conv => {
+      // Search filter
+      if (searchQuery) {
+        const searchLower = searchQuery.toLowerCase();
+        const titleMatch = conv.title?.toLowerCase().includes(searchLower);
+        const contentMatch = conv.messages?.some(msg => 
+          msg.content.toLowerCase().includes(searchLower)
+        );
+        if (!titleMatch && !contentMatch) return false;
+      }
+
+      // Date filter
+      if (dateFilter.from || dateFilter.to) {
+        const convDate = new Date(conv.last_message_at);
+        if (dateFilter.from && convDate < dateFilter.from) return false;
+        if (dateFilter.to && convDate > dateFilter.to) return false;
+      }
+
+      // Course filter
+      if (courseFilter.length > 0) {
+        const hasMatchingCourse = conv.messages?.some(msg =>
+          courseFilter.some(course => 
+            msg.content.toLowerCase().includes(course.toLowerCase())
+          )
+        );
+        if (!hasMatchingCourse) return false;
+      }
+
+      return true;
+    });
+  }, [conversations, searchQuery, dateFilter, courseFilter]);
 
   const startNewConversation = async () => {
     try {
