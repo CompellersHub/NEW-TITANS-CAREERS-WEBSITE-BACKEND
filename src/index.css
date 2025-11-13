@@ -176,4 +176,35 @@ All colors MUST be HSL.
     from { box-shadow: 0 0 20px hsl(var(--primary-glow) / 0.3); }
     to { box-shadow: 0 0 40px hsl(var(--primary-glow) / 0.6); }
   }
+
+  @keyframes logo-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes logo-glow-pulse {
+    0%, 100% { 
+      box-shadow: 0 0 20px hsl(43 100% 50% / 0.4),
+                  0 0 40px hsl(45 67% 47% / 0.2);
+    }
+    50% { 
+      box-shadow: 0 0 30px hsl(43 100% 50% / 0.6),
+                  0 0 60px hsl(45 67% 47% / 0.4),
+                  0 0 80px hsl(43 100% 50% / 0.2);
+    }
+  }
+
+  @keyframes sparkle {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0) scale(0);
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: var(--sparkle-end-position) scale(1);
+    }
+  }
 }

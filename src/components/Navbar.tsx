@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, User, LogOut, Shield, Mail, TestTube, FileText, Users } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import titansLogo from "@/assets/titans-logo.jpg";
 import { useAuth } from "@/contexts/AuthContext";
+import { LogoWithEffects } from "@/components/LogoWithEffects";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,14 +21,8 @@ export const Navbar = () => {
       <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-            <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center transition-all duration-300 group-hover:scale-105 shadow-md">
-              <img 
-                src={titansLogo} 
-                alt="Titans Careers Logo" 
-                className="w-full h-full object-cover"
-              />
-            </div>
+          <Link to="/" className="flex items-center gap-3 cursor-pointer">
+            <LogoWithEffects />
             <div className="flex flex-col">
               <span className="text-lg font-bold text-white leading-tight">
                 Titans Careers
