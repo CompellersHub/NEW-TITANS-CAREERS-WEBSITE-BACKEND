@@ -1,7 +1,21 @@
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { LegalPageSkeleton } from "@/components/admin/LegalPageSkeleton";
 
 const PrivacyPolicy = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <LegalPageSkeleton />;
+  }
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar />
