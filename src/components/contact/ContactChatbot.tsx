@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -140,6 +140,43 @@ export const ContactChatbot = () => {
     }
   };
 
+  const clearHistory = async () => {
+    try {
+      // Create new conversation
+      if (!userIdentifier) return;
+
+      const { data: newConversation } = await supabase
+        .from('chat_conversations')
+        .insert({ user_identifier: userIdentifier })
+        .select()
+        .single();
+
+      if (newConversation) {
+        const newConvId = newConversation.id;
+        localStorage.setItem('chatbot_conversation_id', newConvId);
+        setConversationId(newConvId);
+        
+        // Reset messages to initial state
+        setMessages([{
+          role: 'assistant',
+          content: "Hi! I'm here to help answer your questions about our courses, pricing, and services. How can I assist you today?"
+        }]);
+
+        toast({
+          title: "History cleared",
+          description: "Started a fresh conversation",
+        });
+      }
+    } catch (error) {
+      console.error('Error clearing history:', error);
+      toast({
+        title: "Error",
+        description: "Failed to clear history",
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <>
       {/* Chat Button */}
@@ -165,14 +202,25 @@ export const ContactChatbot = () => {
                 <p className="text-xs opacity-90">Powered by Gemini AI</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(false)}
-              className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearHistory}
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                title="Clear history"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Messages */}
