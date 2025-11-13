@@ -18,7 +18,10 @@ import {
   MessageCircle, 
   Calendar,
   Filter,
-  FileText
+  FileText,
+  Edit2,
+  Save,
+  X
 } from "lucide-react";
 import {
   Select,
@@ -35,6 +38,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Copy, Check } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 interface FormSubmission {
   id: string;
@@ -42,6 +46,10 @@ interface FormSubmission {
   form_data: any;
   created_at: string;
   submitted_at: string;
+  status: 'new' | 'in_progress' | 'resolved' | 'archived';
+  admin_notes: string | null;
+  last_updated_by: string | null;
+  last_updated_at: string | null;
 }
 
 const FormSubmissionsAdmin = () => {
@@ -55,8 +63,13 @@ const FormSubmissionsAdmin = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formTypeFilter, setFormTypeFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [editingStatus, setEditingStatus] = useState(false);
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [tempStatus, setTempStatus] = useState<string>("");
+  const [tempNotes, setTempNotes] = useState<string>("");
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -112,6 +125,11 @@ const FormSubmissionsAdmin = () => {
       filtered = filtered.filter(sub => sub.form_type === formTypeFilter);
     }
 
+    // Filter by status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(sub => sub.status === statusFilter);
+    }
+
     // Filter by date
     const now = new Date();
     if (dateFilter === "today") {
@@ -143,7 +161,7 @@ const FormSubmissionsAdmin = () => {
     }
 
     setFilteredSubmissions(filtered);
-  }, [submissions, searchQuery, formTypeFilter, dateFilter]);
+  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter]);
 
   const exportToCSV = () => {
     if (filteredSubmissions.length === 0) {
@@ -208,6 +226,96 @@ const FormSubmissionsAdmin = () => {
       feedback: "bg-purple-500/10 text-purple-500 border-purple-500/20",
     };
     return colors[type] || "bg-gray-500/10 text-gray-500 border-gray-500/20";
+  };
+
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, { bg: string; text: string; border: string }> = {
+      new: { bg: "bg-blue-500/10", text: "text-blue-500", border: "border-blue-500/20" },
+      in_progress: { bg: "bg-yellow-500/10", text: "text-yellow-500", border: "border-yellow-500/20" },
+      resolved: { bg: "bg-green-500/10", text: "text-green-500", border: "border-green-500/20" },
+      archived: { bg: "bg-gray-500/10", text: "text-gray-500", border: "border-gray-500/20" },
+    };
+    return styles[status] || styles.new;
+  };
+
+  const getStatusLabel = (status: string) => {
+    const labels: Record<string, string> = {
+      new: "New",
+      in_progress: "In Progress",
+      resolved: "Resolved",
+      archived: "Archived",
+    };
+    return labels[status] || status;
+  };
+
+  const updateSubmissionStatus = async (id: string, status: string) => {
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .update({ status, last_updated_by: user?.id })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      // Update local state
+      setSubmissions(prev => 
+        prev.map(sub => sub.id === id ? { ...sub, status: status as any } : sub)
+      );
+      
+      if (selectedSubmission?.id === id) {
+        setSelectedSubmission(prev => prev ? { ...prev, status: status as any } : null);
+      }
+
+      toast({
+        title: "Status Updated",
+        description: `Submission marked as ${getStatusLabel(status)}`,
+      });
+      setEditingStatus(false);
+    } catch (error: any) {
+      console.error("Error updating status:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update status",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updateSubmissionNotes = async (id: string, notes: string) => {
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .update({ admin_notes: notes, last_updated_by: user?.id })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      // Update local state
+      setSubmissions(prev => 
+        prev.map(sub => sub.id === id ? { ...sub, admin_notes: notes } : sub)
+      );
+      
+      if (selectedSubmission?.id === id) {
+        setSelectedSubmission(prev => prev ? { ...prev, admin_notes: notes } : null);
+      }
+
+      toast({
+        title: "Notes Saved",
+        description: "Admin notes have been updated",
+      });
+      setEditingNotes(false);
+    } catch (error: any) {
+      console.error("Error updating notes:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save notes",
+        variant: "destructive",
+      });
+    }
   };
 
   const uniqueFormTypes = Array.from(new Set(submissions.map(s => s.form_type)));
@@ -355,6 +463,19 @@ const FormSubmissionsAdmin = () => {
                 </SelectContent>
               </Select>
 
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="resolved">Resolved</SelectItem>
+                  <SelectItem value="archived">Archived</SelectItem>
+                </SelectContent>
+              </Select>
+
               <Select value={dateFilter} onValueChange={setDateFilter}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Time" />
@@ -366,15 +487,17 @@ const FormSubmissionsAdmin = () => {
                   <SelectItem value="month">Last 30 Days</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
 
-              <Button onClick={exportToCSV} variant="outline" className="w-full">
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-muted-foreground">
+                Showing {filteredSubmissions.length} of {submissions.length} submissions
+              </div>
+              
+              <Button onClick={exportToCSV} variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
                 Export CSV
               </Button>
-            </div>
-
-            <div className="mt-4 text-sm text-muted-foreground">
-              Showing {filteredSubmissions.length} of {submissions.length} submissions
             </div>
           </CardContent>
         </Card>
@@ -405,6 +528,7 @@ const FormSubmissionsAdmin = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Form Type</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead>Email</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Details</TableHead>
@@ -428,6 +552,14 @@ const FormSubmissionsAdmin = () => {
                                   word.charAt(0).toUpperCase() + word.slice(1)
                                 ).join(' ')}
                               </span>
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge 
+                              variant="outline" 
+                              className={`${getStatusBadge(submission.status).bg} ${getStatusBadge(submission.status).text} ${getStatusBadge(submission.status).border}`}
+                            >
+                              {getStatusLabel(submission.status)}
                             </Badge>
                           </TableCell>
                           <TableCell className="font-medium">
@@ -460,7 +592,13 @@ const FormSubmissionsAdmin = () => {
       </main>
 
       {/* Detail Modal */}
-      <Dialog open={!!selectedSubmission} onOpenChange={(open) => !open && setSelectedSubmission(null)}>
+      <Dialog open={!!selectedSubmission} onOpenChange={(open) => {
+        if (!open) {
+          setSelectedSubmission(null);
+          setEditingStatus(false);
+          setEditingNotes(false);
+        }
+      }}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           {selectedSubmission && (
             <>
@@ -483,8 +621,8 @@ const FormSubmissionsAdmin = () => {
               </DialogHeader>
 
               <div className="space-y-6 mt-4">
-                {/* Form Type Badge */}
-                <div>
+                {/* Status and Form Type */}
+                <div className="flex items-center gap-3">
                   <Badge variant="outline" className={getFormTypeBadge(selectedSubmission.form_type)}>
                     <span className="flex items-center gap-2">
                       {getFormTypeIcon(selectedSubmission.form_type)}
@@ -493,6 +631,113 @@ const FormSubmissionsAdmin = () => {
                       ).join(' ')}
                     </span>
                   </Badge>
+
+                  {editingStatus ? (
+                    <div className="flex items-center gap-2">
+                      <Select 
+                        value={tempStatus} 
+                        onValueChange={setTempStatus}
+                      >
+                        <SelectTrigger className="w-[150px] h-8">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="new">New</SelectItem>
+                          <SelectItem value="in_progress">In Progress</SelectItem>
+                          <SelectItem value="resolved">Resolved</SelectItem>
+                          <SelectItem value="archived">Archived</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        onClick={() => updateSubmissionStatus(selectedSubmission.id, tempStatus)}
+                      >
+                        <Save className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        onClick={() => setEditingStatus(false)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant="outline" 
+                        className={`${getStatusBadge(selectedSubmission.status).bg} ${getStatusBadge(selectedSubmission.status).text} ${getStatusBadge(selectedSubmission.status).border}`}
+                      >
+                        {getStatusLabel(selectedSubmission.status)}
+                      </Badge>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8 w-8 p-0"
+                        onClick={() => {
+                          setTempStatus(selectedSubmission.status);
+                          setEditingStatus(true);
+                        }}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Admin Notes Section */}
+                <div className="space-y-3 p-4 rounded-lg border bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold">Admin Notes</h3>
+                    {!editingNotes && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-8"
+                        onClick={() => {
+                          setTempNotes(selectedSubmission.admin_notes || "");
+                          setEditingNotes(true);
+                        }}
+                      >
+                        <Edit2 className="h-4 w-4 mr-2" />
+                        Edit
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {editingNotes ? (
+                    <div className="space-y-2">
+                      <Textarea
+                        value={tempNotes}
+                        onChange={(e) => setTempNotes(e.target.value)}
+                        placeholder="Add internal notes about this submission..."
+                        className="min-h-[100px]"
+                      />
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => updateSubmissionNotes(selectedSubmission.id, tempNotes)}
+                        >
+                          <Save className="h-4 w-4 mr-2" />
+                          Save Notes
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingNotes(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      {selectedSubmission.admin_notes || "No notes added yet."}
+                    </p>
+                  )}
                 </div>
 
                 {/* All Form Fields */}
