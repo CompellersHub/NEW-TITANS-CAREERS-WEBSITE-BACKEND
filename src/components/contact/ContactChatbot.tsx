@@ -82,6 +82,23 @@ export const ContactChatbot = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Load draft message on mount
+  useEffect(() => {
+    const savedDraft = localStorage.getItem('chatbot_draft_message');
+    if (savedDraft) {
+      setInput(savedDraft);
+    }
+  }, []);
+
+  // Auto-save draft message
+  useEffect(() => {
+    if (input.trim()) {
+      localStorage.setItem('chatbot_draft_message', input);
+    } else {
+      localStorage.removeItem('chatbot_draft_message');
+    }
+  }, [input]);
+
   // Initialize conversation on mount
   useEffect(() => {
     const initConversation = async () => {
@@ -327,6 +344,7 @@ export const ContactChatbot = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setAttachments([]);
+    localStorage.removeItem('chatbot_draft_message'); // Clear draft after sending
     setIsLoading(true);
     playSound('send');
 
