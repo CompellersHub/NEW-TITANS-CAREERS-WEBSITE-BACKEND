@@ -13,11 +13,11 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-            <div className="h-11 transition-all duration-300 group-hover:scale-105">
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center transition-all duration-300 group-hover:scale-105 shadow-md">
               <img 
                 src={titansLogo} 
                 alt="Titans Careers Logo" 
-                className="h-full w-auto object-contain"
+                className="w-full h-full object-cover"
               />
             </div>
             <div className="flex flex-col">
