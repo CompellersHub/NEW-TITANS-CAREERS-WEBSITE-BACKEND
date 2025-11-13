@@ -60,8 +60,9 @@ const About = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <PageTransition variant="slide">
+      <div className="min-h-screen bg-background">
+        <Navbar />
       
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-20 md:py-28">
@@ -282,7 +283,8 @@ const About = () => {
       </section>
 
       <Footer />
-    </div>
+      </div>
+    </PageTransition>
   );
 };
 
