@@ -19,14 +19,14 @@ export function SocialProofNotifications() {
   useEffect(() => {
     // Generate realistic notifications
     const notifications: Omit<Notification, "timestamp">[] = [
-      { id: "1", message: "Sarah from London just enrolled in Data Analysis", icon: "users" },
-      { id: "2", message: "Michael completed AML/KYC certification", icon: "check" },
-      { id: "3", message: "15 people viewing courses right now", icon: "trending" },
-      { id: "4", message: "Emma from Manchester just started Cybersecurity", icon: "users" },
-      { id: "5", message: "320+ students enrolled this month", icon: "trending" },
-      { id: "6", message: "James landed a job after completing our course", icon: "check" },
-      { id: "7", message: "New student from Birmingham joined today", icon: "users" },
-      { id: "8", message: "Course completion rate: 94%", icon: "trending" },
+      { id: "1", message: "John from London just contacted us 2 mins ago", icon: "users" },
+      { id: "2", message: "Sarah from Manchester sent an inquiry", icon: "check" },
+      { id: "3", message: "12 people viewing this page right now", icon: "trending" },
+      { id: "4", message: "Michael from Birmingham just reached out", icon: "users" },
+      { id: "5", message: "150+ inquiries received this month", icon: "trending" },
+      { id: "6", message: "Emma just scheduled a consultation", icon: "check" },
+      { id: "7", message: "New inquiry from Leeds 5 mins ago", icon: "users" },
+      { id: "8", message: "Response rate: 95% within 24h", icon: "trending" },
     ];
 
     // Shuffle and add timestamps
@@ -91,10 +91,10 @@ export function SocialProofNotifications() {
     <AnimatePresence>
       {notification && (
         <motion.div
-          initial={{ opacity: 0, y: 50, x: "-50%" }}
-          animate={{ opacity: 1, y: 0, x: "-50%" }}
-          exit={{ opacity: 0, y: 50, x: "-50%" }}
-          className="fixed bottom-6 left-1/2 z-50 max-w-sm"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-6 left-6 z-50 max-w-sm"
         >
           <div className="bg-background border border-border shadow-lg rounded-lg p-4 flex items-center gap-3">
             <div className="flex-shrink-0">

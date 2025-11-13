@@ -18,6 +18,7 @@ import { ContactChatbot } from "@/components/contact/ContactChatbot";
 import { MobileContactBar } from "@/components/contact/MobileContactBar";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
 import { FeedbackWidget } from "@/components/contact/FeedbackWidget";
+import { SocialProofNotifications } from "@/components/marketing/SocialProofNotifications";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 
@@ -636,6 +637,7 @@ const Contact = () => {
       <ContactChatbot />
       <MobileContactBar />
       <FeedbackWidget />
+      <SocialProofNotifications />
     </div>
   );
 };
