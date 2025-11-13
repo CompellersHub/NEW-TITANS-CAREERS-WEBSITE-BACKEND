@@ -13,6 +13,8 @@ serve(async (req) => {
 
   try {
     const { messages, conversationId, userIdentifier } = await req.json();
+    
+    console.log('Received messages:', JSON.stringify(messages, null, 2));
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
@@ -35,7 +37,43 @@ Your role is to help visitors with:
 - Office location: London, UK
 - Operating hours: Monday-Friday, 9:00 AM - 6:00 PM GMT
 
-Be friendly, concise, and professional. If you don't know something specific, politely suggest they use the contact form or reach out directly via the contact methods provided.`;
+Be friendly, concise, and professional. If you don't know something specific, politely suggest they use the contact form or reach out directly via the contact methods provided.
+
+When analyzing images, describe what you see and provide relevant assistance based on the image content.`;
+
+    // Format messages for Gemini API with multimodal support
+    const formattedMessages = messages.map((msg: any) => {
+      // If message has attachments (images), format as multimodal content
+      if (msg.attachments && msg.attachments.length > 0) {
+        const parts = [];
+        
+        // Add text content if exists
+        if (msg.content && msg.content.trim() && msg.content !== 'Attached image(s)') {
+          parts.push({ type: 'text', text: msg.content });
+        }
+        
+        // Add image attachments
+        for (const attachment of msg.attachments) {
+          parts.push({
+            type: 'image_url',
+            image_url: {
+              url: `data:${attachment.mimeType};base64,${attachment.data}`
+            }
+          });
+        }
+        
+        return {
+          role: msg.role,
+          content: parts
+        };
+      }
+      
+      // Regular text-only message
+      return {
+        role: msg.role,
+        content: msg.content
+      };
+    });
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -47,7 +85,7 @@ Be friendly, concise, and professional. If you don't know something specific, po
         model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: systemPrompt },
-          ...messages,
+          ...formattedMessages,
         ],
       }),
     });

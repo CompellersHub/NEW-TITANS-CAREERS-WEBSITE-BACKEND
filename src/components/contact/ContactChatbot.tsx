@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -10,6 +10,12 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: Date;
+  attachments?: Array<{
+    type: 'image';
+    data: string;
+    mimeType: string;
+    name: string;
+  }>;
 }
 
 export const ContactChatbot = () => {
@@ -24,11 +30,13 @@ export const ContactChatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [userIdentifier, setUserIdentifier] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<Array<{ type: 'image'; data: string; mimeType: string; name: string }>>([]);
   const [soundEnabled, setSoundEnabled] = useState(() => {
     const saved = localStorage.getItem('chatbot_sound_enabled');
     return saved !== null ? saved === 'true' : true;
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const scrollToBottom = () => {
@@ -131,12 +139,83 @@ export const ContactChatbot = () => {
     initConversation();
   }, []);
 
-  const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const userMessage: Message = { role: 'user', content: input, timestamp: new Date() };
+    const newAttachments: typeof attachments = [];
+
+    for (const file of Array.from(files)) {
+      // Check file size (20MB limit)
+      if (file.size > 20 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: `${file.name} exceeds 20MB limit`,
+          variant: "destructive"
+        });
+        continue;
+      }
+
+      // Only accept images
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Only image files are supported",
+          variant: "destructive"
+        });
+        continue;
+      }
+
+      try {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64String = (reader.result as string).split(',')[1];
+            resolve(base64String);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        newAttachments.push({
+          type: 'image',
+          data: base64,
+          mimeType: file.type,
+          name: file.name
+        });
+      } catch (error) {
+        console.error('Error reading file:', error);
+        toast({
+          title: "Error",
+          description: `Failed to read ${file.name}`,
+          variant: "destructive"
+        });
+      }
+    }
+
+    setAttachments(prev => [...prev, ...newAttachments]);
+    
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const sendMessage = async () => {
+    if ((!input.trim() && attachments.length === 0) || isLoading) return;
+
+    const userMessage: Message = { 
+      role: 'user', 
+      content: input || 'Attached image(s)', 
+      timestamp: new Date(),
+      attachments: attachments.length > 0 ? [...attachments] : undefined
+    };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    setAttachments([]);
     setIsLoading(true);
     playSound('send');
 
@@ -287,6 +366,18 @@ export const ContactChatbot = () => {
                       : 'bg-muted text-foreground'
                   }`}
                 >
+                  {message.attachments && message.attachments.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {message.attachments.map((attachment, idx) => (
+                        <img
+                          key={idx}
+                          src={`data:${attachment.mimeType};base64,${attachment.data}`}
+                          alt={attachment.name}
+                          className="max-w-[200px] max-h-[200px] rounded object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
                 {message.timestamp && (
@@ -310,7 +401,43 @@ export const ContactChatbot = () => {
 
           {/* Input */}
           <div className="p-4 border-t">
+            {attachments.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-2 p-2 bg-muted rounded">
+                {attachments.map((attachment, idx) => (
+                  <div key={idx} className="relative group">
+                    <img
+                      src={`data:${attachment.mimeType};base64,${attachment.data}`}
+                      alt={attachment.name}
+                      className="w-16 h-16 rounded object-cover"
+                    />
+                    <button
+                      onClick={() => removeAttachment(idx)}
+                      className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="flex gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+                title="Attach image"
+              >
+                <Paperclip className="h-4 w-4" />
+              </Button>
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -321,7 +448,7 @@ export const ContactChatbot = () => {
               />
               <Button
                 onClick={sendMessage}
-                disabled={isLoading || !input.trim()}
+                disabled={isLoading || (!input.trim() && attachments.length === 0)}
                 size="icon"
               >
                 <Send className="h-4 w-4" />
