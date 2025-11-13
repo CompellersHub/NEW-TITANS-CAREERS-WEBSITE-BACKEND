@@ -20,6 +20,7 @@ import CampaignManager from "./pages/CampaignManager";
 import ABTestManager from "./pages/ABTestManager";
 import TemplateLibrary from "./pages/TemplateLibrary";
 import SegmentManager from "./pages/SegmentManager";
+import EmailABTestDashboard from "./pages/EmailABTestDashboard";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RefundPolicy from "./pages/RefundPolicy";
 import TermsConditions from "./pages/TermsConditions";
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="/admin/ab-tests" element={<ABTestManager />} />
             <Route path="/admin/templates" element={<TemplateLibrary />} />
             <Route path="/admin/segments" element={<SegmentManager />} />
+            <Route path="/admin/email-ab-tests" element={<EmailABTestDashboard />} />
             <Route path="/thank-you" element={<ThankYou />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/refund-policy" element={<RefundPolicy />} />
