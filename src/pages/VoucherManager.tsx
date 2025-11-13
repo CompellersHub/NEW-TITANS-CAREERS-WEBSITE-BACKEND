@@ -19,6 +19,7 @@ import { Footer } from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
 import { BulkVoucherForm } from "@/components/voucher/BulkVoucherForm";
 import { EmailDistributionDialog } from "@/components/voucher/EmailDistributionDialog";
+import { ScheduledCampaignDialog } from "@/components/voucher/ScheduledCampaignDialog";
 
 interface Voucher {
   id: string;
@@ -45,6 +46,8 @@ export default function VoucherManager() {
   const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null);
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [selectedVoucherForEmail, setSelectedVoucherForEmail] = useState<Voucher | null>(null);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [selectedVoucherForSchedule, setSelectedVoucherForSchedule] = useState<Voucher | null>(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -145,6 +148,11 @@ export default function VoucherManager() {
           </div>
           
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/scheduled-campaigns')}>
+              <Calendar className="h-4 w-4 mr-2" />
+              Scheduled Campaigns
+            </Button>
+            
             <Button variant="outline" onClick={() => navigate('/admin/voucher-export')}>
               <Download className="h-4 w-4 mr-2" />
               Export
@@ -256,6 +264,16 @@ export default function VoucherManager() {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => {
+                            setSelectedVoucherForSchedule(voucher);
+                            setScheduleDialogOpen(true);
+                          }}
+                        >
+                          <Calendar className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleEdit(voucher)}
                         >
                           <Edit className="h-4 w-4" />
@@ -346,6 +364,15 @@ export default function VoucherManager() {
           onOpenChange={setEmailDialogOpen}
           voucherId={selectedVoucherForEmail.id}
           voucherCode={selectedVoucherForEmail.code}
+        />
+      )}
+      
+      {selectedVoucherForSchedule && (
+        <ScheduledCampaignDialog
+          open={scheduleDialogOpen}
+          onOpenChange={setScheduleDialogOpen}
+          voucherId={selectedVoucherForSchedule.id}
+          voucherCode={selectedVoucherForSchedule.code}
         />
       )}
     </div>
