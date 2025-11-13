@@ -9,30 +9,33 @@ export function SuccessStoriesSection() {
       before: 'Warehouse Worker',
       after: 'AML Analyst',
       salary: '£48k',
-      image: '/images/success-story-1.jpg',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop',
       quote: 'From night shifts to 9-5 office job. I never thought I could do this.',
       course: 'AML/KYC',
-      time: '7 months'
+      time: '7 months',
+      salaryIncrease: '+85%'
     },
     {
       name: 'Priya S.',
       before: 'Retail Manager',
       after: 'Data Analyst',
       salary: '£52k',
-      image: '/images/success-story-2.jpg',
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop',
       quote: 'Titans gave me the skills and confidence to change industries completely.',
       course: 'Data Analysis',
-      time: '8 months'
+      time: '8 months',
+      salaryIncrease: '+120%'
     },
     {
       name: 'James K.',
       before: 'Hospitality',
       after: 'Business Analyst',
       salary: '£45k',
-      image: null,
+      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop',
       quote: 'No UK experience, no problem. The support was incredible.',
       course: 'Business Analysis',
-      time: '9 months'
+      time: '9 months',
+      salaryIncrease: '+95%'
     }
   ];
 
@@ -82,9 +85,15 @@ export function SuccessStoriesSection() {
                     </div>
                   )}
                   
-                  {/* Salary Badge */}
-                  <div className="absolute top-4 right-4 bg-tc-amber text-tc-navy px-4 py-2 rounded-full font-bold text-lg shadow-lg">
-                    {story.salary}
+                  {/* Salary & Increase Badge */}
+                  <div className="absolute top-4 right-4 space-y-2">
+                    <div className="bg-tc-amber text-tc-navy px-4 py-2 rounded-full font-bold text-lg shadow-lg">
+                      {story.salary}
+                    </div>
+                    <div className="bg-white/95 text-tc-navy px-3 py-1 rounded-full font-semibold text-sm shadow-md flex items-center gap-1">
+                      <TrendingUp className="h-3 w-3 text-tc-amber" />
+                      {story.salaryIncrease}
+                    </div>
                   </div>
                 </div>
 
