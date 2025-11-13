@@ -12,5 +12,14 @@ verify_jwt = false
 [functions.send-weekly-campaign]
 verify_jwt = false
 
+[functions.send-ab-test]
+verify_jwt = false
+
+[functions.select-ab-winner]
+verify_jwt = false
+
+[functions.send-ab-winner]
+verify_jwt = false
+
 [functions.populate-campaign-content]
 verify_jwt = false

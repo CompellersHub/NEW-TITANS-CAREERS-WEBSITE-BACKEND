@@ -14,6 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
+      ab_test_results: {
+        Row: {
+          ab_test_id: string
+          click_count: number
+          click_rate: number | null
+          created_at: string
+          id: string
+          open_count: number
+          open_rate: number | null
+          sent_count: number
+          unsubscribe_count: number
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          ab_test_id: string
+          click_count?: number
+          click_rate?: number | null
+          created_at?: string
+          id?: string
+          open_count?: number
+          open_rate?: number | null
+          sent_count?: number
+          unsubscribe_count?: number
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          ab_test_id?: string
+          click_count?: number
+          click_rate?: number | null
+          created_at?: string
+          id?: string
+          open_count?: number
+          open_rate?: number | null
+          sent_count?: number
+          unsubscribe_count?: number
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ab_test_results_ab_test_id_fkey"
+            columns: ["ab_test_id"]
+            isOneToOne: false
+            referencedRelation: "ab_tests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ab_test_results_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "ab_test_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ab_test_variants: {
+        Row: {
+          ab_test_id: string
+          created_at: string
+          html_content: string
+          id: string
+          preview_text: string | null
+          subject: string
+          variant_name: string
+        }
+        Insert: {
+          ab_test_id: string
+          created_at?: string
+          html_content: string
+          id?: string
+          preview_text?: string | null
+          subject: string
+          variant_name: string
+        }
+        Update: {
+          ab_test_id?: string
+          created_at?: string
+          html_content?: string
+          id?: string
+          preview_text?: string | null
+          subject?: string
+          variant_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ab_test_variants_ab_test_id_fkey"
+            columns: ["ab_test_id"]
+            isOneToOne: false
+            referencedRelation: "ab_tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ab_tests: {
+        Row: {
+          campaign_type: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          name: string
+          started_at: string | null
+          status: string
+          test_percentage: number
+          winner_variant_id: string | null
+        }
+        Insert: {
+          campaign_type: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name: string
+          started_at?: string | null
+          status?: string
+          test_percentage?: number
+          winner_variant_id?: string | null
+        }
+        Update: {
+          campaign_type?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          name?: string
+          started_at?: string | null
+          status?: string
+          test_percentage?: number
+          winner_variant_id?: string | null
+        }
+        Relationships: []
+      }
       campaign_content: {
         Row: {
           campaign_type: string

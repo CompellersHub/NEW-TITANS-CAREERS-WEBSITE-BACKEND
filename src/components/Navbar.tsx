@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut, Shield, Mail } from "lucide-react";
+import { Menu, X, User, LogOut, Shield, Mail, TestTube } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import titansLogo from "@/assets/titans-logo.jpg";
@@ -95,6 +95,12 @@ export const Navbar = () => {
                           Campaigns
                         </Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin/ab-tests" className="cursor-pointer">
+                          <TestTube className="w-4 h-4 mr-2" />
+                          A/B Tests
+                        </Link>
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </>
                   )}
@@ -184,6 +190,12 @@ export const Navbar = () => {
                         <Button variant="outline" className="w-full">
                           <Mail className="w-4 h-4 mr-2" />
                           Campaigns
+                        </Button>
+                      </Link>
+                      <Link to="/admin/ab-tests">
+                        <Button variant="outline" className="w-full">
+                          <TestTube className="w-4 h-4 mr-2" />
+                          A/B Tests
                         </Button>
                       </Link>
                     </>
