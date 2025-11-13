@@ -63,7 +63,7 @@ export function SuccessStoriesCarousel() {
 
       <div className="text-center mt-8">
         <Link to="/success-stories">
-          <Button size="lg" className="bg-tc-amber text-tc-navy hover:bg-tc-amber/90">
+          <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 font-sans font-semibold">
             View All Success Stories
           </Button>
         </Link>

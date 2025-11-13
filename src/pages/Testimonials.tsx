@@ -78,19 +78,19 @@ const Testimonials = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-tc-navy text-white py-20 md:py-28">
+      <section className="bg-primary text-primary-foreground py-20 md:py-28">
         <div className="container max-w-7xl">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30">
+            <Badge className="bg-accent/20 text-accent border-accent/30 font-sans">
               <Award className="w-3 h-3 mr-2" />
               SUCCESS STORIES
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Real People. <span className="text-tc-amber">Real Results.</span>
+            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
+              Real People. <span className="text-accent">Real Results.</span>
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
               Meet the warehouse workers, care staff, and career switchers who transformed 
               their lives with Titans Careers training.
             </p>
@@ -99,19 +99,19 @@ const Testimonials = () => {
       </section>
 
       {/* Stats Overview */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="container max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <Card key={index} className="border-2 border-tc-amber/20 hover:border-tc-amber/50 transition-all">
+              <Card key={index} className="border-2 border-accent/20 hover:border-accent/50 transition-all">
                 <CardContent className="p-6 text-center space-y-3">
-                  <div className="w-12 h-12 bg-tc-amber/10 rounded-full flex items-center justify-center mx-auto">
-                    <stat.icon className="w-6 h-6 text-tc-amber" />
+                  <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
+                    <stat.icon className="w-6 h-6 text-accent" />
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold text-tc-navy">
+                  <div className="font-kanit text-3xl md:text-4xl font-bold text-primary">
                     {stat.number}
                   </div>
-                  <div className="text-sm text-muted-foreground font-medium">
+                  <div className="font-sans text-sm text-muted-foreground font-medium">
                     {stat.label}
                   </div>
                 </CardContent>
@@ -122,19 +122,19 @@ const Testimonials = () => {
       </section>
 
       {/* Video Testimonials */}
-      <section className="py-20 bg-secondary/30">
+      <section className="py-20 bg-muted/30">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30">
+            <Badge className="bg-accent/10 text-accent border-accent/30 font-sans">
               <Play className="w-3 h-3 mr-2" />
               VIDEO STORIES
             </Badge>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary">
               Hear It From Our Graduates
             </h2>
             
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
               Watch real students share their journey from their previous roles to professional careers
             </p>
           </div>
@@ -143,7 +143,7 @@ const Testimonials = () => {
             {videoTestimonials.map((video) => (
               <Card 
                 key={video.id} 
-                className="overflow-hidden group border-2 hover:border-tc-amber/50 transition-all hover:shadow-xl cursor-pointer"
+                className="overflow-hidden group border-2 hover:border-accent/50 transition-all hover:shadow-xl cursor-pointer"
                 onClick={() => setSelectedVideo(video)}
               >
                 <CardContent className="p-0">
@@ -159,37 +159,37 @@ const Testimonials = () => {
                         }
                       }}
                     />
-                    <div className="absolute inset-0 bg-tc-navy/40 group-hover:bg-tc-navy/30 transition-colors flex items-center justify-center">
-                      <div className="w-16 h-16 bg-tc-amber rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl">
-                        <Play className="w-8 h-8 text-tc-navy fill-tc-navy ml-1" />
+                    <div className="absolute inset-0 bg-primary/40 group-hover:bg-primary/30 transition-colors flex items-center justify-center">
+                      <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-xl">
+                        <Play className="w-8 h-8 text-accent-foreground fill-accent-foreground ml-1" />
                       </div>
                     </div>
                     
                     {/* Platform Badge */}
                     <div className="absolute top-4 left-4">
-                      <Badge className="bg-tc-navy/80 text-white border-0">
+                      <Badge className="bg-primary/80 text-primary-foreground border-0 font-sans">
                         {video.platform === "youtube" ? "YouTube" : "Vimeo"}
                       </Badge>
                     </div>
                   </div>
                   
                   <div className="p-6 space-y-3">
-                    <h3 className="font-bold text-lg text-tc-navy leading-tight group-hover:text-tc-amber transition-colors">
+                    <h3 className="font-kanit font-bold text-lg text-primary leading-tight group-hover:text-accent transition-colors">
                       {video.title}
                     </h3>
                     
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="font-sans text-sm text-muted-foreground line-clamp-2">
                       {video.description}
                     </p>
                     
-                    <div className="pt-2 border-t">
-                      <p className="font-semibold text-tc-navy">{video.name}</p>
-                      <p className="text-sm text-muted-foreground">{video.role}</p>
+                    <div className="pt-2 border-t border-border">
+                      <p className="font-sans font-semibold text-primary">{video.name}</p>
+                      <p className="font-sans text-sm text-muted-foreground">{video.role}</p>
                     </div>
                     
                     <Button 
                       variant="ghost" 
-                      className="w-full text-tc-amber font-bold group-hover:bg-tc-amber/10"
+                      className="w-full text-accent font-sans font-bold group-hover:bg-accent/10 hover:text-accent/90"
                     >
                       <Play className="w-4 h-4 mr-2" />
                       Watch Video
@@ -204,7 +204,7 @@ const Testimonials = () => {
           <Dialog open={!!selectedVideo} onOpenChange={(open) => !open && setSelectedVideo(null)}>
             <DialogContent className="max-w-5xl p-0 overflow-hidden">
               <DialogHeader className="p-6 pb-0">
-                <DialogTitle className="text-2xl font-bold text-tc-navy pr-8">
+                <DialogTitle className="font-kanit text-2xl font-bold text-primary pr-8">
                   {selectedVideo?.title}
                 </DialogTitle>
               </DialogHeader>
@@ -222,16 +222,16 @@ const Testimonials = () => {
               )}
               
               {selectedVideo && (
-                <div className="p-6 bg-secondary/30">
-                  <p className="text-muted-foreground mb-4">
+                <div className="p-6 bg-muted/30">
+                  <p className="font-sans text-muted-foreground mb-4">
                     {selectedVideo.description}
                   </p>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-semibold text-tc-navy">{selectedVideo.name}</p>
-                      <p className="text-sm text-muted-foreground">{selectedVideo.role}</p>
+                      <p className="font-sans font-semibold text-primary">{selectedVideo.name}</p>
+                      <p className="font-sans text-sm text-muted-foreground">{selectedVideo.role}</p>
                     </div>
-                    <Badge className="bg-tc-amber text-tc-navy">
+                    <Badge className="bg-accent text-accent-foreground font-sans">
                       {selectedVideo.platform === "youtube" ? "YouTube" : "Vimeo"}
                     </Badge>
                   </div>
@@ -241,7 +241,7 @@ const Testimonials = () => {
           </Dialog>
 
           <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-4">
+            <p className="font-sans text-muted-foreground mb-4">
               More video testimonials coming soon from our latest graduates!
             </p>
           </div>
@@ -249,19 +249,19 @@ const Testimonials = () => {
       </section>
 
       {/* Written Reviews Filter */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="text-center mb-12 space-y-4">
-            <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30">
+            <Badge className="bg-accent/10 text-accent border-accent/30 font-sans">
               <Star className="w-3 h-3 mr-2" />
               WRITTEN REVIEWS
             </Badge>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary">
               Student Success Stories
             </h2>
             
-            <p className="text-xl text-muted-foreground">
+            <p className="font-sans text-xl text-muted-foreground">
               Read detailed accounts from our graduates about their career transformation
             </p>
           </div>
@@ -271,33 +271,33 @@ const Testimonials = () => {
             <Button
               variant={selectedTrack === "all" ? "default" : "outline"}
               onClick={() => setSelectedTrack("all")}
-              className={
+              className={`font-sans font-semibold ${
                 selectedTrack === "all"
-                  ? "bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold"
-                  : "border-2 hover:border-tc-amber text-tc-navy"
-              }
+                  ? "bg-accent hover:bg-accent/90 text-accent-foreground"
+                  : "border-2 hover:border-accent hover:text-accent"
+              }`}
             >
               All Stories ({testimonials.length})
             </Button>
             <Button
               variant={selectedTrack === "aml-kyc" ? "default" : "outline"}
               onClick={() => setSelectedTrack("aml-kyc")}
-              className={
+              className={`font-sans font-semibold ${
                 selectedTrack === "aml-kyc"
-                  ? "bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold"
-                  : "border-2 hover:border-tc-amber text-tc-navy"
-              }
+                  ? "bg-accent hover:bg-accent/90 text-accent-foreground"
+                  : "border-2 hover:border-accent hover:text-accent"
+              }`}
             >
               AML/KYC ({testimonials.filter(t => t.track === "aml-kyc").length})
             </Button>
             <Button
               variant={selectedTrack === "data" ? "default" : "outline"}
               onClick={() => setSelectedTrack("data")}
-              className={
+              className={`font-sans font-semibold ${
                 selectedTrack === "data"
-                  ? "bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold"
-                  : "border-2 hover:border-tc-amber text-tc-navy"
-              }
+                  ? "bg-accent hover:bg-accent/90 text-accent-foreground"
+                  : "border-2 hover:border-accent hover:text-accent"
+              }`}
             >
               Data Analysis ({testimonials.filter(t => t.track === "data").length})
             </Button>
@@ -306,38 +306,38 @@ const Testimonials = () => {
           {/* Testimonials Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredTestimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="border-2 hover:border-tc-amber/50 transition-all hover:shadow-xl">
+              <Card key={testimonial.id} className="border-2 hover:border-accent/50 transition-all hover:shadow-xl">
                 <CardContent className="p-6 space-y-4">
                   {/* Rating */}
                   <div className="flex gap-1">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-tc-amber text-tc-amber" />
+                      <Star key={i} className="w-4 h-4 fill-accent text-accent" />
                     ))}
                   </div>
 
                   {/* Story */}
-                  <p className="text-muted-foreground leading-relaxed text-sm italic">
+                  <p className="font-sans text-muted-foreground leading-relaxed text-sm italic">
                     "{testimonial.story}"
                   </p>
 
                   {/* Career Progression */}
-                  <div className="pt-4 border-t space-y-2">
+                  <div className="pt-4 border-t border-border space-y-2">
                     <div className="flex items-start gap-2">
-                      <span className="text-xs text-muted-foreground">From:</span>
-                      <span className="text-sm font-semibold text-tc-navy flex-1">
+                      <span className="font-sans text-xs text-muted-foreground">From:</span>
+                      <span className="font-sans text-sm font-semibold text-foreground flex-1">
                         {testimonial.previousRole}
                       </span>
                     </div>
                     
                     <div className="flex items-start gap-2">
-                      <TrendingUp className="w-4 h-4 text-tc-amber mt-0.5" />
+                      <TrendingUp className="w-4 h-4 text-accent mt-0.5" />
                       <div className="flex-1">
-                        <span className="text-xs text-muted-foreground">To:</span>
-                        <p className="text-sm font-bold text-tc-amber">
+                        <span className="font-sans text-xs text-muted-foreground">To:</span>
+                        <p className="font-kanit text-sm font-bold text-accent">
                           {testimonial.role}
                         </p>
                         {testimonial.company && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="font-sans text-xs text-muted-foreground">
                             at {testimonial.company}
                           </p>
                         )}
@@ -346,7 +346,7 @@ const Testimonials = () => {
 
                     {testimonial.mentor && (
                       <div className="pt-2">
-                        <Badge variant="outline" className="text-xs border-tc-navy/20">
+                        <Badge variant="outline" className="font-sans text-xs border-border">
                           Mentor: {testimonial.mentor}
                         </Badge>
                       </div>
@@ -355,7 +355,7 @@ const Testimonials = () => {
 
                   {/* Student Info */}
                   <div className="pt-2">
-                    <p className="font-bold text-tc-navy">- {testimonial.name}</p>
+                    <p className="font-sans font-bold text-primary">- {testimonial.name}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -365,75 +365,75 @@ const Testimonials = () => {
       </section>
 
       {/* Success Metrics Detail */}
-      <section className="py-20 bg-gradient-to-br from-tc-navy to-tc-blue text-white">
+      <section className="py-20 bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30">
+            <Badge className="bg-accent/20 text-accent border-accent/30 font-sans">
               <TrendingUp className="w-3 h-3 mr-2" />
               GRADUATE OUTCOMES
             </Badge>
             
-            <h2 className="text-3xl md:text-4xl font-bold">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold">
               The Numbers Don't Lie
             </h2>
             
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <p className="font-sans text-xl text-primary-foreground/80 max-w-3xl mx-auto">
               Our commitment to practical training and career support delivers real results
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-primary-foreground/10 backdrop-blur border-primary-foreground/20">
               <CardContent className="p-8 space-y-6">
-                <h3 className="text-2xl font-bold text-tc-amber">AML/KYC Track</h3>
+                <h3 className="font-kanit text-2xl font-bold text-accent">AML/KYC Track</h3>
                 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Average Starting Salary</span>
-                    <span className="text-2xl font-bold text-tc-amber">£32k</span>
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Average Starting Salary</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">£32k</span>
                   </div>
                   
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Job Placement Rate</span>
-                    <span className="text-2xl font-bold text-tc-amber">87%</span>
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Job Placement Rate</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">87%</span>
                   </div>
                   
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Time to First Offer</span>
-                    <span className="text-2xl font-bold text-tc-amber">5 months</span>
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Time to First Offer</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">5 months</span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-white/80">Total Graduates</span>
-                    <span className="text-2xl font-bold text-tc-amber">180+</span>
+                    <span className="text-primary-foreground/80">Total Graduates</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">180+</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/10 backdrop-blur border-white/20">
+            <Card className="bg-primary-foreground/10 backdrop-blur border-primary-foreground/20">
               <CardContent className="p-8 space-y-6">
-                <h3 className="text-2xl font-bold text-tc-amber">Data Analysis Track</h3>
+                <h3 className="font-kanit text-2xl font-bold text-accent">Data Analysis Track</h3>
                 
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Average Starting Salary</span>
-                    <span className="text-2xl font-bold text-tc-amber">£35k</span>
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Average Starting Salary</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">£35k</span>
                   </div>
                   
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Job Placement Rate</span>
-                    <span className="text-2xl font-bold text-tc-amber">83%</span>
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Job Placement Rate</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">83%</span>
                   </div>
                   
-                  <div className="flex justify-between items-center pb-3 border-b border-white/20">
-                    <span className="text-white/80">Time to First Offer</span>
-                    <span className="text-2xl font-bold text-tc-amber">6 months</span>
+                  <div className="flex justify-between items-center pb-3 border-b border-primary-foreground/20">
+                    <span className="text-primary-foreground/80">Time to First Offer</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">6 months</span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-white/80">Total Graduates</span>
-                    <span className="text-2xl font-bold text-tc-amber">120+</span>
+                    <span className="text-primary-foreground/80">Total Graduates</span>
+                    <span className="font-kanit text-2xl font-bold text-accent">120+</span>
                   </div>
                 </div>
               </CardContent>
@@ -441,7 +441,7 @@ const Testimonials = () => {
           </div>
 
           <div className="mt-12 text-center">
-            <p className="text-white/80 mb-6 text-lg">
+            <p className="font-sans text-primary-foreground/80 mb-6 text-lg">
               *Data based on graduates who completed the full program and actively applied for roles
             </p>
           </div>
@@ -449,26 +449,26 @@ const Testimonials = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-4xl text-center space-y-8">
-          <h2 className="text-3xl md:text-5xl font-bold text-tc-navy">
-            Your Success Story <span className="text-tc-amber">Starts Here</span>
+          <h2 className="font-kanit text-3xl md:text-5xl font-bold text-primary">
+            Your Success Story <span className="text-accent">Starts Here</span>
           </h2>
           
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="font-sans text-xl text-muted-foreground leading-relaxed">
             Join our free Q&A session and discover which course path is right for your career goals.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              className="bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold text-lg px-8"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-sans font-bold text-lg px-8"
             >
               <Award className="w-5 h-5 mr-2" />
               Join Free Session
             </Button>
             
-            <Button size="lg" variant="outlineWhite" className="border-tc-navy text-tc-navy text-lg px-8">
+            <Button size="lg" variant="outline" className="border-primary text-primary font-sans text-lg px-8 hover:bg-primary hover:text-primary-foreground">
               <Briefcase className="w-5 h-5 mr-2" />
               View Courses
             </Button>
