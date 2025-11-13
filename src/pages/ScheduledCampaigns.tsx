@@ -21,7 +21,7 @@ const ScheduledCampaigns = () => {
   const fetchCampaigns = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .select(`
           *,
@@ -46,7 +46,7 @@ const ScheduledCampaigns = () => {
 
   const handleCancelCampaign = async (campaignId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .update({ status: "cancelled" })
         .eq("id", campaignId);
@@ -71,7 +71,7 @@ const ScheduledCampaigns = () => {
 
   const handleDeleteCampaign = async (campaignId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .delete()
         .eq("id", campaignId);
@@ -96,7 +96,7 @@ const ScheduledCampaigns = () => {
 
   const handleReactivateCampaign = async (campaignId: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .update({ status: "scheduled" })
         .eq("id", campaignId);
