@@ -63,7 +63,7 @@ const About = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-primary text-white py-20 md:py-28">
+      <section className="bg-primary text-primary-foreground py-20 md:py-28">
         <div className="container max-w-7xl">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <Badge className="bg-accent/20 text-accent border-accent/30">
@@ -76,7 +76,7 @@ const About = () => {
               Not Just Courses
             </h1>
             
-            <p className="font-sans text-xl text-white/80 leading-relaxed">
+            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
               Titans Careers was born from a simple frustration: too many talented people 
               stuck in low-paying jobs, and too many training programs that promise the world 
               but deliver nothing.
@@ -86,7 +86,7 @@ const About = () => {
       </section>
 
       {/* Mission Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
@@ -150,7 +150,7 @@ const About = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-primary text-white">
+      <section className="py-16 bg-primary text-primary-foreground">
         <div className="container max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -158,7 +158,7 @@ const About = () => {
                 <div className="font-kanit text-4xl md:text-5xl font-bold text-accent">
                   {stat.number}
                 </div>
-                <div className="font-sans text-white/80 font-medium">{stat.label}</div>
+                <div className="font-sans text-primary-foreground/80 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -204,7 +204,7 @@ const About = () => {
       </section>
 
       {/* Team Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
             <Badge className="bg-accent/10 text-primary border-accent/30">
@@ -232,7 +232,7 @@ const About = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                    <div className="absolute bottom-4 left-4 right-4 text-primary-foreground">
                       <h3 className="font-kanit text-xl font-bold mb-1">{member.name}</h3>
                       <p className="font-sans text-accent font-semibold">{member.role}</p>
                     </div>
@@ -251,27 +251,27 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-primary via-primary to-primary-glow text-white">
+      <section className="py-20 bg-gradient-to-br from-primary via-primary to-primary-glow text-primary-foreground">
         <div className="container max-w-4xl text-center space-y-8">
           <h2 className="font-kanit text-3xl md:text-5xl font-bold">
             Ready to Start Your Career Transformation?
           </h2>
           
-          <p className="font-sans text-xl text-white/80 leading-relaxed">
+          <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
             Join our next free Q&A session and see if Titans Careers is right for you.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              className="bg-accent hover:bg-gold text-primary font-bold text-lg px-8"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg px-8"
             >
               <BookOpen className="w-5 h-5 mr-2" />
               Join Free Session
             </Button>
             
             <Link to="/courses">
-              <Button size="lg" variant="outline" className="text-lg px-8 bg-white text-primary border-white hover:bg-white/90">
+              <Button size="lg" variant="outline" className="text-lg px-8 bg-background text-foreground border-border hover:bg-background/90">
                 <Briefcase className="w-5 h-5 mr-2" />
                 View Courses
               </Button>
