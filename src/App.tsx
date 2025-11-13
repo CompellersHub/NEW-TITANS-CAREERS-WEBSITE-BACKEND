@@ -42,6 +42,7 @@ import SLAAlertHistory from "./pages/SLAAlertHistory";
 import AdminNotificationSettings from "./pages/AdminNotificationSettings";
 import AdminTemplates from "./pages/AdminTemplates";
 import VoucherManager from "./pages/VoucherManager";
+import VoucherAnalytics from "./pages/VoucherAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const AnimatedRoutes = () => {
               <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
               <Route path="/admin/response-templates" element={<AdminTemplates />} />
               <Route path="/admin/vouchers" element={<VoucherManager />} />
+              <Route path="/admin/voucher-analytics" element={<VoucherAnalytics />} />
               <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
