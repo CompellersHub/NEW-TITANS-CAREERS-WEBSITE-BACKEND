@@ -11,12 +11,14 @@ import { Footer } from "@/components/Footer";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { Clock, BookOpen, Award, Users, CheckCircle } from "lucide-react";
+import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 
 export default function CourseDetail() {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
   const coursesArray = Object.values(courses);
   const course = coursesArray.find(c => c.slug === slug);
+  const { trackCourseView } = useBehaviorTracking();
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -26,6 +28,13 @@ export default function CourseDetail() {
       toast.error("Payment canceled. Feel free to try again when ready.");
     }
   }, [searchParams]);
+
+  // Track course view
+  useEffect(() => {
+    if (course) {
+      trackCourseView(course.slug, course.title);
+    }
+  }, [course, trackCourseView]);
 
   if (!course) {
     return (
