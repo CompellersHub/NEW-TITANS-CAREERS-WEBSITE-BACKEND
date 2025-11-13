@@ -22,13 +22,16 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          glow: "hsl(var(--primary-glow))",
-          deep: "hsl(var(--primary-deep))",
+          hover: "hsl(var(--primary-hover))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          light: "hsl(var(--accent-light))",
+          hover: "hsl(var(--accent-hover))",
+        },
+        gold: {
+          DEFAULT: "hsl(var(--gold))",
+          foreground: "hsl(var(--gold-foreground))",
         },
         success: "hsl(var(--success))",
         warning: "hsl(var(--warning))",
@@ -43,10 +46,6 @@ export default {
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -67,6 +66,10 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      fontFamily: {
+        kanit: ['Kanit', 'sans-serif'],
+        sans: ['Open Sans', 'sans-serif'],
+      },
       borderRadius: {
         lg: "var(--radius-lg)",
         DEFAULT: "var(--radius)",
@@ -77,14 +80,13 @@ export default {
         'sm': 'var(--shadow-sm)',
         'md': 'var(--shadow-md)',
         'lg': 'var(--shadow-lg)',
-        'glow': 'var(--shadow-glow)',
-        'glow-lg': 'var(--shadow-glow-lg)',
+        'accent': 'var(--shadow-accent)',
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-hero': 'var(--gradient-hero)',
+        'gradient-accent': 'var(--gradient-accent)',
         'gradient-card': 'var(--gradient-card)',
-        'gradient-shine': 'var(--gradient-shine)',
       },
       keyframes: {
         "accordion-down": {

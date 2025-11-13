@@ -1,69 +1,128 @@
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const scrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-    setIsMenuOpen(false);
-  };
-
   return (
-    <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-xl border-b border-border/50 z-50 shadow-sm">
-      <div className="container px-4 py-5">
+    <nav className="fixed top-0 w-full bg-primary/95 backdrop-blur-xl border-b border-white/10 z-50 shadow-lg">
+      <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 group cursor-pointer">
-            <div className="w-11 h-11 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow transition-all duration-300 group-hover:shadow-glow-lg group-hover:scale-105">
-              <span className="text-2xl font-bold text-primary-foreground">T</span>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3 group cursor-pointer">
+            <div className="w-11 h-11 bg-gradient-accent rounded-xl flex items-center justify-center shadow-accent transition-all duration-300 group-hover:scale-105">
+              <span className="text-2xl font-bold text-white">T</span>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
-              Titan Careers
-            </span>
-          </div>
+            <div className="flex flex-col">
+              <span className="text-lg font-bold text-white leading-tight">
+                Titans Careers
+              </span>
+              <span className="text-xs text-white/70 leading-tight">
+                Practical training. Real careers.
+              </span>
+            </div>
+          </Link>
           
-          <div className="hidden md:flex items-center gap-10">
-            <a href="#features" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
-              Features
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-8">
+            <Link to="/" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              Home
+            </Link>
+            <Link to="/courses" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              Courses
+            </Link>
+            <a href="#how-it-works" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              How It Works
             </a>
-            <a href="#testimonials" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
-              Testimonials
+            <a href="#success-stories" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              Success Stories
             </a>
-            <a href="#contact" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
+            <a href="#faqs" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              FAQs
+            </a>
+            <a href="#contact" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               Contact
             </a>
           </div>
           
-          <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" className="font-semibold">Sign In</Button>
-            <Button onClick={scrollToContact} className="bg-gradient-primary shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:scale-105 font-bold">
-              Get Started
+          {/* Desktop Buttons */}
+          <div className="hidden lg:flex items-center gap-3">
+            <Button 
+              variant="default"
+              size="default"
+              asChild
+            >
+              <a 
+                href="https://wa.me/447539434403"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join Free Session
+              </a>
+            </Button>
+            <Button 
+              variant="outlineWhite"
+              size="default"
+            >
+              Student Login
             </Button>
           </div>
           
+          {/* Mobile Menu Button */}
           <Button 
             variant="ghost" 
             size="icon"
-            className="md:hidden"
+            className="lg:hidden text-white hover:text-accent hover:bg-white/10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <Menu className="w-6 h-6" />
           </Button>
         </div>
         
+        {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-4 animate-fade-in">
-            <a href="#features" className="block text-foreground hover:text-primary transition-colors font-medium">
-              Features
+          <div className="lg:hidden mt-6 pb-4 space-y-4 animate-fade-in border-t border-white/10 pt-4">
+            <Link to="/" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              Home
+            </Link>
+            <Link to="/courses" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              Courses
+            </Link>
+            <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              How It Works
             </a>
-            <a href="#testimonials" className="block text-foreground hover:text-primary transition-colors font-medium">
-              Testimonials
+            <a href="#success-stories" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              Success Stories
             </a>
-            <a href="#contact" className="block text-foreground hover:text-primary transition-colors font-medium">
+            <a href="#faqs" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              FAQs
+            </a>
+            <a href="#contact" className="block text-white hover:text-accent transition-colors font-medium py-2">
               Contact
             </a>
-            <Button className="w-full" onClick={scrollToContact}>Get Started</Button>
+            <div className="space-y-3 pt-4 border-t border-white/10">
+              <Button 
+                variant="default"
+                className="w-full"
+                asChild
+              >
+                <a 
+                  href="https://wa.me/447539434403"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Join Free Session
+                </a>
+              </Button>
+              <Button 
+                variant="outlineWhite"
+                className="w-full"
+              >
+                Student Login
+              </Button>
+            </div>
           </div>
         )}
       </div>

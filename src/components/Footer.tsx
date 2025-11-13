@@ -1,71 +1,79 @@
-import { Github, Twitter, Linkedin, Mail } from "lucide-react";
+import { Mail, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
   return (
-    <footer className="bg-muted/50 border-t border-border py-12">
+    <footer className="bg-primary text-white border-t border-white/10 py-12">
       <div className="container px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
-                <span className="text-lg font-bold text-primary-foreground">T</span>
+              <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
+                <span className="text-lg font-bold text-white">T</span>
               </div>
-              <span className="text-lg font-bold">Titan Careers</span>
+              <div className="flex flex-col">
+                <span className="text-base font-bold">Titans Careers</span>
+                <span className="text-xs text-white/70">Practical training. Real careers.</span>
+              </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              The world's leading career marketing platform for modern recruiters.
+            <p className="text-sm text-white/80 leading-relaxed">
+              Transform your career with practical tech training. Join 300+ career switchers.
             </p>
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4">Product</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Integrations</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">API</a></li>
+            <h3 className="font-semibold mb-4 text-accent">Courses</h3>
+            <ul className="space-y-2 text-sm text-white/80">
+              <li><Link to="/courses" className="hover:text-accent transition-colors">AML/KYC Compliance</Link></li>
+              <li><Link to="/courses" className="hover:text-accent transition-colors">Data Analysis</Link></li>
+              <li><Link to="/courses" className="hover:text-accent transition-colors">Cybersecurity</Link></li>
+              <li><Link to="/courses" className="hover:text-accent transition-colors">Business Analysis</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4">Company</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">About Us</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Careers</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Press Kit</a></li>
+            <h3 className="font-semibold mb-4 text-accent">Company</h3>
+            <ul className="space-y-2 text-sm text-white/80">
+              <li><Link to="/" className="hover:text-accent transition-colors">About Us</Link></li>
+              <li><a href="#success-stories" className="hover:text-accent transition-colors">Success Stories</a></li>
+              <li><a href="#how-it-works" className="hover:text-accent transition-colors">How It Works</a></li>
+              <li><a href="#faqs" className="hover:text-accent transition-colors">FAQs</a></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4">Legal</h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">GDPR</a></li>
+            <h3 className="font-semibold mb-4 text-accent">Contact</h3>
+            <ul className="space-y-3 text-sm text-white/80">
+              <li className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-accent" />
+                <a href="mailto:info@titanscareers.com" className="hover:text-accent transition-colors">
+                  info@titanscareers.com
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-accent" />
+                <a 
+                  href="https://wa.me/447539434403"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-accent transition-colors"
+                >
+                  +44 7539 434403
+                </a>
+              </li>
             </ul>
           </div>
         </div>
         
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            © 2024 Titan Careers. All rights reserved.
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-white/70">
+            © 2024 Titans Careers. All rights reserved.
           </p>
           
-          <div className="flex items-center gap-4">
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-              <Twitter className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-              <Linkedin className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-              <Github className="w-5 h-5" />
-            </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-              <Mail className="w-5 h-5" />
-            </a>
+          <div className="text-sm text-white/70">
+            <a href="#" className="hover:text-accent transition-colors">Privacy Policy</a>
+            <span className="mx-3">·</span>
+            <a href="#" className="hover:text-accent transition-colors">Terms of Service</a>
           </div>
         </div>
       </div>
