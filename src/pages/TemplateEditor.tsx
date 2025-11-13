@@ -208,7 +208,7 @@ export default function TemplateEditor() {
   const renderPreview = () => {
     let content = htmlContent;
     VARIABLES.forEach(({ key, example }) => {
-      content = content.replaceAll(key, example);
+      content = content.split(key).join(example);
     });
     return content;
   };
@@ -428,10 +428,10 @@ export default function TemplateEditor() {
                 </Tabs>
               ) : (selectedTemplate || isCreating) && previewMode ? (
                 <div className="space-y-4">
-                  <div className="border rounded-lg p-4 bg-muted/30">
-                    <div className="text-sm font-medium mb-2">Subject:</div>
-                    <div className="text-lg">{subject.replaceAll("{{name}}", "John Doe")}</div>
-                  </div>
+                    <div className="border rounded-lg p-4 bg-muted/30">
+                      <div className="text-sm font-medium mb-2">Subject:</div>
+                      <div className="text-lg">{subject.split("{{name}}").join("John Doe")}</div>
+                    </div>
                   {previewText && (
                     <div className="border rounded-lg p-4 bg-muted/30">
                       <div className="text-sm font-medium mb-2">Preview Text:</div>
@@ -439,6 +439,8 @@ export default function TemplateEditor() {
                     </div>
                   )}
                   <div className="border rounded-lg p-6 bg-background">
+                    <div className="text-lg font-medium mb-2">Subject:</div>
+                    <div className="mb-4">{subject.split("{{name}}").join("John Doe")}</div>
                     <div dangerouslySetInnerHTML={{ __html: renderPreview() }} />
                   </div>
                 </div>
