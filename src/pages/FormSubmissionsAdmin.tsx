@@ -767,17 +767,52 @@ const FormSubmissionsAdmin = () => {
             <div className="flex items-center gap-4 flex-wrap">
               <div>
                 <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
-              <p className="text-muted-foreground">View and manage all form submissions from your website</p>
-            </div>
-            {realtimeConnected && (
-              <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-                Live Updates Active
+                <p className="text-muted-foreground">
+                  View and manage all form submissions from your website
+                  {realtimeConnected && (
+                    <span className="ml-2 inline-flex items-center gap-1 text-sm text-green-600">
+                      <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />
+                      Live
+                    </span>
+                  )}
+                </p>
               </div>
-            )}
+              
+              {onlineAdmins.length > 0 && (
+                <TooltipProvider>
+                  <div className="flex items-center gap-2 px-3 py-1 bg-muted rounded-full">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">{onlineAdmins.length} online</span>
+                    <div className="flex -space-x-2">
+                      {onlineAdmins.slice(0, 3).map((admin) => (
+                        <Tooltip key={admin.user_id}>
+                          <TooltipTrigger>
+                            <Avatar className="h-6 w-6 border-2 border-background">
+                              <AvatarFallback className="text-xs bg-primary text-primary-foreground">
+                                {getInitials(admin.email)}
+                              </AvatarFallback>
+                            </Avatar>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{admin.email}</p>
+                            {admin.viewing_submission && (
+                              <p className="text-xs text-muted-foreground">Viewing a submission</p>
+                            )}
+                          </TooltipContent>
+                        </Tooltip>
+                      ))}
+                      {onlineAdmins.length > 3 && (
+                        <Avatar className="h-6 w-6 border-2 border-background">
+                          <AvatarFallback className="text-xs bg-muted">
+                            +{onlineAdmins.length - 3}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
+                  </div>
+                </TooltipProvider>
+              )}
+            </div>
             <Button
               variant="outline"
               size="sm"
@@ -1015,6 +1050,7 @@ const FormSubmissionsAdmin = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Details</TableHead>
                       <TableHead>Submitted</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1068,6 +1104,40 @@ const FormSubmissionsAdmin = () => {
                               minute: '2-digit' 
                             })}
                           </TableCell>
+                          <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
+                            <div className="flex items-center justify-end gap-2">
+                              <TooltipProvider>
+                                {getAdminsViewingSubmission(submission.id).length > 0 && (
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <div className="flex -space-x-2">
+                                        {getAdminsViewingSubmission(submission.id).slice(0, 2).map((admin) => (
+                                          <Avatar key={admin.user_id} className="h-5 w-5 border border-background">
+                                            <AvatarFallback className="text-xs bg-secondary text-secondary-foreground">
+                                              {getInitials(admin.email)}
+                                            </AvatarFallback>
+                                          </Avatar>
+                                        ))}
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="text-xs font-semibold mb-1">Currently viewing:</p>
+                                      {getAdminsViewingSubmission(submission.id).map((admin) => (
+                                        <p key={admin.user_id} className="text-xs">{admin.email}</p>
+                                      ))}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                )}
+                              </TooltipProvider>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedSubmission(submission)}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
                         </TableRow>
                       );
                     })}
@@ -1094,13 +1164,32 @@ const FormSubmissionsAdmin = () => {
           {selectedSubmission && (
             <>
               <DialogHeader>
-                <DialogTitle className="flex items-center gap-2">
+                <DialogTitle className="flex items-center gap-2 flex-wrap">
                   {getFormTypeIcon(selectedSubmission.form_type)}
                   <span>
                     {selectedSubmission.form_type.split('-').map(word => 
                       word.charAt(0).toUpperCase() + word.slice(1)
                     ).join(' ')} Submission
                   </span>
+                  
+                  {getAdminsViewingSubmission(selectedSubmission.id).length > 0 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <div className="flex items-center gap-1 px-2 py-1 bg-secondary rounded-full text-xs">
+                            <User className="h-3 w-3" />
+                            <span>{getAdminsViewingSubmission(selectedSubmission.id).length} viewing</span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs font-semibold mb-1">Other admins viewing:</p>
+                          {getAdminsViewingSubmission(selectedSubmission.id).map((admin) => (
+                            <p key={admin.user_id} className="text-xs">{admin.email}</p>
+                          ))}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </DialogTitle>
                 <DialogDescription>
                   Submitted on {new Date(selectedSubmission.submitted_at).toLocaleDateString()} at{" "}
