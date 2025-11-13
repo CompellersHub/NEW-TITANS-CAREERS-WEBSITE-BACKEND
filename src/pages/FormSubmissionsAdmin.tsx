@@ -70,13 +70,19 @@ interface FormSubmission {
   admin_notes: string | null;
   last_updated_by: string | null;
   last_updated_at: string | null;
+  assigned_to: string | null;
+}
+
+interface AdminUser {
+  id: string;
+  email: string;
 }
 
 interface AuditLogEntry {
   id: string;
   submission_id: string;
   changed_by: string | null;
-  action_type: 'status_changed' | 'notes_updated' | 'created';
+  action_type: 'status_changed' | 'notes_updated' | 'created' | 'assignment_changed';
   old_value: any;
   new_value: any;
   created_at: string;
@@ -101,6 +107,8 @@ const FormSubmissionsAdmin = () => {
   const [formTypeFilter, setFormTypeFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [assigneeFilter, setAssigneeFilter] = useState("all");
+  const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [editingStatus, setEditingStatus] = useState(false);
@@ -321,9 +329,115 @@ const FormSubmissionsAdmin = () => {
     }
   };
 
+  const fetchAdminUsers = async () => {
+    try {
+      // Fetch admin users from admin_notification_preferences table which has emails
+      const { data, error } = await supabase
+        .from("admin_notification_preferences")
+        .select("admin_user_id, email");
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const admins = data.map(pref => ({ 
+          id: pref.admin_user_id, 
+          email: pref.email 
+        }));
+        setAdminUsers(admins);
+      }
+    } catch (error: any) {
+      console.error("Error fetching admin users:", error);
+      // Fallback: just use current user
+      if (user) {
+        setAdminUsers([{ id: user.id, email: user.email || 'Unknown' }]);
+      }
+    }
+  };
+
+  const updateAssignment = async (submissionId: string, assignedTo: string | null) => {
+    try {
+      const { error } = await supabase
+        .from("form_submissions")
+        .update({ 
+          assigned_to: assignedTo,
+          last_updated_by: user?.id,
+          last_updated_at: new Date().toISOString()
+        })
+        .eq("id", submissionId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Assignment updated successfully",
+      });
+
+      // Update local state
+      setSubmissions(prev => 
+        prev.map(s => s.id === submissionId ? { ...s, assigned_to: assignedTo } : s)
+      );
+
+      if (selectedSubmission?.id === submissionId) {
+        setSelectedSubmission(prev => prev ? { ...prev, assigned_to: assignedTo } : null);
+      }
+    } catch (error: any) {
+      console.error("Error updating assignment:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update assignment",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const bulkUpdateAssignment = async (assignedTo: string | null) => {
+    if (selectedIds.size === 0) {
+      toast({
+        title: "No Selection",
+        description: "Please select submissions first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const updates = Array.from(selectedIds).map(id =>
+        supabase
+          .from("form_submissions")
+          .update({ 
+            assigned_to: assignedTo,
+            last_updated_by: user?.id,
+            last_updated_at: new Date().toISOString()
+          })
+          .eq("id", id)
+      );
+
+      await Promise.all(updates);
+
+      toast({
+        title: "Success",
+        description: `Updated ${selectedIds.size} submissions`,
+      });
+
+      setSubmissions(prev =>
+        prev.map(s => selectedIds.has(s.id) ? { ...s, assigned_to: assignedTo } : s)
+      );
+
+      setSelectedIds(new Set());
+    } catch (error: any) {
+      console.error("Error bulk updating assignment:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update assignments",
+        variant: "destructive",
+      });
+    }
+  };
+
   useEffect(() => {
     if (isAdmin) {
       fetchSubmissions();
+      fetchAdminUsers();
     }
   }, [isAdmin]);
 
@@ -434,6 +548,15 @@ const FormSubmissionsAdmin = () => {
       filtered = filtered.filter(sub => sub.status === statusFilter);
     }
 
+    // Filter by assignee
+    if (assigneeFilter !== "all") {
+      if (assigneeFilter === "unassigned") {
+        filtered = filtered.filter(sub => !sub.assigned_to);
+      } else {
+        filtered = filtered.filter(sub => sub.assigned_to === assigneeFilter);
+      }
+    }
+
     // Filter by date
     const now = new Date();
     if (dateFilter === "today") {
@@ -465,7 +588,7 @@ const FormSubmissionsAdmin = () => {
     }
 
     setFilteredSubmissions(filtered);
-  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter]);
+  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter]);
 
   const exportToCSV = () => {
     if (filteredSubmissions.length === 0) {
@@ -550,6 +673,15 @@ const FormSubmissionsAdmin = () => {
       archived: "Archived",
     };
     return labels[status] || status;
+  };
+
+  const getInitials = (email: string) => {
+    if (!email) return '?';
+    const parts = email.split('@')[0].split('.');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return email.substring(0, 2).toUpperCase();
   };
 
   const updateSubmissionStatus = async (id: string, status: string) => {
@@ -828,10 +960,6 @@ const FormSubmissionsAdmin = () => {
     return onlineAdmins.filter(admin => admin.viewing_submission === submissionId);
   };
 
-  const getInitials = (email: string) => {
-    return email.split('@')[0].substring(0, 2).toUpperCase();
-  };
-
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -1066,6 +1194,21 @@ const FormSubmissionsAdmin = () => {
                   <SelectItem value="month">Last 30 Days</SelectItem>
                 </SelectContent>
               </Select>
+
+              <Select value={assigneeFilter} onValueChange={setAssigneeFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Assignees" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Assignees</SelectItem>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  {adminUsers.map(admin => (
+                    <SelectItem key={admin.id} value={admin.id}>
+                      {admin.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex items-center justify-between mt-4">
@@ -1113,6 +1256,22 @@ const FormSubmissionsAdmin = () => {
                         <SelectItem value="in_progress">Mark as In Progress</SelectItem>
                         <SelectItem value="resolved">Mark as Resolved</SelectItem>
                         <SelectItem value="archived">Mark as Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select onValueChange={(value) => {
+                      bulkUpdateAssignment(value === "unassigned" ? null : value);
+                    }}>
+                      <SelectTrigger className="w-[180px] h-9">
+                        <SelectValue placeholder="Assign to..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">Unassign</SelectItem>
+                        {adminUsers.map(admin => (
+                          <SelectItem key={admin.id} value={admin.id}>
+                            {admin.email}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -1186,6 +1345,7 @@ const FormSubmissionsAdmin = () => {
                       <TableHead>Email</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Details</TableHead>
+                      <TableHead>Assigned To</TableHead>
                       <TableHead>Submitted</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -1234,6 +1394,48 @@ const FormSubmissionsAdmin = () => {
                             <div className="truncate text-sm text-muted-foreground">
                               {data.message || data.comment || data.feedback || "N/A"}
                             </div>
+                          </TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Select
+                              value={submission.assigned_to || "unassigned"}
+                              onValueChange={(value) => updateAssignment(submission.id, value === "unassigned" ? null : value)}
+                            >
+                              <SelectTrigger className="h-8 w-[180px]">
+                                <SelectValue>
+                                  {submission.assigned_to ? (
+                                    <div className="flex items-center gap-2">
+                                      <Avatar className="h-5 w-5">
+                                        <AvatarFallback className="text-xs">
+                                          {getInitials(adminUsers.find(a => a.id === submission.assigned_to)?.email || '')}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <span className="text-sm">
+                                        {adminUsers.find(a => a.id === submission.assigned_to)?.email || 'Unknown'}
+                                      </span>
+                                    </div>
+                                  ) : (
+                                    <span className="text-muted-foreground text-sm">Unassigned</span>
+                                  )}
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="unassigned">
+                                  <span className="text-muted-foreground">Unassigned</span>
+                                </SelectItem>
+                                {adminUsers.map(admin => (
+                                  <SelectItem key={admin.id} value={admin.id}>
+                                    <div className="flex items-center gap-2">
+                                      <Avatar className="h-5 w-5">
+                                        <AvatarFallback className="text-xs">
+                                          {getInitials(admin.email)}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      {admin.email}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground" onClick={() => setSelectedSubmission(submission)}>
                             {new Date(submission.submitted_at).toLocaleDateString()} at{" "}
@@ -1594,9 +1796,54 @@ const FormSubmissionsAdmin = () => {
                                 {entry.new_value.admin_notes.substring(0, 100)}
                                 {entry.new_value.admin_notes.length > 100 && '...'}
                               </div>
-                            )}
-                          </div>
-                        </div>
+                    )}
+                  </div>
+
+                  {/* Assignment Section */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Assigned to:</span>
+                    <Select
+                      value={selectedSubmission.assigned_to || "unassigned"}
+                      onValueChange={(value) => updateAssignment(selectedSubmission.id, value === "unassigned" ? null : value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue>
+                          {selectedSubmission.assigned_to ? (
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-5 w-5">
+                                <AvatarFallback className="text-xs">
+                                  {getInitials(adminUsers.find(a => a.id === selectedSubmission.assigned_to)?.email || '')}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm">
+                                {adminUsers.find(a => a.id === selectedSubmission.assigned_to)?.email || 'Unknown'}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">Unassigned</span>
+                          )}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="unassigned">
+                          <span className="text-muted-foreground">Unassigned</span>
+                        </SelectItem>
+                        {adminUsers.map(admin => (
+                          <SelectItem key={admin.id} value={admin.id}>
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-5 w-5">
+                                <AvatarFallback className="text-xs">
+                                  {getInitials(admin.email)}
+                                </AvatarFallback>
+                              </Avatar>
+                              {admin.email}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
                       ))}
                     </div>
                   )}
