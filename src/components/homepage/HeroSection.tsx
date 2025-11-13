@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
   return (
-    <section className="relative text-white overflow-hidden">
+    <section className="relative overflow-hidden bg-primary min-h-[90vh] flex items-center">
       {/* Animated gradient background */}
       <div 
         className="absolute inset-0 animate-gradient-shift"
@@ -41,25 +41,35 @@ export const HeroSection = () => {
       {/* Grid pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5 z-10" />
       
-      <div className="container px-4 py-20 md:py-32 relative z-20">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="container px-4 py-20 md:py-28 relative z-20">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
           {/* Left Column - Content */}
           <div className="space-y-8 animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            {/* Tagline Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full border border-accent/30">
+              <span className="text-accent font-bold text-sm tracking-wide">
+                Practical training. Real careers.
+              </span>
+            </div>
+            
+            {/* H1 - Kanit, bold, 28-48px responsive */}
+            <h1 className="font-kanit font-bold text-white leading-tight" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
               Upgrade Your Career with{" "}
               <span className="text-accent">Practical Tech Training</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-white/90 leading-relaxed">
+            {/* Body text - Open Sans, 16px */}
+            <p className="text-base leading-relaxed text-white/90 max-w-xl">
               Learn in-demand skills through hands-on projects. No UK experience needed. 
               Get CPD-accredited certification and ongoing career support.
             </p>
             
+            {/* CTA Buttons - large touch targets */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button 
                 size="lg" 
                 variant="default"
-                className="text-lg"
+                className="text-base font-bold"
                 asChild
               >
                 <a 
@@ -75,7 +85,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outlineWhite"
-                className="text-lg"
+                className="text-base font-bold"
                 asChild
               >
                 <Link to="/courses">
@@ -84,35 +94,36 @@ export const HeroSection = () => {
               </Button>
             </div>
             
-            <div className="flex flex-wrap gap-6 pt-6 text-sm">
+            {/* Trust indicators */}
+            <div className="flex flex-wrap gap-6 pt-6 text-sm text-white">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-accent rounded-full" />
-                <span>No credit card required</span>
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <span className="font-sans">No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-accent rounded-full" />
-                <span>CPD Accredited</span>
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <span className="font-sans">CPD Accredited</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-accent rounded-full" />
-                <span>Practical Projects</span>
+                <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                <span className="font-sans">Practical Projects</span>
               </div>
             </div>
           </div>
           
-          {/* Right Column - Image/Visual */}
+          {/* Right Column - Stats Card */}
           <div className="relative animate-scale-in">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-2xl">
-              <div className="aspect-video bg-white/5 rounded-lg flex items-center justify-center">
-                <div className="text-center space-y-4">
-                  <div className="text-6xl font-bold text-accent">300+</div>
-                  <div className="text-xl">Career Switchers</div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-[0_16px_48px_-8px_hsl(var(--primary)/0.3)]">
+              <div className="aspect-video bg-white/5 rounded-xl flex items-center justify-center p-8">
+                <div className="text-center space-y-6">
+                  <div className="text-6xl md:text-7xl font-kanit font-bold text-accent">300+</div>
+                  <div className="text-xl md:text-2xl font-kanit font-semibold text-white">Career Switchers</div>
                   <div className="flex gap-2 justify-center pt-4">
                     {[...Array(5)].map((_, i) => (
                       <div key={i} className="w-3 h-3 bg-accent rounded-full" />
                     ))}
                   </div>
-                  <div className="text-sm text-white/70">4.9/5 Average Rating</div>
+                  <div className="text-sm text-white/80 font-sans">4.9/5 Average Rating</div>
                 </div>
               </div>
             </div>
@@ -120,7 +131,8 @@ export const HeroSection = () => {
         </div>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent" />
+      {/* Gradient fade to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 };
