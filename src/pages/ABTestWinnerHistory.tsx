@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,7 +37,7 @@ export default function ABTestWinnerHistory() {
   const { data: history, isLoading } = useQuery({
     queryKey: ["ab-test-winner-history"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("ab_test_winner_history")
         .select("*")
         .order("created_at", { ascending: false });

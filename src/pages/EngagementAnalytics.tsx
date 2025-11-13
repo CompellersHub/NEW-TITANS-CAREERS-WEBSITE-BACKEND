@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -75,18 +77,18 @@ export default function EngagementAnalytics() {
 
   const fetchMetrics = async (startDate: Date, endDate: Date) => {
     try {
-      const { data: events } = await supabase
+      const { data: events } = await sb
         .from("engagement_events")
         .select("event_type")
         .gte("created_at", startDate.toISOString())
         .lte("created_at", endDate.toISOString()) as any;
 
-      const { data: subscribers } = await supabase
+      const { data: subscribers } = await sb
         .from("newsletter_subscribers")
         .select("engagement_score, active")
         .eq("active", true) as any;
 
-      const { data: sends } = await supabase
+      const { data: sends } = await sb
         .from("email_sends")
         .select("opened_at, clicked_at")
         .gte("sent_at", startDate.toISOString())
@@ -154,7 +156,7 @@ export default function EngagementAnalytics() {
 
   const fetchTopPerformers = async () => {
     try {
-      const { data } = await supabase
+      const { data } = await sb
         .from("lead_scores")
         .select("email, name, total_score, status")
         .order("total_score", { ascending: false })
@@ -163,7 +165,7 @@ export default function EngagementAnalytics() {
       if (data) {
         const enrichedData = await Promise.all(
           data.map(async (lead: any) => {
-            const { data: subscriber } = await supabase
+            const { data: subscriber } = await sb
               .from("newsletter_subscribers")
               .select("total_opens, total_clicks")
               .eq("email", lead.email)
@@ -186,7 +188,7 @@ export default function EngagementAnalytics() {
 
   const fetchScoreDistribution = async () => {
     try {
-      const { data } = await supabase
+      const { data } = await sb
         .from("lead_scores")
         .select("total_score") as any;
 
