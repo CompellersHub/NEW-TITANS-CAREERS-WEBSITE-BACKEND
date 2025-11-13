@@ -85,16 +85,32 @@ export const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm font-sans text-white/70">
+        <div className="border-t border-white/10 pt-8 space-y-6">
+          {/* Legal Links */}
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-sans text-white/70">
+            <a href="#" className="hover:text-accent transition-colors duration-300">Privacy Policy</a>
+            <span className="hidden sm:inline">·</span>
+            <a href="#" className="hover:text-accent transition-colors duration-300">Refund Policy</a>
+            <span className="hidden sm:inline">·</span>
+            <a href="#" className="hover:text-accent transition-colors duration-300">Terms and Conditions</a>
+          </div>
+
+          {/* Company Information */}
+          <div className="flex flex-col items-center gap-2 text-xs font-sans text-white/60 text-center">
+            <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <span>Company Number: 12345678</span>
+              <span className="hidden sm:inline">·</span>
+              <span>UKRLP Number: 10012345</span>
+            </div>
+            <p className="max-w-2xl">
+              Pay later options are subject to eligibility and approval. Terms and conditions apply.
+            </p>
+          </div>
+
+          {/* Copyright */}
+          <p className="text-sm font-sans text-white/70 text-center">
             © 2024 Titans Careers. All rights reserved.
           </p>
-          
-          <div className="text-sm font-sans text-white/70">
-            <a href="#" className="hover:text-accent transition-colors duration-300">Privacy Policy</a>
-            <span className="mx-3">·</span>
-            <a href="#" className="hover:text-accent transition-colors duration-300">Terms of Service</a>
-          </div>
         </div>
       </div>
     </footer>
