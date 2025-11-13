@@ -11,10 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { useNavigate } from "react-router-dom";
 
 interface Voucher {
   id: string;
@@ -39,17 +40,18 @@ export default function VoucherManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: vouchers, isLoading } = useQuery({
     queryKey: ['vouchers'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('vouchers')
+        .from('vouchers' as any)
         .select('*')
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Voucher[];
+      return (data || []) as any as Voucher[];
     }
   });
 
@@ -57,12 +59,12 @@ export default function VoucherManager() {
     queryKey: ['voucher-usage-stats'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('voucher_usage')
+        .from('voucher_usage' as any)
         .select('voucher_id, discount_amount');
       
       if (error) throw error;
       
-      const stats = data.reduce((acc, usage) => {
+      const stats = (data as any[]).reduce((acc, usage) => {
         if (!acc[usage.voucher_id]) {
           acc[usage.voucher_id] = { count: 0, totalDiscount: 0 };
         }
@@ -78,7 +80,7 @@ export default function VoucherManager() {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('vouchers')
+        .from('vouchers' as any)
         .delete()
         .eq('id', id);
       
@@ -96,7 +98,7 @@ export default function VoucherManager() {
   const toggleActiveMutation = useMutation({
     mutationFn: async ({ id, is_active }: { id: string; is_active: boolean }) => {
       const { error } = await supabase
-        .from('vouchers')
+        .from('vouchers' as any)
         .update({ is_active })
         .eq('id', id);
       
@@ -136,30 +138,37 @@ export default function VoucherManager() {
             <p className="text-muted-foreground mt-2">Create and manage discount vouchers</p>
           </div>
           
-          <Dialog open={isDialogOpen} onOpenChange={(open) => {
-            setIsDialogOpen(open);
-            if (!open) setEditingVoucher(null);
-          }}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Voucher
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>{editingVoucher ? 'Edit Voucher' : 'Create New Voucher'}</DialogTitle>
-              </DialogHeader>
-              <VoucherForm 
-                voucher={editingVoucher} 
-                onSuccess={() => {
-                  setIsDialogOpen(false);
-                  setEditingVoucher(null);
-                  queryClient.invalidateQueries({ queryKey: ['vouchers'] });
-                }} 
-              />
-            </DialogContent>
-          </Dialog>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/voucher-analytics')}>
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View Analytics
+            </Button>
+            
+            <Dialog open={isDialogOpen} onOpenChange={(open) => {
+              setIsDialogOpen(open);
+              if (!open) setEditingVoucher(null);
+            }}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Voucher
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>{editingVoucher ? 'Edit Voucher' : 'Create New Voucher'}</DialogTitle>
+                </DialogHeader>
+                <VoucherForm 
+                  voucher={editingVoucher} 
+                  onSuccess={() => {
+                    setIsDialogOpen(false);
+                    setEditingVoucher(null);
+                    queryClient.invalidateQueries({ queryKey: ['vouchers'] });
+                  }} 
+                />
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {isLoading ? (
@@ -328,13 +337,13 @@ function VoucherForm({ voucher, onSuccess }: { voucher: Voucher | null; onSucces
 
       if (voucher) {
         const { error } = await supabase
-          .from('vouchers')
+          .from('vouchers' as any)
           .update(data)
           .eq('id', voucher.id);
         if (error) throw error;
       } else {
         const { error } = await supabase
-          .from('vouchers')
+          .from('vouchers' as any)
           .insert(data);
         if (error) throw error;
       }
