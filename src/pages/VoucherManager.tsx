@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -142,6 +142,11 @@ export default function VoucherManager() {
           </div>
           
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/voucher-export')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+            
             <Button variant="outline" onClick={() => navigate('/admin/voucher-analytics')}>
               <BarChart3 className="h-4 w-4 mr-2" />
               View Analytics

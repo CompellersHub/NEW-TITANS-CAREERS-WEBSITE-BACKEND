@@ -43,6 +43,7 @@ import AdminNotificationSettings from "./pages/AdminNotificationSettings";
 import AdminTemplates from "./pages/AdminTemplates";
 import VoucherManager from "./pages/VoucherManager";
 import VoucherAnalytics from "./pages/VoucherAnalytics";
+import VoucherExport from "./pages/VoucherExport";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,7 @@ const AnimatedRoutes = () => {
               <Route path="/admin/response-templates" element={<AdminTemplates />} />
               <Route path="/admin/vouchers" element={<VoucherManager />} />
               <Route path="/admin/voucher-analytics" element={<VoucherAnalytics />} />
+              <Route path="/admin/voucher-export" element={<VoucherExport />} />
               <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

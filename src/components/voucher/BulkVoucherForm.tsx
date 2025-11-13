@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Download } from "lucide-react";
 
 interface BulkVoucherFormProps {
   onSuccess: () => void;
@@ -158,6 +158,138 @@ export function BulkVoucherForm({ onSuccess }: BulkVoucherFormProps) {
     generateVouchers();
   };
 
+  const exportToCSV = () => {
+    const successfulVouchers = generatedVouchers.filter(v => v.status === 'success');
+    
+    if (successfulVouchers.length === 0) {
+      toast.error('No successful vouchers to export');
+      return;
+    }
+
+    // CSV Headers
+    const headers = [
+      'Voucher Code',
+      'Status',
+      'Campaign Name',
+      'Discount Type',
+      'Discount Value',
+      'Min Purchase',
+      'Max Discount',
+      'Valid From',
+      'Valid Until',
+      'Usage Limit',
+      'Per User Limit',
+      'Active'
+    ];
+
+    // CSV Rows
+    const rows = successfulVouchers.map(voucher => [
+      voucher.code,
+      voucher.status,
+      formData.name,
+      formData.discount_type === 'percentage' ? 'Percentage' : 'Fixed Amount',
+      formData.discount_type === 'percentage' 
+        ? `${formData.discount_value}%` 
+        : `£${formData.discount_value}`,
+      formData.min_purchase_amount ? `£${formData.min_purchase_amount}` : 'None',
+      formData.max_discount_amount ? `£${formData.max_discount_amount}` : 'None',
+      formData.valid_from ? format(new Date(formData.valid_from), 'yyyy-MM-dd HH:mm') : '',
+      formData.valid_until ? format(new Date(formData.valid_until), 'yyyy-MM-dd HH:mm') : '',
+      formData.usage_limit || 'Unlimited',
+      formData.per_user_limit || 'Unlimited',
+      formData.is_active ? 'Yes' : 'No'
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const timestamp = format(new Date(), 'yyyyMMdd-HHmmss');
+    const filename = `vouchers-${formData.base_code.toLowerCase()}-${timestamp}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`Exported ${successfulVouchers.length} vouchers to ${filename}`);
+  };
+
+  const exportAllToCSV = () => {
+    if (generatedVouchers.length === 0) {
+      toast.error('No vouchers to export');
+      return;
+    }
+
+    // CSV Headers
+    const headers = [
+      'Voucher Code',
+      'Status',
+      'Error Message',
+      'Campaign Name',
+      'Discount Type',
+      'Discount Value',
+      'Min Purchase',
+      'Max Discount',
+      'Valid From',
+      'Valid Until',
+      'Usage Limit',
+      'Per User Limit',
+      'Active'
+    ];
+
+    // CSV Rows (include all vouchers with their status)
+    const rows = generatedVouchers.map(voucher => [
+      voucher.code,
+      voucher.status,
+      voucher.error || '',
+      formData.name,
+      formData.discount_type === 'percentage' ? 'Percentage' : 'Fixed Amount',
+      formData.discount_type === 'percentage' 
+        ? `${formData.discount_value}%` 
+        : `£${formData.discount_value}`,
+      formData.min_purchase_amount ? `£${formData.min_purchase_amount}` : 'None',
+      formData.max_discount_amount ? `£${formData.max_discount_amount}` : 'None',
+      formData.valid_from ? format(new Date(formData.valid_from), 'yyyy-MM-dd HH:mm') : '',
+      formData.valid_until ? format(new Date(formData.valid_until), 'yyyy-MM-dd HH:mm') : '',
+      formData.usage_limit || 'Unlimited',
+      formData.per_user_limit || 'Unlimited',
+      formData.is_active ? 'Yes' : 'No'
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    const timestamp = format(new Date(), 'yyyyMMdd-HHmmss');
+    const filename = `vouchers-all-${formData.base_code.toLowerCase()}-${timestamp}.csv`;
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`Exported all ${generatedVouchers.length} vouchers to ${filename}`);
+  };
+
   if (showResults) {
     const successCount = generatedVouchers.filter(v => v.status === 'success').length;
     const errorCount = generatedVouchers.filter(v => v.status === 'error').length;
@@ -224,17 +356,36 @@ export function BulkVoucherForm({ onSuccess }: BulkVoucherFormProps) {
         </div>
 
         {!isGenerating && (
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => {
-              setShowResults(false);
-              setGeneratedVouchers([]);
-              setProgress(0);
-            }}>
-              Create More
-            </Button>
-            <Button onClick={onSuccess}>
-              Done
-            </Button>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={exportToCSV}
+                disabled={successCount === 0}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export Successful ({successCount})
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={exportAllToCSV}
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export All ({generatedVouchers.length})
+              </Button>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowResults(false);
+                setGeneratedVouchers([]);
+                setProgress(0);
+              }}>
+                Create More
+              </Button>
+              <Button onClick={onSuccess}>
+                Done
+              </Button>
+            </div>
           </div>
         )}
       </div>
