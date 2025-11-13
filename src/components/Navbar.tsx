@@ -104,9 +104,9 @@ export const Navbar = () => {
             <a href="#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               FAQs
             </a>
-            <a href="#contact" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <Link to="/contact" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Contact
-            </a>
+            </Link>
           </div>
           
           {/* Desktop Buttons */}
@@ -253,9 +253,9 @@ export const Navbar = () => {
             <a href="#faqs" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               FAQs
             </a>
-            <a href="#contact" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <Link to="/contact" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Contact
-            </a>
+            </Link>
             <div className="space-y-3 pt-4 border-t border-primary-foreground/10">
               {user ? (
                 <>

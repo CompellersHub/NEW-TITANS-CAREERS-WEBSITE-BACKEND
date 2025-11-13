@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import titansLogo from "@/assets/titans-logo.jpg";
+import { useNavigate } from "react-router-dom";
 
 export const Hero = () => {
-  const scrollToContact = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const navigate = useNavigate();
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background">
@@ -43,7 +42,7 @@ export const Hero = () => {
             <Button 
               size="lg" 
               className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all hover:scale-105"
-              onClick={scrollToContact}
+              onClick={() => navigate('/contact')}
             >
               Get Started Free
               <ArrowRight className="ml-2 w-5 h-5" />
