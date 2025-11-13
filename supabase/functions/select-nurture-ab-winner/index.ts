@@ -222,6 +222,48 @@ const handler = async (req: Request): Promise<Response> => {
 
         console.log(`✓ Deactivated ${variantsToDeactivate.length} underperforming variants for ${testName}`);
 
+        // Calculate improvement percentage
+        const improvementPercent = variants.length > 1 
+          ? (((bestVariant.combined_score - variants[1].combined_score) / variants[1].combined_score) * 100)
+          : 0;
+
+        // Get deactivated variants info
+        const deactivatedVariantsInfo = variants
+          .filter(v => variantsToDeactivate.includes(v.template_id))
+          .map(v => ({
+            template_id: v.template_id,
+            template_name: v.template_name,
+            variant_letter: v.variant_letter,
+            open_rate: v.open_rate,
+            click_rate: v.click_rate,
+            combined_score: v.combined_score,
+            sends_count: v.sends_count
+          }));
+
+        // Log to history table
+        const { error: historyError } = await supabase
+          .from("ab_test_winner_history")
+          .insert({
+            ab_test_name: testName,
+            campaign_type: "nurture",
+            winner_template_id: bestVariant.template_id,
+            winner_template_name: bestVariant.template_name,
+            winner_variant_letter: bestVariant.variant_letter,
+            winner_open_rate: bestVariant.open_rate,
+            winner_click_rate: bestVariant.click_rate,
+            winner_combined_score: bestVariant.combined_score,
+            winner_sends_count: bestVariant.sends_count,
+            improvement_percent: improvementPercent,
+            deactivated_variants_count: variantsToDeactivate.length,
+            deactivated_variants: deactivatedVariantsInfo,
+            selected_by: "automated"
+          });
+
+        if (historyError) {
+          console.error(`Error logging winner to history for ${testName}:`, historyError);
+          // Don't throw - logging failure shouldn't stop the process
+        }
+
         totalWinnersSelected++;
 
         const resultData = {
@@ -243,9 +285,6 @@ const handler = async (req: Request): Promise<Response> => {
         // Send email notification to admins
         if (resend && adminEmails.length > 0) {
           try {
-            const improvementPercent = variants.length > 1 
-              ? (((bestVariant.combined_score - variants[1].combined_score) / variants[1].combined_score) * 100).toFixed(1)
-              : "0";
 
             const emailHtml = `
               <!DOCTYPE html>
@@ -293,7 +332,7 @@ const handler = async (req: Request): Promise<Response> => {
                         </tr>
                         <tr style="background: #fff3e0;">
                           <td style="padding: 12px; font-weight: bold;">Improvement</td>
-                          <td style="padding: 12px; text-align: right; font-weight: bold; color: #f57c00;">+${improvementPercent}%</td>
+                          <td style="padding: 12px; text-align: right; font-weight: bold; color: #f57c00;">+${improvementPercent.toFixed(1)}%</td>
                         </tr>
                       </table>
 

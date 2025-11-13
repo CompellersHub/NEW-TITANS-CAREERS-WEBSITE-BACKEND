@@ -147,11 +147,19 @@ export default function ABTestDashboard() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">A/B Test Performance Dashboard</h1>
-        <p className="text-muted-foreground">
-          Compare template variants and identify winning strategies
-        </p>
+      <div className="mb-8 flex justify-between items-start">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">A/B Test Performance Dashboard</h1>
+          <p className="text-muted-foreground">
+            Compare template variants and identify winning strategies
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          onClick={() => window.location.href = '/admin/ab-test-history'}
+        >
+          View Winner History
+        </Button>
       </div>
 
       {/* Automated Winner Selection Info */}
