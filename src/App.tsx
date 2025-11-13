@@ -31,6 +31,7 @@ import NotFound from "./pages/NotFound";
 import FormDemo from "./pages/FormDemo";
 import FormAnalytics from "./pages/FormAnalytics";
 import FormAlertSettings from "./pages/FormAlertSettings";
+import EngagementAnalytics from "./pages/EngagementAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -65,6 +66,7 @@ const AnimatedRoutes = () => {
         <Route path="/form-demo" element={<FormDemo />} />
         <Route path="/form-analytics" element={<FormAnalytics />} />
         <Route path="/form-alert-settings" element={<FormAlertSettings />} />
+        <Route path="/admin/engagement-analytics" element={<EngagementAnalytics />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
