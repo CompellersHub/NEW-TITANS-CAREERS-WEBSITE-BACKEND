@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Mail, TrendingUp, Users, MousePointerClick } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
+import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
 
 interface CampaignStats {
   totalCampaigns: number;
@@ -150,15 +151,7 @@ export default function EmailAnalyticsDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1 container mx-auto px-4 py-8">
-          <p className="text-center">Loading analytics...</p>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <AnalyticsPageSkeleton />;
   }
 
   return (

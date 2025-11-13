@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { CampaignManagerSkeleton } from "@/components/admin/CampaignManagerSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -422,11 +423,7 @@ const CampaignManager = () => {
   };
 
   if (authLoading || isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-tc-navy" />
-      </div>
-    );
+    return <CampaignManagerSkeleton />;
   }
 
   if (!isAdmin) {

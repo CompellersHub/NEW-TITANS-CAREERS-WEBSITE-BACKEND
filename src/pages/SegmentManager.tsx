@@ -14,6 +14,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { toast } from "sonner";
 import { ArrowLeft, Plus, Edit, Trash2, Users, Tag, TrendingUp } from "lucide-react";
 import { z } from "zod";
+import { SegmentManagerSkeleton } from "@/components/admin/SegmentManagerSkeleton";
 
 const segmentSchema = z.object({
   name: z.string().trim().min(3, "Name must be at least 3 characters").max(100, "Name must be less than 100 characters"),
@@ -253,6 +254,10 @@ const SegmentManager = () => {
         </Card>
       </div>
     );
+  }
+
+  if (isLoading) {
+    return <SegmentManagerSkeleton />;
   }
 
   return (
