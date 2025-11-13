@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import titansLogo from "@/assets/titans-logo.jpg";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,8 +13,12 @@ export const Navbar = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-            <div className="w-11 h-11 bg-gradient-accent rounded-xl flex items-center justify-center shadow-accent transition-all duration-300 group-hover:scale-105">
-              <span className="text-2xl font-bold text-white">T</span>
+            <div className="h-11 transition-all duration-300 group-hover:scale-105">
+              <img 
+                src={titansLogo} 
+                alt="Titans Careers Logo" 
+                className="h-full w-auto object-contain"
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-bold text-white leading-tight">
