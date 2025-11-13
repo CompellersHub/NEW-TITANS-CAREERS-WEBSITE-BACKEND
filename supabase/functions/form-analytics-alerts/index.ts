@@ -91,9 +91,10 @@ const handler = async (req: Request): Promise<Response> => {
       return acc;
     }, {} as Record<string, any>);
 
-    // Check each form for threshold violations
-    for (const [formName, metrics] of Object.entries(formGroups)) {
-      const uniqueSessions = metrics.sessions.size;
+// Check each form for threshold violations
+const entries = Object.entries(formGroups) as [string, any][];
+for (const [formName, metrics] of entries) {
+  const uniqueSessions = metrics.sessions.size;
 
       // Skip if not enough data
       if (uniqueSessions < DEFAULT_THRESHOLDS.minimumSessions) {
@@ -165,20 +166,32 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate email content
     const emailHtml = generateAlertEmail(alerts);
 
-    // Send email alert
-    try {
-      const emailResult = await resend.emails.send({
-        from: "Form Analytics <onboarding@resend.dev>",
-        to: [adminEmail],
-        subject: `⚠️ Form Analytics Alert: ${alerts.length} Issue${alerts.length > 1 ? "s" : ""} Detected`,
-        html: emailHtml,
-      });
-
-      console.log("Alert email sent successfully:", emailResult);
-    } catch (emailError: any) {
-      console.error("Error sending email:", emailError);
-      // Don't throw - we still want to return success if analytics check worked
-    }
+// Send email alert via Resend REST API
+try {
+  if (!RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY secret");
+  const emailResponse = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: "Form Analytics <onboarding@resend.dev>",
+      to: [adminEmail],
+      subject: `⚠️ Form Analytics Alert: ${alerts.length} Issue${alerts.length > 1 ? "s" : ""} Detected`,
+      html: emailHtml,
+    }),
+  });
+  const emailResult = await emailResponse.json();
+  if (!emailResponse.ok) {
+    console.error("Resend API error:", emailResult);
+  } else {
+    console.log("Alert email sent successfully:", emailResult);
+  }
+} catch (emailError: any) {
+  console.error("Error sending email:", emailError);
+  // Don't throw - we still want to return success if analytics check worked
+}
 
     return new Response(
       JSON.stringify({
