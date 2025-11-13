@@ -89,6 +89,7 @@ const AdminNotificationSettings = () => {
       if (error && error.code !== 'PGRST116') throw error;
 
       if (data) {
+        // @ts-ignore - Types will be regenerated
         setPreferences(data);
       }
     } catch (error: any) {
@@ -137,6 +138,7 @@ const AdminNotificationSettings = () => {
           .single();
 
         if (error) throw error;
+        // @ts-ignore - Types will be regenerated
         if (data) setPreferences(data);
       }
 
