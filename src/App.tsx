@@ -18,6 +18,7 @@ import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import CampaignManager from "./pages/CampaignManager";
 import ABTestManager from "./pages/ABTestManager";
+import SendTimeOptimization from "./pages/SendTimeOptimization";
 import TemplateLibrary from "./pages/TemplateLibrary";
 import SegmentManager from "./pages/SegmentManager";
 import EmailABTestDashboard from "./pages/EmailABTestDashboard";
@@ -49,6 +50,7 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/campaigns" element={<CampaignManager />} />
             <Route path="/admin/ab-tests" element={<ABTestManager />} />
+            <Route path="/admin/send-time-optimization" element={<SendTimeOptimization />} />
             <Route path="/admin/templates" element={<TemplateLibrary />} />
             <Route path="/admin/segments" element={<SegmentManager />} />
             <Route path="/admin/email-ab-tests" element={<EmailABTestDashboard />} />

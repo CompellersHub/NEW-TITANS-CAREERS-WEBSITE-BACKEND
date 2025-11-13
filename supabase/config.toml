@@ -54,6 +54,9 @@ verify_jwt = false
 [functions.send-ab-winner]
 verify_jwt = false
 
+[functions.optimize-send-times]
+verify_jwt = false
+
 [functions.ai-course-advisor]
 verify_jwt = false
 
