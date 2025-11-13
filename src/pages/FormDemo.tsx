@@ -294,7 +294,7 @@ export default function FormDemo() {
                   <CardTitle className="text-center">Compact Style</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <MultiStepForm 
+                  <ValidatedMultiStepForm 
                     steps={steps}
                     onComplete={handleComplete}
                     showProgress={false}
@@ -317,7 +317,7 @@ export default function FormDemo() {
                   <CardTitle className="text-center">Vertical Steps</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <MultiStepForm 
+                  <ValidatedMultiStepForm 
                     steps={steps.slice(0, 3)}
                     onComplete={handleComplete}
                     showProgress={false}
