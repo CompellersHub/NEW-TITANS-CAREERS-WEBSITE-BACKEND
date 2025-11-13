@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+  timestamp?: Date;
 }
 
 export const ContactChatbot = () => {
@@ -67,7 +68,8 @@ export const ContactChatbot = () => {
           if (chatMessages && chatMessages.length > 0) {
             const loadedMessages: Message[] = chatMessages.map(msg => ({
               role: msg.role as 'user' | 'assistant',
-              content: msg.content
+              content: msg.content,
+              timestamp: new Date(msg.created_at)
             }));
             setMessages(prev => [...prev, ...loadedMessages]);
           }
@@ -96,7 +98,7 @@ export const ContactChatbot = () => {
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', content: input };
+    const userMessage: Message = { role: 'user', content: input, timestamp: new Date() };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -113,7 +115,7 @@ export const ContactChatbot = () => {
       if (error) throw error;
 
       if (data?.message) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.message }]);
+        setMessages(prev => [...prev, { role: 'assistant', content: data.message, timestamp: new Date() }]);
       } else {
         throw new Error('No response from AI');
       }
@@ -126,7 +128,8 @@ export const ContactChatbot = () => {
       });
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: "I apologize, but I'm having trouble responding right now. Please try using our contact form or reach out directly." 
+        content: "I apologize, but I'm having trouble responding right now. Please try using our contact form or reach out directly.",
+        timestamp: new Date()
       }]);
     } finally {
       setIsLoading(false);
@@ -228,7 +231,7 @@ export const ContactChatbot = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
@@ -239,6 +242,11 @@ export const ContactChatbot = () => {
                 >
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                 </div>
+                {message.timestamp && (
+                  <span className="text-xs text-muted-foreground mt-1 px-1">
+                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                )}
               </div>
             ))}
             {isLoading && (
