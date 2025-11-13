@@ -1,5 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 
+const sb: any = supabase;
+
 /**
  * Integration utilities for connecting with Titans Academy
  * This prepares the infrastructure for seamless SSO and data sync
@@ -20,7 +22,7 @@ export async function generateAcademyToken(email: string): Promise<string> {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 30); // 30 days expiry
 
-  const { error } = await supabase.from("integration_tokens").insert({
+  const { error } = await sb.from("integration_tokens").insert({
     email,
     token,
     expires_at: expiresAt.toISOString(),
@@ -35,7 +37,7 @@ export async function generateAcademyToken(email: string): Promise<string> {
  * Verify token from Titans Academy
  */
 export async function verifyAcademyToken(token: string): Promise<AcademyUser | null> {
-  const { data, error } = await supabase
+  const { data, error } = await sb
     .from("integration_tokens")
     .select("*")
     .eq("token", token)
@@ -61,7 +63,7 @@ export async function syncProgressToAcademy(
   progress: number
 ): Promise<void> {
   // Track the sync attempt
-  await supabase.from("user_behaviors").insert({
+  await sb.from("user_behaviors").insert({
     email,
     behavior_type: "academy_sync",
     score_value: 0,
@@ -95,7 +97,7 @@ export async function trackEnrollment(
   courseSlug: string,
   courseName: string
 ): Promise<void> {
-  await supabase.from("user_behaviors").insert({
+  await sb.from("user_behaviors").insert({
     email,
     behavior_type: "course_enrollment",
     score_value: 50,
@@ -107,7 +109,7 @@ export async function trackEnrollment(
   });
 
   // Update lead score to "customer"
-  await supabase
+  await sb
     .from("lead_scores")
     .update({ status: "customer" })
     .eq("email", email);

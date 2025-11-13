@@ -42,7 +42,7 @@ export function LeadMagnetModal({ isOpen, onClose, leadMagnetId }: LeadMagnetMod
   }, [leadMagnetId, leadMagnets]);
 
   const fetchLeadMagnets = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await sb
       .from("lead_magnets")
       .select("*")
       .eq("active", true);
@@ -66,21 +66,21 @@ export function LeadMagnetModal({ isOpen, onClose, leadMagnetId }: LeadMagnetMod
 
     try {
       // Track download
-      await supabase.from("lead_magnet_downloads").insert({
+      await sb.from("lead_magnet_downloads").insert({
         email,
         name,
         lead_magnet_id: selectedMagnet.id,
       });
 
       // Update lead score
-      await supabase.rpc("update_lead_score", {
+      await sb.rpc("update_lead_score", {
         p_email: email,
         p_score_change: 20,
         p_behavior: "lead_magnet_download",
       });
 
       // Track behavior
-      await supabase.from("user_behaviors").insert({
+      await sb.from("user_behaviors").insert({
         email,
         behavior_type: "lead_magnet_download",
         score_value: 20,
@@ -91,7 +91,7 @@ export function LeadMagnetModal({ isOpen, onClose, leadMagnetId }: LeadMagnetMod
       });
 
       // Subscribe to newsletter
-      await supabase.from("newsletter_subscribers").insert({
+      await sb.from("newsletter_subscribers").insert({
         email,
         name,
         source: "lead_magnet",

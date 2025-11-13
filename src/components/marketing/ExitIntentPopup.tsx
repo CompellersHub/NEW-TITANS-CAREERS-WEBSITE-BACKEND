@@ -55,21 +55,21 @@ export function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
 
     try {
       // Track exit capture
-      await supabase.from("exit_captures").insert({
+      await sb.from("exit_captures").insert({
         email,
         offer_type: "career_guide",
         converted: true,
       });
 
       // Update lead score
-      await supabase.rpc("update_lead_score", {
+      await sb.rpc("update_lead_score", {
         p_email: email,
         p_score_change: 25,
         p_behavior: "exit_intent_conversion",
       });
 
       // Track behavior
-      await supabase.from("user_behaviors").insert({
+      await sb.from("user_behaviors").insert({
         email,
         behavior_type: "exit_intent_conversion",
         score_value: 25,
@@ -77,7 +77,7 @@ export function ExitIntentPopup({ onClose }: ExitIntentPopupProps) {
       });
 
       // Sign up for newsletter
-      await supabase.from("newsletter_subscribers").insert({
+      await sb.from("newsletter_subscribers").insert({
         email,
         name,
         source: "exit_intent",

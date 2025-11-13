@@ -2,6 +2,8 @@ import { useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
+const sb: any = supabase;
+
 interface TrackingOptions {
   email?: string;
   enableAutoTracking?: boolean;
@@ -16,7 +18,7 @@ export function useBehaviorTracking({ email, enableAutoTracking = true }: Tracki
 
     const trackPageView = async () => {
       try {
-        await supabase.from("user_behaviors").insert({
+        await sb.from("user_behaviors").insert({
           email: email || "anonymous",
           behavior_type: "page_view",
           score_value: 1,
@@ -25,7 +27,7 @@ export function useBehaviorTracking({ email, enableAutoTracking = true }: Tracki
 
         // Update lead score if email provided
         if (email) {
-          await supabase.rpc("update_lead_score", {
+          await sb.rpc("update_lead_score", {
             p_email: email,
             p_score_change: 1,
             p_behavior: "page_view",
@@ -43,7 +45,7 @@ export function useBehaviorTracking({ email, enableAutoTracking = true }: Tracki
   const trackBehavior = useCallback(
     async (behaviorType: string, scoreValue: number = 5, behaviorData?: any) => {
       try {
-        await supabase.from("user_behaviors").insert({
+        await sb.from("user_behaviors").insert({
           email: email || "anonymous",
           behavior_type: behaviorType,
           score_value: scoreValue,
@@ -52,7 +54,7 @@ export function useBehaviorTracking({ email, enableAutoTracking = true }: Tracki
 
         // Update lead score if email provided
         if (email) {
-          await supabase.rpc("update_lead_score", {
+          await sb.rpc("update_lead_score", {
             p_email: email,
             p_score_change: scoreValue,
             p_behavior: behaviorType,

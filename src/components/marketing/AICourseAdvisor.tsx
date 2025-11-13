@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock, Search, Filter, Download, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+const sb: any = supabase;
 import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -105,7 +107,7 @@ export function AICourseAdvisor() {
   const loadOrCreateConversation = async () => {
     try {
       // Check if conversation exists for this session
-      const { data: existing } = await supabase
+      const { data: existing } = await sb
         .from("ai_advisor_conversations")
         .select("id")
         .eq("session_id", sessionId)
@@ -118,7 +120,7 @@ export function AICourseAdvisor() {
         await loadMessages(existing.id);
       } else {
         // Create new conversation
-        const { data: newConv, error } = await supabase
+        const { data: newConv, error } = await sb
           .from("ai_advisor_conversations")
           .insert({
             session_id: sessionId,
@@ -137,7 +139,7 @@ export function AICourseAdvisor() {
 
   const loadMessages = async (convId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("ai_advisor_messages")
         .select("role, content")
         .eq("conversation_id", convId)
@@ -156,7 +158,7 @@ export function AICourseAdvisor() {
   const loadConversationHistory = async (userEmail: string) => {
     setIsLoadingHistory(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("ai_advisor_conversations")
         .select(`
           id,
@@ -252,7 +254,7 @@ export function AICourseAdvisor() {
       localStorage.setItem("ai_advisor_session_id", newSessionId);
       setSessionId(newSessionId);
 
-      const { data: newConv, error } = await supabase
+      const { data: newConv, error } = await sb
         .from("ai_advisor_conversations")
         .insert({
           session_id: newSessionId,
@@ -286,7 +288,7 @@ export function AICourseAdvisor() {
     if (!conversationId) return;
 
     try {
-      await supabase.from("ai_advisor_messages").insert({
+      await sb.from("ai_advisor_messages").insert({
         conversation_id: conversationId,
         role: message.role,
         content: message.content,
@@ -304,7 +306,7 @@ export function AICourseAdvisor() {
 
     try {
       // Subscribe to newsletter
-      await supabase.from("newsletter_subscribers").insert({
+      await sb.from("newsletter_subscribers").insert({
         email,
         name: null,
         source: "ai_advisor",
@@ -315,7 +317,7 @@ export function AICourseAdvisor() {
 
       // Update conversation with email
       if (conversationId) {
-        await supabase
+        await sb
           .from("ai_advisor_conversations")
           .update({ email, lead_captured: true })
           .eq("id", conversationId);

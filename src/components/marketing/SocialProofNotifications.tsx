@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, CheckCircle, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+const sb: any = supabase;
+
 interface Notification {
   id: string;
   message: string;
@@ -54,7 +56,7 @@ export function SocialProofNotifications() {
     setQueue(rest);
 
     // Track impression
-    supabase.from("user_behaviors").insert({
+    sb.from("user_behaviors").insert({
       email: "anonymous",
       behavior_type: "social_proof_view",
       score_value: 0,

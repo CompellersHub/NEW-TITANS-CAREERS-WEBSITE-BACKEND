@@ -1,6 +1,8 @@
 import { useCallback, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const sb: any = supabase;
+
 interface FormAnalyticsEvent {
   formName: string;
   stepNumber?: number;
@@ -36,7 +38,7 @@ export function useFormAnalytics(formName: string) {
 
   const trackEvent = useCallback(async (event: FormAnalyticsEvent) => {
     try {
-      await supabase.from('form_analytics').insert({
+      await sb.from('form_analytics').insert({
         form_name: event.formName,
         step_number: event.stepNumber,
         step_title: event.stepTitle,
