@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
+import titansLogo from "@/assets/titans-logo.jpg";
 
 export const Hero = () => {
   const scrollToContact = () => {
@@ -12,6 +13,16 @@ export const Hero = () => {
       
       <div className="container px-4 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-xl animate-scale-in">
+              <img 
+                src={titansLogo} 
+                alt="Titans Careers Logo" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-sm font-medium text-primary animate-scale-in">
             <Sparkles className="w-4 h-4" />
             <span>The Future of Career Marketing</span>

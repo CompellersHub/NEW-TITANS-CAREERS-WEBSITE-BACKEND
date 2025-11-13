@@ -1,5 +1,6 @@
 import { Mail, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import titansLogo from "@/assets/titans-logo.jpg";
 
 export const Footer = () => {
   return (
@@ -7,9 +8,13 @@ export const Footer = () => {
       <div className="container px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-accent rounded-lg flex items-center justify-center">
-                <span className="text-lg font-bold text-white">T</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md">
+                <img 
+                  src={titansLogo} 
+                  alt="Titans Careers Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-base font-bold">Titans Careers</span>
