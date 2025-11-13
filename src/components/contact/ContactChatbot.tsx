@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck, ThumbsUp, ThumbsDown, BarChart3 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -68,6 +68,7 @@ export const ContactChatbot = () => {
     const saved = localStorage.getItem('chatbot_ratings');
     return saved ? new Map(JSON.parse(saved)) : new Map();
   });
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -663,6 +664,66 @@ export const ContactChatbot = () => {
     });
   };
 
+  // Calculate analytics metrics
+  const calculateAnalytics = () => {
+    const userMessages = messages.filter(m => m.role === 'user');
+    const assistantMessages = messages.filter(m => m.role === 'assistant');
+    
+    // Total messages (excluding initial greeting)
+    const totalMessages = messages.length - 1; // Subtract initial greeting
+    
+    // Conversation duration
+    let conversationDuration = 0;
+    if (messages.length > 1 && messages[1].timestamp && messages[messages.length - 1].timestamp) {
+      const start = new Date(messages[1].timestamp).getTime();
+      const end = new Date(messages[messages.length - 1].timestamp).getTime();
+      conversationDuration = Math.floor((end - start) / 1000); // in seconds
+    }
+    
+    // Average response time (time between user message and AI response)
+    let totalResponseTime = 0;
+    let responseCount = 0;
+    for (let i = 0; i < messages.length - 1; i++) {
+      if (messages[i].role === 'user' && messages[i + 1].role === 'assistant') {
+        if (messages[i].timestamp && messages[i + 1].timestamp) {
+          const userTime = new Date(messages[i].timestamp).getTime();
+          const assistantTime = new Date(messages[i + 1].timestamp).getTime();
+          totalResponseTime += (assistantTime - userTime);
+          responseCount++;
+        }
+      }
+    }
+    const avgResponseTime = responseCount > 0 ? Math.floor(totalResponseTime / responseCount / 1000) : 0;
+    
+    // Satisfaction rate
+    const ratedMessages = assistantMessages.filter(m => m.id && messageRatings.has(m.id));
+    const positiveRatings = ratedMessages.filter(m => m.id && messageRatings.get(m.id) === 'up').length;
+    const satisfactionRate = ratedMessages.length > 0 
+      ? Math.round((positiveRatings / ratedMessages.length) * 100) 
+      : null;
+    
+    return {
+      totalMessages,
+      userMessages: userMessages.length,
+      assistantMessages: assistantMessages.length - 1, // Subtract initial greeting
+      conversationDuration,
+      avgResponseTime,
+      satisfactionRate,
+      totalRatings: ratedMessages.length,
+      positiveRatings,
+      negativeRatings: ratedMessages.length - positiveRatings
+    };
+  };
+
+  const analytics = calculateAnalytics();
+
+  const formatDuration = (seconds: number) => {
+    if (seconds < 60) return `${seconds}s`;
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}m ${remainingSeconds}s`;
+  };
+
   return (
     <>
       {/* Chat Button */}
@@ -771,6 +832,15 @@ export const ContactChatbot = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowAnalytics(true)}
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                title="View analytics"
+              >
+                <BarChart3 className="h-4 w-4" />
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
@@ -1056,6 +1126,122 @@ export const ContactChatbot = () => {
                   Send Email
                 </>
               )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Analytics Dialog */}
+      <Dialog open={showAnalytics} onOpenChange={setShowAnalytics}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Chat Session Analytics</DialogTitle>
+            <DialogDescription>
+              Insights about your conversation session
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {/* Message Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <Card className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Total Messages</div>
+                <div className="text-2xl font-bold">{analytics.totalMessages}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {analytics.userMessages} from you, {analytics.assistantMessages} from AI
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Duration</div>
+                <div className="text-2xl font-bold">
+                  {analytics.conversationDuration > 0 ? formatDuration(analytics.conversationDuration) : 'N/A'}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Conversation length
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Avg Response</div>
+                <div className="text-2xl font-bold">
+                  {analytics.avgResponseTime > 0 ? `${analytics.avgResponseTime}s` : 'N/A'}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  AI response time
+                </div>
+              </Card>
+            </div>
+
+            {/* Satisfaction Rate */}
+            <Card className="p-4">
+              <div className="text-sm text-muted-foreground mb-2">Satisfaction Rate</div>
+              {analytics.satisfactionRate !== null ? (
+                <>
+                  <div className="flex items-center gap-4">
+                    <div className="text-3xl font-bold text-primary">{analytics.satisfactionRate}%</div>
+                    <div className="flex-1">
+                      <div className="w-full bg-muted rounded-full h-3">
+                        <div 
+                          className="bg-primary h-3 rounded-full transition-all" 
+                          style={{ width: `${analytics.satisfactionRate}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mt-3 text-sm">
+                    <div className="flex items-center gap-1 text-green-600">
+                      <ThumbsUp className="h-4 w-4" />
+                      <span>{analytics.positiveRatings} positive</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-red-600">
+                      <ThumbsDown className="h-4 w-4" />
+                      <span>{analytics.negativeRatings} negative</span>
+                    </div>
+                    <div className="text-muted-foreground ml-auto">
+                      {analytics.totalRatings} total ratings
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p className="mb-2">No ratings yet</p>
+                  <p className="text-sm">Rate AI responses to see satisfaction metrics</p>
+                </div>
+              )}
+            </Card>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <MessageCircle className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Messages per minute</div>
+                    <div className="text-lg font-semibold">
+                      {analytics.conversationDuration > 0 
+                        ? ((analytics.totalMessages / analytics.conversationDuration) * 60).toFixed(1)
+                        : 'N/A'
+                      }
+                    </div>
+                  </div>
+                </div>
+              </Card>
+              <Card className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center">
+                    <Bookmark className="h-5 w-5 text-accent" />
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Bookmarked Messages</div>
+                    <div className="text-lg font-semibold">{bookmarkedMessages.size}</div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setShowAnalytics(false)}>
+              Close
             </Button>
           </DialogFooter>
         </DialogContent>
