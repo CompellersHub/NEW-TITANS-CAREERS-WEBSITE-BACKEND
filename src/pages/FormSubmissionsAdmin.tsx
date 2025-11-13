@@ -23,7 +23,8 @@ import {
   Save,
   X,
   Trash2,
-  CheckSquare
+  CheckSquare,
+  Bell
 } from "lucide-react";
 import {
   Select,
@@ -151,6 +152,19 @@ const FormSubmissionsAdmin = () => {
           console.log('New submission received:', payload);
           // @ts-ignore - Types will be regenerated
           setSubmissions(prev => [payload.new, ...prev]);
+          
+          // Trigger notification
+          supabase.functions.invoke('send-admin-notification', {
+            body: {
+              submission_id: payload.new.id,
+              form_type: payload.new.form_type,
+              status: payload.new.status || 'new',
+              form_data: payload.new.form_data,
+            }
+          }).then(({ error }) => {
+            if (error) console.error('Notification error:', error);
+          });
+          
           toast({
             title: "New Submission",
             description: "A new form submission has been received",
@@ -627,6 +641,14 @@ const FormSubmissionsAdmin = () => {
                 Live Updates Active
               </div>
             )}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/admin/notification-settings")}
+            >
+              <Bell className="h-4 w-4 mr-2" />
+              Notification Settings
+            </Button>
           </div>
         </div>
 
