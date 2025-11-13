@@ -4,6 +4,9 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { format } from "date-fns";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -332,14 +335,16 @@ const FormSubmissionsAdmin = () => {
   const fetchAdminUsers = async () => {
     try {
       // Fetch admin users from admin_notification_preferences table which has emails
+      // @ts-ignore - Types will be regenerated
       const { data, error } = await supabase
+        // @ts-ignore - Types will be regenerated
         .from("admin_notification_preferences")
         .select("admin_user_id, email");
 
       if (error) throw error;
 
       if (data && data.length > 0) {
-        const admins = data.map(pref => ({ 
+        const admins = data.map((pref: any) => ({ 
           id: pref.admin_user_id, 
           email: pref.email 
         }));
@@ -356,13 +361,16 @@ const FormSubmissionsAdmin = () => {
 
   const updateAssignment = async (submissionId: string, assignedTo: string | null) => {
     try {
+      // @ts-ignore - Types will be regenerated
+      // @ts-ignore - Types will be regenerated
       const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
         .from("form_submissions")
         .update({ 
           assigned_to: assignedTo,
           last_updated_by: user?.id,
           last_updated_at: new Date().toISOString()
-        })
+        } as any)
         .eq("id", submissionId);
 
       if (error) throw error;
@@ -402,13 +410,15 @@ const FormSubmissionsAdmin = () => {
 
     try {
       const updates = Array.from(selectedIds).map(id =>
+        // @ts-ignore - Types will be regenerated
         supabase
+          // @ts-ignore - Types will be regenerated
           .from("form_submissions")
           .update({ 
             assigned_to: assignedTo,
             last_updated_by: user?.id,
             last_updated_at: new Date().toISOString()
-          })
+          } as any)
           .eq("id", id)
       );
 
@@ -432,6 +442,127 @@ const FormSubmissionsAdmin = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const exportToPDF = () => {
+    if (selectedIds.size === 0) {
+      toast({
+        title: "No Selection",
+        description: "Please select submissions to export",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedData = submissions.filter(s => selectedIds.has(s.id));
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text('Form Submissions Report', pageWidth / 2, 15, { align: 'center' });
+    
+    // Add export date
+    doc.setFontSize(10);
+    doc.text(`Generated: ${format(new Date(), 'PPpp')}`, pageWidth / 2, 22, { align: 'center' });
+    
+    let yPosition = 30;
+    
+    selectedData.forEach((submission, index) => {
+      // Check if we need a new page
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      // Submission header
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`Submission #${index + 1}`, 14, yPosition);
+      yPosition += 8;
+      
+      // Basic info
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      
+      const assignedEmail = submission.assigned_to 
+        ? adminUsers.find(a => a.id === submission.assigned_to)?.email || 'N/A'
+        : 'Unassigned';
+      
+      const basicInfo = [
+        ['Form Type', submission.form_type],
+        ['Status', submission.status.toUpperCase()],
+        ['Submitted', format(new Date(submission.submitted_at), 'PPpp')],
+        ['Assigned To', assignedEmail]
+      ];
+      
+      autoTable(doc, {
+        startY: yPosition,
+        head: [['Field', 'Value']],
+        body: basicInfo,
+        theme: 'grid',
+        headStyles: { fillColor: [11, 31, 59] },
+        margin: { left: 14, right: 14 },
+        tableWidth: pageWidth - 28,
+      });
+      
+      yPosition = (doc as any).lastAutoTable.finalY + 5;
+      
+      // Form data
+      if (submission.form_data && typeof submission.form_data === 'object') {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Form Data:', 14, yPosition);
+        yPosition += 5;
+        
+        const formDataRows = Object.entries(submission.form_data as Record<string, any>).map(([key, value]) => [
+          key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          String(value)
+        ]);
+        
+        autoTable(doc, {
+          startY: yPosition,
+          body: formDataRows,
+          theme: 'striped',
+          margin: { left: 14, right: 14 },
+          tableWidth: pageWidth - 28,
+          columnStyles: {
+            0: { fontStyle: 'bold', cellWidth: 60 },
+            1: { cellWidth: 'auto' }
+          }
+        });
+        
+        yPosition = (doc as any).lastAutoTable.finalY + 5;
+      }
+      
+      // Admin notes
+      if (submission.admin_notes) {
+        doc.setFont('helvetica', 'bold');
+        doc.text('Admin Notes:', 14, yPosition);
+        yPosition += 5;
+        doc.setFont('helvetica', 'normal');
+        
+        const splitNotes = doc.splitTextToSize(submission.admin_notes, pageWidth - 28);
+        doc.text(splitNotes, 14, yPosition);
+        yPosition += (splitNotes.length * 5) + 10;
+      } else {
+        yPosition += 10;
+      }
+      
+      // Add separator line if not last submission
+      if (index < selectedData.length - 1) {
+        doc.setDrawColor(200, 200, 200);
+        doc.line(14, yPosition, pageWidth - 14, yPosition);
+        yPosition += 10;
+      }
+    });
+    
+    // Save the PDF
+    doc.save(`form-submissions-${format(new Date(), 'yyyy-MM-dd-HHmmss')}.pdf`);
+    toast({
+      title: "Export Complete",
+      description: `Exported ${selectedIds.size} submissions to PDF`,
+    });
   };
 
   useEffect(() => {
@@ -1284,7 +1415,16 @@ const FormSubmissionsAdmin = () => {
                     onClick={exportSelected}
                   >
                     <Download className="h-4 w-4 mr-2" />
-                    Export Selected
+                    Export CSV
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={exportToPDF}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export PDF
                   </Button>
                   
                   <Button
