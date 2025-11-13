@@ -135,33 +135,30 @@ export default function CourseDetail() {
               </div>
               
               <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">What You'll Learn</h2>
-                <EventDetailAccordion items={course.modules} />
+                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Course Overview</h2>
+                <ul className="space-y-3 font-sans text-muted-foreground">
+                  {course.overview.map((item, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
               
               <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Skills You'll Master</h2>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                  {course.skills.map((skill, index) => (
-                    <SkillLogo key={index} name={skill} />
+                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Tools & Technologies</h2>
+                <div className="flex flex-wrap gap-3">
+                  {course.tools.map((tool, index) => (
+                    <Badge key={index} variant="secondary">{tool}</Badge>
                   ))}
                 </div>
               </div>
               
               <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Course Statistics</h2>
-                <StatisticsOverview 
-                  placementRate={course.placementRate}
-                  averageSalary={course.averageSalary}
-                  rating={course.rating}
-                  students={course.students}
-                />
-              </div>
-              
-              <div>
                 <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Who This Course is For</h2>
                 <ul className="space-y-3 font-sans text-muted-foreground">
-                  {course.suitableFor.map((item, index) => (
+                  {course.whoItsFor.map((item, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
