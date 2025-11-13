@@ -32,6 +32,7 @@ import FormDemo from "./pages/FormDemo";
 import FormAnalytics from "./pages/FormAnalytics";
 import FormAlertSettings from "./pages/FormAlertSettings";
 import EngagementAnalytics from "./pages/EngagementAnalytics";
+import LeadNurtureManager from "./pages/LeadNurtureManager";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const AnimatedRoutes = () => {
         <Route path="/form-analytics" element={<FormAnalytics />} />
         <Route path="/form-alert-settings" element={<FormAlertSettings />} />
         <Route path="/admin/engagement-analytics" element={<EngagementAnalytics />} />
+        <Route path="/admin/lead-nurture" element={<LeadNurtureManager />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

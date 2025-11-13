@@ -74,124 +74,140 @@ export default function EngagementAnalytics() {
   };
 
   const fetchMetrics = async (startDate: Date, endDate: Date) => {
-    const { data: events } = await supabase
-      .from("engagement_events")
-      .select("event_type")
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString());
+    try {
+      const { data: events } = await supabase
+        .from("engagement_events")
+        .select("event_type")
+        .gte("created_at", startDate.toISOString())
+        .lte("created_at", endDate.toISOString()) as any;
 
-    const { data: subscribers } = await supabase
-      .from("newsletter_subscribers")
-      .select("engagement_score, active")
-      .eq("active", true);
+      const { data: subscribers } = await supabase
+        .from("newsletter_subscribers")
+        .select("engagement_score, active")
+        .eq("active", true) as any;
 
-    const { data: sends } = await supabase
-      .from("email_sends")
-      .select("opened_at, clicked_at")
-      .gte("sent_at", startDate.toISOString())
-      .lte("sent_at", endDate.toISOString());
+      const { data: sends } = await supabase
+        .from("email_sends")
+        .select("opened_at, clicked_at")
+        .gte("sent_at", startDate.toISOString())
+        .lte("sent_at", endDate.toISOString()) as any;
 
-    const totalOpens = events?.filter(e => e.event_type === "open").length || 0;
-    const totalClicks = events?.filter(e => e.event_type === "click").length || 0;
-    const avgLeadScore = subscribers?.reduce((sum, s) => sum + (s.engagement_score || 0), 0) / (subscribers?.length || 1);
-    const activeSubscribers = subscribers?.length || 0;
-    const totalSends = sends?.length || 1;
-    const openRate = ((sends?.filter(s => s.opened_at).length || 0) / totalSends) * 100;
-    const clickRate = ((sends?.filter(s => s.clicked_at).length || 0) / totalSends) * 100;
+      const totalOpens = events?.filter((e: any) => e.event_type === "open").length || 0;
+      const totalClicks = events?.filter((e: any) => e.event_type === "click").length || 0;
+      const avgLeadScore = subscribers?.reduce((sum: number, s: any) => sum + (s.engagement_score || 0), 0) / (subscribers?.length || 1);
+      const activeSubscribers = subscribers?.length || 0;
+      const totalSends = sends?.length || 1;
+      const openRate = ((sends?.filter((s: any) => s.opened_at).length || 0) / totalSends) * 100;
+      const clickRate = ((sends?.filter((s: any) => s.clicked_at).length || 0) / totalSends) * 100;
 
-    setMetrics({
-      totalOpens,
-      totalClicks,
-      avgLeadScore: Math.round(avgLeadScore),
-      activeSubscribers,
-      openRate: Math.round(openRate),
-      clickRate: Math.round(clickRate),
-    });
+      setMetrics({
+        totalOpens,
+        totalClicks,
+        avgLeadScore: Math.round(avgLeadScore),
+        activeSubscribers,
+        openRate: Math.round(openRate),
+        clickRate: Math.round(clickRate),
+      });
+    } catch (error) {
+      console.error("Error fetching metrics:", error);
+    }
   };
 
   const fetchTimeSeriesData = async (startDate: Date, endDate: Date) => {
-    const { data: events } = await supabase
-      .from("engagement_events")
-      .select("event_type, created_at")
-      .gte("created_at", startDate.toISOString())
-      .lte("created_at", endDate.toISOString())
-      .order("created_at", { ascending: true });
+    try {
+      const { data: events } = await supabase
+        .from("engagement_events")
+        .select("event_type, created_at")
+        .gte("created_at", startDate.toISOString())
+        .lte("created_at", endDate.toISOString())
+        .order("created_at", { ascending: true }) as any;
 
-    // Group by date
-    const groupedData = new Map<string, { opens: number; clicks: number }>();
-    
-    for (let i = 0; i <= timeRange; i++) {
-      const date = format(subDays(new Date(), timeRange - i), "MMM dd");
-      groupedData.set(date, { opens: 0, clicks: 0 });
-    }
-
-    events?.forEach(event => {
-      const date = format(new Date(event.created_at), "MMM dd");
-      const existing = groupedData.get(date) || { opens: 0, clicks: 0 };
-      if (event.event_type === "open") {
-        existing.opens++;
-      } else if (event.event_type === "click") {
-        existing.clicks++;
+      // Group by date
+      const groupedData = new Map<string, { opens: number; clicks: number }>();
+      
+      for (let i = 0; i <= timeRange; i++) {
+        const date = format(subDays(new Date(), timeRange - i), "MMM dd");
+        groupedData.set(date, { opens: 0, clicks: 0 });
       }
-      groupedData.set(date, existing);
-    });
 
-    const chartData = Array.from(groupedData.entries()).map(([date, values]) => ({
-      date,
-      ...values,
-    }));
+      events?.forEach((event: any) => {
+        const date = format(new Date(event.created_at), "MMM dd");
+        const existing = groupedData.get(date) || { opens: 0, clicks: 0 };
+        if (event.event_type === "open") {
+          existing.opens++;
+        } else if (event.event_type === "click") {
+          existing.clicks++;
+        }
+        groupedData.set(date, existing);
+      });
 
-    setTimeSeriesData(chartData);
+      const chartData = Array.from(groupedData.entries()).map(([date, values]) => ({
+        date,
+        ...values,
+      }));
+
+      setTimeSeriesData(chartData);
+    } catch (error) {
+      console.error("Error fetching time series:", error);
+    }
   };
 
   const fetchTopPerformers = async () => {
-    const { data } = await supabase
-      .from("lead_scores")
-      .select("email, name, total_score, status")
-      .order("total_score", { ascending: false })
-      .limit(10);
+    try {
+      const { data } = await supabase
+        .from("lead_scores")
+        .select("email, name, total_score, status")
+        .order("total_score", { ascending: false })
+        .limit(10) as any;
 
-    if (data) {
-      const enrichedData = await Promise.all(
-        data.map(async (lead) => {
-          const { data: subscriber } = await supabase
-            .from("newsletter_subscribers")
-            .select("total_opens, total_clicks")
-            .eq("email", lead.email)
-            .single();
+      if (data) {
+        const enrichedData = await Promise.all(
+          data.map(async (lead: any) => {
+            const { data: subscriber } = await supabase
+              .from("newsletter_subscribers")
+              .select("total_opens, total_clicks")
+              .eq("email", lead.email)
+              .maybeSingle() as any;
 
-          return {
-            ...lead,
-            total_opens: subscriber?.total_opens || 0,
-            total_clicks: subscriber?.total_clicks || 0,
-          };
-        })
-      );
+            return {
+              ...lead,
+              total_opens: subscriber?.total_opens || 0,
+              total_clicks: subscriber?.total_clicks || 0,
+            };
+          })
+        );
 
-      setTopPerformers(enrichedData);
+        setTopPerformers(enrichedData);
+      }
+    } catch (error) {
+      console.error("Error fetching top performers:", error);
     }
   };
 
   const fetchScoreDistribution = async () => {
-    const { data } = await supabase
-      .from("lead_scores")
-      .select("total_score");
+    try {
+      const { data } = await supabase
+        .from("lead_scores")
+        .select("total_score") as any;
 
-    if (data) {
-      const ranges = [
-        { range: "0-25 (Cold)", min: 0, max: 25, fill: "hsl(var(--chart-1))" },
-        { range: "26-50 (Warm)", min: 26, max: 50, fill: "hsl(var(--chart-2))" },
-        { range: "51-75 (Hot)", min: 51, max: 75, fill: "hsl(var(--chart-3))" },
-        { range: "76-100 (Very Hot)", min: 76, max: 100, fill: "hsl(var(--chart-4))" },
-      ];
+      if (data) {
+        const ranges = [
+          { range: "0-25 (Cold)", min: 0, max: 25, fill: "hsl(var(--chart-1))" },
+          { range: "26-50 (Warm)", min: 26, max: 50, fill: "hsl(var(--chart-2))" },
+          { range: "51-75 (Hot)", min: 51, max: 75, fill: "hsl(var(--chart-3))" },
+          { range: "76-100 (Very Hot)", min: 76, max: 100, fill: "hsl(var(--chart-4))" },
+        ];
 
-      const distribution = ranges.map(range => ({
-        range: range.range,
-        count: data.filter(d => d.total_score >= range.min && d.total_score <= range.max).length,
-        fill: range.fill,
-      }));
+        const distribution = ranges.map(range => ({
+          range: range.range,
+          count: data.filter((d: any) => d.total_score >= range.min && d.total_score <= range.max).length,
+          fill: range.fill,
+        }));
 
-      setScoreDistribution(distribution);
+        setScoreDistribution(distribution);
+      }
+    } catch (error) {
+      console.error("Error fetching score distribution:", error);
     }
   };
 

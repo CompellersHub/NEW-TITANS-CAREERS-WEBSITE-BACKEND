@@ -45,15 +45,6 @@ verify_jwt = false
 [functions.select-email-ab-winner]
 verify_jwt = false
 
-[functions.send-ab-test]
-verify_jwt = false
-
-[functions.select-ab-winner]
-verify_jwt = false
-
-[functions.send-ab-winner]
-verify_jwt = false
-
 [functions.optimize-send-times]
 verify_jwt = false
 
@@ -67,4 +58,13 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.academy-integration]
+verify_jwt = false
+
+[functions.form-analytics-alerts]
+verify_jwt = false
+
+[functions.email-webhook]
+verify_jwt = false
+
+[functions.lead-nurture]
 verify_jwt = false
