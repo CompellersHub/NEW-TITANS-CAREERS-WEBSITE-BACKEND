@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -36,6 +36,8 @@ export const ContactChatbot = () => {
     return saved !== null ? saved === 'true' : true;
   });
   const [isDragging, setIsDragging] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -286,6 +288,33 @@ export const ContactChatbot = () => {
     setAttachments(prev => [...prev, ...newAttachments]);
   };
 
+  const highlightText = (text: string, query: string) => {
+    if (!query.trim()) return text;
+    
+    const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+    const parts = text.split(regex);
+    
+    return parts.map((part, index) => 
+      regex.test(part) ? (
+        <mark key={index} className="bg-yellow-300 dark:bg-yellow-600 text-foreground">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const filteredMessages = searchQuery.trim()
+    ? messages.filter(msg => 
+        msg.content.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : messages;
+
+  const searchResultCount = searchQuery.trim() 
+    ? filteredMessages.length 
+    : 0;
+
   const sendMessage = async () => {
     if ((!input.trim() && attachments.length === 0) || isLoading) return;
 
@@ -408,6 +437,18 @@ export const ContactChatbot = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => {
+                  setShowSearch(!showSearch);
+                  setSearchQuery('');
+                }}
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                title="Search messages"
+              >
+                <Search className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={toggleSound}
                 className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
                 title={soundEnabled ? "Disable sounds" : "Enable sounds"}
@@ -434,6 +475,36 @@ export const ContactChatbot = () => {
             </div>
           </div>
 
+          {/* Search Bar */}
+          {showSearch && (
+            <div className="px-4 pt-3 pb-2 border-b">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search messages..."
+                  className="pl-9 pr-20"
+                />
+                {searchQuery && (
+                  <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">
+                      {searchResultCount} {searchResultCount === 1 ? 'result' : 'results'}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setSearchQuery('')}
+                      className="h-6 w-6"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Messages */}
           <div 
             className="flex-1 overflow-y-auto p-4 space-y-4 relative"
@@ -451,7 +522,13 @@ export const ContactChatbot = () => {
                 </div>
               </div>
             )}
-            {messages.map((message, index) => (
+            {searchQuery.trim() && filteredMessages.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">No messages found matching "{searchQuery}"</p>
+              </div>
+            )}
+            {filteredMessages.map((message, index) => (
               <div
                 key={index}
                 className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
@@ -475,7 +552,9 @@ export const ContactChatbot = () => {
                       ))}
                     </div>
                   )}
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {searchQuery.trim() ? highlightText(message.content, searchQuery) : message.content}
+                  </p>
                 </div>
                 {message.timestamp && (
                   <span className="text-xs text-muted-foreground mt-1 px-1">
