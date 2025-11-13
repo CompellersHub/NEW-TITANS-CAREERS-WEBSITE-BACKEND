@@ -75,6 +75,16 @@ export const contactSchema = z.object({
     .max(2000, "Message must be less than 2000 characters")
 });
 
+// Password validation schema
+export const passwordSchema = z
+  .string()
+  .trim()
+  .min(8, "Password must be at least 8 characters")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/\d/, "Password must contain at least one number")
+  .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character");
+
 // Newsletter subscription schema
 export const newsletterSchema = z.object({
   email: z
