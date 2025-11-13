@@ -11,31 +11,35 @@ export const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-lg border-b border-border z-50">
-      <div className="container px-4 py-4">
+    <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-xl border-b border-border/50 z-50 shadow-sm">
+      <div className="container px-4 py-5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-glow rounded-lg flex items-center justify-center">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <div className="w-11 h-11 bg-gradient-primary rounded-xl flex items-center justify-center shadow-glow transition-all duration-300 group-hover:shadow-glow-lg group-hover:scale-105">
               <span className="text-2xl font-bold text-primary-foreground">T</span>
             </div>
-            <span className="text-xl font-bold">Titan Careers</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
+              Titan Careers
+            </span>
           </div>
           
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-foreground hover:text-primary transition-colors font-medium">
+          <div className="hidden md:flex items-center gap-10">
+            <a href="#features" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
               Features
             </a>
-            <a href="#testimonials" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a href="#testimonials" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
               Testimonials
             </a>
-            <a href="#contact" className="text-foreground hover:text-primary transition-colors font-medium">
+            <a href="#contact" className="text-foreground/80 hover:text-primary transition-all duration-300 font-semibold text-sm tracking-wide relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">
               Contact
             </a>
           </div>
           
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost">Sign In</Button>
-            <Button onClick={scrollToContact}>Get Started</Button>
+            <Button variant="ghost" className="font-semibold">Sign In</Button>
+            <Button onClick={scrollToContact} className="bg-gradient-primary shadow-glow hover:shadow-glow-lg transition-all duration-300 hover:scale-105 font-bold">
+              Get Started
+            </Button>
           </div>
           
           <Button 
