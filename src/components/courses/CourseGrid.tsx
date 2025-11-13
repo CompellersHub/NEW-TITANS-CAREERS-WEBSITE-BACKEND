@@ -24,7 +24,7 @@ export function CourseGrid({ courses, loading }: CourseGridProps) {
   if (courses.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="text-xl text-muted-foreground">No courses found</p>
+        <p className="font-sans text-xl text-muted-foreground">No courses found</p>
       </div>
     );
   }

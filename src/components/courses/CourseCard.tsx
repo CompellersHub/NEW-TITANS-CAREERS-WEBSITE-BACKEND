@@ -20,30 +20,30 @@ interface CourseCardProps {
 export function CourseCard({ course }: CourseCardProps) {
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      compliance: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-      data: "bg-green-500/10 text-green-500 border-green-500/20",
-      cybersecurity: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-      business: "bg-orange-500/10 text-orange-500 border-orange-500/20",
-      marketing: "bg-pink-500/10 text-pink-500 border-pink-500/20",
+      compliance: "bg-accent/10 text-accent border-accent/20",
+      data: "bg-gold/10 text-gold border-gold/20",
+      cybersecurity: "bg-primary/10 text-primary border-primary/20",
+      business: "bg-accent/10 text-accent border-accent/20",
+      marketing: "bg-gold/10 text-gold border-gold/20",
     };
     return colors[category] || "bg-primary/10 text-primary border-primary/20";
   };
 
   return (
-    <Card className="group p-8 hover:shadow-lg transition-all duration-500 border-border bg-white flex flex-col h-full relative overflow-hidden hover:-translate-y-2">
-      <Badge className={`mb-4 w-fit font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
+    <Card className="group p-8 hover:shadow-xl transition-all duration-500 border-border bg-white flex flex-col h-full relative overflow-hidden hover:-translate-y-2">
+      <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
         {course.category}
       </Badge>
       
       <Link to={`/course/${course.slug}`} className="group/link">
-        <h3 className="text-2xl font-bold mb-3 group-hover/link:text-accent transition-all duration-300 leading-tight text-foreground">
+        <h3 className="font-kanit text-2xl font-bold mb-3 group-hover/link:text-accent transition-all duration-300 leading-tight text-primary">
           {course.title}
         </h3>
       </Link>
       
-      <p className="text-muted-foreground mb-5 text-sm leading-relaxed">{course.tagline}</p>
+      <p className="font-sans text-muted-foreground mb-5 text-sm leading-relaxed">{course.tagline}</p>
       
-      <div className="flex gap-6 mb-5 text-sm text-muted-foreground">
+      <div className="flex gap-6 mb-5 text-sm font-sans text-muted-foreground">
         <span className="flex items-center gap-2">
           <Clock className="h-4 w-4 text-accent" />
           {course.duration}
@@ -54,12 +54,12 @@ export function CourseCard({ course }: CourseCardProps) {
         </span>
       </div>
       
-      <p className="mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
+      <p className="font-sans mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
       
       <div className="flex items-center justify-between mt-auto pt-6 border-t border-border">
         <div>
-          <p className="text-xs text-muted-foreground mb-1">One-time payment</p>
-          <span className="text-4xl font-bold text-foreground">
+          <p className="font-sans text-xs text-muted-foreground mb-1">One-time payment</p>
+          <span className="font-kanit text-4xl font-bold text-primary">
             £{course.price}
           </span>
         </div>
