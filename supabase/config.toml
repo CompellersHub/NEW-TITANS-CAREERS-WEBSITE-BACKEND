@@ -45,6 +45,15 @@ verify_jwt = false
 [functions.select-email-ab-winner]
 verify_jwt = false
 
+[functions.send-ab-test]
+verify_jwt = false
+
+[functions.select-ab-winner]
+verify_jwt = false
+
+[functions.send-ab-winner]
+verify_jwt = false
+
 [functions.ai-course-advisor]
 verify_jwt = false
 
