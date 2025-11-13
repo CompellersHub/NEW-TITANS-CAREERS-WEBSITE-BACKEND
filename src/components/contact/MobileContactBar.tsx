@@ -2,10 +2,12 @@ import { Phone, Mail, MessageCircle, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { useToast } from "@/hooks/use-toast";
 
 export function MobileContactBar() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { triggerHaptic } = useHapticFeedback();
+  const { toast } = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +30,13 @@ export function MobileContactBar() {
 
   const handleContactClick = (type: "whatsapp" | "call" | "email") => {
     triggerHaptic("light");
+    if (type === "whatsapp") {
+      toast({
+        title: "⚡ Quick Response",
+        description: "Average response: 5 mins",
+        duration: 3000,
+      });
+    }
   };
 
   return (
@@ -58,8 +67,15 @@ export function MobileContactBar() {
               href="https://wa.me/447539434403"
               target="_blank"
               rel="noopener noreferrer"
-              className="block"
-              onClick={() => handleContactClick("whatsapp")}
+              className="block relative"
+              onClick={(e) => {
+                e.preventDefault();
+                handleContactClick("whatsapp");
+                // Small delay before opening WhatsApp
+                setTimeout(() => {
+                  window.open("https://wa.me/447539434403", "_blank");
+                }, 300);
+              }}
             >
               <Button
                 className="w-full h-14 bg-[#25D366] hover:bg-[#20BA5A] text-white font-bold flex flex-col items-center justify-center gap-1 transition-all active:scale-95 shadow-lg hover:shadow-xl"
@@ -67,6 +83,10 @@ export function MobileContactBar() {
                 <MessageCircle className="w-5 h-5" />
                 <span className="text-xs">WhatsApp</span>
               </Button>
+              {/* Pulsing Badge */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full animate-pulse shadow-lg">
+                <div className="absolute inset-0 bg-accent rounded-full animate-ping opacity-75"></div>
+              </div>
             </a>
 
             {/* Call Button */}
