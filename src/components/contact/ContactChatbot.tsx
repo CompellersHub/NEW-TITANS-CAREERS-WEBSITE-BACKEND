@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,11 +24,47 @@ export const ContactChatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [userIdentifier, setUserIdentifier] = useState<string | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    const saved = localStorage.getItem('chatbot_sound_enabled');
+    return saved !== null ? saved === 'true' : true;
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const playSound = (type: 'send' | 'receive') => {
+    if (!soundEnabled) return;
+    
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // Different frequencies for send vs receive
+    oscillator.frequency.value = type === 'send' ? 800 : 600;
+    oscillator.type = 'sine';
+    
+    // Short beep
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.1);
+  };
+
+  const toggleSound = () => {
+    const newValue = !soundEnabled;
+    setSoundEnabled(newValue);
+    localStorage.setItem('chatbot_sound_enabled', String(newValue));
+    toast({
+      title: newValue ? "Sound enabled" : "Sound disabled",
+      description: newValue ? "You'll hear sounds for messages" : "Message sounds are off",
+    });
   };
 
   useEffect(() => {
@@ -102,6 +138,7 @@ export const ContactChatbot = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
+    playSound('send');
 
     try {
       const { data, error } = await supabase.functions.invoke('contact-chat', {
@@ -116,6 +153,7 @@ export const ContactChatbot = () => {
 
       if (data?.message) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.message, timestamp: new Date() }]);
+        playSound('receive');
       } else {
         throw new Error('No response from AI');
       }
@@ -206,6 +244,15 @@ export const ContactChatbot = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSound}
+                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                title={soundEnabled ? "Disable sounds" : "Enable sounds"}
+              >
+                {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+              </Button>
               <Button
                 variant="ghost"
                 size="icon"
