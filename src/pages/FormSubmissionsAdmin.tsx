@@ -33,7 +33,8 @@ import {
   Clock,
   Users,
   Eye,
-  User
+  User,
+  TrendingUp
 } from "lucide-react";
 import {
   Select,
@@ -1605,6 +1606,14 @@ const FormSubmissionsAdmin = () => {
               )}
             </div>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/admin/form-analytics")}
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Analytics
+              </Button>
               <Button
                 variant="outline"
                 size="sm"

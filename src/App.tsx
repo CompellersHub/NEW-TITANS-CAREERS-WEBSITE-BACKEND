@@ -37,6 +37,7 @@ import LeadNurtureManager from "./pages/LeadNurtureManager";
 import TemplateEditor from "./pages/TemplateEditor";
 import ABTestWinnerHistory from "./pages/ABTestWinnerHistory";
 import FormSubmissionsAdmin from "./pages/FormSubmissionsAdmin";
+import FormSubmissionAnalytics from "./pages/FormSubmissionAnalytics";
 import AdminNotificationSettings from "./pages/AdminNotificationSettings";
 import AdminTemplates from "./pages/AdminTemplates";
 
@@ -78,7 +79,8 @@ const AnimatedRoutes = () => {
         <Route path="/admin/ab-test-history" element={<ABTestWinnerHistory />} />
         <Route path="/admin/lead-nurture" element={<LeadNurtureManager />} />
         <Route path="/admin/template-editor" element={<TemplateEditor />} />
-        <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
+            <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
+            <Route path="/admin/form-analytics" element={<FormSubmissionAnalytics />} />
         <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
         <Route path="/admin/response-templates" element={<AdminTemplates />} />
         <Route path="*" element={<NotFound />} />
