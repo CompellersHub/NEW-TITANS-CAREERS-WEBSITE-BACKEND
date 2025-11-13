@@ -10,12 +10,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3 } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
+import { BulkVoucherForm } from "@/components/voucher/BulkVoucherForm";
 
 interface Voucher {
   id: string;
@@ -38,6 +40,7 @@ interface Voucher {
 
 export default function VoucherManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -143,6 +146,26 @@ export default function VoucherManager() {
               <BarChart3 className="h-4 w-4 mr-2" />
               View Analytics
             </Button>
+
+            <Dialog open={isBulkDialogOpen} onOpenChange={setIsBulkDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Bulk Create
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Bulk Create Vouchers</DialogTitle>
+                </DialogHeader>
+                <BulkVoucherForm 
+                  onSuccess={() => {
+                    setIsBulkDialogOpen(false);
+                    queryClient.invalidateQueries({ queryKey: ['vouchers'] });
+                  }} 
+                />
+              </DialogContent>
+            </Dialog>
             
             <Dialog open={isDialogOpen} onOpenChange={(open) => {
               setIsDialogOpen(open);
