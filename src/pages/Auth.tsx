@@ -10,10 +10,12 @@ import { Loader2, LogIn, UserPlus } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { z } from "zod";
+import { passwordSchema } from "@/lib/formSchemas";
+import { PasswordStrengthIndicator } from "@/components/forms/PasswordStrengthIndicator";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  password: passwordSchema,
 });
 
 const Auth = () => {
@@ -160,9 +162,7 @@ const Auth = () => {
                       required
                       disabled={isLoading}
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Password must be at least 6 characters
-                    </p>
+                    <PasswordStrengthIndicator password={password} />
                   </div>
                   
                   <Button 
