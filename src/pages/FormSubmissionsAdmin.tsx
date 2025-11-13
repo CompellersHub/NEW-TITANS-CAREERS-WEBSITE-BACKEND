@@ -21,7 +21,9 @@ import {
   FileText,
   Edit2,
   Save,
-  X
+  X,
+  Trash2,
+  CheckSquare
 } from "lucide-react";
 import {
   Select,
@@ -39,6 +41,17 @@ import {
 } from "@/components/ui/dialog";
 import { Copy, Check } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface FormSubmission {
   id: string;
@@ -71,6 +84,9 @@ const FormSubmissionsAdmin = () => {
   const [tempStatus, setTempStatus] = useState<string>("");
   const [tempNotes, setTempNotes] = useState<string>("");
   const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkActionStatus, setBulkActionStatus] = useState<string>("");
+  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -353,9 +369,152 @@ const FormSubmissionsAdmin = () => {
       toast({
         title: "Error",
         description: "Failed to update status",
+      variant: "destructive",
+      });
+    }
+  };
+
+  const toggleSelection = (id: string) => {
+    setSelectedIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === filteredSubmissions.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredSubmissions.map(s => s.id)));
+    }
+  };
+
+  const bulkUpdateStatus = async (status: string) => {
+    if (selectedIds.size === 0) return;
+
+    try {
+      const idsArray = Array.from(selectedIds);
+      
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .update({ status, last_updated_by: user?.id })
+        .in("id", idsArray);
+
+      if (error) throw error;
+
+      // Update local state
+      setSubmissions(prev => 
+        prev.map(sub => 
+          selectedIds.has(sub.id) ? { ...sub, status: status as any } : sub
+        )
+      );
+
+      toast({
+        title: "Bulk Update Complete",
+        description: `${selectedIds.size} submissions marked as ${getStatusLabel(status)}`,
+      });
+
+      setSelectedIds(new Set());
+      setBulkActionStatus("");
+    } catch (error: any) {
+      console.error("Error bulk updating:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update submissions",
         variant: "destructive",
       });
     }
+  };
+
+  const bulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+
+    try {
+      const idsArray = Array.from(selectedIds);
+      
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .delete()
+        .in("id", idsArray);
+
+      if (error) throw error;
+
+      // Update local state
+      setSubmissions(prev => 
+        prev.filter(sub => !selectedIds.has(sub.id))
+      );
+
+      toast({
+        title: "Bulk Delete Complete",
+        description: `${selectedIds.size} submissions deleted`,
+      });
+
+      setSelectedIds(new Set());
+      setShowBulkDeleteDialog(false);
+    } catch (error: any) {
+      console.error("Error bulk deleting:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete submissions",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const exportSelected = () => {
+    if (selectedIds.size === 0) {
+      toast({
+        title: "No Selection",
+        description: "Please select submissions to export",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedSubmissions = filteredSubmissions.filter(sub => selectedIds.has(sub.id));
+
+    const headers = ["Form Type", "Status", "Email", "Name", "Message/Comment", "Admin Notes", "Submitted At"];
+    const rows = selectedSubmissions.map(sub => {
+      const data = sub.form_data;
+      return [
+        sub.form_type,
+        getStatusLabel(sub.status),
+        data.email || "N/A",
+        data.name || "N/A",
+        data.message || data.comment || "N/A",
+        sub.admin_notes || "N/A",
+        new Date(sub.submitted_at).toLocaleString()
+      ];
+    });
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `selected-submissions-${new Date().toISOString().split('T')[0]}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+
+    toast({
+      title: "Export Successful",
+      description: `Exported ${selectedSubmissions.length} selected submissions`,
+    });
   };
 
   const updateSubmissionNotes = async (id: string, notes: string) => {
@@ -364,6 +523,7 @@ const FormSubmissionsAdmin = () => {
       const { error } = await supabase
         // @ts-ignore - Types will be regenerated
         .from("form_submissions")
+        // @ts-ignore - Types will be regenerated
         .update({ admin_notes: notes, last_updated_by: user?.id })
         .eq("id", id);
 
@@ -580,6 +740,11 @@ const FormSubmissionsAdmin = () => {
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-muted-foreground">
                 Showing {filteredSubmissions.length} of {submissions.length} submissions
+                {selectedIds.size > 0 && (
+                  <span className="ml-2 font-medium text-primary">
+                    • {selectedIds.size} selected
+                  </span>
+                )}
               </div>
               
               <Button onClick={exportToCSV} variant="outline" size="sm">
@@ -589,6 +754,70 @@ const FormSubmissionsAdmin = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Bulk Actions Bar */}
+        {selectedIds.size > 0 && (
+          <Card className="mb-6 border-primary">
+            <CardContent className="py-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <CheckSquare className="h-5 w-5 text-primary" />
+                    <span className="font-medium">{selectedIds.size} selected</span>
+                  </div>
+                  
+                  <div className="h-6 w-px bg-border" />
+                  
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Bulk Actions:</span>
+                    <Select value={bulkActionStatus} onValueChange={(value) => {
+                      setBulkActionStatus(value);
+                      if (value) bulkUpdateStatus(value);
+                    }}>
+                      <SelectTrigger className="w-[180px] h-9">
+                        <SelectValue placeholder="Change Status..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="new">Mark as New</SelectItem>
+                        <SelectItem value="in_progress">Mark as In Progress</SelectItem>
+                        <SelectItem value="resolved">Mark as Resolved</SelectItem>
+                        <SelectItem value="archived">Mark as Archived</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={exportSelected}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export Selected
+                  </Button>
+                  
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => setShowBulkDeleteDialog(true)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Selected
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedIds(new Set())}
+                  >
+                    Clear Selection
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Submissions Table */}
         <Card>
@@ -615,6 +844,12 @@ const FormSubmissionsAdmin = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-12">
+                        <Checkbox
+                          checked={selectedIds.size === filteredSubmissions.length && filteredSubmissions.length > 0}
+                          onCheckedChange={toggleSelectAll}
+                        />
+                      </TableHead>
                       <TableHead>Form Type</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Email</TableHead>
@@ -626,13 +861,19 @@ const FormSubmissionsAdmin = () => {
                   <TableBody>
                     {filteredSubmissions.map((submission) => {
                       const data = submission.form_data;
+                      const isSelected = selectedIds.has(submission.id);
                       return (
                         <TableRow 
                           key={submission.id}
-                          className="cursor-pointer hover:bg-muted/50"
-                          onClick={() => setSelectedSubmission(submission)}
+                          className={`cursor-pointer ${isSelected ? 'bg-muted/50' : 'hover:bg-muted/50'}`}
                         >
-                          <TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={() => toggleSelection(submission.id)}
+                            />
+                          </TableCell>
+                          <TableCell onClick={() => setSelectedSubmission(submission)}>
                             <Badge variant="outline" className={getFormTypeBadge(submission.form_type)}>
                               <span className="flex items-center gap-2">
                                 {getFormTypeIcon(submission.form_type)}
@@ -642,7 +883,7 @@ const FormSubmissionsAdmin = () => {
                               </span>
                             </Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell onClick={() => setSelectedSubmission(submission)}>
                             <Badge 
                               variant="outline" 
                               className={`${getStatusBadge(submission.status).bg} ${getStatusBadge(submission.status).text} ${getStatusBadge(submission.status).border}`}
@@ -650,18 +891,18 @@ const FormSubmissionsAdmin = () => {
                               {getStatusLabel(submission.status)}
                             </Badge>
                           </TableCell>
-                          <TableCell className="font-medium">
+                          <TableCell className="font-medium" onClick={() => setSelectedSubmission(submission)}>
                             {data.email || "N/A"}
                           </TableCell>
-                          <TableCell>
+                          <TableCell onClick={() => setSelectedSubmission(submission)}>
                             {data.name || "N/A"}
                           </TableCell>
-                          <TableCell className="max-w-xs">
+                          <TableCell className="max-w-xs" onClick={() => setSelectedSubmission(submission)}>
                             <div className="truncate text-sm text-muted-foreground">
                               {data.message || data.comment || data.feedback || "N/A"}
                             </div>
                           </TableCell>
-                          <TableCell className="text-sm text-muted-foreground">
+                          <TableCell className="text-sm text-muted-foreground" onClick={() => setSelectedSubmission(submission)}>
                             {new Date(submission.submitted_at).toLocaleDateString()} at{" "}
                             {new Date(submission.submitted_at).toLocaleTimeString([], { 
                               hour: '2-digit', 
@@ -931,6 +1172,24 @@ const FormSubmissionsAdmin = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <AlertDialog open={showBulkDeleteDialog} onOpenChange={setShowBulkDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {selectedIds.size} Submissions?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the selected submissions from the database.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={bulkDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Footer />
     </div>
