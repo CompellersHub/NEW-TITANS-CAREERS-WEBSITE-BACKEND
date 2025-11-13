@@ -18,6 +18,7 @@ interface FormStep {
   content: ReactNode;
   schema?: z.ZodObject<any>;
   onValidate?: () => ValidationResult;
+  shouldShow?: (formData: any) => boolean;
 }
 
 interface ValidatedMultiStepFormProps {
@@ -25,22 +26,31 @@ interface ValidatedMultiStepFormProps {
   onComplete: () => void;
   showProgress?: boolean;
   variant?: "default" | "compact" | "vertical";
+  formData?: any;
+  onFormDataChange?: (data: any) => void;
 }
 
 export const ValidatedMultiStepForm = ({ 
   steps, 
   onComplete, 
   showProgress = true,
-  variant = "default" 
+  variant = "default",
+  formData = {},
+  onFormDataChange
 }: ValidatedMultiStepFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [attemptedNext, setAttemptedNext] = useState(false);
   
-  const progress = ((currentStep + 1) / steps.length) * 100;
+  // Filter steps based on shouldShow condition
+  const visibleSteps = steps.filter(step => 
+    !step.shouldShow || step.shouldShow(formData)
+  );
+  
+  const progress = ((currentStep + 1) / visibleSteps.length) * 100;
 
   const validateCurrentStep = (): boolean => {
-    const step = steps[currentStep];
+    const step = visibleSteps[currentStep];
     
     if (step.onValidate) {
       const result = step.onValidate();
@@ -63,7 +73,7 @@ export const ValidatedMultiStepForm = ({
       return;
     }
     
-    if (currentStep < steps.length - 1) {
+    if (currentStep < visibleSteps.length - 1) {
       setCurrentStep(currentStep + 1);
       setAttemptedNext(false);
       setValidationErrors([]);
@@ -85,7 +95,7 @@ export const ValidatedMultiStepForm = ({
       {showProgress && (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>Step {currentStep + 1} of {steps.length}</span>
+            <span>Step {currentStep + 1} of {visibleSteps.length}</span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -93,7 +103,7 @@ export const ValidatedMultiStepForm = ({
       )}
 
       <StepIndicator 
-        steps={steps} 
+        steps={visibleSteps} 
         currentStep={currentStep}
         variant={variant}
       />
@@ -115,7 +125,7 @@ export const ValidatedMultiStepForm = ({
       )}
 
       <div className="min-h-[300px] py-8">
-        {steps[currentStep].content}
+        {visibleSteps[currentStep].content}
       </div>
 
       <div className="flex items-center justify-between pt-6 border-t">
@@ -129,7 +139,7 @@ export const ValidatedMultiStepForm = ({
         </Button>
         
         <Button onClick={handleNext}>
-          {currentStep === steps.length - 1 ? (
+          {currentStep === visibleSteps.length - 1 ? (
             "Complete"
           ) : (
             <>
