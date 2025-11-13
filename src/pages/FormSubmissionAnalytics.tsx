@@ -43,7 +43,9 @@ import {
   Tag,
   Calendar,
   ArrowLeft,
-  Download
+  Download,
+  Bell,
+  Activity
 } from "lucide-react";
 
 interface MetricsByPriority {
@@ -360,6 +362,10 @@ const FormSubmissionAnalytics = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button onClick={() => navigate("/admin/sla-alert-history")} variant="outline">
+              <Bell className="h-4 w-4 mr-2" />
+              Alert History
+            </Button>
             <NotificationBell />
             <Select value={dateRange} onValueChange={(value: any) => setDateRange(value)}>
               <SelectTrigger className="w-[180px]">
