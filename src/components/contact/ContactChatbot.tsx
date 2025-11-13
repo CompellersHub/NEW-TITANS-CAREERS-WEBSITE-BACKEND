@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -12,6 +12,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -45,6 +54,9 @@ export const ContactChatbot = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [emailAddress, setEmailAddress] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -393,6 +405,51 @@ export const ContactChatbot = () => {
     playSound('send');
   };
 
+  const handleEmailTranscript = async () => {
+    if (!emailAddress || !emailAddress.includes('@')) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('send-chat-transcript', {
+        body: {
+          email: emailAddress,
+          messages: messages.map(msg => ({
+            role: msg.role,
+            content: msg.content,
+            timestamp: msg.timestamp?.toISOString()
+          }))
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Email sent!",
+        description: `Chat transcript has been sent to ${emailAddress}`
+      });
+      playSound('send');
+      setShowEmailDialog(false);
+      setEmailAddress('');
+    } catch (error) {
+      console.error('Error sending email:', error);
+      toast({
+        title: "Failed to send email",
+        description: "Please try again or use the export option",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
   const highlightText = (text: string, query: string) => {
     if (!query.trim()) return text;
     
@@ -570,6 +627,10 @@ export const ContactChatbot = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={exportAsPDF}>
                     Export as PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowEmailDialog(true)}>
+                    <Mail className="h-4 w-4 mr-2" />
+                    Email Transcript
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -760,6 +821,63 @@ export const ContactChatbot = () => {
           </div>
         </Card>
       )}
+
+      {/* Email Dialog */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Email Chat Transcript</DialogTitle>
+            <DialogDescription>
+              Enter your email address to receive a copy of this chat conversation.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your.email@example.com"
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleEmailTranscript();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowEmailDialog(false);
+                setEmailAddress('');
+              }}
+              disabled={isSendingEmail}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleEmailTranscript}
+              disabled={isSendingEmail || !emailAddress}
+            >
+              {isSendingEmail ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send Email
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
