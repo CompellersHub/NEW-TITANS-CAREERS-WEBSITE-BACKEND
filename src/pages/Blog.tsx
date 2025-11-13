@@ -1,16 +1,25 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { PageTransition } from "@/components/PageTransition";
+import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { blogPosts, BlogPost } from "@/data/blogPosts";
 import { BookOpen, Clock, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading state for data fetching
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(timer);
+  }, [selectedCategory]);
 
   const categories = [
     { id: "all", label: "All Articles" },
