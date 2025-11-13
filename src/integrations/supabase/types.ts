@@ -223,6 +223,60 @@ export type Database = {
         }
         Relationships: []
       }
+      email_templates: {
+        Row: {
+          campaign_type: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          html_content: string
+          id: string
+          last_used_at: string | null
+          name: string
+          preview_text: string | null
+          source_id: string | null
+          source_type: string
+          subject: string
+          tags: string[] | null
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          campaign_type: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          html_content: string
+          id?: string
+          last_used_at?: string | null
+          name: string
+          preview_text?: string | null
+          source_id?: string | null
+          source_type: string
+          subject: string
+          tags?: string[] | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          campaign_type?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          html_content?: string
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          preview_text?: string | null
+          source_id?: string | null
+          source_type?: string
+          subject?: string
+          tags?: string[] | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           course_slug: string
