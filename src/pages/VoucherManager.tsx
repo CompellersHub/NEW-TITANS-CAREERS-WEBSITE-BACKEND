@@ -12,12 +12,13 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download, Mail } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
 import { BulkVoucherForm } from "@/components/voucher/BulkVoucherForm";
+import { EmailDistributionDialog } from "@/components/voucher/EmailDistributionDialog";
 
 interface Voucher {
   id: string;
@@ -42,6 +43,8 @@ export default function VoucherManager() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
   const [editingVoucher, setEditingVoucher] = useState<Voucher | null>(null);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [selectedVoucherForEmail, setSelectedVoucherForEmail] = useState<Voucher | null>(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -243,6 +246,16 @@ export default function VoucherManager() {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => {
+                            setSelectedVoucherForEmail(voucher);
+                            setEmailDialogOpen(true);
+                          }}
+                        >
+                          <Mail className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleEdit(voucher)}
                         >
                           <Edit className="h-4 w-4" />
@@ -326,6 +339,15 @@ export default function VoucherManager() {
       </main>
       
       <Footer />
+      
+      {selectedVoucherForEmail && (
+        <EmailDistributionDialog
+          open={emailDialogOpen}
+          onOpenChange={setEmailDialogOpen}
+          voucherId={selectedVoucherForEmail.id}
+          voucherCode={selectedVoucherForEmail.code}
+        />
+      )}
     </div>
   );
 }

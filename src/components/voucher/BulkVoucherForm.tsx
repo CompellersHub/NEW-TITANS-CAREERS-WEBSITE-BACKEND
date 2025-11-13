@@ -11,7 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Loader2, CheckCircle2, Download } from "lucide-react";
+import { Loader2, CheckCircle2, Download, Mail } from "lucide-react";
+import { EmailDistributionDialog } from "./EmailDistributionDialog";
 
 interface BulkVoucherFormProps {
   onSuccess: () => void;
@@ -19,6 +20,7 @@ interface BulkVoucherFormProps {
 
 interface GeneratedVoucher {
   code: string;
+  id?: string;
   status: 'pending' | 'success' | 'error';
   error?: string;
 }
@@ -44,6 +46,8 @@ export function BulkVoucherForm({ onSuccess }: BulkVoucherFormProps) {
   const [progress, setProgress] = useState(0);
   const [generatedVouchers, setGeneratedVouchers] = useState<GeneratedVoucher[]>([]);
   const [showResults, setShowResults] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [selectedVoucherForEmail, setSelectedVoucherForEmail] = useState<string | null>(null);
 
   const generateVouchers = async () => {
     if (!formData.base_code.trim()) {
@@ -111,10 +115,11 @@ export function BulkVoucherForm({ onSuccess }: BulkVoucherFormProps) {
 
         if (error) throw error;
 
-        // Update status for successful vouchers
+        // Update status for successful vouchers with their IDs
         batch.forEach((_, idx) => {
           const voucherIdx = i + idx;
           vouchers[voucherIdx].status = 'success';
+          vouchers[voucherIdx].id = (data as any)?.[idx]?.id;
           successCount++;
         });
       } catch (error: any) {
@@ -356,37 +361,63 @@ export function BulkVoucherForm({ onSuccess }: BulkVoucherFormProps) {
         </div>
 
         {!isGenerating && (
-          <div className="flex justify-between items-center">
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                onClick={exportToCSV}
-                disabled={successCount === 0}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export Successful ({successCount})
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={exportAllToCSV}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export All ({generatedVouchers.length})
-              </Button>
+          <>
+            <div className="flex justify-between items-center">
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  onClick={exportToCSV}
+                  disabled={successCount === 0}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Successful ({successCount})
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={exportAllToCSV}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export All ({generatedVouchers.length})
+                </Button>
+                {successCount > 0 && (
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      const firstSuccess = generatedVouchers.find(v => v.status === 'success' && v.id);
+                      if (firstSuccess && firstSuccess.id) {
+                        setSelectedVoucherForEmail(firstSuccess.id);
+                        setEmailDialogOpen(true);
+                      }
+                    }}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Send via Email
+                  </Button>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => {
+                  setShowResults(false);
+                  setGeneratedVouchers([]);
+                  setProgress(0);
+                }}>
+                  Create More
+                </Button>
+                <Button onClick={onSuccess}>
+                  Done
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => {
-                setShowResults(false);
-                setGeneratedVouchers([]);
-                setProgress(0);
-              }}>
-                Create More
-              </Button>
-              <Button onClick={onSuccess}>
-                Done
-              </Button>
-            </div>
-          </div>
+            
+            {selectedVoucherForEmail && generatedVouchers.find(v => v.status === 'success' && v.code)?.code && (
+              <EmailDistributionDialog
+                open={emailDialogOpen}
+                onOpenChange={setEmailDialogOpen}
+                voucherId={selectedVoucherForEmail}
+                voucherCode={generatedVouchers.find(v => v.id === selectedVoucherForEmail)?.code || ''}
+              />
+            )}
+          </>
         )}
       </div>
     );
