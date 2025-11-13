@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { NotificationBell } from "@/components/admin/NotificationBell";
 import { format, formatDistanceToNow, differenceInMilliseconds } from "date-fns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -1606,6 +1607,7 @@ const FormSubmissionsAdmin = () => {
               )}
             </div>
             <div className="flex gap-2">
+              <NotificationBell />
               <Button
                 variant="outline"
                 size="sm"
