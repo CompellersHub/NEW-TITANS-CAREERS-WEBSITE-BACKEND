@@ -25,13 +25,13 @@ const steps = [
 
 export const HowItWorksSection = () => {
   return (
-    <section className="py-20 md:py-28 bg-white">
+    <section className="py-20 md:py-28 bg-background">
       <div className="container px-4">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">
+          <h2 className="font-kanit text-4xl md:text-5xl font-bold mb-6 text-primary">
             How It Works
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-sans text-xl text-muted-foreground max-w-2xl mx-auto">
             Four simple steps to transform your career with practical training
           </p>
         </div>
@@ -45,7 +45,7 @@ export const HowItWorksSection = () => {
             >
               <div className="bg-card rounded-2xl p-8 border border-border shadow-sm hover:shadow-md transition-all duration-300 h-full">
                 {/* Step Number */}
-                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-accent rounded-full flex items-center justify-center text-white font-bold text-lg shadow-accent">
+                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-accent rounded-full flex items-center justify-center text-white font-kanit font-bold text-lg shadow-accent">
                   {index + 1}
                 </div>
                 
@@ -55,10 +55,10 @@ export const HowItWorksSection = () => {
                 </div>
                 
                 {/* Content */}
-                <h3 className="text-xl font-bold mb-3 text-foreground">
+                <h3 className="font-kanit text-xl font-bold mb-3 text-primary">
                   {step.title}
                 </h3>
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="font-sans text-muted-foreground leading-relaxed">
                   {step.description}
                 </p>
               </div>

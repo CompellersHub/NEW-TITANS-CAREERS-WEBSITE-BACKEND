@@ -47,19 +47,19 @@ export const HeroSection = () => {
           <div className="space-y-8 animate-fade-in">
             {/* Tagline Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full border border-accent/30">
-              <span className="text-accent font-bold text-sm tracking-wide">
+              <span className="text-accent font-sans font-bold text-sm tracking-wide">
                 Practical training. Real careers.
               </span>
             </div>
             
             {/* H1 - Kanit, bold, 28-48px responsive */}
-            <h1 className="font-kanit font-bold text-white leading-tight" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
+            <h1 className="font-kanit font-bold text-primary-foreground leading-tight" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
               Upgrade Your Career with{" "}
               <span className="text-accent">Practical Tech Training</span>
             </h1>
             
             {/* Body text - Open Sans, 16px */}
-            <p className="text-base leading-relaxed text-white/90 max-w-xl">
+            <p className="font-sans text-base leading-relaxed text-primary-foreground/90 max-w-xl">
               Learn in-demand skills through hands-on projects. No UK experience needed. 
               Get CPD-accredited certification and ongoing career support.
             </p>
@@ -69,7 +69,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="default"
-                className="text-base font-bold"
+                className="font-sans text-base font-bold"
                 asChild
               >
                 <a 
@@ -85,7 +85,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outlineWhite"
-                className="text-base font-bold"
+                className="font-sans text-base font-bold"
                 asChild
               >
                 <Link to="/courses">
@@ -95,7 +95,7 @@ export const HeroSection = () => {
             </div>
             
             {/* Trust indicators */}
-            <div className="flex flex-wrap gap-6 pt-6 text-sm text-white">
+            <div className="flex flex-wrap gap-6 pt-6 text-sm text-primary-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
                 <span className="font-sans">No credit card required</span>

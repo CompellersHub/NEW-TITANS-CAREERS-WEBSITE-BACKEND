@@ -14,13 +14,13 @@ export function EmotionalHeroSection() {
           alt="Online education platform background"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-tc-navy/95 via-tc-blue/90 to-tc-navy/95" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-primary-glow/90 to-primary/95" />
       </div>
 
       {/* Animated Glow Elements */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-tc-gold rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-tc-amber rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-20 right-20 w-96 h-96 bg-gold rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-accent rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
       
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5" />
@@ -30,40 +30,40 @@ export function EmotionalHeroSection() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Emotional Copy */}
           <div className="space-y-8 animate-fade-in">
-            <Badge className="bg-tc-amber/10 text-tc-amber border-tc-amber/30 px-6 py-2.5 text-sm shadow-lg">
+            <Badge className="bg-accent/10 text-accent border-accent/30 px-6 py-2.5 text-sm font-sans shadow-lg">
               <Heart className="w-4 h-4 mr-2" />
               YOUR STORY STARTS HERE
             </Badge>
 
             <div className="space-y-6">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight">
+              <h1 className="font-kanit text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-tight">
                 Your Dream Career
                 <br />
-                <span className="bg-gradient-to-r from-tc-amber via-tc-gold to-tc-amber bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+                <span className="bg-gradient-to-r from-accent via-gold to-accent bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
                   Is Closer Than You Think
                 </span>
               </h1>
 
-              <p className="text-2xl md:text-3xl text-tc-amber font-semibold">
+              <p className="font-kanit text-2xl md:text-3xl text-accent font-semibold">
                 From Warehouse to £50k Office Job in 8 Months
               </p>
 
-              <p className="text-xl text-white/90 max-w-2xl leading-relaxed">
+              <p className="font-sans text-xl text-primary-foreground/90 max-w-2xl leading-relaxed">
                 You don't need UK experience. You don't need a degree. You just need the right training and support. 
-                <span className="font-semibold text-white"> 300+ people just like you</span> have already made the switch.
+                <span className="font-semibold text-primary-foreground"> 300+ people just like you</span> have already made the switch.
               </p>
 
-              <div className="flex flex-wrap gap-4 text-white/80 text-sm">
-                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <Users className="h-4 w-4 text-tc-amber" />
+              <div className="flex flex-wrap gap-4 text-primary-foreground/80 text-sm font-sans">
+                <div className="flex items-center gap-2 bg-primary-foreground/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <Users className="h-4 w-4 text-accent" />
                   <span className="font-medium">No UK Experience Required</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <Award className="h-4 w-4 text-tc-amber" />
+                <div className="flex items-center gap-2 bg-primary-foreground/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <Award className="h-4 w-4 text-accent" />
                   <span className="font-medium">40 CPD Hours</span>
                 </div>
-                <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm">
-                  <Star className="h-4 w-4 fill-tc-amber text-tc-amber" />
+                <div className="flex items-center gap-2 bg-primary-foreground/10 rounded-full px-4 py-2 backdrop-blur-sm">
+                  <Star className="h-4 w-4 fill-accent text-accent" />
                   <span className="font-medium">4.8★ Rating</span>
                 </div>
               </div>
@@ -73,7 +73,7 @@ export function EmotionalHeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-tc-amber to-tc-gold hover:from-tc-gold hover:to-tc-amber text-tc-navy font-bold px-10 py-7 text-lg rounded-xl shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 pulse-glow"
+                className="bg-gradient-to-r from-accent to-gold hover:from-gold hover:to-accent text-accent-foreground font-sans font-bold px-10 py-7 text-lg rounded-xl shadow-2xl hover:shadow-accent/50 transition-all duration-300 pulse-glow"
                 onClick={() => {
                   trackCTA('Emotional Hero WhatsApp', 'homepage', 'whatsapp');
                   window.open('https://wa.me/447539434403?text=Hi%20TITANS%20CAREERS', '_blank');
@@ -86,7 +86,7 @@ export function EmotionalHeroSection() {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white hover:text-tc-navy px-10 py-7 text-lg rounded-xl font-semibold backdrop-blur-sm"
+                className="border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary px-10 py-7 text-lg rounded-xl font-sans font-semibold backdrop-blur-sm"
                 asChild
               >
                 <Link to="/courses">
@@ -100,21 +100,21 @@ export function EmotionalHeroSection() {
             <div className="flex items-center gap-6 pt-4">
               <div className="flex -space-x-3">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-tc-amber to-tc-gold border-2 border-tc-navy flex items-center justify-center text-white font-bold">
+                  <div key={i} className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-gold border-2 border-primary flex items-center justify-center text-primary-foreground font-kanit font-bold">
                     {String.fromCharCode(64 + i)}
                   </div>
                 ))}
               </div>
-              <div className="text-white">
+              <div className="text-primary-foreground font-sans">
                 <p className="font-bold text-lg">300+</p>
-                <p className="text-sm text-white/80">Career Switchers</p>
+                <p className="text-sm text-primary-foreground/80">Career Switchers</p>
               </div>
             </div>
           </div>
 
           {/* Right Column - Success Story Image */}
           <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-tc-amber/30">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-accent/30">
               <img 
                 src="/images/hero-student.png" 
                 alt="Success story - Career transformation from warehouse to professional role earning £50k"
@@ -122,29 +122,29 @@ export function EmotionalHeroSection() {
                 onError={(e) => {
                   // Fallback gradient if image doesn't load
                   e.currentTarget.style.display = 'none';
-                  e.currentTarget.parentElement!.style.background = 'linear-gradient(135deg, hsl(var(--tc-navy)), hsl(var(--tc-blue)))';
+                  e.currentTarget.parentElement!.style.background = 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)))';
                   e.currentTarget.parentElement!.style.minHeight = '500px';
                 }}
               />
               
               {/* Overlay Quote Badge */}
-              <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-xl">
+              <div className="absolute bottom-6 left-6 right-6 bg-background/95 backdrop-blur-md rounded-2xl p-6 shadow-xl">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-tc-amber to-tc-gold flex items-center justify-center">
-                      <Sparkles className="h-6 w-6 text-white" />
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-gold flex items-center justify-center">
+                      <Sparkles className="h-6 w-6 text-accent-foreground" />
                     </div>
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-tc-navy mb-2">
+                    <p className="font-kanit text-lg font-bold text-primary mb-2">
                       "I'm earning £48k now. Best decision ever."
                     </p>
-                    <p className="text-sm text-tc-grey font-medium">
+                    <p className="font-sans text-sm text-muted-foreground font-medium">
                       Sarah M. - Former Supermarket Manager
                     </p>
                     <div className="flex gap-1 mt-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-tc-amber text-tc-amber" />
+                        <Star key={i} className="h-4 w-4 fill-accent text-accent" />
                       ))}
                     </div>
                   </div>
@@ -153,9 +153,9 @@ export function EmotionalHeroSection() {
             </div>
 
             {/* Floating Stats */}
-            <div className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl border-2 border-tc-amber">
-              <p className="text-3xl font-bold text-tc-navy">£40k-£70k</p>
-              <p className="text-sm text-tc-grey font-medium">Avg Salary</p>
+            <div className="absolute -top-4 -right-4 bg-background rounded-2xl p-4 shadow-xl border-2 border-accent">
+              <p className="font-kanit text-3xl font-bold text-primary">£40k-£70k</p>
+              <p className="font-sans text-sm text-muted-foreground font-medium">Avg Salary</p>
             </div>
           </div>
         </div>
