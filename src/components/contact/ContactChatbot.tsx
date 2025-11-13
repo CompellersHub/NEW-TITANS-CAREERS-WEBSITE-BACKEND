@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -26,6 +26,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: Date;
+  id?: string;
   attachments?: Array<{
     type: 'image';
     data: string;
@@ -39,7 +40,8 @@ export const ContactChatbot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hi! I'm here to help answer your questions about our courses, pricing, and services. How can I assist you today?"
+      content: "Hi! I'm here to help answer your questions about our courses, pricing, and services. How can I assist you today?",
+      id: 'initial-message'
     }
   ]);
   const [input, setInput] = useState('');
@@ -57,8 +59,14 @@ export const ContactChatbot = () => {
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [emailAddress, setEmailAddress] = useState('');
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [bookmarkedMessages, setBookmarkedMessages] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('chatbot_bookmarks');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+  const [showBookmarks, setShowBookmarks] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { toast } = useToast();
 
   const scrollToBottom = () => {
@@ -118,6 +126,11 @@ export const ContactChatbot = () => {
     }
   }, [input]);
 
+  // Persist bookmarks
+  useEffect(() => {
+    localStorage.setItem('chatbot_bookmarks', JSON.stringify([...bookmarkedMessages]));
+  }, [bookmarkedMessages]);
+
   // Initialize conversation on mount
   useEffect(() => {
     const initConversation = async () => {
@@ -152,7 +165,8 @@ export const ContactChatbot = () => {
             const loadedMessages: Message[] = chatMessages.map(msg => ({
               role: msg.role as 'user' | 'assistant',
               content: msg.content,
-              timestamp: new Date(msg.created_at)
+              timestamp: new Date(msg.created_at),
+              id: msg.id
             }));
             setMessages(prev => [...prev, ...loadedMessages]);
           }
@@ -484,6 +498,7 @@ export const ContactChatbot = () => {
       role: 'user', 
       content: input || 'Attached image(s)', 
       timestamp: new Date(),
+      id: crypto.randomUUID(),
       attachments: attachments.length > 0 ? [...attachments] : undefined
     };
     setMessages(prev => [...prev, userMessage]);
@@ -505,7 +520,12 @@ export const ContactChatbot = () => {
       if (error) throw error;
 
       if (data?.message) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.message, timestamp: new Date() }]);
+        setMessages(prev => [...prev, { 
+          role: 'assistant', 
+          content: data.message, 
+          timestamp: new Date(),
+          id: crypto.randomUUID()
+        }]);
         playSound('receive');
       } else {
         throw new Error('No response from AI');
@@ -520,7 +540,8 @@ export const ContactChatbot = () => {
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         content: "I apologize, but I'm having trouble responding right now. Please try using our contact form or reach out directly.",
-        timestamp: new Date()
+        timestamp: new Date(),
+        id: crypto.randomUUID()
       }]);
     } finally {
       setIsLoading(false);
@@ -553,8 +574,11 @@ export const ContactChatbot = () => {
         // Reset messages to initial state
         setMessages([{
           role: 'assistant',
-          content: "Hi! I'm here to help answer your questions about our courses, pricing, and services. How can I assist you today?"
+          content: "Hi! I'm here to help answer your questions about our courses, pricing, and services. How can I assist you today?",
+          id: 'initial-message'
         }]);
+        setAttachments([]);
+        setBookmarkedMessages(new Set());
 
         toast({
           title: "History cleared",
@@ -570,6 +594,41 @@ export const ContactChatbot = () => {
       });
     }
   };
+
+  const toggleBookmark = (messageId: string) => {
+    setBookmarkedMessages(prev => {
+      const newBookmarks = new Set(prev);
+      if (newBookmarks.has(messageId)) {
+        newBookmarks.delete(messageId);
+        toast({
+          title: "Bookmark removed",
+          description: "Message removed from bookmarks"
+        });
+      } else {
+        newBookmarks.add(messageId);
+        toast({
+          title: "Message bookmarked",
+          description: "You can access this message from the bookmarks menu"
+        });
+      }
+      return newBookmarks;
+    });
+  };
+
+  const scrollToMessage = (messageId: string) => {
+    const messageElement = messageRefs.current.get(messageId);
+    if (messageElement) {
+      messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight the message briefly
+      messageElement.style.backgroundColor = 'hsl(var(--accent))';
+      setTimeout(() => {
+        messageElement.style.backgroundColor = '';
+      }, 2000);
+      setShowBookmarks(false);
+    }
+  };
+
+  const bookmarkedMessagesList = messages.filter(msg => msg.id && bookmarkedMessages.has(msg.id));
 
   return (
     <>
@@ -609,6 +668,51 @@ export const ContactChatbot = () => {
               >
                 <Search className="h-4 w-4" />
               </Button>
+              <DropdownMenu open={showBookmarks} onOpenChange={setShowBookmarks}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                    title="Bookmarked messages"
+                  >
+                    <Bookmark className="h-4 w-4" />
+                    {bookmarkedMessages.size > 0 && (
+                      <span className="absolute top-1 right-1 h-2 w-2 bg-accent rounded-full" />
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-64 max-h-96 overflow-y-auto">
+                  {bookmarkedMessagesList.length === 0 ? (
+                    <div className="px-4 py-8 text-center text-sm text-muted-foreground">
+                      No bookmarked messages yet
+                    </div>
+                  ) : (
+                    bookmarkedMessagesList.map((msg, idx) => (
+                      <DropdownMenuItem
+                        key={msg.id}
+                        onClick={() => msg.id && scrollToMessage(msg.id)}
+                        className="flex flex-col items-start gap-1 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2 w-full">
+                          <BookmarkCheck className="h-3 w-3 text-primary" />
+                          <span className="text-xs font-medium">
+                            {msg.role === 'user' ? 'You' : 'Assistant'}
+                          </span>
+                          {msg.timestamp && (
+                            <span className="text-xs text-muted-foreground ml-auto">
+                              {new Date(msg.timestamp).toLocaleTimeString()}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2 w-full">
+                          {msg.content}
+                        </p>
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -719,7 +823,12 @@ export const ContactChatbot = () => {
             {filteredMessages.map((message, index) => (
               <div
                 key={index}
-                className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'}`}
+                ref={(el) => {
+                  if (el && message.id) {
+                    messageRefs.current.set(message.id, el);
+                  }
+                }}
+                className={`flex flex-col ${message.role === 'user' ? 'items-end' : 'items-start'} group relative`}
               >
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
@@ -744,6 +853,22 @@ export const ContactChatbot = () => {
                     {searchQuery.trim() ? highlightText(message.content, searchQuery) : message.content}
                   </p>
                 </div>
+                {message.id && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity absolute ${
+                      message.role === 'user' ? 'right-0' : 'left-0'
+                    } top-0 -translate-y-1`}
+                    onClick={() => toggleBookmark(message.id!)}
+                  >
+                    {bookmarkedMessages.has(message.id) ? (
+                      <BookmarkCheck className="h-3 w-3 text-primary" />
+                    ) : (
+                      <Bookmark className="h-3 w-3" />
+                    )}
+                  </Button>
+                )}
                 {message.timestamp && (
                   <span className="text-xs text-muted-foreground mt-1 px-1">
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
