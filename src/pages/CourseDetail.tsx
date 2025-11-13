@@ -56,8 +56,8 @@ export default function CourseDetail() {
           <div className="lg:col-span-2 space-y-12">
             <div>
               <Badge className="mb-4">{course.category}</Badge>
-              <h1 className="text-5xl font-bold mb-4 text-foreground">{course.title}</h1>
-              <p className="text-xl text-muted-foreground mb-8">{course.tagline}</p>
+              <h1 className="text-5xl font-kanit font-bold mb-4 text-foreground">{course.title}</h1>
+              <p className="text-xl font-sans text-muted-foreground mb-8">{course.tagline}</p>
               
               <div className="flex flex-wrap gap-6 mb-8">
                 <div className="flex items-center gap-2">
@@ -80,13 +80,13 @@ export default function CourseDetail() {
             </div>
             
             <div>
-              <h2 className="text-3xl font-bold mb-4 text-foreground">Course Overview</h2>
-              <p className="text-lg text-muted-foreground leading-relaxed">{course.description}</p>
+              <h2 className="text-3xl font-kanit font-bold mb-4 text-foreground">Course Overview</h2>
+              <p className="text-lg font-sans text-muted-foreground leading-relaxed">{course.description}</p>
             </div>
             
             {course.syllabus && course.syllabus.length > 0 && (
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-foreground">Curriculum</h2>
+                <h2 className="text-3xl font-kanit font-bold mb-6 text-foreground">Curriculum</h2>
                 <EventDetailAccordion
                   learningObjectives={course.overview || []}
                   toolsCovered={course.tools || []}
@@ -98,7 +98,7 @@ export default function CourseDetail() {
             
             {course.tools && course.tools.length > 0 && (
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-foreground">Tools & Technologies</h2>
+                <h2 className="text-3xl font-kanit font-bold mb-6 text-foreground">Tools & Technologies</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   {course.tools.map((tool, index) => (
                     <div key={index} className="flex flex-col items-center gap-2 p-4 border border-border rounded-lg bg-card hover:shadow-md transition-shadow">
@@ -107,7 +107,7 @@ export default function CourseDetail() {
                         logo="🔧"
                         brandColor="#0EA5E9"
                       />
-                      <span className="text-sm text-center font-medium">{tool}</span>
+                      <span className="text-sm text-center font-sans font-medium">{tool}</span>
                     </div>
                   ))}
                 </div>
@@ -116,12 +116,12 @@ export default function CourseDetail() {
             
             {course.overview && course.overview.length > 0 && (
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-foreground">What You'll Learn</h2>
+                <h2 className="text-3xl font-kanit font-bold mb-6 text-foreground">What You'll Learn</h2>
                 <ul className="space-y-3">
                   {course.overview.map((outcome, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">{outcome}</span>
+                      <span className="font-sans text-muted-foreground">{outcome}</span>
                     </li>
                   ))}
                 </ul>
@@ -133,7 +133,7 @@ export default function CourseDetail() {
           
           <div className="lg:col-span-1">
             <div className="sticky top-4 p-6 border border-border rounded-lg bg-card shadow-lg">
-              <div className="text-4xl font-bold mb-6 text-foreground">£{course.price}</div>
+              <div className="text-4xl font-kanit font-bold mb-6 text-foreground">£{course.price}</div>
               <StripeCheckoutButton
                 courseSlug={course.slug}
                 courseTitle={course.title}
@@ -141,7 +141,7 @@ export default function CourseDetail() {
                 size="lg"
                 className="w-full mb-6"
               />
-              <ul className="space-y-3 text-sm text-muted-foreground">
+              <ul className="space-y-3 text-sm font-sans text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-primary" />
                   Lifetime access to content
