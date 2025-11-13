@@ -6,6 +6,7 @@ import { FAQSection } from "@/components/homepage/FAQSection";
 import { CourseGrid } from "@/components/courses/CourseGrid";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
+import { NewsletterSection } from "@/components/NewsletterSection";
 import { courses } from "@/data/courses";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -57,6 +58,8 @@ const Index = () => {
       <div id="faqs">
         <FAQSection />
       </div>
+      
+      <NewsletterSection />
       
       <CTA />
       <Footer />

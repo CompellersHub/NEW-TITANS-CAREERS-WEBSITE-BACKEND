@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Download, FileText, Briefcase, ClipboardList, TrendingUp, BookOpen, CheckCircle } from "lucide-react";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const Resources = () => {
   const careerGuides = [
@@ -226,6 +227,48 @@ const Resources = () => {
             {industryReports.map((resource, index) => (
               <ResourceCard key={index} {...resource} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-20 bg-white">
+        <div className="container max-w-4xl">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-tc-navy mb-4">
+                Want More Free Resources?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                Subscribe to get new career guides, templates, and industry reports delivered straight to your inbox. Plus, receive exclusive WhatsApp updates with job alerts and quick tips.
+              </p>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <span>Weekly career tips and job search strategies</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <span>New downloadable resources each month</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <span>Early access to course launches</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <span>Instant WhatsApp job alerts (optional)</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <NewsletterSignup 
+                variant="card" 
+                source="resources-page" 
+                showWhatsApp={true}
+                showName={true}
+              />
+            </div>
           </div>
         </div>
       </section>

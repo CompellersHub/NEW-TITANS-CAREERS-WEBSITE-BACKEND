@@ -1,12 +1,13 @@
 import { Mail, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import titansLogo from "@/assets/titans-logo.jpg";
+import { NewsletterSignup } from "./NewsletterSignup";
 
 export const Footer = () => {
   return (
     <footer className="bg-primary text-white border-t border-white/10 py-12">
       <div className="container px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md">
@@ -67,6 +68,20 @@ export const Footer = () => {
                 </a>
               </li>
             </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-4 text-accent">Stay Updated</h3>
+            <p className="text-sm text-white/80 mb-4">
+              Weekly career tips & job alerts
+            </p>
+            <NewsletterSignup 
+              variant="minimal" 
+              source="footer" 
+            />
+            <p className="text-xs text-white/60 mt-2">
+              Free. Unsubscribe anytime.
+            </p>
           </div>
         </div>
         

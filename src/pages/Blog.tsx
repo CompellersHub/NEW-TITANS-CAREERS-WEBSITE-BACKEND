@@ -7,6 +7,7 @@ import { blogPosts, BlogPost } from "@/data/blogPosts";
 import { BookOpen, Clock, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -177,6 +178,28 @@ const Blog = () => {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-20 bg-white">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-tc-navy mb-4">
+              Never Miss a Career Insight
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Get our latest articles, exclusive tips, and career advice delivered to your inbox weekly.
+            </p>
+          </div>
+          <div className="max-w-xl mx-auto">
+            <NewsletterSignup 
+              variant="card" 
+              source="blog-page" 
+              showWhatsApp={true}
+              showName={true}
+            />
+          </div>
         </div>
       </section>
 
