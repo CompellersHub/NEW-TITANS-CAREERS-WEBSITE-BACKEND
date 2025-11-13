@@ -225,10 +225,9 @@ return new Response(
     success: true, 
     emailId: emailResult?.id,
     coursesDiscussed: coursesDiscussed,
-        coursesDiscussed: coursesDiscussed,
-        variant: selectedVariant.variant_name,
-        trackingId: trackingId
-      }),
+    variant: selectedVariant.variant_name,
+    trackingId: trackingId
+  }),
       {
         status: 200,
         headers: {
