@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/homepage/HeroSection";
 import { HowItWorksSection } from "@/components/homepage/HowItWorksSection";
@@ -10,14 +11,33 @@ import { NewsletterSection } from "@/components/NewsletterSection";
 import { courses } from "@/data/courses";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { ExitIntentPopup } from "@/components/marketing/ExitIntentPopup";
+import { SocialProofNotifications } from "@/components/marketing/SocialProofNotifications";
+import { CourseFinder } from "@/components/marketing/CourseFinder";
+import { LeadMagnetModal } from "@/components/marketing/LeadMagnetModal";
+import { ReferralProgram } from "@/components/marketing/ReferralProgram";
+import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
+import { Sparkles, Download } from "lucide-react";
 
 const Index = () => {
   const coursesArray = Object.values(courses);
   const featuredCourses = coursesArray.slice(0, 3);
+  const [showCourseFinder, setShowCourseFinder] = useState(false);
+  const [showLeadMagnet, setShowLeadMagnet] = useState(false);
+
+  // Track behavior on this page
+  useBehaviorTracking({ enableAutoTracking: true });
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+      
+      {/* Marketing Automation Features */}
+      <ExitIntentPopup />
+      <SocialProofNotifications />
+      <CourseFinder isOpen={showCourseFinder} onClose={() => setShowCourseFinder(false)} />
+      <LeadMagnetModal isOpen={showLeadMagnet} onClose={() => setShowLeadMagnet(false)} />
+      
       <HeroSection />
       
       {/* Featured Courses Section */}
@@ -44,12 +64,46 @@ const Index = () => {
           
           <CourseGrid courses={featuredCourses} />
           
-          <div className="text-center mt-12 animate-slide-up">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12 animate-slide-up">
+            <Button 
+              size="lg" 
+              variant="default" 
+              className="font-bold"
+              onClick={() => setShowCourseFinder(true)}
+            >
+              <Sparkles className="mr-2 h-5 w-5" />
+              Find Your Perfect Course
+            </Button>
             <Link to="/courses">
-              <Button size="lg" variant="default" className="font-bold">
+              <Button size="lg" variant="outline" className="font-bold">
                 View All Courses
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+      
+      {/* Lead Magnet CTA Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-accent/10 to-accent/5">
+        <div className="container mx-auto max-w-4xl">
+          <div className="bg-background rounded-2xl shadow-xl p-8 md:p-12 text-center space-y-6">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-accent/20">
+              <Download className="h-8 w-8 text-accent" />
+            </div>
+            <h2 className="font-kanit font-semibold text-primary text-3xl md:text-4xl">
+              Free Career Resources
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Download our proven career guides, roadmaps, and toolkits to kickstart your journey
+            </p>
+            <Button 
+              size="lg" 
+              onClick={() => setShowLeadMagnet(true)}
+              className="font-bold"
+            >
+              <Download className="mr-2 h-5 w-5" />
+              Get Free Resources
+            </Button>
           </div>
         </div>
       </section>
@@ -65,6 +119,13 @@ const Index = () => {
       <div id="faqs">
         <FAQSection />
       </div>
+      
+      {/* Referral Program Section */}
+      <section className="py-16 px-4 bg-secondary">
+        <div className="container mx-auto max-w-2xl">
+          <ReferralProgram />
+        </div>
+      </section>
       
       <NewsletterSection />
       
