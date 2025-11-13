@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download, Mail, Bookmark, BookmarkCheck, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import jsPDF from 'jspdf';
@@ -64,6 +64,10 @@ export const ContactChatbot = () => {
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [messageRatings, setMessageRatings] = useState<Map<string, 'up' | 'down'>>(() => {
+    const saved = localStorage.getItem('chatbot_ratings');
+    return saved ? new Map(JSON.parse(saved)) : new Map();
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -130,6 +134,11 @@ export const ContactChatbot = () => {
   useEffect(() => {
     localStorage.setItem('chatbot_bookmarks', JSON.stringify([...bookmarkedMessages]));
   }, [bookmarkedMessages]);
+
+  // Persist ratings
+  useEffect(() => {
+    localStorage.setItem('chatbot_ratings', JSON.stringify([...messageRatings]));
+  }, [messageRatings]);
 
   // Initialize conversation on mount
   useEffect(() => {
@@ -579,6 +588,7 @@ export const ContactChatbot = () => {
         }]);
         setAttachments([]);
         setBookmarkedMessages(new Set());
+        setMessageRatings(new Map());
 
         toast({
           title: "History cleared",
@@ -629,6 +639,29 @@ export const ContactChatbot = () => {
   };
 
   const bookmarkedMessagesList = messages.filter(msg => msg.id && bookmarkedMessages.has(msg.id));
+
+  const rateMessage = (messageId: string, rating: 'up' | 'down') => {
+    setMessageRatings(prev => {
+      const newRatings = new Map(prev);
+      const currentRating = newRatings.get(messageId);
+      
+      // Toggle if same rating, otherwise set new rating
+      if (currentRating === rating) {
+        newRatings.delete(messageId);
+        toast({
+          title: "Rating removed",
+          description: "Your feedback has been removed"
+        });
+      } else {
+        newRatings.set(messageId, rating);
+        toast({
+          title: "Thanks for your feedback!",
+          description: rating === 'up' ? "Glad the response was helpful" : "We'll work on improving our responses"
+        });
+      }
+      return newRatings;
+    });
+  };
 
   return (
     <>
@@ -869,11 +902,35 @@ export const ContactChatbot = () => {
                     )}
                   </Button>
                 )}
-                {message.timestamp && (
-                  <span className="text-xs text-muted-foreground mt-1 px-1">
-                    {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                )}
+                <div className="flex items-center gap-2">
+                  {message.timestamp && (
+                    <span className="text-xs text-muted-foreground px-1">
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  )}
+                  {message.role === 'assistant' && message.id && (
+                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'up' ? 'text-green-600' : 'text-muted-foreground'}`}
+                        onClick={() => rateMessage(message.id!, 'up')}
+                        title="Helpful response"
+                      >
+                        <ThumbsUp className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'down' ? 'text-red-600' : 'text-muted-foreground'}`}
+                        onClick={() => rateMessage(message.id!, 'down')}
+                        title="Not helpful"
+                      >
+                        <ThumbsDown className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
             {isLoading && (
