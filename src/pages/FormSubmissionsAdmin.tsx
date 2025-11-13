@@ -70,6 +70,7 @@ interface FormSubmission {
   created_at: string;
   submitted_at: string;
   status: 'new' | 'in_progress' | 'resolved' | 'archived';
+  priority: 'low' | 'medium' | 'high';
   admin_notes: string | null;
   last_updated_by: string | null;
   last_updated_at: string | null;
@@ -86,7 +87,7 @@ interface AuditLogEntry {
   id: string;
   submission_id: string;
   changed_by: string | null;
-  action_type: 'status_changed' | 'notes_updated' | 'created' | 'assignment_changed' | 'tags_changed';
+  action_type: 'status_changed' | 'notes_updated' | 'created' | 'assignment_changed' | 'tags_changed' | 'priority_changed';
   old_value: any;
   new_value: any;
   created_at: string;
@@ -113,6 +114,8 @@ const FormSubmissionsAdmin = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [assigneeFilter, setAssigneeFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<'date' | 'priority'>('date');
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
@@ -450,6 +453,89 @@ const FormSubmissionsAdmin = () => {
       toast({
         title: "Error",
         description: "Failed to update assignments",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const updatePriority = async (submissionId: string, priority: 'low' | 'medium' | 'high') => {
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .update({ 
+          priority: priority,
+          last_updated_by: user?.id,
+          last_updated_at: new Date().toISOString()
+        } as any)
+        .eq("id", submissionId);
+
+      if (error) throw error;
+
+      setSubmissions(prev =>
+        prev.map(s => s.id === submissionId ? { ...s, priority } : s)
+      );
+
+      if (selectedSubmission?.id === submissionId) {
+        setSelectedSubmission(prev => prev ? { ...prev, priority } : null);
+      }
+
+      toast({
+        title: "Success",
+        description: `Priority updated to ${getPriorityLabel(priority)}`,
+      });
+    } catch (error: any) {
+      console.error("Error updating priority:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update priority",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const bulkUpdatePriority = async (priority: 'low' | 'medium' | 'high') => {
+    if (selectedIds.size === 0) {
+      toast({
+        title: "No Selection",
+        description: "Please select submissions first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const updates = Array.from(selectedIds).map(id =>
+        // @ts-ignore - Types will be regenerated
+        supabase
+          // @ts-ignore - Types will be regenerated
+          .from("form_submissions")
+          .update({ 
+            priority: priority,
+            last_updated_by: user?.id,
+            last_updated_at: new Date().toISOString()
+          } as any)
+          .eq("id", id)
+      );
+
+      await Promise.all(updates);
+
+      toast({
+        title: "Success",
+        description: `Updated priority for ${selectedIds.size} submissions`,
+      });
+
+      setSubmissions(prev =>
+        prev.map(s => selectedIds.has(s.id) ? { ...s, priority } : s)
+      );
+
+      setSelectedIds(new Set());
+    } catch (error: any) {
+      console.error("Error bulk updating priority:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update priorities",
         variant: "destructive",
       });
     }
@@ -855,6 +941,10 @@ const FormSubmissionsAdmin = () => {
       );
     }
 
+    if (priorityFilter !== "all") {
+      filtered = filtered.filter(sub => sub.priority === priorityFilter);
+    }
+
     // Filter by date
     const now = new Date();
     if (dateFilter === "today") {
@@ -885,8 +975,25 @@ const FormSubmissionsAdmin = () => {
       });
     }
 
+    // Sort
+    if (sortBy === 'priority') {
+      const priorityOrder = { high: 0, medium: 1, low: 2 };
+      filtered.sort((a, b) => {
+        const aPriority = priorityOrder[a.priority] ?? 1;
+        const bPriority = priorityOrder[b.priority] ?? 1;
+        if (aPriority !== bPriority) return aPriority - bPriority;
+        // Secondary sort by date for same priority
+        return new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime();
+      });
+    } else {
+      // Sort by date (default)
+      filtered.sort((a, b) => 
+        new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime()
+      );
+    }
+
     setFilteredSubmissions(filtered);
-  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter, tagFilter]);
+  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter, tagFilter, priorityFilter, sortBy]);
 
   const exportToCSV = () => {
     if (filteredSubmissions.length === 0) {
@@ -961,6 +1068,39 @@ const FormSubmissionsAdmin = () => {
       archived: { bg: "bg-gray-500/10", text: "text-gray-500", border: "border-gray-500/20" },
     };
     return styles[status] || styles.new;
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const styles: Record<string, { bg: string; text: string; border: string; icon: string }> = {
+      high: { 
+        bg: "bg-red-500/10", 
+        text: "text-red-500", 
+        border: "border-red-500/20",
+        icon: "🔴"
+      },
+      medium: { 
+        bg: "bg-amber-500/10", 
+        text: "text-amber-500", 
+        border: "border-amber-500/20",
+        icon: "🟡"
+      },
+      low: { 
+        bg: "bg-green-500/10", 
+        text: "text-green-500", 
+        border: "border-green-500/20",
+        icon: "🟢"
+      },
+    };
+    return styles[priority] || styles.medium;
+  };
+
+  const getPriorityLabel = (priority: string) => {
+    const labels: Record<string, string> = {
+      high: "High Priority",
+      medium: "Medium Priority",
+      low: "Low Priority",
+    };
+    return labels[priority] || "Medium Priority";
   };
 
   const getStatusLabel = (status: string) => {
@@ -1223,6 +1363,10 @@ const FormSubmissionsAdmin = () => {
         if (added.length > 0 && removed.length === 0) return `Added tag${added.length > 1 ? 's' : ''}: ${added.join(', ')}`;
         if (removed.length > 0 && added.length === 0) return `Removed tag${removed.length > 1 ? 's' : ''}: ${removed.join(', ')}`;
         return 'Updated tags';
+      case 'priority_changed':
+        const oldPriority = entry.old_value?.priority || 'medium';
+        const newPriority = entry.new_value?.priority || 'medium';
+        return `Priority changed from ${getPriorityLabel(oldPriority)} to ${getPriorityLabel(newPriority)}`;
       case 'created':
         return 'Submission created';
       default:
@@ -1548,6 +1692,34 @@ const FormSubmissionsAdmin = () => {
               </Select>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Filter by Priority</label>
+              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Priorities" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Priorities</SelectItem>
+                  <SelectItem value="high">🔴 High Priority</SelectItem>
+                  <SelectItem value="medium">🟡 Medium Priority</SelectItem>
+                  <SelectItem value="low">🟢 Low Priority</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Sort By</label>
+              <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">Date (Newest First)</SelectItem>
+                  <SelectItem value="priority">Priority (High to Low)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-muted-foreground">
                 Showing {filteredSubmissions.length} of {submissions.length} submissions
@@ -1647,6 +1819,19 @@ const FormSubmissionsAdmin = () => {
                         </Button>
                       )}
                     </div>
+
+                    <Select onValueChange={(value: any) => {
+                      bulkUpdatePriority(value);
+                    }}>
+                      <SelectTrigger className="w-[180px] h-9">
+                        <SelectValue placeholder="Set Priority..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="high">🔴 High Priority</SelectItem>
+                        <SelectItem value="medium">🟡 Medium Priority</SelectItem>
+                        <SelectItem value="low">🟢 Low Priority</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -1722,6 +1907,7 @@ const FormSubmissionsAdmin = () => {
                           onCheckedChange={toggleSelectAll}
                         />
                       </TableHead>
+                      <TableHead>Priority</TableHead>
                       <TableHead>Form Type</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Email</TableHead>
@@ -1748,6 +1934,28 @@ const FormSubmissionsAdmin = () => {
                               checked={isSelected}
                               onCheckedChange={() => toggleSelection(submission.id)}
                             />
+                          </TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Select
+                              value={submission.priority || "medium"}
+                              onValueChange={(value: any) => updatePriority(submission.id, value)}
+                            >
+                              <SelectTrigger className="h-8 w-[120px]">
+                                <SelectValue>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`${getPriorityBadge(submission.priority || 'medium').bg} ${getPriorityBadge(submission.priority || 'medium').text} ${getPriorityBadge(submission.priority || 'medium').border}`}
+                                  >
+                                    {getPriorityBadge(submission.priority || 'medium').icon} {submission.priority?.toUpperCase() || 'MEDIUM'}
+                                  </Badge>
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="high">🔴 High</SelectItem>
+                                <SelectItem value="medium">🟡 Medium</SelectItem>
+                                <SelectItem value="low">🟢 Low</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell onClick={() => setSelectedSubmission(submission)}>
                             <Badge variant="outline" className={getFormTypeBadge(submission.form_type)}>
@@ -2242,6 +2450,43 @@ const FormSubmissionsAdmin = () => {
                             </div>
                           </SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Priority Section */}
+                  <div className="space-y-2 pt-4 border-t">
+                    <span className="text-sm font-semibold">Priority Level</span>
+                    <Select
+                      value={selectedSubmission.priority || "medium"}
+                      onValueChange={(value: any) => updatePriority(selectedSubmission.id, value)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue>
+                          <Badge 
+                            variant="outline" 
+                            className={`${getPriorityBadge(selectedSubmission.priority || 'medium').bg} ${getPriorityBadge(selectedSubmission.priority || 'medium').text} ${getPriorityBadge(selectedSubmission.priority || 'medium').border}`}
+                          >
+                            {getPriorityBadge(selectedSubmission.priority || 'medium').icon} {getPriorityLabel(selectedSubmission.priority || 'medium')}
+                          </Badge>
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="high">
+                          <div className="flex items-center gap-2">
+                            🔴 High Priority
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          <div className="flex items-center gap-2">
+                            🟡 Medium Priority
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="low">
+                          <div className="flex items-center gap-2">
+                            🟢 Low Priority
+                          </div>
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
