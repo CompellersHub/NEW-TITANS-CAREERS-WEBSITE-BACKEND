@@ -119,6 +119,8 @@ export default {
         "logo-rotate": "logo-rotate 0.6s ease-in-out",
         "logo-glow-pulse": "logo-glow-pulse 2s ease-in-out infinite",
         "sparkle": "sparkle 1s ease-out forwards",
+        "gradient-shift": "gradient-shift 15s ease infinite",
+        "gradient-flow": "gradient-flow 20s ease-in-out infinite",
       },
     },
   },

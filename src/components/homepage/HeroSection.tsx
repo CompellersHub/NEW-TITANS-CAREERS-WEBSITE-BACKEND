@@ -4,10 +4,44 @@ import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-hero text-white overflow-hidden">
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+    <section className="relative text-white overflow-hidden">
+      {/* Animated gradient background */}
+      <div 
+        className="absolute inset-0 animate-gradient-shift"
+        style={{
+          background: `linear-gradient(
+            135deg,
+            hsl(213 69% 13%) 0%,
+            hsl(213 69% 10%) 25%,
+            hsl(213 69% 13%) 50%,
+            hsl(220 69% 15%) 75%,
+            hsl(213 69% 13%) 100%
+          )`,
+          backgroundSize: '200% 200%',
+        }}
+      />
       
-      <div className="container px-4 py-20 md:py-32 relative z-10">
+      {/* Subtle accent overlay */}
+      <div 
+        className="absolute inset-0 opacity-20 animate-gradient-flow"
+        style={{
+          background: `radial-gradient(
+            ellipse at top left,
+            hsl(43 100% 50% / 0.15) 0%,
+            transparent 50%
+          ), radial-gradient(
+            ellipse at bottom right,
+            hsl(45 67% 47% / 0.1) 0%,
+            transparent 50%
+          )`,
+          backgroundSize: '200% 200%',
+        }}
+      />
+      
+      {/* Grid pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 z-10" />
+      
+      <div className="container px-4 py-20 md:py-32 relative z-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Column - Content */}
           <div className="space-y-8 animate-fade-in">
