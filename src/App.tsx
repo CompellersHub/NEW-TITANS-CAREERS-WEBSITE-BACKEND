@@ -38,6 +38,7 @@ import TemplateEditor from "./pages/TemplateEditor";
 import ABTestWinnerHistory from "./pages/ABTestWinnerHistory";
 import FormSubmissionsAdmin from "./pages/FormSubmissionsAdmin";
 import AdminNotificationSettings from "./pages/AdminNotificationSettings";
+import AdminTemplates from "./pages/AdminTemplates";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/template-editor" element={<TemplateEditor />} />
         <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
         <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
+        <Route path="/admin/response-templates" element={<AdminTemplates />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

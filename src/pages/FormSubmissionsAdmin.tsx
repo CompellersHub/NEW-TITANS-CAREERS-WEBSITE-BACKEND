@@ -118,6 +118,11 @@ const FormSubmissionsAdmin = () => {
   const [newTag, setNewTag] = useState("");
   const [showTagInput, setShowTagInput] = useState(false);
   const [bulkTags, setBulkTags] = useState<string[]>([]);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [templates, setTemplates] = useState<any[]>([]);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailContent, setEmailContent] = useState("");
   const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [editingStatus, setEditingStatus] = useState(false);
@@ -685,8 +690,48 @@ const FormSubmissionsAdmin = () => {
     if (isAdmin) {
       fetchSubmissions();
       fetchAdminUsers();
+      fetchTemplates();
     }
   }, [isAdmin]);
+
+  const fetchTemplates = async () => {
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { data, error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("response_templates")
+        .select("*")
+        .eq("is_active", true)
+        .order("name");
+
+      if (error) throw error;
+      setTemplates(data || []);
+    } catch (error: any) {
+      console.error("Error fetching templates:", error);
+    }
+  };
+
+  const applyTemplate = (template: any) => {
+    if (!selectedSubmission) return;
+    
+    const formData = selectedSubmission.form_data;
+    let subject = template.subject;
+    let content = template.content;
+    
+    // Replace placeholders
+    if (formData.name) {
+      subject = subject.replace(/\{name\}/g, formData.name);
+      content = content.replace(/\{name\}/g, formData.name);
+    }
+    if (formData.email) {
+      subject = subject.replace(/\{email\}/g, formData.email);
+      content = content.replace(/\{email\}/g, formData.email);
+    }
+    
+    setEmailSubject(subject);
+    setEmailContent(content);
+    setSelectedTemplate(template);
+  };
 
   // Fetch audit log when submission is selected
   useEffect(() => {
@@ -1336,6 +1381,14 @@ const FormSubmissionsAdmin = () => {
               )}
             </div>
             <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/admin/response-templates")}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Templates
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -2306,20 +2359,149 @@ const FormSubmissionsAdmin = () => {
                   </Button>
                   
                   {selectedSubmission.form_data.email && (
-                    <Button
-                      variant="default"
-                      className="flex-1"
-                      onClick={() => {
-                        window.location.href = `mailto:${selectedSubmission.form_data.email}`;
-                      }}
-                    >
-                      <Mail className="h-4 w-4 mr-2" />
-                      Reply via Email
-                    </Button>
+                    <>
+                      <Button
+                        variant="default"
+                        className="flex-1"
+                        onClick={() => setShowTemplateDialog(true)}
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        Reply with Template
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          window.location.href = `mailto:${selectedSubmission.form_data.email}`;
+                        }}
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        Direct Email
+                      </Button>
+                    </>
                   )}
                 </div>
               </div>
             </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Template Reply Dialog */}
+      <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Reply with Template</DialogTitle>
+            <DialogDescription>
+              Select a template and customize your response
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedSubmission && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Select Template</label>
+                <Select 
+                  value={selectedTemplate?.id || ""} 
+                  onValueChange={(value) => {
+                    const template = templates.find(t => t.id === value);
+                    if (template) applyTemplate(template);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a template..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {templates.map((template) => (
+                      <SelectItem key={template.id} value={template.id}>
+                        <div>
+                          <div className="font-medium">{template.name}</div>
+                          {template.category && (
+                            <div className="text-xs text-muted-foreground">{template.category}</div>
+                          )}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {selectedTemplate && (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">To</label>
+                    <Input 
+                      value={selectedSubmission.form_data.email} 
+                      disabled 
+                      className="bg-muted"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Subject</label>
+                    <Input 
+                      value={emailSubject}
+                      onChange={(e) => setEmailSubject(e.target.value)}
+                      placeholder="Email subject"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Message</label>
+                    <Textarea
+                      value={emailContent}
+                      onChange={(e) => setEmailContent(e.target.value)}
+                      placeholder="Email content"
+                      className="min-h-[300px]"
+                    />
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        const mailtoLink = `mailto:${selectedSubmission.form_data.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailContent)}`;
+                        window.location.href = mailtoLink;
+                        setShowTemplateDialog(false);
+                        toast({
+                          title: "Email Client Opened",
+                          description: "Your email client should open with the template",
+                        });
+                      }}
+                    >
+                      <Mail className="h-4 w-4 mr-2" />
+                      Open in Email Client
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        navigator.clipboard.writeText(`To: ${selectedSubmission.form_data.email}\nSubject: ${emailSubject}\n\n${emailContent}`);
+                        toast({
+                          title: "Copied",
+                          description: "Email content copied to clipboard",
+                        });
+                      }}
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      Copy to Clipboard
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {templates.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p className="mb-4">No templates available</p>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowTemplateDialog(false);
+                      navigate("/admin/templates");
+                    }}
+                  >
+                    Create Templates
+                  </Button>
+                </div>
+              )}
+            </div>
           )}
         </DialogContent>
       </Dialog>
