@@ -74,6 +74,7 @@ interface FormSubmission {
   last_updated_by: string | null;
   last_updated_at: string | null;
   assigned_to: string | null;
+  tags: string[];
 }
 
 interface AdminUser {
@@ -85,7 +86,7 @@ interface AuditLogEntry {
   id: string;
   submission_id: string;
   changed_by: string | null;
-  action_type: 'status_changed' | 'notes_updated' | 'created' | 'assignment_changed';
+  action_type: 'status_changed' | 'notes_updated' | 'created' | 'assignment_changed' | 'tags_changed';
   old_value: any;
   new_value: any;
   created_at: string;
@@ -111,7 +112,12 @@ const FormSubmissionsAdmin = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [assigneeFilter, setAssigneeFilter] = useState("all");
+  const [tagFilter, setTagFilter] = useState("all");
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
+  const [newTag, setNewTag] = useState("");
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [bulkTags, setBulkTags] = useState<string[]>([]);
   const [selectedSubmission, setSelectedSubmission] = useState<FormSubmission | null>(null);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [editingStatus, setEditingStatus] = useState(false);
@@ -444,6 +450,115 @@ const FormSubmissionsAdmin = () => {
     }
   };
 
+  const updateTags = async (submissionId: string, tags: string[]) => {
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submissions")
+        .update({ 
+          tags: tags,
+          last_updated_by: user?.id,
+          last_updated_at: new Date().toISOString()
+        } as any)
+        .eq("id", submissionId);
+
+      if (error) throw error;
+
+      setSubmissions(prev =>
+        prev.map(s => s.id === submissionId ? { ...s, tags } : s)
+      );
+
+      if (selectedSubmission?.id === submissionId) {
+        setSelectedSubmission(prev => prev ? { ...prev, tags } : null);
+      }
+
+      // Update available tags
+      const allTags = new Set(availableTags);
+      tags.forEach(tag => allTags.add(tag));
+      setAvailableTags(Array.from(allTags).sort());
+
+      toast({
+        title: "Success",
+        description: "Tags updated successfully",
+      });
+    } catch (error: any) {
+      console.error("Error updating tags:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update tags",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const addTag = (submissionId: string, tag: string) => {
+    const submission = submissions.find(s => s.id === submissionId);
+    if (!submission) return;
+    
+    const currentTags = submission.tags || [];
+    if (currentTags.includes(tag)) {
+      toast({
+        title: "Info",
+        description: "Tag already exists",
+      });
+      return;
+    }
+    
+    updateTags(submissionId, [...currentTags, tag]);
+  };
+
+  const removeTag = (submissionId: string, tagToRemove: string) => {
+    const submission = submissions.find(s => s.id === submissionId);
+    if (!submission) return;
+    
+    const updatedTags = (submission.tags || []).filter(tag => tag !== tagToRemove);
+    updateTags(submissionId, updatedTags);
+  };
+
+  const bulkAddTags = async (tagsToAdd: string[]) => {
+    if (selectedIds.size === 0 || tagsToAdd.length === 0) return;
+
+    try {
+      const updates = Array.from(selectedIds).map(id => {
+        const submission = submissions.find(s => s.id === id);
+        if (!submission) return null;
+        
+        const currentTags = submission.tags || [];
+        const newTags = [...new Set([...currentTags, ...tagsToAdd])];
+        
+        // @ts-ignore - Types will be regenerated
+        return supabase
+          // @ts-ignore - Types will be regenerated
+          .from("form_submissions")
+          .update({ 
+            tags: newTags,
+            last_updated_by: user?.id,
+            last_updated_at: new Date().toISOString()
+          } as any)
+          .eq("id", id);
+      }).filter(Boolean);
+
+      await Promise.all(updates);
+
+      await fetchSubmissions();
+      setSelectedIds(new Set());
+      setBulkTags([]);
+
+      toast({
+        title: "Success",
+        description: `Added tags to ${selectedIds.size} submissions`,
+      });
+    } catch (error: any) {
+      console.error("Error bulk adding tags:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add tags",
+        variant: "destructive",
+      });
+    }
+  };
+
   const exportToPDF = () => {
     if (selectedIds.size === 0) {
       toast({
@@ -494,7 +609,8 @@ const FormSubmissionsAdmin = () => {
         ['Form Type', submission.form_type],
         ['Status', submission.status.toUpperCase()],
         ['Submitted', format(new Date(submission.submitted_at), 'PPpp')],
-        ['Assigned To', assignedEmail]
+        ['Assigned To', assignedEmail],
+        ['Tags', submission.tags && submission.tags.length > 0 ? submission.tags.join(', ') : 'No tags']
       ];
       
       autoTable(doc, {
@@ -688,6 +804,12 @@ const FormSubmissionsAdmin = () => {
       }
     }
 
+    if (tagFilter !== "all") {
+      filtered = filtered.filter(sub => 
+        sub.tags && sub.tags.includes(tagFilter)
+      );
+    }
+
     // Filter by date
     const now = new Date();
     if (dateFilter === "today") {
@@ -719,7 +841,7 @@ const FormSubmissionsAdmin = () => {
     }
 
     setFilteredSubmissions(filtered);
-  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter]);
+  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter, tagFilter]);
 
   const exportToCSV = () => {
     if (filteredSubmissions.length === 0) {
@@ -1042,6 +1164,20 @@ const FormSubmissionsAdmin = () => {
         if (!hadNotes && hasNotes) return 'Added notes';
         if (hadNotes && !hasNotes) return 'Removed notes';
         return 'Updated notes';
+      case 'assignment_changed':
+        const oldAssignee = entry.old_value?.assigned_to;
+        const newAssignee = entry.new_value?.assigned_to;
+        if (!oldAssignee && newAssignee) return 'Submission assigned';
+        if (oldAssignee && !newAssignee) return 'Assignment removed';
+        return 'Reassigned submission';
+      case 'tags_changed':
+        const oldTags = entry.old_value?.tags || [];
+        const newTags = entry.new_value?.tags || [];
+        const added = newTags.filter((t: string) => !oldTags.includes(t));
+        const removed = oldTags.filter((t: string) => !newTags.includes(t));
+        if (added.length > 0 && removed.length === 0) return `Added tag${added.length > 1 ? 's' : ''}: ${added.join(', ')}`;
+        if (removed.length > 0 && added.length === 0) return `Removed tag${removed.length > 1 ? 's' : ''}: ${removed.join(', ')}`;
+        return 'Updated tags';
       case 'created':
         return 'Submission created';
       default:
@@ -1342,6 +1478,23 @@ const FormSubmissionsAdmin = () => {
               </Select>
             </div>
 
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Filter by Tag</label>
+              <Select value={tagFilter} onValueChange={setTagFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All Tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tags</SelectItem>
+                  {availableTags.map(tag => (
+                    <SelectItem key={tag} value={tag}>
+                      {tag}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-muted-foreground">
                 Showing {filteredSubmissions.length} of {submissions.length} submissions
@@ -1405,6 +1558,42 @@ const FormSubmissionsAdmin = () => {
                         ))}
                       </SelectContent>
                     </Select>
+
+                    <div className="flex items-center gap-2">
+                      <Select
+                        value={bulkTags[0] || ""}
+                        onValueChange={(value) => {
+                          if (value === "new-tag") {
+                            setShowTagInput(true);
+                          } else {
+                            setBulkTags([value]);
+                          }
+                        }}
+                      >
+                        <SelectTrigger className="w-[180px] h-9">
+                          <SelectValue placeholder="Add Tag..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="new-tag">+ Create New Tag</SelectItem>
+                          {availableTags.map(tag => (
+                            <SelectItem key={tag} value={tag}>
+                              {tag}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {bulkTags.length > 0 && (
+                        <Button
+                          variant="default"
+                          size="sm"
+                          onClick={() => {
+                            bulkAddTags(bulkTags);
+                          }}
+                        >
+                          Apply Tags
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -1486,6 +1675,7 @@ const FormSubmissionsAdmin = () => {
                       <TableHead>Name</TableHead>
                       <TableHead>Details</TableHead>
                       <TableHead>Assigned To</TableHead>
+                      <TableHead>Tags</TableHead>
                       <TableHead>Submitted</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -1576,6 +1766,25 @@ const FormSubmissionsAdmin = () => {
                                 ))}
                               </SelectContent>
                             </Select>
+                          </TableCell>
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <div className="flex flex-wrap gap-1 max-w-[200px]">
+                              {submission.tags && submission.tags.length > 0 ? (
+                                submission.tags.map(tag => (
+                                  <Badge 
+                                    key={tag} 
+                                    variant="secondary"
+                                    className="text-xs cursor-pointer hover:bg-secondary/80"
+                                    onClick={() => removeTag(submission.id, tag)}
+                                  >
+                                    {tag}
+                                    <X className="h-3 w-3 ml-1" />
+                                  </Badge>
+                                ))
+                              ) : (
+                                <span className="text-xs text-muted-foreground">No tags</span>
+                              )}
+                            </div>
                           </TableCell>
                           <TableCell className="text-sm text-muted-foreground" onClick={() => setSelectedSubmission(submission)}>
                             {new Date(submission.submitted_at).toLocaleDateString()} at{" "}
@@ -1982,6 +2191,97 @@ const FormSubmissionsAdmin = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  {/* Tags Section */}
+                  <div className="space-y-2 pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-semibold">Tags</span>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {selectedSubmission.tags && selectedSubmission.tags.length > 0 ? (
+                        selectedSubmission.tags.map(tag => (
+                          <Badge 
+                            key={tag} 
+                            variant="secondary"
+                            className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                            onClick={() => removeTag(selectedSubmission.id, tag)}
+                          >
+                            {tag}
+                            <X className="h-3 w-3 ml-1" />
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-xs text-muted-foreground">No tags assigned</span>
+                      )}
+                    </div>
+
+                    {showTagInput ? (
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="Enter new tag..."
+                          value={newTag}
+                          onChange={(e) => setNewTag(e.target.value)}
+                          onKeyPress={(e) => {
+                            if (e.key === 'Enter' && newTag.trim()) {
+                              addTag(selectedSubmission.id, newTag.trim());
+                              setNewTag("");
+                              setShowTagInput(false);
+                            }
+                          }}
+                          className="h-8"
+                          autoFocus
+                        />
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            if (newTag.trim()) {
+                              addTag(selectedSubmission.id, newTag.trim());
+                              setNewTag("");
+                              setShowTagInput(false);
+                            }
+                          }}
+                        >
+                          Add
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setNewTag("");
+                            setShowTagInput(false);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2 flex-wrap">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setShowTagInput(true)}
+                        >
+                          + New Tag
+                        </Button>
+                        {availableTags.slice(0, 5).map(tag => {
+                          const hasTag = selectedSubmission.tags?.includes(tag);
+                          if (hasTag) return null;
+                          return (
+                            <Button
+                              key={tag}
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => addTag(selectedSubmission.id, tag)}
+                              className="text-xs"
+                            >
+                              + {tag}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    )}
                   </div>
                 </div>
                       ))}
