@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { format, subDays } from "date-fns";
+import { format, subDays, formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -101,6 +101,9 @@ const FormSubmissionAnalytics = () => {
   
   const [isLoading, setIsLoading] = useState(true);
   const [dateRange, setDateRange] = useState<'7' | '30' | '90'>('30');
+  const [realtimeConnected, setRealtimeConnected] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [updateIndicator, setUpdateIndicator] = useState(false);
   const [priorityMetrics, setPriorityMetrics] = useState<MetricsByPriority[]>([]);
   const [assigneeMetrics, setAssigneeMetrics] = useState<MetricsByAssignee[]>([]);
   const [tagDistribution, setTagDistribution] = useState<TagDistribution[]>([]);
@@ -132,6 +135,41 @@ const FormSubmissionAnalytics = () => {
       fetchAnalytics();
     }
   }, [isAdmin, dateRange]);
+
+  // Setup realtime subscription for form_submissions changes
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const channel = supabase
+      .channel('form-submissions-analytics')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'form_submissions'
+        },
+        (payload) => {
+          console.log('Realtime update received:', payload);
+          setLastUpdate(new Date());
+          setUpdateIndicator(true);
+          
+          // Refresh analytics data
+          fetchAnalytics();
+          
+          // Show update indicator for 2 seconds
+          setTimeout(() => setUpdateIndicator(false), 2000);
+        }
+      )
+      .subscribe((status) => {
+        console.log('Realtime status:', status);
+        setRealtimeConnected(status === 'SUBSCRIBED');
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isAdmin]);
 
   const fetchAnalytics = async () => {
     setIsLoading(true);
@@ -296,8 +334,28 @@ const FormSubmissionAnalytics = () => {
               Back to Submissions
             </Button>
             <div>
-              <h1 className="text-3xl font-bold">Form Submission Analytics</h1>
-              <p className="text-muted-foreground">Comprehensive insights and metrics</p>
+              <div className="flex items-center gap-3">
+                <h1 className="text-3xl font-bold">Form Submission Analytics</h1>
+                {realtimeConnected && (
+                  <Badge 
+                    variant="outline" 
+                    className={`${updateIndicator ? 'bg-green-500 text-white animate-pulse' : 'bg-green-500/10 text-green-500 border-green-500/20'}`}
+                  >
+                    <div className="flex items-center gap-1">
+                      <div className="h-2 w-2 rounded-full bg-current"></div>
+                      {updateIndicator ? 'Updating...' : 'Live'}
+                    </div>
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-muted-foreground">Comprehensive insights and metrics</p>
+                {lastUpdate && (
+                  <span className="text-xs text-muted-foreground">
+                    • Last updated {formatDistanceToNow(lastUpdate, { addSuffix: true })}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2">
