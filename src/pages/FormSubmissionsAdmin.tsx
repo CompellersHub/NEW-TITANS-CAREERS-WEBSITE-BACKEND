@@ -24,7 +24,8 @@ import {
   X,
   Trash2,
   CheckSquare,
-  Bell
+  Bell,
+  Clock
 } from "lucide-react";
 import {
   Select,
@@ -66,6 +67,16 @@ interface FormSubmission {
   last_updated_at: string | null;
 }
 
+interface AuditLogEntry {
+  id: string;
+  submission_id: string;
+  changed_by: string | null;
+  action_type: 'status_changed' | 'notes_updated' | 'created';
+  old_value: any;
+  new_value: any;
+  created_at: string;
+}
+
 const FormSubmissionsAdmin = () => {
   const { isAdmin, isLoading: authLoading, user } = useAuth();
   const navigate = useNavigate();
@@ -88,6 +99,8 @@ const FormSubmissionsAdmin = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkActionStatus, setBulkActionStatus] = useState<string>("");
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
+  const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
+  const [loadingAuditLog, setLoadingAuditLog] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -134,6 +147,13 @@ const FormSubmissionsAdmin = () => {
       fetchSubmissions();
     }
   }, [isAdmin]);
+
+  // Fetch audit log when submission is selected
+  useEffect(() => {
+    if (selectedSubmission) {
+      fetchAuditLog(selectedSubmission.id);
+    }
+  }, [selectedSubmission?.id]);
 
   // Real-time subscription
   useEffect(() => {
@@ -529,6 +549,62 @@ const FormSubmissionsAdmin = () => {
       title: "Export Successful",
       description: `Exported ${selectedSubmissions.length} selected submissions`,
     });
+  };
+
+  const fetchAuditLog = async (submissionId: string) => {
+    setLoadingAuditLog(true);
+    try {
+      // @ts-ignore - Types will be regenerated
+      const { data, error } = await supabase
+        // @ts-ignore - Types will be regenerated
+        .from("form_submission_audit_log")
+        .select("*")
+        .eq("submission_id", submissionId)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      // @ts-ignore - Types will be regenerated
+      setAuditLog(data || []);
+    } catch (error: any) {
+      console.error("Error fetching audit log:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load activity log",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingAuditLog(false);
+    }
+  };
+
+  const getActionIcon = (actionType: string) => {
+    switch (actionType) {
+      case 'status_changed':
+        return <Edit2 className="h-4 w-4" />;
+      case 'notes_updated':
+        return <FileText className="h-4 w-4" />;
+      case 'created':
+        return <MessageCircle className="h-4 w-4" />;
+      default:
+        return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  const getActionDescription = (entry: AuditLogEntry) => {
+    switch (entry.action_type) {
+      case 'status_changed':
+        return `Status changed from ${getStatusLabel(entry.old_value?.status || 'unknown')} to ${getStatusLabel(entry.new_value?.status || 'unknown')}`;
+      case 'notes_updated':
+        const hadNotes = entry.old_value?.admin_notes;
+        const hasNotes = entry.new_value?.admin_notes;
+        if (!hadNotes && hasNotes) return 'Added notes';
+        if (hadNotes && !hasNotes) return 'Removed notes';
+        return 'Updated notes';
+      case 'created':
+        return 'Submission created';
+      default:
+        return 'Unknown action';
+    }
   };
 
   const updateSubmissionNotes = async (id: string, notes: string) => {
@@ -948,9 +1024,12 @@ const FormSubmissionsAdmin = () => {
           setSelectedSubmission(null);
           setEditingStatus(false);
           setEditingNotes(false);
+          setAuditLog([]);
+        } else if (selectedSubmission) {
+          fetchAuditLog(selectedSubmission.id);
         }
       }}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
           {selectedSubmission && (
             <>
               <DialogHeader>
@@ -1158,6 +1237,81 @@ const FormSubmissionsAdmin = () => {
                       </p>
                     </div>
                   </div>
+                </div>
+
+                {/* Activity Log Timeline */}
+                <div className="space-y-3 pt-6 border-t">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                      Activity Timeline
+                    </h3>
+                    {loadingAuditLog && <Loader2 className="h-4 w-4 animate-spin" />}
+                  </div>
+                  
+                  {!loadingAuditLog && auditLog.length === 0 && (
+                    <p className="text-sm text-muted-foreground text-center py-4">
+                      No activity recorded yet
+                    </p>
+                  )}
+
+                  {!loadingAuditLog && auditLog.length > 0 && (
+                    <div className="space-y-3">
+                      {auditLog.map((entry, index) => (
+                        <div 
+                          key={entry.id} 
+                          className="flex gap-3 pb-3 border-b last:border-0 last:pb-0"
+                        >
+                          <div className="flex-shrink-0 mt-1">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                              {getActionIcon(entry.action_type)}
+                            </div>
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-foreground">
+                                  {getActionDescription(entry)}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {entry.changed_by ? (
+                                    <>by Admin • {new Date(entry.created_at).toLocaleString()}</>
+                                  ) : (
+                                    <>System • {new Date(entry.created_at).toLocaleString()}</>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+
+                            {entry.action_type === 'status_changed' && (
+                              <div className="flex items-center gap-2 mt-2">
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs ${getStatusBadge(entry.old_value?.status).bg} ${getStatusBadge(entry.old_value?.status).text} ${getStatusBadge(entry.old_value?.status).border}`}
+                                >
+                                  {getStatusLabel(entry.old_value?.status)}
+                                </Badge>
+                                <span className="text-xs text-muted-foreground">→</span>
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs ${getStatusBadge(entry.new_value?.status).bg} ${getStatusBadge(entry.new_value?.status).text} ${getStatusBadge(entry.new_value?.status).border}`}
+                                >
+                                  {getStatusLabel(entry.new_value?.status)}
+                                </Badge>
+                              </div>
+                            )}
+
+                            {entry.action_type === 'notes_updated' && entry.new_value?.admin_notes && (
+                              <div className="mt-2 p-2 bg-muted/30 rounded text-xs">
+                                {entry.new_value.admin_notes.substring(0, 100)}
+                                {entry.new_value.admin_notes.length > 100 && '...'}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Action Buttons */}
