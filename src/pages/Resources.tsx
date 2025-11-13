@@ -92,29 +92,29 @@ const Resources = () => {
   ];
 
   const ResourceCard = ({ title, description, fileSize, icon: Icon }: any) => (
-    <Card className="hover:shadow-xl transition-all group border-2 hover:border-tc-amber/50">
+    <Card className="hover:shadow-xl transition-all group border-2 hover:border-accent/50">
       <CardHeader>
         <div className="flex items-start justify-between gap-4">
-          <div className="w-12 h-12 bg-tc-amber/10 rounded-xl flex items-center justify-center flex-shrink-0">
-            <Icon className="w-6 h-6 text-tc-amber" />
+          <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <Icon className="w-6 h-6 text-accent" />
           </div>
           <Button 
             size="sm" 
-            className="bg-tc-navy hover:bg-tc-blue text-white"
+            className="bg-primary hover:bg-primary-glow text-primary-foreground font-sans"
           >
             <Download className="w-4 h-4 mr-2" />
             Download
           </Button>
         </div>
-        <CardTitle className="text-xl mt-4 group-hover:text-tc-amber transition-colors">
+        <CardTitle className="font-kanit text-xl mt-4 group-hover:text-accent transition-colors">
           {title}
         </CardTitle>
-        <CardDescription className="text-base">
+        <CardDescription className="font-sans text-base">
           {description}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm font-sans text-muted-foreground">
           <FileText className="w-4 h-4" />
           <span>PDF • {fileSize}</span>
         </div>
@@ -127,19 +127,19 @@ const Resources = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-tc-navy text-white py-20 md:py-28">
+      <section className="bg-primary text-primary-foreground py-20 md:py-28">
         <div className="container max-w-7xl">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30">
+            <Badge className="bg-accent/20 text-accent border-accent/30 font-sans">
               <Download className="w-3 h-3 mr-2" />
               FREE RESOURCES
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Your <span className="text-tc-amber">Free Career Toolkit</span>
+            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
+              Your <span className="text-accent">Free Career Toolkit</span>
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
               Everything you need to kickstart your career transformation. 
               Download our professional guides, templates, and reports - completely free.
             </p>
@@ -148,14 +148,14 @@ const Resources = () => {
       </section>
 
       {/* Career Guides Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="mb-12 space-y-3">
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy flex items-center gap-3">
-              <BookOpen className="w-8 h-8 text-tc-amber" />
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary flex items-center gap-3">
+              <BookOpen className="w-8 h-8 text-accent" />
               Career Guides
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="font-sans text-lg text-muted-foreground">
               Comprehensive guides to help you navigate your career journey.
             </p>
           </div>
@@ -169,14 +169,14 @@ const Resources = () => {
       </section>
 
       {/* Resume Templates Section */}
-      <section className="py-20 bg-secondary/30">
+      <section className="py-20 bg-muted/30">
         <div className="container max-w-7xl">
           <div className="mb-12 space-y-3">
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy flex items-center gap-3">
-              <FileText className="w-8 h-8 text-tc-amber" />
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary flex items-center gap-3">
+              <FileText className="w-8 h-8 text-accent" />
               Resume Templates
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="font-sans text-lg text-muted-foreground">
               Professional templates that get you noticed by recruiters.
             </p>
           </div>
@@ -190,14 +190,14 @@ const Resources = () => {
       </section>
 
       {/* Interview Prep Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="mb-12 space-y-3">
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy flex items-center gap-3">
-              <ClipboardList className="w-8 h-8 text-tc-amber" />
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary flex items-center gap-3">
+              <ClipboardList className="w-8 h-8 text-accent" />
               Interview Preparation
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="font-sans text-lg text-muted-foreground">
               Ace your interviews with our proven preparation materials.
             </p>
           </div>
@@ -211,14 +211,14 @@ const Resources = () => {
       </section>
 
       {/* Industry Reports Section */}
-      <section className="py-20 bg-secondary/30">
+      <section className="py-20 bg-muted/30">
         <div className="container max-w-7xl">
           <div className="mb-12 space-y-3">
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-tc-amber" />
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary flex items-center gap-3">
+              <TrendingUp className="w-8 h-8 text-accent" />
               Industry Reports
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="font-sans text-lg text-muted-foreground">
               Stay informed with our latest industry insights and salary data.
             </p>
           </div>
@@ -232,31 +232,31 @@ const Resources = () => {
       </section>
 
       {/* Newsletter Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-4xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-tc-navy mb-4">
+              <h2 className="font-kanit text-3xl font-bold text-primary mb-4">
                 Want More Free Resources?
               </h2>
-              <p className="text-lg text-muted-foreground mb-6">
+              <p className="font-sans text-lg text-muted-foreground mb-6">
                 Subscribe to get new career guides, templates, and industry reports delivered straight to your inbox. Plus, receive exclusive WhatsApp updates with job alerts and quick tips.
               </p>
-              <ul className="space-y-3 text-muted-foreground">
+              <ul className="space-y-3 font-sans text-muted-foreground">
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                   <span>Weekly career tips and job search strategies</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                   <span>New downloadable resources each month</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                   <span>Early access to course launches</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <CheckCircle className="w-5 h-5 text-tc-amber flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
                   <span>Instant WhatsApp job alerts (optional)</span>
                 </li>
               </ul>
@@ -274,13 +274,13 @@ const Resources = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-tc-navy to-tc-blue text-white">
+      <section className="py-20 bg-gradient-to-br from-primary to-primary-glow text-primary-foreground">
         <div className="container max-w-4xl text-center space-y-8">
-          <h2 className="text-3xl md:text-5xl font-bold">
+          <h2 className="font-kanit text-3xl md:text-5xl font-bold">
             Ready to Take the Next Step?
           </h2>
           
-          <p className="text-xl text-white/80 leading-relaxed">
+          <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
             These resources are just the beginning. Join our courses to get personalized 
             guidance, hands-on projects, and direct career support.
           </p>
@@ -288,13 +288,13 @@ const Resources = () => {
           <div className="flex flex-wrap gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              className="bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold text-lg px-8"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground font-sans font-bold text-lg px-8"
             >
               <Briefcase className="w-5 h-5 mr-2" />
               View Our Courses
             </Button>
             
-            <Button size="lg" variant="outlineWhite" className="text-lg px-8">
+            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-sans text-lg px-8">
               <BookOpen className="w-5 h-5 mr-2" />
               Book Free Consultation
             </Button>
