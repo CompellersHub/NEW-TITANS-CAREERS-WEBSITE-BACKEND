@@ -36,6 +36,7 @@ import EngagementAnalytics from "./pages/EngagementAnalytics";
 import LeadNurtureManager from "./pages/LeadNurtureManager";
 import TemplateEditor from "./pages/TemplateEditor";
 import ABTestWinnerHistory from "./pages/ABTestWinnerHistory";
+import FormSubmissionsAdmin from "./pages/FormSubmissionsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/ab-test-history" element={<ABTestWinnerHistory />} />
         <Route path="/admin/lead-nurture" element={<LeadNurtureManager />} />
         <Route path="/admin/template-editor" element={<TemplateEditor />} />
+        <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
