@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
@@ -6,8 +7,21 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, Award, Heart, TrendingUp, Zap, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AboutPageSkeleton } from "@/components/admin/AboutPageSkeleton";
 
 const About = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <AboutPageSkeleton />;
+  }
   const values = [
     {
       icon: Target,
