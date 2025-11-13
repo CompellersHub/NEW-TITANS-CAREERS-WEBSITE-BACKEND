@@ -1,10 +1,11 @@
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, useEffect, cloneElement, isValidElement } from "react";
 import { StepIndicator } from "./StepIndicator";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ChevronLeft, ChevronRight, AlertCircle } from "lucide-react";
 import { z } from "zod";
+import { useFormAnalytics } from "@/hooks/useFormAnalytics";
 
 interface ValidationResult {
   isValid: boolean;
@@ -28,6 +29,8 @@ interface ValidatedMultiStepFormProps {
   variant?: "default" | "compact" | "vertical";
   formData?: any;
   onFormDataChange?: (data: any) => void;
+  formName?: string;
+  userEmail?: string;
 }
 
 export const ValidatedMultiStepForm = ({ 
@@ -36,11 +39,15 @@ export const ValidatedMultiStepForm = ({
   showProgress = true,
   variant = "default",
   formData = {},
-  onFormDataChange
+  onFormDataChange,
+  formName = "multi-step-form",
+  userEmail
 }: ValidatedMultiStepFormProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [attemptedNext, setAttemptedNext] = useState(false);
+  
+  const analytics = useFormAnalytics(formName);
   
   // Filter steps based on shouldShow condition
   const visibleSteps = steps.filter(step => 
@@ -48,6 +55,16 @@ export const ValidatedMultiStepForm = ({
   );
   
   const progress = ((currentStep + 1) / visibleSteps.length) * 100;
+  
+  // Track step abandonment when step changes
+  const previousStepRef = useState(currentStep);
+  useEffect(() => {
+    if (previousStepRef[0] !== currentStep && previousStepRef[0] < currentStep) {
+      const previousStep = visibleSteps[previousStepRef[0]];
+      analytics.trackStepComplete(previousStepRef[0], previousStep.title);
+    }
+    previousStepRef[1](currentStep);
+  }, [currentStep, visibleSteps, analytics]);
 
   const validateCurrentStep = (): boolean => {
     const step = visibleSteps[currentStep];
@@ -58,6 +75,14 @@ export const ValidatedMultiStepForm = ({
       if (!result.isValid) {
         const errorMessages = Object.values(result.errors).filter(Boolean);
         setValidationErrors(errorMessages);
+        
+        // Track validation errors
+        Object.entries(result.errors).forEach(([fieldName, errorMessage]) => {
+          if (errorMessage) {
+            analytics.trackFieldError(fieldName, errorMessage, currentStep, step.title);
+          }
+        });
+        
         return false;
       }
     }
@@ -78,6 +103,7 @@ export const ValidatedMultiStepForm = ({
       setAttemptedNext(false);
       setValidationErrors([]);
     } else {
+      analytics.trackFormComplete(userEmail);
       onComplete();
     }
   };
@@ -125,7 +151,12 @@ export const ValidatedMultiStepForm = ({
       )}
 
       <div className="min-h-[300px] py-8">
-        {visibleSteps[currentStep].content}
+        {enhanceContentWithTracking(
+          visibleSteps[currentStep].content, 
+          currentStep, 
+          visibleSteps[currentStep].title,
+          analytics
+        )}
       </div>
 
       <div className="flex items-center justify-between pt-6 border-t">
@@ -152,3 +183,58 @@ export const ValidatedMultiStepForm = ({
     </div>
   );
 };
+
+// Helper function to enhance form content with analytics tracking
+function enhanceContentWithTracking(
+  content: ReactNode, 
+  stepNumber: number, 
+  stepTitle: string,
+  analytics: ReturnType<typeof useFormAnalytics>
+): ReactNode {
+  if (!isValidElement(content)) {
+    return content;
+  }
+
+  // Recursively process children
+  const enhanceChildren = (children: ReactNode): ReactNode => {
+    if (!children) return children;
+
+    return cloneElement(content as any, {
+      children: Array.isArray(children)
+        ? children.map((child, index) => {
+            if (isValidElement(child)) {
+              const props = child.props as any;
+              
+              // Track input fields (Input, Textarea, Select, etc.)
+              if (props.id || props.name) {
+                const fieldName = props.id || props.name;
+                
+                return cloneElement(child, {
+                  ...props,
+                  onFocus: (e: any) => {
+                    analytics.trackFieldFocus(fieldName, stepNumber, stepTitle);
+                    props.onFocus?.(e);
+                  },
+                  onBlur: (e: any) => {
+                    analytics.trackFieldBlur(fieldName, stepNumber, stepTitle);
+                    props.onBlur?.(e);
+                  },
+                });
+              }
+              
+              // Recursively process nested children
+              if (props.children) {
+                return cloneElement(child, {
+                  ...props,
+                  children: enhanceChildren(props.children),
+                });
+              }
+            }
+            return child;
+          })
+        : enhanceChildren(children)
+    });
+  };
+
+  return enhanceChildren(content);
+}

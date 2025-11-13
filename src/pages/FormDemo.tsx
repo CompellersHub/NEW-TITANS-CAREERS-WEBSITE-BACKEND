@@ -284,6 +284,8 @@ export default function FormDemo() {
                   steps={steps}
                   onComplete={handleComplete}
                   showProgress={true}
+                  formName="demo-registration-form"
+                  userEmail={formData.email}
                 />
               </CardContent>
             </Card>
@@ -299,6 +301,7 @@ export default function FormDemo() {
                     onComplete={handleComplete}
                     showProgress={false}
                     variant="compact"
+                    formName="demo-compact-form"
                   />
                 </CardContent>
               </Card>
@@ -322,6 +325,7 @@ export default function FormDemo() {
                     onComplete={handleComplete}
                     showProgress={false}
                     variant="vertical"
+                    formName="demo-vertical-form"
                   />
                 </CardContent>
               </Card>
