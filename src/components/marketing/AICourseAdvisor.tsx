@@ -2,14 +2,22 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Sparkles, Send, X, Minimize2, Maximize2, Mail } from "lucide-react";
+import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
+}
+
+interface Conversation {
+  id: string;
+  title: string | null;
+  last_message_at: string;
+  message_count: number;
 }
 
 export function AICourseAdvisor() {
@@ -26,7 +34,38 @@ export function AICourseAdvisor() {
   const [email, setEmail] = useState("");
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
+  const [sessionId, setSessionId] = useState<string>("");
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize or load session
+  useEffect(() => {
+    // Get or create session ID
+    let storedSessionId = localStorage.getItem("ai_advisor_session_id");
+    if (!storedSessionId) {
+      storedSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("ai_advisor_session_id", storedSessionId);
+    }
+    setSessionId(storedSessionId);
+
+    // Load stored email if exists
+    const storedEmail = localStorage.getItem("ai_advisor_email");
+    if (storedEmail) {
+      setEmail(storedEmail);
+      setEmailCaptured(true);
+      loadConversationHistory(storedEmail);
+    }
+  }, []);
+
+  // Create or load conversation when session is ready
+  useEffect(() => {
+    if (sessionId && !conversationId) {
+      loadOrCreateConversation();
+    }
+  }, [sessionId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -35,6 +74,136 @@ export function AICourseAdvisor() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const loadOrCreateConversation = async () => {
+    try {
+      // Check if conversation exists for this session
+      const { data: existing } = await supabase
+        .from("ai_advisor_conversations")
+        .select("id")
+        .eq("session_id", sessionId)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      if (existing) {
+        setConversationId(existing.id);
+        await loadMessages(existing.id);
+      } else {
+        // Create new conversation
+        const { data: newConv, error } = await supabase
+          .from("ai_advisor_conversations")
+          .insert({
+            session_id: sessionId,
+            email: emailCaptured ? email : null,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        setConversationId(newConv.id);
+      }
+    } catch (error) {
+      console.error("Error loading conversation:", error);
+    }
+  };
+
+  const loadMessages = async (convId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("ai_advisor_messages")
+        .select("role, content")
+        .eq("conversation_id", convId)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        setMessages(data as Message[]);
+      }
+    } catch (error) {
+      console.error("Error loading messages:", error);
+    }
+  };
+
+  const loadConversationHistory = async (userEmail: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("ai_advisor_conversations")
+        .select("id, title, last_message_at, message_count")
+        .eq("email", userEmail)
+        .order("last_message_at", { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setConversations(data || []);
+    } catch (error) {
+      console.error("Error loading history:", error);
+    }
+  };
+
+  const switchConversation = async (convId: string) => {
+    setIsLoadingHistory(true);
+    try {
+      setConversationId(convId);
+      await loadMessages(convId);
+      setShowHistory(false);
+    } catch (error) {
+      console.error("Error switching conversation:", error);
+      toast.error("Failed to load conversation");
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  const startNewConversation = async () => {
+    try {
+      const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("ai_advisor_session_id", newSessionId);
+      setSessionId(newSessionId);
+
+      const { data: newConv, error } = await supabase
+        .from("ai_advisor_conversations")
+        .insert({
+          session_id: newSessionId,
+          email: emailCaptured ? email : null,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setConversationId(newConv.id);
+      setMessages([
+        {
+          role: "assistant",
+          content: "👋 Hi! I'm your AI career advisor at Titans Careers. I'm here to help you find the perfect course for your career goals. What brings you here today?",
+        },
+      ]);
+      setShowHistory(false);
+      
+      if (emailCaptured) {
+        loadConversationHistory(email);
+      }
+    } catch (error) {
+      console.error("Error creating new conversation:", error);
+      toast.error("Failed to start new conversation");
+    }
+  };
+
+  const saveMessage = async (message: Message) => {
+    if (!conversationId) return;
+
+    try {
+      await supabase.from("ai_advisor_messages").insert({
+        conversation_id: conversationId,
+        role: message.role,
+        content: message.content,
+      });
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  };
 
   const handleEmailSubmit = async () => {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -50,36 +219,32 @@ export function AICourseAdvisor() {
         source: "ai_advisor",
       });
 
+      // Store email locally
+      localStorage.setItem("ai_advisor_email", email);
+
+      // Update conversation with email
+      if (conversationId) {
+        await supabase
+          .from("ai_advisor_conversations")
+          .update({ email, lead_captured: true })
+          .eq("id", conversationId);
+      }
+
       setEmailCaptured(true);
       setShowEmailCapture(false);
-      
-      // Track email capture with high score
-      await supabase.from("user_behaviors").insert({
-        email,
-        behavior_type: "ai_advisor_email_captured",
-        score_value: 35,
-        behavior_data: {
-          conversation_length: messages.length,
-          captured_via: "ai_advisor",
-        },
-      });
 
-      await supabase.rpc("update_lead_score", {
-        p_email: email,
-        p_score_change: 35,
-        p_behavior: "ai_advisor_email_captured",
-      });
+      // Load conversation history
+      await loadConversationHistory(email);
 
       toast.success("Great! I'll personalize my recommendations for you.");
+
+      const confirmMessage: Message = {
+        role: "assistant",
+        content: "Perfect! ✅ I've got your email. I'll make sure to give you the most personalized recommendations. Now, let's continue - what are your main career goals?",
+      };
       
-      // Add confirmation message
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Perfect! ✅ I've got your email. I'll make sure to give you the most personalized recommendations. Now, let's continue - what are your main career goals?",
-        },
-      ]);
+      setMessages((prev) => [...prev, confirmMessage]);
+      await saveMessage(confirmMessage);
     } catch (error) {
       console.error("Email capture error:", error);
       toast.error("Something went wrong. Please try again.");
@@ -95,6 +260,7 @@ export function AICourseAdvisor() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    await saveMessage(userMessage);
     setInput("");
     setIsLoading(true);
 
@@ -115,6 +281,12 @@ export function AICourseAdvisor() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+      await saveMessage(assistantMessage);
+
+      // Reload history to show updated conversation
+      if (emailCaptured && email) {
+        loadConversationHistory(email);
+      }
 
       // Check if we should suggest email capture
       if (data.suggestEmailCapture && !emailCaptured && !showEmailCapture) {
@@ -125,14 +297,14 @@ export function AICourseAdvisor() {
     } catch (error) {
       console.error("AI advisor error:", error);
       toast.error("Sorry, I'm having trouble responding. Please try again.");
-      
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "I apologize, but I'm experiencing technical difficulties. Please try sending your message again, or contact us directly at info@titanscareers.com.",
-        },
-      ]);
+
+      const errorMessage: Message = {
+        role: "assistant",
+        content: "I apologize, but I'm experiencing technical difficulties. Please try sending your message again, or contact us directly at info@titanscareers.com.",
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+      await saveMessage(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -191,6 +363,28 @@ export function AICourseAdvisor() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {emailCaptured && conversations.length > 0 && (
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                      onClick={() => setShowHistory(!showHistory)}
+                      title="Conversation History"
+                    >
+                      <History className="h-4 w-4" />
+                    </Button>
+                  )}
+                  {emailCaptured && (
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-8 w-8 text-white hover:bg-white/20"
+                      onClick={startNewConversation}
+                      title="New Conversation"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     size="icon"
                     variant="ghost"
@@ -216,8 +410,59 @@ export function AICourseAdvisor() {
 
               {!isMinimized && (
                 <>
-                  {/* Messages */}
-                  <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[440px]">
+                  {showHistory ? (
+                    /* Conversation History */
+                    <div className="flex-1 overflow-y-auto p-4 h-[440px]">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="font-semibold text-lg">Conversation History</h3>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowHistory(false)}
+                        >
+                          Back to Chat
+                        </Button>
+                      </div>
+                      <ScrollArea className="h-[380px]">
+                        <div className="space-y-2">
+                          {conversations.map((conv) => (
+                            <button
+                              key={conv.id}
+                              onClick={() => switchConversation(conv.id)}
+                              disabled={isLoadingHistory}
+                              className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                                conv.id === conversationId
+                                  ? "border-accent bg-accent/10"
+                                  : "border-border hover:border-accent/50 hover:bg-accent/5"
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-2">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium truncate">
+                                    {conv.title || "New conversation"}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    {conv.message_count} messages
+                                  </p>
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
+                                  <Clock className="h-3 w-3" />
+                                  {new Date(conv.last_message_at).toLocaleDateString()}
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                          {conversations.length === 0 && (
+                            <p className="text-center text-muted-foreground text-sm py-8">
+                              No previous conversations
+                            </p>
+                          )}
+                        </div>
+                      </ScrollArea>
+                    </div>
+                  ) : (
+                    /* Messages */
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[440px]">
                     {messages.map((message, index) => (
                       <div
                         key={index}
@@ -280,11 +525,13 @@ export function AICourseAdvisor() {
                       </div>
                     )}
 
-                    <div ref={messagesEndRef} />
-                  </div>
+                      <div ref={messagesEndRef} />
+                    </div>
+                  )}
 
                   {/* Input */}
-                  <div className="border-t p-4">
+                  {!showHistory && (
+                    <div className="border-t p-4">
                     <div className="flex gap-2">
                       <Input
                         placeholder="Ask me about courses..."
@@ -302,6 +549,7 @@ export function AICourseAdvisor() {
                       </Button>
                     </div>
                   </div>
+                  )}
                 </>
               )}
             </Card>
