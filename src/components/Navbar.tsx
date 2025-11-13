@@ -44,6 +44,9 @@ export const Navbar = () => {
             <Link to="/resources" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               Resources
             </Link>
+            <Link to="/blog" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+              Blog
+            </Link>
             <a href="#how-it-works" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               How It Works
             </a>
@@ -106,6 +109,9 @@ export const Navbar = () => {
             </Link>
             <Link to="/resources" className="block text-white hover:text-accent transition-colors font-medium py-2">
               Resources
+            </Link>
+            <Link to="/blog" className="block text-white hover:text-accent transition-colors font-medium py-2">
+              Blog
             </Link>
             <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-medium py-2">
               How It Works
