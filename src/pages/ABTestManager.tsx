@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { ArrowLeft, Plus, Send, Trophy, Eye, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Send, Trophy, Eye, Trash2, FileText, Save } from "lucide-react";
 
 interface ABTest {
   id: string;
@@ -58,6 +58,8 @@ const ABTestManager = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
   const [previewContent, setPreviewContent] = useState("");
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [selectedVariantForTemplate, setSelectedVariantForTemplate] = useState<number | null>(null);
   
   // Form state for new test
   const [testName, setTestName] = useState("");
@@ -120,6 +122,35 @@ const ABTestManager = () => {
     },
     enabled: !!selectedTest?.id && selectedTest.status !== "draft",
   });
+
+  // Fetch templates
+  const { data: templates = [] } = useQuery({
+    queryKey: ["emailTemplates"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("email_templates")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: isAdmin,
+  });
+
+  const loadTemplate = (template: any, variantIndex: number) => {
+    const newVariants = [...variants];
+    newVariants[variantIndex] = {
+      ...newVariants[variantIndex],
+      subject: template.subject,
+      htmlContent: template.html_content,
+      previewText: template.preview_text || "",
+    };
+    setVariants(newVariants);
+    setShowTemplateDialog(false);
+    setSelectedVariantForTemplate(null);
+    toast.success("Template loaded into variant");
+  };
 
   // Create A/B test mutation
   const createTestMutation = useMutation({
@@ -408,6 +439,20 @@ const ABTestManager = () => {
                         </div>
                         <div>
                           <Label>HTML Content</Label>
+                          <div className="flex gap-2 mb-2">
+                            <Button
+                              type="button"
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                setSelectedVariantForTemplate(index);
+                                setShowTemplateDialog(true);
+                              }}
+                            >
+                              <FileText className="h-4 w-4 mr-2" />
+                              Load from Template
+                            </Button>
+                          </div>
                           <Textarea
                             value={variant.htmlContent}
                             onChange={(e) => {
@@ -627,6 +672,52 @@ const ABTestManager = () => {
             className="border rounded p-4 overflow-auto"
             dangerouslySetInnerHTML={{ __html: previewContent }}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Load Template Dialog */}
+      <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Load from Template</DialogTitle>
+            <DialogDescription>
+              Select a template to load into Variant {selectedVariantForTemplate !== null ? variants[selectedVariantForTemplate]?.name : ""}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            {templates.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">
+                No templates available. Create templates from the Template Library.
+              </p>
+            ) : (
+              templates.map((template: any) => (
+                <Card 
+                  key={template.id} 
+                  className="cursor-pointer hover:border-primary transition-colors" 
+                  onClick={() => selectedVariantForTemplate !== null && loadTemplate(template, selectedVariantForTemplate)}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{template.name}</CardTitle>
+                        <CardDescription className="mt-1">{template.description || "No description"}</CardDescription>
+                      </div>
+                      <Badge variant="outline">{template.campaign_type}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm font-medium text-muted-foreground">Subject</p>
+                    <p className="text-sm truncate">{template.subject}</p>
+                    <div className="flex gap-2 mt-2">
+                      {template.tags?.map((tag: string, i: number) => (
+                        <Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
         </DialogContent>
       </Dialog>
     </div>

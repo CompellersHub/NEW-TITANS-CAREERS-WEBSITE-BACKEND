@@ -93,6 +93,30 @@ const handler = async (req: Request): Promise<Response> => {
       })
       .eq("id", testId);
 
+    // Auto-save winning variant as template
+    console.log("Saving winning variant as template");
+    
+    try {
+      await supabase
+        .from("email_templates")
+        .insert({
+          name: `${abTest.name} - Winner (${winner.ab_test_variants.variant_name})`,
+          description: `Winning variant from A/B test with ${winner.score.toFixed(2)} score`,
+          campaign_type: abTest.campaign_type,
+          subject: winner.ab_test_variants.subject,
+          html_content: winner.ab_test_variants.html_content,
+          preview_text: winner.ab_test_variants.preview_text,
+          source_type: "ab_test_winner",
+          source_id: testId,
+          tags: ["ab-test-winner", "high-performing"],
+        });
+      
+      console.log("Winner saved as template successfully");
+    } catch (templateError: any) {
+      console.error("Error saving winner as template:", templateError);
+      // Don't fail the whole operation if template saving fails
+    }
+
     return new Response(
       JSON.stringify({
         success: true,

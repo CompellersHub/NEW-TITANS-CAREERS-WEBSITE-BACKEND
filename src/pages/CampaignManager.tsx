@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -59,6 +61,8 @@ import {
   Mail,
   TrendingUp,
   TrendingDown,
+  FileText,
+  Save,
 } from "lucide-react";
 
 interface CampaignContent {
@@ -109,6 +113,11 @@ const CampaignManager = () => {
   const [previewCampaign, setPreviewCampaign] = useState<CampaignContent | null>(null);
   const [deleteCampaignId, setDeleteCampaignId] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
+  const [showSaveTemplateDialog, setShowSaveTemplateDialog] = useState(false);
+  const [templateName, setTemplateName] = useState("");
+  const [templateDescription, setTemplateDescription] = useState("");
+  const [templateTags, setTemplateTags] = useState("");
 
   const form = useForm<CampaignFormValues>({
     resolver: zodResolver(campaignFormSchema),
@@ -171,6 +180,77 @@ const CampaignManager = () => {
       toast({
         title: "Error",
         description: "Failed to load campaign history",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const { data: templates = [] } = useQuery({
+    queryKey: ["emailTemplates"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("email_templates")
+        .select("*")
+        .order("created_at", { ascending: false});
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !!isAdmin,
+  });
+
+  const loadTemplate = (template: any) => {
+    form.reset({
+      campaign_type: template.campaign_type as "career_tips" | "job_alerts" | "course_updates",
+      content_key: `${template.campaign_type}_${Date.now()}`,
+      subject: template.subject,
+      preview_text: template.preview_text || "",
+      html_content: template.html_content,
+      is_active: true,
+      priority: 50,
+    });
+    setShowTemplateDialog(false);
+    toast({
+      title: "Template Loaded",
+      description: "Template content has been loaded into the form.",
+    });
+  };
+
+  const saveAsTemplate = async () => {
+    try {
+      const values = form.getValues();
+      
+      const { error } = await supabase
+        .from("email_templates")
+        .insert({
+          name: templateName,
+          description: templateDescription || null,
+          campaign_type: values.campaign_type,
+          subject: values.subject,
+          html_content: values.html_content,
+          preview_text: values.preview_text || null,
+          source_type: "campaign",
+          source_id: editingCampaign?.id || null,
+          tags: templateTags ? templateTags.split(",").map(t => t.trim()) : [],
+          created_by: user?.id,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Template Saved",
+        description: "Campaign has been saved as a template.",
+      });
+
+      setShowSaveTemplateDialog(false);
+      setTemplateName("");
+      setTemplateDescription("");
+      setTemplateTags("");
+    } catch (error: any) {
+      console.error("Error saving template:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save template",
         variant: "destructive",
       });
     }
@@ -367,12 +447,45 @@ const CampaignManager = () => {
           <TabsContent value="create">
             <Card>
               <CardHeader>
-                <CardTitle>{editingCampaign ? "Edit Campaign" : "Create New Campaign"}</CardTitle>
-                <CardDescription>
-                  {editingCampaign
-                    ? "Update the campaign details below"
-                    : "Fill in the details to create a new email campaign"}
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>{editingCampaign ? "Edit Campaign" : "Create New Campaign"}</CardTitle>
+                    <CardDescription>
+                      {editingCampaign
+                        ? "Update the campaign details below"
+                        : "Fill in the details to create a new email campaign"}
+                    </CardDescription>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setShowTemplateDialog(true)}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Load Template
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        const values = form.getValues();
+                        if (!values.subject || !values.html_content) {
+                          toast({
+                            title: "Error",
+                            description: "Please fill in subject and content before saving as template",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        setShowSaveTemplateDialog(true);
+                      }}
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save as Template
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
                 <Form {...form}>
@@ -854,6 +967,98 @@ const CampaignManager = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Load Template Dialog */}
+      <Dialog open={showTemplateDialog} onOpenChange={setShowTemplateDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Load from Template</DialogTitle>
+            <DialogDescription>
+              Select a template to load into the campaign form
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            {templates.length === 0 ? (
+              <p className="text-center text-muted-foreground py-8">
+                No templates available. Create templates from the Template Library.
+              </p>
+            ) : (
+              templates.map((template: any) => (
+                <Card key={template.id} className="cursor-pointer hover:border-primary transition-colors" onClick={() => loadTemplate(template)}>
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{template.name}</CardTitle>
+                        <CardDescription className="mt-1">{template.description || "No description"}</CardDescription>
+                      </div>
+                      <Badge variant="outline">{template.campaign_type}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm font-medium text-muted-foreground">Subject</p>
+                    <p className="text-sm truncate">{template.subject}</p>
+                    <div className="flex gap-2 mt-2">
+                      {template.tags?.map((tag: string, i: number) => (
+                        <Badge key={i} variant="secondary" className="text-xs">{tag}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Save as Template Dialog */}
+      <Dialog open={showSaveTemplateDialog} onOpenChange={setShowSaveTemplateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Save as Template</DialogTitle>
+            <DialogDescription>
+              Save this campaign as a reusable template
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="template-name">Template Name</Label>
+              <Input
+                id="template-name"
+                value={templateName}
+                onChange={(e) => setTemplateName(e.target.value)}
+                placeholder="e.g., High-Converting Career Tips"
+              />
+            </div>
+            <div>
+              <Label htmlFor="template-description">Description</Label>
+              <Textarea
+                id="template-description"
+                value={templateDescription}
+                onChange={(e) => setTemplateDescription(e.target.value)}
+                placeholder="Brief description of this template"
+                rows={2}
+              />
+            </div>
+            <div>
+              <Label htmlFor="template-tags">Tags (comma separated)</Label>
+              <Input
+                id="template-tags"
+                value={templateTags}
+                onChange={(e) => setTemplateTags(e.target.value)}
+                placeholder="e.g., high-converting, newsletter, promotional"
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowSaveTemplateDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={saveAsTemplate} disabled={!templateName}>
+                Save Template
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
