@@ -31,9 +31,22 @@ export function InteractiveMap({
   longitude = -0.1415,
   address = "London, United Kingdom"
 }: InteractiveMapProps) {
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg bg-muted animate-pulse" style={{ minHeight: '400px' }} />
+    );
+  }
+
   return (
     <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
       <MapContainer
+        key={`map-${latitude}-${longitude}`}
         center={[latitude, longitude]}
         zoom={15}
         scrollWheelZoom={false}

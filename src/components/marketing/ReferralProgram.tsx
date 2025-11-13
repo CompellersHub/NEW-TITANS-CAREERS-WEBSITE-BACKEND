@@ -6,6 +6,8 @@ import { Gift, Copy, Mail, Share2, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+const sb: any = supabase;
+
 interface ReferralProgramProps {
   userEmail?: string;
 }
@@ -37,14 +39,14 @@ export function ReferralProgram({ userEmail }: ReferralProgramProps) {
 
     try {
       // Create referral
-      await supabase.from("referrals").insert({
+      await sb.from("referrals").insert({
         referrer_email: userEmail,
         referred_email: referralEmail,
         status: "pending",
       });
 
       // Track behavior
-      await supabase.from("user_behaviors").insert({
+      await sb.from("user_behaviors").insert({
         email: userEmail,
         behavior_type: "referral_sent",
         score_value: 10,

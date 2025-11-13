@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, ArrowRight, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+const sb: any = supabase;
 import { useNavigate } from "react-router-dom";
 import { COURSE_CONFIG } from "@/lib/course-config";
 
@@ -112,7 +114,7 @@ export function CourseFinder({ isOpen, onClose }: CourseFinderProps) {
 
     try {
       // Save quiz results
-      await supabase.from("quiz_results").insert({
+      await sb.from("quiz_results").insert({
         email,
         name,
         answers,
@@ -120,14 +122,14 @@ export function CourseFinder({ isOpen, onClose }: CourseFinderProps) {
       });
 
       // Update lead score
-      await supabase.rpc("update_lead_score", {
+      await sb.rpc("update_lead_score", {
         p_email: email,
         p_score_change: 30,
         p_behavior: "quiz_complete",
       });
 
       // Track behavior
-      await supabase.from("user_behaviors").insert({
+      await sb.from("user_behaviors").insert({
         email,
         behavior_type: "quiz_complete",
         score_value: 30,
