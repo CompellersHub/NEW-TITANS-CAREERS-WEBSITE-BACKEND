@@ -21,6 +21,8 @@ export const ContactChatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [userIdentifier, setUserIdentifier] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -32,6 +34,65 @@ export const ContactChatbot = () => {
     scrollToBottom();
   }, [messages]);
 
+  // Initialize conversation on mount
+  useEffect(() => {
+    const initConversation = async () => {
+      // Get or create user identifier
+      let identifier = localStorage.getItem('chatbot_user_id');
+      if (!identifier) {
+        identifier = crypto.randomUUID();
+        localStorage.setItem('chatbot_user_id', identifier);
+      }
+      setUserIdentifier(identifier);
+
+      // Get or create conversation
+      let convId = localStorage.getItem('chatbot_conversation_id');
+      
+      if (convId) {
+        // Load existing conversation messages
+        const { data: conversation } = await supabase
+          .from('chat_conversations')
+          .select('id')
+          .eq('id', convId)
+          .eq('user_identifier', identifier)
+          .single();
+
+        if (conversation) {
+          const { data: chatMessages } = await supabase
+            .from('chat_messages')
+            .select('*')
+            .eq('conversation_id', convId)
+            .order('created_at', { ascending: true });
+
+          if (chatMessages && chatMessages.length > 0) {
+            const loadedMessages: Message[] = chatMessages.map(msg => ({
+              role: msg.role as 'user' | 'assistant',
+              content: msg.content
+            }));
+            setMessages(prev => [...prev, ...loadedMessages]);
+          }
+          setConversationId(convId);
+          return;
+        }
+      }
+
+      // Create new conversation
+      const { data: newConversation } = await supabase
+        .from('chat_conversations')
+        .insert({ user_identifier: identifier })
+        .select()
+        .single();
+
+      if (newConversation) {
+        convId = newConversation.id;
+        localStorage.setItem('chatbot_conversation_id', convId);
+        setConversationId(convId);
+      }
+    };
+
+    initConversation();
+  }, []);
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -42,7 +103,11 @@ export const ContactChatbot = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('contact-chat', {
-        body: { messages: [...messages, userMessage] }
+        body: { 
+          messages: [...messages, userMessage],
+          conversationId,
+          userIdentifier
+        }
       });
 
       if (error) throw error;

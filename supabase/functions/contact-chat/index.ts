@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -11,12 +12,17 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, conversationId, userIdentifier } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     const systemPrompt = `You are a helpful customer service assistant for a training and consulting company. 
     
@@ -67,6 +73,35 @@ Be friendly, concise, and professional. If you don't know something specific, po
 
     const data = await response.json();
     const aiMessage = data.choices[0].message.content;
+
+    // Save messages to database if conversationId and userIdentifier are provided
+    if (conversationId && userIdentifier) {
+      const userMessage = messages[messages.length - 1];
+      
+      // Update conversation last_message_at
+      await supabase
+        .from('chat_conversations')
+        .update({ last_message_at: new Date().toISOString() })
+        .eq('id', conversationId);
+
+      // Save user message
+      await supabase
+        .from('chat_messages')
+        .insert({
+          conversation_id: conversationId,
+          role: userMessage.role,
+          content: userMessage.content
+        });
+
+      // Save assistant message
+      await supabase
+        .from('chat_messages')
+        .insert({
+          conversation_id: conversationId,
+          role: 'assistant',
+          content: aiMessage
+        });
+    }
 
     return new Response(
       JSON.stringify({ message: aiMessage }), 
