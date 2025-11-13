@@ -20,6 +20,9 @@ import CampaignManager from "./pages/CampaignManager";
 import ABTestManager from "./pages/ABTestManager";
 import TemplateLibrary from "./pages/TemplateLibrary";
 import SegmentManager from "./pages/SegmentManager";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +51,9 @@ const App = () => (
             <Route path="/admin/templates" element={<TemplateLibrary />} />
             <Route path="/admin/segments" element={<SegmentManager />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/terms-conditions" element={<TermsConditions />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

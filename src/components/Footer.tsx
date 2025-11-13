@@ -149,11 +149,11 @@ export const Footer = () => {
 
           {/* Legal Links */}
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-sans text-white/70">
-            <a href="#" className="hover:text-accent transition-colors duration-300">Privacy Policy</a>
+            <Link to="/privacy-policy" className="hover:text-accent transition-colors duration-300">Privacy Policy</Link>
             <span className="hidden sm:inline">·</span>
-            <a href="#" className="hover:text-accent transition-colors duration-300">Refund Policy</a>
+            <Link to="/refund-policy" className="hover:text-accent transition-colors duration-300">Refund Policy</Link>
             <span className="hidden sm:inline">·</span>
-            <a href="#" className="hover:text-accent transition-colors duration-300">Terms and Conditions</a>
+            <Link to="/terms-conditions" className="hover:text-accent transition-colors duration-300">Terms and Conditions</Link>
           </div>
 
           {/* Company Information */}
