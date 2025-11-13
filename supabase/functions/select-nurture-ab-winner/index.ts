@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "npm:resend@4.0.0";
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -83,6 +83,13 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
+    // Get template auto_winner_paused status
+    const { data: templatesData } = await supabase
+      .from("email_templates")
+      .select("id, ab_test_name, auto_winner_paused")
+      .eq("is_ab_test", true)
+      .eq("campaign_type", "nurture");
+
     // Group by A/B test name
     const testGroups: Record<string, TemplateStats[]> = performanceData.reduce((acc, item) => {
       const testName = item.ab_test_name!;
@@ -125,6 +132,21 @@ const handler = async (req: Request): Promise<Response> => {
     for (const [testName, variants] of Object.entries(testGroups)) {
       if (variants.length < 2) {
         console.log(`Test ${testName} has only one variant, skipping`);
+        continue;
+      }
+
+      // Check if auto winner selection is paused for this test
+      const isPaused = templatesData?.some(
+        t => t.ab_test_name === testName && t.auto_winner_paused === true
+      );
+
+      if (isPaused) {
+        console.log(`Auto winner selection is paused for ${testName}, skipping`);
+        results.push({
+          test_name: testName,
+          status: "paused",
+          message: "Automated winner selection is paused by admin",
+        });
         continue;
       }
 
