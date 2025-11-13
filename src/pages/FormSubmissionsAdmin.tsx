@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -114,6 +114,8 @@ const FormSubmissionsAdmin = () => {
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
   const [loadingAuditLog, setLoadingAuditLog] = useState(false);
   const [onlineAdmins, setOnlineAdmins] = useState<PresenceState[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -166,6 +168,131 @@ const FormSubmissionsAdmin = () => {
       supabase.removeChannel(presenceChannel);
     };
   }, [isAdmin, user, selectedSubmission?.id]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        // Allow Esc to blur inputs
+        if (e.key === 'Escape') {
+          (e.target as HTMLElement).blur();
+        }
+        return;
+      }
+
+      // Show shortcuts help
+      if (e.key === '?' && e.shiftKey) {
+        e.preventDefault();
+        setShowShortcuts(prev => !prev);
+        return;
+      }
+
+      // Close modal with Esc
+      if (e.key === 'Escape') {
+        if (selectedSubmission) {
+          setSelectedSubmission(null);
+          setSelectedIndex(-1);
+        } else if (showShortcuts) {
+          setShowShortcuts(false);
+        }
+        return;
+      }
+
+      // Focus search with /
+      if (e.key === '/') {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+        if (searchInput) {
+          searchInput.focus();
+          searchInput.select();
+        }
+        return;
+      }
+
+      // Navigation with arrow keys
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (filteredSubmissions.length === 0) return;
+
+        let newIndex = selectedIndex;
+        if (e.key === 'ArrowDown') {
+          newIndex = selectedIndex < filteredSubmissions.length - 1 ? selectedIndex + 1 : 0;
+        } else {
+          newIndex = selectedIndex > 0 ? selectedIndex - 1 : filteredSubmissions.length - 1;
+        }
+        
+        setSelectedIndex(newIndex);
+        setSelectedIds(new Set([filteredSubmissions[newIndex].id]));
+        
+        // Scroll into view
+        const row = document.querySelector(`[data-submission-index="${newIndex}"]`);
+        if (row) {
+          row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return;
+      }
+
+      // Open selected submission with Enter
+      if (e.key === 'Enter' && selectedIndex >= 0) {
+        e.preventDefault();
+        setSelectedSubmission(filteredSubmissions[selectedIndex]);
+        return;
+      }
+
+      // Mark as new with 'n'
+      if (e.key === 'n' && selectedIds.size > 0) {
+        e.preventDefault();
+        bulkUpdateStatus('new');
+        return;
+      }
+
+      // Mark as resolved with 'r'
+      if (e.key === 'r' && selectedIds.size > 0) {
+        e.preventDefault();
+        bulkUpdateStatus('resolved');
+        return;
+      }
+
+      // Mark as in progress with 'i'
+      if (e.key === 'i' && selectedIds.size > 0) {
+        e.preventDefault();
+        bulkUpdateStatus('in_progress');
+        return;
+      }
+
+      // Mark as archived with 'a'
+      if (e.key === 'a' && selectedIds.size > 0) {
+        e.preventDefault();
+        bulkUpdateStatus('archived');
+        return;
+      }
+
+      // Delete with 'd'
+      if (e.key === 'd' && selectedIds.size > 0) {
+        e.preventDefault();
+        setShowBulkDeleteDialog(true);
+        return;
+      }
+
+      // Select all with Ctrl/Cmd + A
+      if ((e.ctrlKey || e.metaKey) && e.key === 'a') {
+        e.preventDefault();
+        if (selectedIds.size === filteredSubmissions.length) {
+          setSelectedIds(new Set());
+          setSelectedIndex(-1);
+        } else {
+          setSelectedIds(new Set(filteredSubmissions.map(s => s.id)));
+        }
+        return;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAdmin, selectedSubmission, selectedIds, selectedIndex, filteredSubmissions, showShortcuts]);
 
   const fetchSubmissions = async () => {
     setIsLoading(true);
@@ -813,14 +940,24 @@ const FormSubmissionsAdmin = () => {
                 </TooltipProvider>
               )}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/admin/notification-settings")}
-            >
-              <Bell className="h-4 w-4 mr-2" />
-              Notification Settings
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/admin/notification-settings")}
+              >
+                <Bell className="h-4 w-4 mr-2" />
+                Notification Settings
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowShortcuts(true)}
+              >
+                <kbd className="px-2 py-1 text-xs font-semibold border rounded bg-muted">?</kbd>
+                <span className="ml-2">Shortcuts</span>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -1054,13 +1191,14 @@ const FormSubmissionsAdmin = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredSubmissions.map((submission) => {
+                    {filteredSubmissions.map((submission, index) => {
                       const data = submission.form_data;
                       const isSelected = selectedIds.has(submission.id);
                       return (
                         <TableRow 
                           key={submission.id}
-                          className={`cursor-pointer ${isSelected ? 'bg-muted/50' : 'hover:bg-muted/50'}`}
+                          data-submission-index={index}
+                          className={`cursor-pointer ${isSelected ? 'bg-muted/50' : 'hover:bg-muted/50'} ${index === selectedIndex ? 'ring-2 ring-primary' : ''}`}
                         >
                           <TableCell onClick={(e) => e.stopPropagation()}>
                             <Checkbox
@@ -1516,6 +1654,99 @@ const FormSubmissionsAdmin = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Keyboard Shortcuts Dialog */}
+      <Dialog open={showShortcuts} onOpenChange={setShowShortcuts}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Keyboard Shortcuts</DialogTitle>
+            <DialogDescription>
+              Use these shortcuts to navigate and manage submissions faster
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            <div>
+              <h3 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">Navigation</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Focus search</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">/</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Navigate up/down</span>
+                  <div className="flex gap-2">
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">↑</kbd>
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">↓</kbd>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Open selected submission</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">Enter</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Close modal</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">Esc</kbd>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">Selection</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Select all</span>
+                  <div className="flex gap-1 items-center">
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">Ctrl</kbd>
+                    <span className="text-muted-foreground">+</span>
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">A</kbd>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">Actions</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Mark as New</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">N</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Mark as Resolved</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">R</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Mark as In Progress</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">I</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Mark as Archived</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">A</kbd>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Delete selected</span>
+                  <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">D</kbd>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-3 text-sm text-muted-foreground uppercase tracking-wide">Help</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-sm">Show this dialog</span>
+                  <div className="flex gap-1 items-center">
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">Shift</kbd>
+                    <span className="text-muted-foreground">+</span>
+                    <kbd className="px-3 py-1.5 text-sm font-semibold border rounded bg-muted">?</kbd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Footer />
     </div>
