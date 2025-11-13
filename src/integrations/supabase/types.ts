@@ -44,6 +44,42 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          active: boolean | null
+          email: string
+          id: string
+          metadata: Json | null
+          name: string | null
+          source: string | null
+          subscribed_at: string
+          welcome_email_sent: boolean | null
+          whatsapp: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          email: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string
+          welcome_email_sent?: boolean | null
+          whatsapp?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          email?: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string
+          welcome_email_sent?: boolean | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
