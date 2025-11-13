@@ -2,9 +2,16 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Trash2, Volume2, VolumeX, Paperclip, Image as ImageIcon, Search, Download } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import jsPDF from 'jspdf';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -305,6 +312,87 @@ export const ContactChatbot = () => {
     setAttachments(prev => [...prev, ...newAttachments]);
   };
 
+  const exportAsText = () => {
+    const timestamp = new Date().toLocaleString();
+    let content = `Chat History - ${timestamp}\n\n`;
+    
+    messages.forEach((msg) => {
+      const role = msg.role === 'user' ? 'You' : 'Assistant';
+      const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+      content += `[${time}] ${role}:\n${msg.content}\n\n`;
+    });
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chat-history-${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Exported",
+      description: "Chat history exported as text file"
+    });
+    playSound('send');
+  };
+
+  const exportAsPDF = () => {
+    const doc = new jsPDF();
+    const timestamp = new Date().toLocaleString();
+    
+    doc.setFontSize(16);
+    doc.text('Chat History', 20, 20);
+    doc.setFontSize(10);
+    doc.text(timestamp, 20, 28);
+    
+    let yPosition = 40;
+    const pageHeight = doc.internal.pageSize.height;
+    const margin = 20;
+    const lineHeight = 7;
+    
+    messages.forEach((msg) => {
+      const role = msg.role === 'user' ? 'You' : 'Assistant';
+      const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+      
+      // Check if we need a new page
+      if (yPosition > pageHeight - margin) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`[${time}] ${role}:`, margin, yPosition);
+      yPosition += lineHeight;
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      
+      // Split long text into multiple lines
+      const textLines = doc.splitTextToSize(msg.content, 170);
+      textLines.forEach((line: string) => {
+        if (yPosition > pageHeight - margin) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(line, margin, yPosition);
+        yPosition += lineHeight;
+      });
+      
+      yPosition += 3; // Add spacing between messages
+    });
+    
+    doc.save(`chat-history-${Date.now()}.pdf`);
+    toast({
+      title: "Exported",
+      description: "Chat history exported as PDF"
+    });
+    playSound('send');
+  };
+
   const highlightText = (text: string, query: string) => {
     if (!query.trim()) return text;
     
@@ -464,6 +552,27 @@ export const ContactChatbot = () => {
               >
                 <Search className="h-4 w-4" />
               </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/10"
+                    disabled={messages.length <= 1}
+                    title="Export chat history"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={exportAsText}>
+                    Export as Text
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={exportAsPDF}>
+                    Export as PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <Button
                 variant="ghost"
                 size="icon"
