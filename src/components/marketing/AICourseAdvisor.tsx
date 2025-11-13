@@ -59,6 +59,7 @@ export function AICourseAdvisor() {
   const [dateFilter, setDateFilter] = useState<{ from?: Date; to?: Date }>({});
   const [courseFilter, setCourseFilter] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [isSendingSummary, setIsSendingSummary] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const courseOptions = [
@@ -487,6 +488,44 @@ export function AICourseAdvisor() {
     toast.success("Conversation exported as PDF");
   };
 
+  const sendConversationSummary = async () => {
+    if (!conversationId || !emailCaptured || !email) {
+      toast.error("Please provide your email first to receive the summary");
+      return;
+    }
+
+    if (messages.length <= 1) {
+      toast.error("Have a longer conversation before requesting a summary");
+      return;
+    }
+
+    setIsSendingSummary(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("send-conversation-summary", {
+        body: {
+          conversationId,
+          email,
+        },
+      });
+
+      if (error) throw error;
+
+      toast.success(
+        `📧 Conversation summary sent to ${email}! Check your inbox.`,
+        {
+          description: data.coursesDiscussed?.length > 0 
+            ? `Courses discussed: ${data.coursesDiscussed.join(", ")}`
+            : "Your complete transcript and recommendations are on the way!"
+        }
+      );
+    } catch (error) {
+      console.error("Error sending summary:", error);
+      toast.error("Failed to send conversation summary. Please try again.");
+    } finally {
+      setIsSendingSummary(false);
+    }
+  };
+
   return (
     <>
       {/* Floating Button */}
@@ -562,12 +601,19 @@ export function AICourseAdvisor() {
                           size="icon"
                           variant="ghost"
                           className="h-8 w-8 text-white hover:bg-white/20"
-                          title="Export Conversation"
+                          title="Export & Share"
                         >
                           <Download className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
+                        <DropdownMenuItem 
+                          onClick={sendConversationSummary}
+                          disabled={isSendingSummary || !emailCaptured}
+                        >
+                          <Mail className="h-4 w-4 mr-2" />
+                          {isSendingSummary ? "Sending..." : "Email Summary"}
+                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={exportAsPDF}>
                           <FileText className="h-4 w-4 mr-2" />
                           Export as PDF
