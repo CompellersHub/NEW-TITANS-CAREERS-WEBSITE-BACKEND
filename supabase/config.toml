@@ -68,3 +68,6 @@ verify_jwt = false
 
 [functions.lead-nurture]
 verify_jwt = false
+
+[functions.validate-voucher]
+verify_jwt = false

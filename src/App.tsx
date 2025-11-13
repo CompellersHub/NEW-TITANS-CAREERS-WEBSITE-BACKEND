@@ -41,6 +41,7 @@ import FormSubmissionAnalytics from "./pages/FormSubmissionAnalytics";
 import SLAAlertHistory from "./pages/SLAAlertHistory";
 import AdminNotificationSettings from "./pages/AdminNotificationSettings";
 import AdminTemplates from "./pages/AdminTemplates";
+import VoucherManager from "./pages/VoucherManager";
 
 const queryClient = new QueryClient();
 
@@ -83,9 +84,10 @@ const AnimatedRoutes = () => {
             <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
             <Route path="/admin/form-analytics" element={<FormSubmissionAnalytics />} />
             <Route path="/admin/sla-alert-history" element={<SLAAlertHistory />} />
-        <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
-        <Route path="/admin/response-templates" element={<AdminTemplates />} />
-        <Route path="*" element={<NotFound />} />
+              <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
+              <Route path="/admin/response-templates" element={<AdminTemplates />} />
+              <Route path="/admin/vouchers" element={<VoucherManager />} />
+              <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   );
