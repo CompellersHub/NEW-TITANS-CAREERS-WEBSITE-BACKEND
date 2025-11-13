@@ -17,6 +17,7 @@ import { InteractiveMap } from "@/components/contact/InteractiveMap";
 import { ContactChatbot } from "@/components/contact/ContactChatbot";
 import { MobileContactBar } from "@/components/contact/MobileContactBar";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
+import { FeedbackWidget } from "@/components/contact/FeedbackWidget";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 
@@ -634,6 +635,7 @@ const Contact = () => {
       <Footer />
       <ContactChatbot />
       <MobileContactBar />
+      <FeedbackWidget />
     </div>
   );
 };
