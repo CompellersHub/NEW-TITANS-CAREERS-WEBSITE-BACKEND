@@ -15,6 +15,7 @@ import { ContactMethodCard } from "@/components/contact/ContactMethodCard";
 import { ProcessStep } from "@/components/contact/ProcessStep";
 import { InteractiveMap } from "@/components/contact/InteractiveMap";
 import { ContactChatbot } from "@/components/contact/ContactChatbot";
+import { MobileContactBar } from "@/components/contact/MobileContactBar";
 import { useState, useEffect } from "react";
 
 const contactFormSchema = z.object({
@@ -142,7 +143,7 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
       
       {/* Hero Section */}
@@ -602,6 +603,7 @@ const Contact = () => {
 
       <Footer />
       <ContactChatbot />
+      <MobileContactBar />
     </div>
   );
 };
