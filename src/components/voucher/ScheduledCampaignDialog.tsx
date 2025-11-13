@@ -149,15 +149,45 @@ export const ScheduledCampaignDialog = ({
       campaignData.status = requiresApproval ? "pending" : "scheduled";
       campaignData.created_by = user?.id;
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .insert(campaignData);
 
       if (error) throw error;
 
+      // Send approval notification if campaign requires approval
+      if (requiresApproval) {
+        try {
+          // Get voucher details for notification
+          const { data: voucherData } = await (supabase as any)
+            .from("vouchers")
+            .select("code")
+            .eq("id", voucherId)
+            .single();
+
+          await supabase.functions.invoke("send-campaign-approval-notification", {
+            body: {
+              campaignId: voucherId,
+              campaignSubject: subject,
+              recipientCount,
+              scheduledTime: scheduledDateTime.toISOString(),
+              voucherCode: voucherData?.code || voucherCode || "N/A",
+              submitterEmail: user?.email,
+            },
+          });
+
+          console.log("Approval notification sent to admins");
+        } catch (notificationError) {
+          console.error("Failed to send approval notification:", notificationError);
+          // Don't fail the whole operation if notification fails
+        }
+      }
+
       toast({
-        title: "Campaign Scheduled",
-        description: `Voucher campaign scheduled for ${scheduledDateTime.toLocaleString()}`,
+        title: requiresApproval ? "Campaign Submitted for Approval" : "Campaign Scheduled",
+        description: requiresApproval 
+          ? "Campaign submitted and admins have been notified for approval"
+          : `Voucher campaign scheduled for ${scheduledDateTime.toLocaleString()}`,
       });
 
       onOpenChange(false);

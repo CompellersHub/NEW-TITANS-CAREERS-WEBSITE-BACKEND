@@ -46,15 +46,15 @@ export default function CampaignApprovalQueue() {
   const fetchPendingCampaigns = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("scheduled_voucher_campaigns")
-        .select(`
-          *,
-          vouchers:voucher_id (code, discount_type, discount_value),
-          subscriber_segments:segment_id (name, subscriber_count)
-        `)
-        .eq("status", "pending")
-        .order("created_at", { ascending: false }) as any;
+    const { data, error } = await (supabase as any)
+      .from("scheduled_voucher_campaigns")
+      .select(`
+        *,
+        vouchers:voucher_id (code, discount_type, discount_value),
+        subscriber_segments:segment_id (name, subscriber_count)
+      `)
+      .eq("status", "pending")
+      .order("created_at", { ascending: false });
 
       if (error) throw error;
       setpendingCampaigns(data || []);
@@ -70,7 +70,7 @@ export default function CampaignApprovalQueue() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .update({
           status: "scheduled",
@@ -98,7 +98,7 @@ export default function CampaignApprovalQueue() {
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("scheduled_voucher_campaigns")
         .update({
           status: "rejected",
