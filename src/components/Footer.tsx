@@ -18,18 +18,18 @@ export const Footer = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-base font-bold">Titans Careers</span>
-                <span className="text-xs text-white/70">Practical training. Real careers.</span>
+                <span className="text-base font-kanit font-bold">Titans Careers</span>
+                <span className="text-xs font-sans text-white/70">Practical training. Real careers.</span>
               </div>
             </div>
-            <p className="text-sm text-white/80 leading-relaxed">
+            <p className="text-sm font-sans text-white/80 leading-relaxed">
               Transform your career with practical tech training. Join 300+ career switchers.
             </p>
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-accent">Courses</h3>
-            <ul className="space-y-2 text-sm text-white/80">
+            <h3 className="font-kanit font-semibold mb-4 text-accent">Courses</h3>
+            <ul className="space-y-2 text-sm font-sans text-white/80">
               <li><Link to="/courses" className="hover:text-accent transition-colors">AML/KYC Compliance</Link></li>
               <li><Link to="/courses" className="hover:text-accent transition-colors">Data Analysis</Link></li>
               <li><Link to="/courses" className="hover:text-accent transition-colors">Cybersecurity</Link></li>
@@ -38,8 +38,8 @@ export const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-accent">Company</h3>
-            <ul className="space-y-2 text-sm text-white/80">
+            <h3 className="font-kanit font-semibold mb-4 text-accent">Company</h3>
+            <ul className="space-y-2 text-sm font-sans text-white/80">
               <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
               <li><Link to="/testimonials" className="hover:text-accent transition-colors">Success Stories</Link></li>
               <li><Link to="/blog" className="hover:text-accent transition-colors">Blog</Link></li>
@@ -48,8 +48,8 @@ export const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4 text-accent">Contact</h3>
-            <ul className="space-y-3 text-sm text-white/80">
+            <h3 className="font-kanit font-semibold mb-4 text-accent">Contact</h3>
+            <ul className="space-y-3 text-sm font-sans text-white/80">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-accent" />
                 <a href="mailto:info@titanscareers.com" className="hover:text-accent transition-colors">
@@ -71,29 +71,29 @@ export const Footer = () => {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4 text-accent">Stay Updated</h3>
-            <p className="text-sm text-white/80 mb-4">
+            <h3 className="font-kanit font-semibold mb-4 text-accent">Stay Updated</h3>
+            <p className="text-sm font-sans text-white/80 mb-4">
               Weekly career tips & job alerts
             </p>
             <NewsletterSignup 
               variant="minimal" 
               source="footer" 
             />
-            <p className="text-xs text-white/60 mt-2">
+            <p className="text-xs font-sans text-white/60 mt-2">
               Free. Unsubscribe anytime.
             </p>
           </div>
         </div>
         
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-white/70">
+          <p className="text-sm font-sans text-white/70">
             © 2024 Titans Careers. All rights reserved.
           </p>
           
-          <div className="text-sm text-white/70">
-            <a href="#" className="hover:text-accent transition-colors">Privacy Policy</a>
+          <div className="text-sm font-sans text-white/70">
+            <a href="#" className="hover:text-accent transition-colors duration-300">Privacy Policy</a>
             <span className="mx-3">·</span>
-            <a href="#" className="hover:text-accent transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-accent transition-colors duration-300">Terms of Service</a>
           </div>
         </div>
       </div>
