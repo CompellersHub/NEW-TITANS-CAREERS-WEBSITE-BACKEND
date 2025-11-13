@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NotificationBell } from "@/components/admin/NotificationBell";
+import { AdminDashboardSkeleton } from "@/components/admin/AdminDashboardSkeleton";
 import { format, formatDistanceToNow, differenceInMilliseconds } from "date-fns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -1548,6 +1549,10 @@ const FormSubmissionsAdmin = () => {
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
+  }
+
+  if (isLoading) {
+    return <AdminDashboardSkeleton />;
   }
 
   return (
