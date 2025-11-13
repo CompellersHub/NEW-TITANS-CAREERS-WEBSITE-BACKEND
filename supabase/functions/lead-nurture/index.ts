@@ -67,62 +67,74 @@ serve(async (req) => {
           continue;
         }
 
-        // Determine email content based on lead score
+        // Determine email content based on lead score and templates
         let subject = "";
         let htmlContent = "";
-        
-        if (lead.total_score >= 75) {
-          // Hot lead - strong CTA
-          subject = `${lead.name ? lead.name + ", " : ""}Ready to Transform Your Career?`;
-          htmlContent = `
-            <h2>You're Almost There!</h2>
-            <p>Hi ${lead.name || "there"},</p>
-            <p>We've noticed your strong interest in our courses. You're part of an exclusive group showing exceptional commitment to professional growth.</p>
-            <p><strong>Special offer just for you:</strong> Book a free consultation call with our expert advisors to create your personalized learning path.</p>
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/contact" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Book Your Free Call</a>
-            </p>
-            <p>Don't let this opportunity pass you by.</p>
-            <p>Best regards,<br>The Titans Team</p>
-          `;
-        } else if (lead.total_score >= 50) {
-          // Warm lead - value proposition
-          subject = `${lead.name ? lead.name + ", " : ""}Discover What You've Been Missing`;
-          htmlContent = `
-            <h2>Your Learning Journey Awaits</h2>
-            <p>Hi ${lead.name || "there"},</p>
-            <p>Based on your interests, we've identified courses that align perfectly with your career goals:</p>
-            <ul>
-              <li><strong>AML/KYC Masterclass</strong> - Master compliance and regulations</li>
-              <li><strong>Financial Crime Prevention</strong> - Become an expert in risk management</li>
-              <li><strong>Professional Certifications</strong> - Boost your credentials</li>
-            </ul>
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/courses" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Explore Courses</a>
-            </p>
-            <p>Start your transformation today.</p>
-            <p>Best regards,<br>The Titans Team</p>
-          `;
+        let template = null;
+
+        if (lead.total_score >= 75 && templateMap.hot) {
+          template = templateMap.hot;
+        } else if (lead.total_score >= 50 && templateMap.warm) {
+          template = templateMap.warm;
+        } else if (templateMap.cold) {
+          template = templateMap.cold;
+        }
+
+        // Use template or fallback to default
+        if (template) {
+          subject = template.subject;
+          htmlContent = template.html_content;
+          
+          // Replace variables
+          subject = subject
+            .replaceAll("{{name}}", lead.name || "there")
+            .replaceAll("{{email}}", lead.email)
+            .replaceAll("{{score}}", lead.total_score.toString())
+            .replaceAll("{{status}}", lead.status)
+            .replaceAll("{{company}}", "Titans Academy");
+
+          htmlContent = htmlContent
+            .replaceAll("{{name}}", lead.name || "there")
+            .replaceAll("{{email}}", lead.email)
+            .replaceAll("{{score}}", lead.total_score.toString())
+            .replaceAll("{{status}}", lead.status)
+            .replaceAll("{{company}}", "Titans Academy");
         } else {
-          // Cold lead - educational content
-          subject = `${lead.name ? lead.name + ", " : ""}Free Guide: Career Growth in Compliance`;
-          htmlContent = `
-            <h2>Build Your Future in Compliance</h2>
-            <p>Hi ${lead.name || "there"},</p>
-            <p>We understand that advancing your career can feel overwhelming. That's why we've created a comprehensive guide to help you navigate the compliance landscape.</p>
-            <p><strong>In this free guide, you'll discover:</strong></p>
-            <ul>
-              <li>Top skills employers are looking for</li>
-              <li>Certification paths that pay off</li>
-              <li>Real success stories from our graduates</li>
-              <li>How to stand out in a competitive market</li>
-            </ul>
-            <p style="text-align: center; margin: 30px 0;">
-              <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/resources" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Download Free Guide</a>
-            </p>
-            <p>We're here to support your journey.</p>
-            <p>Best regards,<br>The Titans Team</p>
-          `;
+          // Fallback to default content
+          if (lead.total_score >= 75) {
+            subject = `${lead.name ? lead.name + ", " : ""}Ready to Transform Your Career?`;
+            htmlContent = `
+              <h2>You're Almost There!</h2>
+              <p>Hi ${lead.name || "there"},</p>
+              <p>We've noticed your strong interest in our courses. Book a free consultation call with our expert advisors.</p>
+              <p style="text-align: center; margin: 30px 0;">
+                <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/contact" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Book Your Free Call</a>
+              </p>
+              <p>Best regards,<br>The Titans Team</p>
+            `;
+          } else if (lead.total_score >= 50) {
+            subject = `${lead.name ? lead.name + ", " : ""}Discover What You've Been Missing`;
+            htmlContent = `
+              <h2>Your Learning Journey Awaits</h2>
+              <p>Hi ${lead.name || "there"},</p>
+              <p>Based on your interests, we've identified courses that align perfectly with your career goals.</p>
+              <p style="text-align: center; margin: 30px 0;">
+                <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/courses" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Explore Courses</a>
+              </p>
+              <p>Best regards,<br>The Titans Team</p>
+            `;
+          } else {
+            subject = `${lead.name ? lead.name + ", " : ""}Free Guide: Career Growth in Compliance`;
+            htmlContent = `
+              <h2>Build Your Future in Compliance</h2>
+              <p>Hi ${lead.name || "there"},</p>
+              <p>We've created a comprehensive guide to help you navigate the compliance landscape.</p>
+              <p style="text-align: center; margin: 30px 0;">
+                <a href="https://gfmhhnynyxvmekhvytgg.supabase.co/resources" style="background: #FF6B6B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Download Free Guide</a>
+              </p>
+              <p>Best regards,<br>The Titans Team</p>
+            `;
+          }
         }
 
         // Send email via Brevo

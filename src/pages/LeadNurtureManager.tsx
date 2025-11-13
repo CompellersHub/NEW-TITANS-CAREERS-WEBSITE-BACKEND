@@ -1,14 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Mail, Zap, CheckCircle2, AlertCircle, Info } from "lucide-react";
+import { Mail, Zap, CheckCircle2, AlertCircle, Info, Settings } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { useQuery } from "@tanstack/react-query";
 
 export default function LeadNurtureManager() {
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState<{ sent_count?: number; errors?: string[] } | null>(null);
+
+  // Fetch templates
+  const { data: templates } = useQuery({
+    queryKey: ["nurture-templates"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("email_templates")
+        .select("*")
+        .eq("campaign_type", "nurture")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  const getTemplatesByTag = (tag: string) => {
+    return templates?.filter((t) => t.tags?.includes(tag)) || [];
+  };
 
   const runNurtureAutomation = async () => {
     setIsRunning(true);
@@ -202,6 +223,108 @@ export default function LeadNurtureManager() {
               updating engagement scores and analytics data.
             </AlertDescription>
           </Alert>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Settings className="h-5 w-5 text-primary" />
+            <CardTitle>Template Configuration</CardTitle>
+          </div>
+          <CardDescription>
+            Configure which email templates are used for each lead status
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="border rounded-lg p-4">
+              <Badge variant="destructive" className="mb-3">HOT (75+ score)</Badge>
+              <p className="text-sm text-muted-foreground mb-3">
+                High-intent leads ready to convert
+              </p>
+              {getTemplatesByTag("hot").length > 0 ? (
+                <div className="space-y-2">
+                  {getTemplatesByTag("hot").map((template: any) => (
+                    <div key={template.id} className="text-sm p-2 bg-muted rounded">
+                      <div className="font-medium">{template.name}</div>
+                      <div className="text-xs text-muted-foreground">{template.subject}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    No templates with hot tag. Add one in the Template Editor.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            <div className="border rounded-lg p-4">
+              <Badge variant="default" className="mb-3">WARM (50-74 score)</Badge>
+              <p className="text-sm text-muted-foreground mb-3">
+                Engaged leads needing value props
+              </p>
+              {getTemplatesByTag("warm").length > 0 ? (
+                <div className="space-y-2">
+                  {getTemplatesByTag("warm").map((template: any) => (
+                    <div key={template.id} className="text-sm p-2 bg-muted rounded">
+                      <div className="font-medium">{template.name}</div>
+                      <div className="text-xs text-muted-foreground">{template.subject}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    No templates with warm tag. Add one in the Template Editor.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+
+            <div className="border rounded-lg p-4">
+              <Badge variant="secondary" className="mb-3">COLD (25-49 score)</Badge>
+              <p className="text-sm text-muted-foreground mb-3">
+                New leads needing education
+              </p>
+              {getTemplatesByTag("cold").length > 0 ? (
+                <div className="space-y-2">
+                  {getTemplatesByTag("cold").map((template: any) => (
+                    <div key={template.id} className="text-sm p-2 bg-muted rounded">
+                      <div className="font-medium">{template.name}</div>
+                      <div className="text-xs text-muted-foreground">{template.subject}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Alert>
+                  <Info className="h-4 w-4" />
+                  <AlertDescription className="text-xs">
+                    No templates with cold tag. Add one in the Template Editor.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          </div>
+
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>How to set up:</strong> Go to the Template Editor and tag your nurture templates
+              with hot, warm, or cold to assign them to lead statuses. Templates support variables
+              like name, email, and score. If no templates are found, default content will be used.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex gap-2">
+            <Button variant="outline" asChild>
+              <a href="/admin/template-editor">Open Template Editor</a>
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
