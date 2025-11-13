@@ -70,6 +70,7 @@ const FormSubmissionsAdmin = () => {
   const [editingNotes, setEditingNotes] = useState(false);
   const [tempStatus, setTempStatus] = useState<string>("");
   const [tempNotes, setTempNotes] = useState<string>("");
+  const [realtimeConnected, setRealtimeConnected] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -116,6 +117,80 @@ const FormSubmissionsAdmin = () => {
       fetchSubmissions();
     }
   }, [isAdmin]);
+
+  // Real-time subscription
+  useEffect(() => {
+    if (!isAdmin) return;
+
+    const channel = supabase
+      .channel('form-submissions-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'form_submissions'
+        },
+        (payload) => {
+          console.log('New submission received:', payload);
+          // @ts-ignore - Types will be regenerated
+          setSubmissions(prev => [payload.new, ...prev]);
+          toast({
+            title: "New Submission",
+            description: "A new form submission has been received",
+          });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'form_submissions'
+        },
+        (payload) => {
+          console.log('Submission updated:', payload);
+          // @ts-ignore - Types will be regenerated
+          setSubmissions(prev => 
+            prev.map(sub => sub.id === payload.new.id ? payload.new : sub)
+          );
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'form_submissions'
+        },
+        (payload) => {
+          console.log('Submission deleted:', payload);
+          setSubmissions(prev => 
+            prev.filter(sub => sub.id !== payload.old.id)
+          );
+        }
+      )
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('Realtime connected');
+          setRealtimeConnected(true);
+        } else if (status === 'CHANNEL_ERROR') {
+          console.error('Realtime connection error');
+          setRealtimeConnected(false);
+        } else if (status === 'TIMED_OUT') {
+          console.error('Realtime connection timed out');
+          setRealtimeConnected(false);
+        } else if (status === 'CLOSED') {
+          console.log('Realtime connection closed');
+          setRealtimeConnected(false);
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+      setRealtimeConnected(false);
+    };
+  }, [isAdmin, toast]);
 
   useEffect(() => {
     let filtered = [...submissions];
@@ -378,8 +453,21 @@ const FormSubmissionsAdmin = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
-          <p className="text-muted-foreground">View and manage all form submissions from your website</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
+              <p className="text-muted-foreground">View and manage all form submissions from your website</p>
+            </div>
+            {realtimeConnected && (
+              <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Live Updates Active
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Statistics */}
