@@ -29,6 +29,31 @@ serve(async (req) => {
 
     console.log("Starting lead nurture automation...");
 
+    // Get templates for each lead status
+    const { data: templates, error: templateError } = await supabase
+      .from("email_templates")
+      .select("*")
+      .eq("campaign_type", "nurture");
+
+    if (templateError) {
+      console.log("No templates found, using default content");
+    }
+
+    // Build template map by tags (with A/B testing support)
+    const templateMap: Record<string, any[]> = {
+      hot: [],
+      warm: [],
+      cold: []
+    };
+    
+    if (templates) {
+      templates.forEach((template) => {
+        if (template.tags?.includes("hot")) templateMap.hot.push(template);
+        if (template.tags?.includes("warm")) templateMap.warm.push(template);
+        if (template.tags?.includes("cold")) templateMap.cold.push(template);
+      });
+    }
+
     // Get leads that need nurturing
     const { data: leads, error: leadsError } = await supabase
       .from("lead_scores")
@@ -70,35 +95,46 @@ serve(async (req) => {
         // Determine email content based on lead score and templates
         let subject = "";
         let htmlContent = "";
-        let template = null;
+        let selectedTemplate = null;
+        let selectedTemplateId = null;
+        let abVariantLetter = null;
 
-        if (lead.total_score >= 75 && templateMap.hot) {
-          template = templateMap.hot;
-        } else if (lead.total_score >= 50 && templateMap.warm) {
-          template = templateMap.warm;
-        } else if (templateMap.cold) {
-          template = templateMap.cold;
+        // Select template based on lead score
+        let templatePool: any[] = [];
+        if (lead.total_score >= 75 && templateMap.hot.length > 0) {
+          templatePool = templateMap.hot;
+        } else if (lead.total_score >= 50 && templateMap.warm.length > 0) {
+          templatePool = templateMap.warm;
+        } else if (templateMap.cold.length > 0) {
+          templatePool = templateMap.cold;
+        }
+
+        // If A/B testing, randomly select a variant
+        if (templatePool.length > 0) {
+          const randomIndex = Math.floor(Math.random() * templatePool.length);
+          selectedTemplate = templatePool[randomIndex];
+          selectedTemplateId = selectedTemplate.id;
+          abVariantLetter = selectedTemplate.variant_letter || null;
         }
 
         // Use template or fallback to default
-        if (template) {
-          subject = template.subject;
-          htmlContent = template.html_content;
+        if (selectedTemplate) {
+          subject = selectedTemplate.subject;
+          htmlContent = selectedTemplate.html_content;
           
           // Replace variables
-          subject = subject
-            .replaceAll("{{name}}", lead.name || "there")
-            .replaceAll("{{email}}", lead.email)
-            .replaceAll("{{score}}", lead.total_score.toString())
-            .replaceAll("{{status}}", lead.status)
-            .replaceAll("{{company}}", "Titans Academy");
+          const replacements: Record<string, string> = {
+            "{{name}}": lead.name || "there",
+            "{{email}}": lead.email,
+            "{{score}}": lead.total_score.toString(),
+            "{{status}}": lead.status,
+            "{{company}}": "Titans Academy"
+          };
 
-          htmlContent = htmlContent
-            .replaceAll("{{name}}", lead.name || "there")
-            .replaceAll("{{email}}", lead.email)
-            .replaceAll("{{score}}", lead.total_score.toString())
-            .replaceAll("{{status}}", lead.status)
-            .replaceAll("{{company}}", "Titans Academy");
+          Object.entries(replacements).forEach(([key, value]) => {
+            subject = subject.split(key).join(value);
+            htmlContent = htmlContent.split(key).join(value);
+          });
         } else {
           // Fallback to default content
           if (lead.total_score >= 75) {
@@ -166,6 +202,8 @@ serve(async (req) => {
         await supabase.from("email_sends").insert({
           email: lead.email,
           tracking_id: brevoData.messageId,
+          template_id: selectedTemplateId,
+          ab_variant_letter: abVariantLetter
         });
 
         // Track behavior
