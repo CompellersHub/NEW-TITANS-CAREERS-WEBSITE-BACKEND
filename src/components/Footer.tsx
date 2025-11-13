@@ -98,9 +98,9 @@ export const Footer = () => {
           {/* Company Information */}
           <div className="flex flex-col items-center gap-2 text-xs font-sans text-white/60 text-center">
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-              <span>Company Number: 12345678</span>
+              <span>Company Number: 16369966</span>
               <span className="hidden sm:inline">·</span>
-              <span>UKRLP Number: 10012345</span>
+              <span>UKRLP Number: 10098472</span>
             </div>
             <p className="max-w-2xl">
               Pay later options are subject to eligibility and approval. Terms and conditions apply.
