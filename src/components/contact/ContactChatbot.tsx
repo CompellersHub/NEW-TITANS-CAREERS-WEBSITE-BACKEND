@@ -251,8 +251,10 @@ export const ContactChatbot = () => {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-muted rounded-lg p-3">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                <div className="bg-muted rounded-lg p-3 flex items-center gap-1">
+                  <div className="w-2 h-2 bg-foreground/60 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                  <div className="w-2 h-2 bg-foreground/60 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                  <div className="w-2 h-2 bg-foreground/60 rounded-full animate-bounce"></div>
                 </div>
               </div>
             )}
