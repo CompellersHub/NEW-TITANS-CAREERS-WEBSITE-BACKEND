@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Bell, Mail, Clock } from "lucide-react";
+import { Loader2, Bell, Mail, Clock, Send } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -42,6 +42,7 @@ const AdminNotificationSettings = () => {
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isSendingTest, setIsSendingTest] = useState(false);
   const [preferences, setPreferences] = useState<NotificationPreferences>({
     admin_user_id: user?.id || "",
     email: user?.email || "",
@@ -155,6 +156,37 @@ const AdminNotificationSettings = () => {
       });
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const sendTestNotification = async (type: 'instant' | 'digest') => {
+    if (!user?.email) return;
+
+    setIsSendingTest(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-test-notification', {
+        body: { 
+          type, 
+          email: preferences.email || user.email,
+          adminName: user.email.split('@')[0]
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Test Email Sent",
+        description: `Test ${type === 'instant' ? 'instant alert' : 'daily digest'} email sent to ${preferences.email || user.email}`,
+      });
+    } catch (error: any) {
+      console.error("Error sending test notification:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send test notification. Please check your preferences are saved.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingTest(false);
     }
   };
 
@@ -328,6 +360,77 @@ const AdminNotificationSettings = () => {
                   </Select>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Test Notifications */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Mail className="h-5 w-5" />
+                <CardTitle>Test Notifications</CardTitle>
+              </div>
+              <CardDescription>
+                Send test emails to verify your notification preferences are working correctly
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                  <div>
+                    <p className="font-medium">Test Instant Alert</p>
+                    <p className="text-sm text-muted-foreground">
+                      Send a sample new submission notification
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => sendTestNotification('instant')}
+                    disabled={isSendingTest}
+                  >
+                    {isSendingTest ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Bell className="h-4 w-4 mr-2" />
+                        Send Test
+                      </>
+                    )}
+                  </Button>
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                  <div>
+                    <p className="font-medium">Test Daily Digest</p>
+                    <p className="text-sm text-muted-foreground">
+                      Send a sample daily summary email
+                    </p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    onClick={() => sendTestNotification('digest')}
+                    disabled={isSendingTest}
+                  >
+                    {isSendingTest ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Mail className="h-4 w-4 mr-2" />
+                        Send Test
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <p className="text-sm text-blue-900 dark:text-blue-100">
+                  💡 Test emails will be sent to: <strong>{preferences.email || user?.email}</strong>
+                </p>
+                <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
+                  Make sure to save your preferences before sending test emails to see the latest settings reflected.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
