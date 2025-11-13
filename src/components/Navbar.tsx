@@ -36,13 +36,13 @@ export const Navbar = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link to="/" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <Link to="/" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               Home
             </Link>
-            <Link to="/courses" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <Link to="/courses" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               Courses
             </Link>
-            <Link to="/about" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <Link to="/about" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               About Us
             </Link>
             
@@ -98,13 +98,13 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <a href="#how-it-works" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <a href="#how-it-works" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               How It Works
             </a>
-            <a href="#faqs" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <a href="#faqs" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               FAQs
             </a>
-            <a href="#contact" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
+            <a href="#contact" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
               Contact
             </a>
           </div>

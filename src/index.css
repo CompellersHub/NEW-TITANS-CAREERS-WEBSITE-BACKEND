@@ -228,4 +228,18 @@ All colors MUST be HSL.
       background-position: 0% 0%;
     }
   }
+
+  /* Navigation link underline animation */
+  .nav-link-underline {
+    @apply relative;
+  }
+
+  .nav-link-underline::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-accent transition-all duration-300 ease-out;
+  }
+
+  .nav-link-underline:hover::after {
+    @apply w-full;
+  }
 }
