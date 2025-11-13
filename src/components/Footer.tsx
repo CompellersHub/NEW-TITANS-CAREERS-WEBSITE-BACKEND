@@ -109,7 +109,7 @@ export const Footer = () => {
 
           {/* Copyright */}
           <p className="text-sm font-sans text-white/70 text-center">
-            © 2024 Titans Careers. All rights reserved.
+            © 2025 Titans Careers. All rights reserved.
           </p>
         </div>
       </div>
