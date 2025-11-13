@@ -158,6 +158,7 @@ export type Database = {
           is_active: boolean | null
           preview_text: string | null
           priority: number | null
+          segment_id: string | null
           subject: string
           updated_at: string
         }
@@ -170,6 +171,7 @@ export type Database = {
           is_active?: boolean | null
           preview_text?: string | null
           priority?: number | null
+          segment_id?: string | null
           subject: string
           updated_at?: string
         }
@@ -182,10 +184,19 @@ export type Database = {
           is_active?: boolean | null
           preview_text?: string | null
           priority?: number | null
+          segment_id?: string | null
           subject?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "campaign_content_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "subscriber_segments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_campaigns: {
         Row: {
@@ -195,6 +206,7 @@ export type Database = {
           id: string
           metadata: Json | null
           recipient_count: number
+          segment_id: string | null
           sent_at: string
           subject: string
           success_count: number
@@ -206,6 +218,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           recipient_count?: number
+          segment_id?: string | null
           sent_at?: string
           subject: string
           success_count?: number
@@ -217,11 +230,20 @@ export type Database = {
           id?: string
           metadata?: Json | null
           recipient_count?: number
+          segment_id?: string | null
           sent_at?: string
           subject?: string
           success_count?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "email_campaigns_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "subscriber_segments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       email_templates: {
         Row: {

@@ -20,6 +20,10 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     console.log("Starting weekly campaign send...");
 
+    // Parse request body for optional segment targeting
+    const { segmentId } = await req.json().catch(() => ({ segmentId: null }));
+    console.log("Segment targeting:", segmentId || "All subscribers");
+
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -75,21 +79,56 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Selected content: ${content.subject}`);
 
-    // Fetch active subscribers
-    const { data: subscribers, error: subscribersError } = await supabase
+    // Fetch active subscribers, optionally filtered by segment
+    let subscribersQuery = supabase
       .from("newsletter_subscribers")
-      .select("email, name")
+      .select("email, name, tags, engagement_score")
       .eq("active", true);
+
+    // If segment is specified, apply segment filters
+    if (segmentId) {
+      console.log(`Applying segment filters for segment: ${segmentId}`);
+      
+      // Get segment details
+      const { data: segment, error: segmentError } = await supabase
+        .from("subscriber_segments")
+        .select("*")
+        .eq("id", segmentId)
+        .single();
+
+      if (segmentError) {
+        console.error("Error fetching segment:", segmentError);
+        throw segmentError;
+      }
+
+      if (!segment) {
+        throw new Error("Segment not found");
+      }
+
+      console.log(`Segment details:`, {
+        name: segment.name,
+        tags_include: segment.tags_include,
+        tags_exclude: segment.tags_exclude,
+        engagement_range: [segment.min_engagement_score, segment.max_engagement_score]
+      });
+
+      // Apply engagement score filters
+      subscribersQuery = subscribersQuery
+        .gte("engagement_score", segment.min_engagement_score)
+        .lte("engagement_score", segment.max_engagement_score);
+    }
+
+    const { data: allSubscribers, error: subscribersError } = await subscribersQuery;
 
     if (subscribersError) {
       console.error("Error fetching subscribers:", subscribersError);
       throw subscribersError;
     }
 
-    if (!subscribers || subscribers.length === 0) {
-      console.log("No active subscribers found");
+    if (!allSubscribers || allSubscribers.length === 0) {
+      console.log("No subscribers found matching criteria");
       return new Response(
-        JSON.stringify({ message: "No active subscribers" }),
+        JSON.stringify({ message: "No subscribers found" }),
         {
           status: 200,
           headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -97,7 +136,47 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log(`Found ${subscribers.length} active subscribers`);
+    // Apply tag filters if segment is specified
+    let subscribers = allSubscribers;
+    
+    if (segmentId) {
+      const { data: segment } = await supabase
+        .from("subscriber_segments")
+        .select("tags_include, tags_exclude")
+        .eq("id", segmentId)
+        .single();
+
+      if (segment) {
+        subscribers = allSubscribers.filter((sub: any) => {
+          const subTags = sub.tags || [];
+          
+          // Check include tags (subscriber must have at least one, or include is empty)
+          const includeMatch = 
+            segment.tags_include.length === 0 || 
+            segment.tags_include.some((tag: string) => subTags.includes(tag));
+          
+          // Check exclude tags (subscriber must not have any)
+          const excludeMatch = 
+            segment.tags_exclude.length === 0 || 
+            !segment.tags_exclude.some((tag: string) => subTags.includes(tag));
+          
+          return includeMatch && excludeMatch;
+        });
+      }
+    }
+
+    if (subscribers.length === 0) {
+      console.log("No subscribers match segment criteria after tag filtering");
+      return new Response(
+        JSON.stringify({ message: "No subscribers match segment criteria" }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log(`Found ${subscribers.length} subscribers matching criteria`);
 
     // Prepare recipients for Brevo
     const recipients = subscribers.map((sub: Subscriber) => ({
@@ -149,9 +228,11 @@ const handler = async (req: Request): Promise<Response> => {
         recipient_count: recipients.length,
         success_count: recipients.length,
         failure_count: 0,
+        segment_id: segmentId || null,
         metadata: {
           brevo_message_id: brevoResult.messageId,
           sent_to: recipients.length > 50 ? 50 : recipients.length,
+          segment_targeted: !!segmentId,
         },
       });
 

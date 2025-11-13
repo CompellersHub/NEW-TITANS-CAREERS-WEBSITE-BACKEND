@@ -63,6 +63,7 @@ import {
   TrendingDown,
   FileText,
   Save,
+  Users,
 } from "lucide-react";
 
 interface CampaignContent {
@@ -97,6 +98,7 @@ const campaignFormSchema = z.object({
   html_content: z.string().min(50, "Content must be at least 50 characters"),
   is_active: z.boolean(),
   priority: z.number().min(0).max(100),
+  segment_id: z.string().optional(),
 });
 
 type CampaignFormValues = z.infer<typeof campaignFormSchema>;
@@ -118,6 +120,7 @@ const CampaignManager = () => {
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
   const [templateTags, setTemplateTags] = useState("");
+  const [selectedSendSegment, setSelectedSendSegment] = useState<string>("");
 
   const form = useForm<CampaignFormValues>({
     resolver: zodResolver(campaignFormSchema),
@@ -129,6 +132,7 @@ const CampaignManager = () => {
       html_content: "",
       is_active: true,
       priority: 0,
+      segment_id: undefined,
     },
   });
 
@@ -199,6 +203,20 @@ const CampaignManager = () => {
     enabled: !!user && !!isAdmin,
   });
 
+  const { data: segments = [] } = useQuery({
+    queryKey: ["subscriberSegments"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("subscriber_segments")
+        .select("id, name, description, subscriber_count")
+        .order("name", { ascending: true });
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user && !!isAdmin,
+  });
+
   const loadTemplate = (template: any) => {
     form.reset({
       campaign_type: template.campaign_type as "career_tips" | "job_alerts" | "course_updates",
@@ -208,6 +226,7 @@ const CampaignManager = () => {
       html_content: template.html_content,
       is_active: true,
       priority: 50,
+      segment_id: undefined,
     });
     setShowTemplateDialog(false);
     toast({
@@ -280,6 +299,7 @@ const CampaignManager = () => {
             html_content: values.html_content,
             is_active: values.is_active,
             priority: values.priority,
+            segment_id: values.segment_id || null,
           })
           .eq("id", editingCampaign.id);
 
@@ -300,6 +320,7 @@ const CampaignManager = () => {
             html_content: values.html_content,
             is_active: values.is_active,
             priority: values.priority,
+            segment_id: values.segment_id || null,
           }]);
 
         if (error) throw error;
@@ -333,6 +354,7 @@ const CampaignManager = () => {
       html_content: campaign.html_content,
       is_active: campaign.is_active,
       priority: campaign.priority,
+      segment_id: (campaign as any).segment_id || undefined,
     });
   };
 
@@ -368,13 +390,19 @@ const CampaignManager = () => {
   const handleSendCampaign = async () => {
     setIsSending(true);
     try {
-      const { error } = await supabase.functions.invoke("send-weekly-campaign");
+      const { error } = await supabase.functions.invoke("send-weekly-campaign", {
+        body: { segmentId: selectedSendSegment || null },
+      });
 
       if (error) throw error;
 
+      const message = selectedSendSegment 
+        ? "Campaign is being sent to the selected segment."
+        : "Campaign is being sent to all active subscribers.";
+
       toast({
         title: "Campaign Sent",
-        description: "Email campaign is being sent to all active subscribers.",
+        description: message,
       });
 
       // Refresh history after a delay
@@ -652,6 +680,38 @@ const CampaignManager = () => {
                       />
                     </div>
 
+                    <FormField
+                      control={form.control}
+                      name="segment_id"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Target Segment (Optional)</FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="All subscribers (no segment)" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="">All subscribers (no segment)</SelectItem>
+                              {segments.map((segment: any) => (
+                                <SelectItem key={segment.id} value={segment.id}>
+                                  {segment.name} ({segment.subscriber_count || 0} subscribers)
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormDescription>
+                            Target a specific subscriber segment or leave blank for all subscribers
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     <div className="flex gap-4">
                       <Button type="submit" className="bg-tc-navy hover:bg-tc-blue">
                         {editingCampaign ? "Update Campaign" : "Create Campaign"}
@@ -868,21 +928,46 @@ const CampaignManager = () => {
               <CardHeader>
                 <CardTitle>Send Campaign Now</CardTitle>
                 <CardDescription>
-                  Manually trigger a campaign to be sent to all active subscribers
+                  Manually trigger a campaign to be sent to subscribers
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div className="bg-muted p-4 rounded-lg space-y-2">
                   <h3 className="font-semibold">How it works:</h3>
                   <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                     <li>Campaigns are automatically rotated based on type and priority</li>
                     <li>Only active campaigns will be selected</li>
-                    <li>Emails are sent to all active subscribers</li>
+                    <li>Choose a segment or send to all active subscribers</li>
                     <li>Results are tracked and shown in the Send History tab</li>
                   </ul>
                 </div>
 
-                <div className="flex gap-4 items-center">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="send-segment">Target Segment (Optional)</Label>
+                    <Select
+                      value={selectedSendSegment}
+                      onValueChange={setSelectedSendSegment}
+                    >
+                      <SelectTrigger id="send-segment" className="max-w-md">
+                        <SelectValue placeholder="All active subscribers" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">All active subscribers</SelectItem>
+                        {segments.map((segment: any) => (
+                          <SelectItem key={segment.id} value={segment.id}>
+                            {segment.name} ({segment.subscriber_count || 0} subscribers)
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {selectedSendSegment 
+                        ? "Campaign will be sent to subscribers in the selected segment"
+                        : "Campaign will be sent to all active subscribers"}
+                    </p>
+                  </div>
+
                   <Button
                     onClick={handleSendCampaign}
                     disabled={isSending || campaigns.filter(c => c.is_active).length === 0}
