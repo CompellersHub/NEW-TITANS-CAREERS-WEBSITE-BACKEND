@@ -121,11 +121,15 @@ const ScheduledCampaigns = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "pending":
+        return "outline";
       case "scheduled":
         return "default";
       case "sent":
         return "secondary";
       case "cancelled":
+        return "destructive";
+      case "rejected":
         return "destructive";
       case "failed":
         return "destructive";
@@ -163,11 +167,17 @@ const ScheduledCampaigns = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex items-center gap-2 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/admin/voucher-manager")}>
-          <ArrowLeft className="h-4 w-4" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/admin/voucher-manager")}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <h1 className="text-3xl font-bold">Scheduled Campaigns</h1>
+        </div>
+        <Button variant="outline" onClick={() => navigate("/admin/campaign-approval")}>
+          <Clock className="h-4 w-4 mr-2" />
+          Approval Queue
         </Button>
-        <h1 className="text-3xl font-bold">Scheduled Campaigns</h1>
       </div>
 
       {campaigns.length === 0 ? (

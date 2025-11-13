@@ -35,6 +35,7 @@ export const ScheduledCampaignDialog = ({
   const [scheduledTime, setScheduledTime] = useState("");
   const [recurrenceType, setRecurrenceType] = useState<"none" | "daily" | "weekly" | "monthly">("none");
   const [recipientCount, setRecipientCount] = useState(0);
+  const [requiresApproval, setRequiresApproval] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -143,6 +144,11 @@ export const ScheduledCampaignDialog = ({
         campaignData.segment_id = null;
       }
 
+      // Set status based on approval requirement
+      const { data: { user } } = await supabase.auth.getUser();
+      campaignData.status = requiresApproval ? "pending" : "scheduled";
+      campaignData.created_by = user?.id;
+
       const { error } = await supabase
         .from("scheduled_voucher_campaigns")
         .insert(campaignData);
@@ -237,6 +243,19 @@ export const ScheduledCampaignDialog = ({
                 Campaign will repeat {recurrenceType} starting from the scheduled date
               </p>
             )}
+          </div>
+
+          <div className="flex items-center space-x-2 pt-2 pb-2 border-b">
+            <input
+              type="checkbox"
+              id="requiresApproval"
+              checked={requiresApproval}
+              onChange={(e) => setRequiresApproval(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 cursor-pointer"
+            />
+            <Label htmlFor="requiresApproval" className="text-sm font-normal cursor-pointer">
+              Require approval before scheduling (campaign will be pending)
+            </Label>
           </div>
 
           <div>
