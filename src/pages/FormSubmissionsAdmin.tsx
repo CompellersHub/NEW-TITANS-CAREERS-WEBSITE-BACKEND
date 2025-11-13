@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { 
   Download, 
@@ -25,7 +27,10 @@ import {
   Trash2,
   CheckSquare,
   Bell,
-  Clock
+  Clock,
+  Users,
+  Eye,
+  User
 } from "lucide-react";
 import {
   Select,
@@ -77,6 +82,13 @@ interface AuditLogEntry {
   created_at: string;
 }
 
+interface PresenceState {
+  user_id: string;
+  email: string;
+  viewing_submission: string | null;
+  online_at: string;
+}
+
 const FormSubmissionsAdmin = () => {
   const { isAdmin, isLoading: authLoading, user } = useAuth();
   const navigate = useNavigate();
@@ -101,6 +113,7 @@ const FormSubmissionsAdmin = () => {
   const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
   const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
   const [loadingAuditLog, setLoadingAuditLog] = useState(false);
+  const [onlineAdmins, setOnlineAdmins] = useState<PresenceState[]>([]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -114,6 +127,45 @@ const FormSubmissionsAdmin = () => {
       navigate("/");
     }
   }, [isAdmin, authLoading, user, navigate, toast]);
+
+  // Setup presence tracking
+  useEffect(() => {
+    if (!isAdmin || !user) return;
+
+    const presenceChannel = supabase.channel('form-submissions-presence');
+
+    presenceChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = presenceChannel.presenceState();
+        const presences: PresenceState[] = [];
+        
+        Object.keys(state).forEach((key) => {
+          const presence = state[key] as any[];
+          if (presence && presence.length > 0) {
+            const presenceData = presence[0] as PresenceState;
+            if (presenceData.user_id !== user.id) {
+              presences.push(presenceData);
+            }
+          }
+        });
+        
+        setOnlineAdmins(presences);
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          await presenceChannel.track({
+            user_id: user.id,
+            email: user.email,
+            viewing_submission: selectedSubmission?.id || null,
+            online_at: new Date().toISOString(),
+          });
+        }
+      });
+
+    return () => {
+      supabase.removeChannel(presenceChannel);
+    };
+  }, [isAdmin, user, selectedSubmission?.id]);
 
   const fetchSubmissions = async () => {
     setIsLoading(true);
@@ -645,6 +697,14 @@ const FormSubmissionsAdmin = () => {
 
   const uniqueFormTypes = Array.from(new Set(submissions.map(s => s.form_type)));
 
+  const getAdminsViewingSubmission = (submissionId: string) => {
+    return onlineAdmins.filter(admin => admin.viewing_submission === submissionId);
+  };
+
+  const getInitials = (email: string) => {
+    return email.split('@')[0].substring(0, 2).toUpperCase();
+  };
+
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -703,9 +763,10 @@ const FormSubmissionsAdmin = () => {
       
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4 flex-wrap">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
               <p className="text-muted-foreground">View and manage all form submissions from your website</p>
             </div>
             {realtimeConnected && (

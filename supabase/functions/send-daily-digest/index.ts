@@ -115,7 +115,7 @@ serve(async (req) => {
           <h3 style="color: #2563eb; margin-bottom: 15px;">Summary by Status</h3>
           ${Object.entries(byStatus).map(([status, subs]) => `
             <div style="background-color: #f3f4f6; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-              <strong>${statusName(status)}:</strong> ${subs.length} submission${subs.length !== 1 ? 's' : ''}
+              <strong>${statusName(status)}:</strong> ${(subs as any[]).length} submission${(subs as any[]).length !== 1 ? 's' : ''}
             </div>
           `).join('')}
         </div>
@@ -124,7 +124,7 @@ serve(async (req) => {
           <h3 style="color: #2563eb; margin-bottom: 15px;">Summary by Form Type</h3>
           ${Object.entries(byFormType).map(([type, subs]) => `
             <div style="background-color: #f3f4f6; padding: 10px 15px; border-radius: 5px; margin-bottom: 10px;">
-              <strong>${formTypeName(type)}:</strong> ${subs.length} submission${subs.length !== 1 ? 's' : ''}
+              <strong>${formTypeName(type)}:</strong> ${(subs as any[]).length} submission${(subs as any[]).length !== 1 ? 's' : ''}
             </div>
           `).join('')}
         </div>
