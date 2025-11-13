@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut, Shield } from "lucide-react";
+import { Menu, X, User, LogOut, Shield, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import titansLogo from "@/assets/titans-logo.jpg";
@@ -86,7 +86,13 @@ export const Navbar = () => {
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="cursor-pointer">
                           <Shield className="w-4 h-4 mr-2" />
-                          Admin Dashboard
+                          Subscribers
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin/campaigns" className="cursor-pointer">
+                          <Mail className="w-4 h-4 mr-2" />
+                          Campaigns
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -167,12 +173,20 @@ export const Navbar = () => {
               {user ? (
                 <>
                   {isAdmin && (
-                    <Link to="/admin">
-                      <Button variant="outline" className="w-full">
-                        <Shield className="w-4 h-4 mr-2" />
-                        Admin Dashboard
-                      </Button>
-                    </Link>
+                    <>
+                      <Link to="/admin">
+                        <Button variant="outline" className="w-full">
+                          <Shield className="w-4 h-4 mr-2" />
+                          Subscribers
+                        </Button>
+                      </Link>
+                      <Link to="/admin/campaigns">
+                        <Button variant="outline" className="w-full">
+                          <Mail className="w-4 h-4 mr-2" />
+                          Campaigns
+                        </Button>
+                      </Link>
+                    </>
                   )}
                   <Button 
                     variant="outline"

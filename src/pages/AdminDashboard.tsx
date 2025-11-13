@@ -263,7 +263,7 @@ const AdminDashboard = () => {
 
       <div className="container max-w-7xl py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-tc-navy mb-2">Newsletter Subscribers</h1>
+          <h1 className="text-4xl font-bold text-tc-navy mb-2">Subscriber Management</h1>
           <p className="text-muted-foreground">
             Manage your newsletter subscribers, export contacts, and handle unsubscribe requests
           </p>
