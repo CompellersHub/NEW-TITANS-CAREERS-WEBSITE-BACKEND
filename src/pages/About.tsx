@@ -63,20 +63,20 @@ const About = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-tc-navy text-white py-20 md:py-28">
+      <section className="bg-primary text-white py-20 md:py-28">
         <div className="container max-w-7xl">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30">
+            <Badge className="bg-accent/20 text-accent border-accent/30">
               <Heart className="w-3 h-3 mr-2" />
               OUR STORY
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold">
-              We're Building <span className="text-tc-amber">Real Careers</span>,
+            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
+              We're Building <span className="text-accent">Real Careers</span>,
               Not Just Courses
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="font-sans text-xl text-white/80 leading-relaxed">
               Titans Careers was born from a simple frustration: too many talented people 
               stuck in low-paying jobs, and too many training programs that promise the world 
               but deliver nothing.
@@ -90,39 +90,39 @@ const About = () => {
         <div className="container max-w-7xl">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30">
+              <Badge className="bg-accent/10 text-primary border-accent/30">
                 <Target className="w-3 h-3 mr-2" />
                 OUR MISSION
               </Badge>
               
-              <h2 className="text-3xl md:text-4xl font-bold text-tc-navy">
+              <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary">
                 Break Barriers. Build Futures.
               </h2>
               
-              <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
+              <div className="space-y-4 font-sans text-muted-foreground text-lg leading-relaxed">
                 <p>
                   We exist to give career switchers, recent grads, and anyone stuck in the wrong 
                   job a real path into high-paying professional careers.
                 </p>
                 
                 <p>
-                  No coding required. No degree required. Just practical skills, hands-on projects, 
+                  No endless theory. No fake promises. Just practical training, real-world projects, 
                   and ongoing career support that actually works.
                 </p>
                 
-                <p className="font-semibold text-tc-navy">
+                <p className="font-semibold text-primary">
                   Our promise: If you put in the work, we'll get you job-ready. Period.
                 </p>
               </div>
               
               <div className="flex flex-wrap gap-4 pt-4">
                 <Link to="/courses">
-                  <Button size="lg" className="bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold">
+                  <Button size="lg" className="font-bold">
                     View Our Courses
                   </Button>
                 </Link>
                 <Link to="/#how-it-works">
-                  <Button size="lg" variant="outlineWhite" className="border-tc-navy text-tc-navy">
+                  <Button size="lg" variant="outline">
                     How It Works
                   </Button>
                 </Link>
@@ -135,12 +135,12 @@ const About = () => {
                 alt="Team collaboration"
                 className="rounded-2xl shadow-2xl"
               />
-              <div className="absolute -bottom-6 -left-6 bg-tc-amber text-tc-navy p-6 rounded-xl shadow-xl">
+              <div className="absolute -bottom-6 -left-6 bg-accent text-primary p-6 rounded-xl shadow-xl">
                 <div className="flex items-center gap-3">
                   <Award className="w-8 h-8" />
                   <div>
-                    <div className="text-2xl font-bold">300+</div>
-                    <div className="text-sm font-semibold">Lives Changed</div>
+                    <div className="font-kanit text-2xl font-bold">300+</div>
+                    <div className="font-sans text-sm font-semibold">Lives Changed</div>
                   </div>
                 </div>
               </div>
@@ -150,15 +150,15 @@ const About = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-tc-navy text-white">
+      <section className="py-16 bg-primary text-white">
         <div className="container max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center space-y-2">
-                <div className="text-4xl md:text-5xl font-bold text-tc-amber">
+                <div className="font-kanit text-4xl md:text-5xl font-bold text-accent">
                   {stat.number}
                 </div>
-                <div className="text-white/80 font-medium">{stat.label}</div>
+                <div className="font-sans text-white/80 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -169,31 +169,31 @@ const About = () => {
       <section className="py-20 bg-secondary/30">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30">
+            <Badge className="bg-accent/10 text-primary border-accent/30">
               <Zap className="w-3 h-3 mr-2" />
               OUR VALUES
             </Badge>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary">
               What We Stand For
             </h2>
             
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
               These principles guide everything we do, from course design to student support.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map((value, index) => (
-              <Card key={index} className="border-2 hover:border-tc-amber/50 transition-all hover:shadow-xl">
+              <Card key={index} className="border-2 hover:border-accent/50 transition-all hover:shadow-xl">
                 <CardContent className="p-6 space-y-4">
-                  <div className="w-14 h-14 bg-tc-amber/10 rounded-xl flex items-center justify-center">
-                    <value.icon className="w-7 h-7 text-tc-amber" />
+                  <div className="w-14 h-14 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <value.icon className="w-7 h-7 text-accent" />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-tc-navy">{value.title}</h3>
+                  <h3 className="font-kanit text-xl font-bold text-primary">{value.title}</h3>
                   
-                  <p className="text-muted-foreground leading-relaxed">
+                  <p className="font-sans text-muted-foreground leading-relaxed">
                     {value.description}
                   </p>
                 </CardContent>
@@ -207,16 +207,16 @@ const About = () => {
       <section className="py-20 bg-white">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
-            <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30">
+            <Badge className="bg-accent/10 text-primary border-accent/30">
               <Users className="w-3 h-3 mr-2" />
               MEET THE TEAM
             </Badge>
             
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary">
               The People Behind Your Success
             </h2>
             
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
               We've been in your shoes. We know what it takes to switch careers and succeed.
             </p>
           </div>
@@ -231,15 +231,15 @@ const About = () => {
                       alt={member.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-tc-navy/80 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h3 className="text-xl font-bold mb-1">{member.name}</h3>
-                      <p className="text-tc-amber font-semibold">{member.role}</p>
+                      <h3 className="font-kanit text-xl font-bold mb-1">{member.name}</h3>
+                      <p className="font-sans text-accent font-semibold">{member.role}</p>
                     </div>
                   </div>
                   
                   <div className="p-6">
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="font-sans text-muted-foreground leading-relaxed">
                       {member.bio}
                     </p>
                   </div>
@@ -251,27 +251,27 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-tc-navy to-tc-blue text-white">
+      <section className="py-20 bg-gradient-to-br from-primary via-primary to-primary-glow text-white">
         <div className="container max-w-4xl text-center space-y-8">
-          <h2 className="text-3xl md:text-5xl font-bold">
+          <h2 className="font-kanit text-3xl md:text-5xl font-bold">
             Ready to Start Your Career Transformation?
           </h2>
           
-          <p className="text-xl text-white/80 leading-relaxed">
+          <p className="font-sans text-xl text-white/80 leading-relaxed">
             Join our next free Q&A session and see if Titans Careers is right for you.
           </p>
           
           <div className="flex flex-wrap gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              className="bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold text-lg px-8"
+              className="bg-accent hover:bg-gold text-primary font-bold text-lg px-8"
             >
               <BookOpen className="w-5 h-5 mr-2" />
               Join Free Session
             </Button>
             
             <Link to="/courses">
-              <Button size="lg" variant="outlineWhite" className="text-lg px-8">
+              <Button size="lg" variant="outline" className="text-lg px-8 bg-white text-primary border-white hover:bg-white/90">
                 <Briefcase className="w-5 h-5 mr-2" />
                 View Courses
               </Button>
