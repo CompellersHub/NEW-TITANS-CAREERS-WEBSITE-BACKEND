@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut, Shield, Mail, TestTube, FileText, Users } from "lucide-react";
+import { Menu, X, User, LogOut, Shield, Mail, TestTube, FileText, Users, ChevronDown, BookOpen, Trophy, Library } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +14,7 @@ import {
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
 
   return (
@@ -44,17 +45,61 @@ export const Navbar = () => {
             <Link to="/about" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               About Us
             </Link>
-            <Link to="/resources" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
-              Resources
-            </Link>
-            <Link to="/blog" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
-              Blog
-            </Link>
+            
+            {/* Resources Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm outline-none group">
+                Resources
+                <ChevronDown className="w-4 h-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                align="center" 
+                className="w-56 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl animate-fade-in"
+                sideOffset={8}
+              >
+                <DropdownMenuItem asChild>
+                  <Link 
+                    to="/resources" 
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                  >
+                    <Library className="w-4 h-4" />
+                    <div className="flex flex-col">
+                      <span className="font-medium">Resources Hub</span>
+                      <span className="text-xs text-muted-foreground">Tools & guides</span>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuItem asChild>
+                  <Link 
+                    to="/blog" 
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    <div className="flex flex-col">
+                      <span className="font-medium">Blog</span>
+                      <span className="text-xs text-muted-foreground">Latest insights</span>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuItem asChild>
+                  <a 
+                    href="#success-stories" 
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                  >
+                    <Trophy className="w-4 h-4" />
+                    <div className="flex flex-col">
+                      <span className="font-medium">Success Stories</span>
+                      <span className="text-xs text-muted-foreground">Real results</span>
+                    </div>
+                  </a>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
             <a href="#how-it-works" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               How It Works
-            </a>
-            <a href="#success-stories" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
-              Success Stories
             </a>
             <a href="#faqs" className="text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm">
               FAQs
@@ -163,17 +208,46 @@ export const Navbar = () => {
             <Link to="/about" className="block text-white hover:text-accent transition-colors font-medium py-2">
               About Us
             </Link>
-            <Link to="/resources" className="block text-white hover:text-accent transition-colors font-medium py-2">
-              Resources
-            </Link>
-            <Link to="/blog" className="block text-white hover:text-accent transition-colors font-medium py-2">
-              Blog
-            </Link>
+            
+            {/* Mobile Resources Expandable */}
+            <div className="space-y-2">
+              <button
+                onClick={() => setIsResourcesOpen(!isResourcesOpen)}
+                className="flex items-center justify-between w-full text-white hover:text-accent transition-colors font-medium py-2"
+              >
+                <span>Resources</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isResourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {isResourcesOpen && (
+                <div className="pl-4 space-y-2 animate-fade-in border-l-2 border-accent/30">
+                  <Link 
+                    to="/resources" 
+                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                  >
+                    <Library className="w-4 h-4" />
+                    <span>Resources Hub</span>
+                  </Link>
+                  <Link 
+                    to="/blog" 
+                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                  >
+                    <BookOpen className="w-4 h-4" />
+                    <span>Blog</span>
+                  </Link>
+                  <a 
+                    href="#success-stories" 
+                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                  >
+                    <Trophy className="w-4 h-4" />
+                    <span>Success Stories</span>
+                  </a>
+                </div>
+              )}
+            </div>
+            
             <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-medium py-2">
               How It Works
-            </a>
-            <a href="#success-stories" className="block text-white hover:text-accent transition-colors font-medium py-2">
-              Success Stories
             </a>
             <a href="#faqs" className="block text-white hover:text-accent transition-colors font-medium py-2">
               FAQs
