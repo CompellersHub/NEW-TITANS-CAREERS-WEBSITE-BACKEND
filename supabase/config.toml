@@ -36,6 +36,9 @@ verify_jwt = false
 [functions.send-conversation-summary]
 verify_jwt = false
 
+[functions.auto-send-summaries]
+verify_jwt = false
+
 [functions.ai-course-advisor]
 verify_jwt = false
 
