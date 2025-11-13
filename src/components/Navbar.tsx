@@ -22,13 +22,13 @@ export const Navbar = () => {
       <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 cursor-pointer">
+          <Link to="/" className="flex items-center gap-3 cursor-pointer group">
             <LogoWithEffects />
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-white leading-tight">
+              <span className="font-kanit font-bold text-lg text-white leading-tight group-hover:text-accent transition-colors">
                 Titans Careers
               </span>
-              <span className="text-xs text-white/70 leading-tight">
+              <span className="text-xs text-white/80 leading-tight font-sans">
                 Practical training. Real careers.
               </span>
             </div>
@@ -36,36 +36,36 @@ export const Navbar = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link to="/" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <Link to="/" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Home
             </Link>
-            <Link to="/courses" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <Link to="/courses" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Courses
             </Link>
-            <Link to="/about" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <Link to="/about" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               About Us
             </Link>
             
             {/* Resources Dropdown */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-white/90 hover:text-accent transition-all duration-300 font-medium text-sm outline-none group">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-white hover:text-accent transition-all duration-300 font-sans font-semibold text-sm outline-none group">
                 Resources
                 <ChevronDown className="w-4 h-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="center" 
-                className="w-56 bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl animate-fade-in"
-                sideOffset={8}
+                className="w-64 bg-card/98 backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] animate-fade-in rounded-xl"
+                sideOffset={12}
               >
                 <DropdownMenuItem asChild>
                   <Link 
                     to="/resources" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
                   >
-                    <Library className="w-4 h-4" />
+                    <Library className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-medium">Resources Hub</span>
-                      <span className="text-xs text-muted-foreground">Tools & guides</span>
+                      <span className="font-sans font-semibold text-primary">Resources Hub</span>
+                      <span className="text-xs text-muted-foreground font-sans">Tools & guides</span>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -73,12 +73,12 @@ export const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <Link 
                     to="/blog" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
                   >
-                    <BookOpen className="w-4 h-4" />
+                    <BookOpen className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-medium">Blog</span>
-                      <span className="text-xs text-muted-foreground">Latest insights</span>
+                      <span className="font-sans font-semibold text-primary">Blog</span>
+                      <span className="text-xs text-muted-foreground font-sans">Latest insights</span>
                     </div>
                   </Link>
                 </DropdownMenuItem>
@@ -86,25 +86,25 @@ export const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <a 
                     href="#success-stories" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-accent/10 hover:text-accent"
+                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
                   >
-                    <Trophy className="w-4 h-4" />
+                    <Trophy className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-medium">Success Stories</span>
-                      <span className="text-xs text-muted-foreground">Real results</span>
+                      <span className="font-sans font-semibold text-primary">Success Stories</span>
+                      <span className="text-xs text-muted-foreground font-sans">Real results</span>
                     </div>
                   </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <a href="#how-it-works" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <a href="#how-it-works" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               How It Works
             </a>
-            <a href="#faqs" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <a href="#faqs" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               FAQs
             </a>
-            <a href="#contact" className="nav-link-underline text-white/90 hover:text-accent transition-colors duration-300 font-medium text-sm">
+            <a href="#contact" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Contact
             </a>
           </div>
@@ -114,56 +114,56 @@ export const Navbar = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-accent">
+                  <Button variant="ghost" size="sm" className="text-white hover:text-accent hover:bg-white/10 font-sans font-semibold">
                     <User className="w-4 h-4 mr-2" />
                     Account
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
+                <DropdownMenuContent align="end" className="w-56 bg-card/98 backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] rounded-xl">
                   {isAdmin && (
                     <>
                       <DropdownMenuItem asChild>
-                        <Link to="/admin" className="cursor-pointer">
-                          <Shield className="w-4 h-4 mr-2" />
-                          Subscribers
+                        <Link to="/admin" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <Shield className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">Subscribers</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/admin/campaigns" className="cursor-pointer">
-                          <Mail className="w-4 h-4 mr-2" />
-                          Campaigns
+                        <Link to="/admin/campaigns" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <Mail className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">Campaigns</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/admin/ab-tests" className="cursor-pointer">
-                          <TestTube className="w-4 h-4 mr-2" />
-                          A/B Tests
+                        <Link to="/admin/ab-tests" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <TestTube className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">A/B Tests</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/admin/templates" className="cursor-pointer">
-                          <FileText className="w-4 h-4 mr-2" />
-                          Templates
+                        <Link to="/admin/templates" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <FileText className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">Templates</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link to="/admin/segments" className="cursor-pointer">
-                          <Users className="w-4 h-4 mr-2" />
-                          Segments
+                        <Link to="/admin/segments" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <Users className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">Segments</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                     </>
                   )}
-                  <DropdownMenuItem onClick={signOut} className="cursor-pointer">
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
+                  <DropdownMenuItem onClick={signOut} className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-destructive/10 focus:bg-destructive/10 transition-all">
+                    <LogOut className="w-4 h-4 mr-2 text-destructive" />
+                    <span className="font-sans font-medium text-destructive">Sign Out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-white hover:text-accent">
+                <Button variant="ghost" size="sm" className="text-white hover:text-accent hover:bg-white/10 font-sans font-semibold">
                   <User className="w-4 h-4 mr-2" />
                   Sign In
                 </Button>
@@ -173,6 +173,7 @@ export const Navbar = () => {
             <Button 
               variant="default"
               size="default"
+              className="font-bold"
               asChild
             >
               <a 
@@ -199,13 +200,13 @@ export const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden mt-6 pb-4 space-y-4 animate-fade-in border-t border-white/10 pt-4">
-            <Link to="/" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <Link to="/" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Home
             </Link>
-            <Link to="/courses" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <Link to="/courses" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Courses
             </Link>
-            <Link to="/about" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <Link to="/about" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               About Us
             </Link>
             
@@ -213,46 +214,46 @@ export const Navbar = () => {
             <div className="space-y-2">
               <button
                 onClick={() => setIsResourcesOpen(!isResourcesOpen)}
-                className="flex items-center justify-between w-full text-white hover:text-accent transition-colors font-medium py-2"
+                className="flex items-center justify-between w-full text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2"
               >
                 <span>Resources</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isResourcesOpen ? 'rotate-180' : ''}`} />
               </button>
               
               {isResourcesOpen && (
-                <div className="pl-4 space-y-2 animate-fade-in border-l-2 border-accent/30">
+                <div className="pl-4 space-y-2 animate-fade-in border-l-2 border-accent">
                   <Link 
                     to="/resources" 
-                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
                   >
-                    <Library className="w-4 h-4" />
-                    <span>Resources Hub</span>
+                    <Library className="w-4 h-4 text-accent" />
+                    <span className="font-medium">Resources Hub</span>
                   </Link>
                   <Link 
                     to="/blog" 
-                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
                   >
-                    <BookOpen className="w-4 h-4" />
-                    <span>Blog</span>
+                    <BookOpen className="w-4 h-4 text-accent" />
+                    <span className="font-medium">Blog</span>
                   </Link>
                   <a 
                     href="#success-stories" 
-                    className="flex items-center gap-2 text-white/80 hover:text-accent transition-colors py-2"
+                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
                   >
-                    <Trophy className="w-4 h-4" />
-                    <span>Success Stories</span>
+                    <Trophy className="w-4 h-4 text-accent" />
+                    <span className="font-medium">Success Stories</span>
                   </a>
                 </div>
               )}
             </div>
             
-            <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               How It Works
             </a>
-            <a href="#faqs" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <a href="#faqs" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               FAQs
             </a>
-            <a href="#contact" className="block text-white hover:text-accent transition-colors font-medium py-2">
+            <a href="#contact" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Contact
             </a>
             <div className="space-y-3 pt-4 border-t border-white/10">
@@ -312,7 +313,7 @@ export const Navbar = () => {
               
               <Button 
                 variant="default"
-                className="w-full"
+                className="w-full font-bold"
                 asChild
               >
                 <a 
