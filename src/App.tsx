@@ -29,6 +29,8 @@ import RefundPolicy from "./pages/RefundPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
 import FormDemo from "./pages/FormDemo";
+import FormAnalytics from "./pages/FormAnalytics";
+import FormAlertSettings from "./pages/FormAlertSettings";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ const AnimatedRoutes = () => {
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/form-demo" element={<FormDemo />} />
+        <Route path="/form-analytics" element={<FormAnalytics />} />
+        <Route path="/form-alert-settings" element={<FormAlertSettings />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
