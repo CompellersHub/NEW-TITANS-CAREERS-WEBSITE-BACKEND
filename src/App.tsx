@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
@@ -30,6 +31,40 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/course/:slug" element={<CourseDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/resources" element={<Resources />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/campaigns" element={<CampaignManager />} />
+        <Route path="/admin/ab-tests" element={<ABTestManager />} />
+        <Route path="/admin/send-time-optimization" element={<SendTimeOptimization />} />
+        <Route path="/admin/email-analytics" element={<EmailAnalyticsDashboard />} />
+        <Route path="/admin/templates" element={<TemplateLibrary />} />
+        <Route path="/admin/segments" element={<SegmentManager />} />
+        <Route path="/admin/email-ab-tests" element={<EmailABTestDashboard />} />
+        <Route path="/thank-you" element={<ThankYou />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/terms-conditions" element={<TermsConditions />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -37,32 +72,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/course/:slug" element={<CourseDetail />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/testimonials" element={<Testimonials />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/campaigns" element={<CampaignManager />} />
-            <Route path="/admin/ab-tests" element={<ABTestManager />} />
-            <Route path="/admin/send-time-optimization" element={<SendTimeOptimization />} />
-            <Route path="/admin/email-analytics" element={<EmailAnalyticsDashboard />} />
-            <Route path="/admin/templates" element={<TemplateLibrary />} />
-            <Route path="/admin/segments" element={<SegmentManager />} />
-            <Route path="/admin/email-ab-tests" element={<EmailABTestDashboard />} />
-            <Route path="/thank-you" element={<ThankYou />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/refund-policy" element={<RefundPolicy />} />
-            <Route path="/terms-conditions" element={<TermsConditions />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <AnimatedRoutes />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
