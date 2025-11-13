@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import { TrendingUp, Award, AlertCircle, Target } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ABTestControls } from "@/components/ab-testing/ABTestControls";
 
 interface TemplatePerformance {
   template_id: string;
@@ -74,17 +75,25 @@ export default function ABTestDashboard() {
     },
   });
 
-  // Check template active status
+  // Check template active status and manual controls
   const { data: templatesStatus } = useQuery({
     queryKey: ["templates-active-status"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("email_templates")
-        .select("id, is_active, ab_test_name")
+        .select("id, is_active, ab_test_name, auto_winner_paused, traffic_weight, name, variant_letter")
         .eq("is_ab_test", true);
 
       if (error) throw error;
-      return data as Array<{ id: string; is_active: boolean; ab_test_name: string | null }>;
+      return data as Array<{ 
+        id: string; 
+        is_active: boolean; 
+        ab_test_name: string | null;
+        auto_winner_paused: boolean;
+        traffic_weight: number;
+        name: string;
+        variant_letter: string | null;
+      }>;
     },
   });
 
@@ -277,6 +286,11 @@ export default function ABTestDashboard() {
                             Significant Result
                           </Badge>
                         )}
+                        {templatesStatus?.some(t => t.ab_test_name === testName && t.auto_winner_paused) && (
+                          <Badge variant="outline" className="ml-2">
+                            Manual Control
+                          </Badge>
+                        )}
                       </CardTitle>
                       <CardDescription className="mt-1">
                         {variants.length} variants • {variants.reduce((sum, v) => sum + v.sends_count, 0)} total sends
@@ -286,6 +300,23 @@ export default function ABTestDashboard() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Manual Controls */}
+                  {templatesStatus && (
+                    <ABTestControls
+                      testName={testName}
+                      variants={variants.map(v => {
+                        const templateStatus = templatesStatus.find(t => t.id === v.template_id);
+                        return {
+                          template_id: v.template_id,
+                          template_name: v.template_name,
+                          variant_letter: v.variant_letter,
+                          auto_winner_paused: templateStatus?.auto_winner_paused ?? false,
+                          traffic_weight: templateStatus?.traffic_weight ?? 100,
+                        };
+                      })}
+                    />
+                  )}
+
                   {/* Variants Grid */}
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {variants.map((variant, idx) => (
