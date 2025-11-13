@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MessageCircle, MapPin, Clock, Send, Navigation, Users as UsersIcon } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin, Clock, Send, Navigation, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -15,6 +15,7 @@ import { ContactMethodCard } from "@/components/contact/ContactMethodCard";
 import { ProcessStep } from "@/components/contact/ProcessStep";
 import { InteractiveMap } from "@/components/contact/InteractiveMap";
 import { ContactChatbot } from "@/components/contact/ContactChatbot";
+import { useState, useEffect } from "react";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -45,10 +46,17 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const Contact = () => {
   const { toast } = useToast();
+  const [charCount, setCharCount] = useState(0);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<ContactFormData>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema)
   });
+
+  const message = watch("message");
+  
+  useEffect(() => {
+    setCharCount(message?.length || 0);
+  }, [message]);
 
   const onSubmit = async (data: ContactFormData) => {
     try {
@@ -138,41 +146,67 @@ const Contact = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-20 md:py-28">
-        <div className="container max-w-7xl">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-accent/20 text-accent border-accent/30">
-              <MessageCircle className="w-3 h-3 mr-2" />
+      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-24 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNi0yLjY4NiA2LTYgMi42ODYtNiA2LTZ2Nmg2djZoLTZ2Nmgtdi02aDE4djZoLTZ2NmgtNnYtNkg0MnYtNmg2di02aDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+        
+        <div className="container max-w-7xl relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+            <Badge className="bg-accent/20 text-accent border-accent/30 backdrop-blur-sm px-6 py-2 text-sm font-semibold">
+              <Sparkles className="w-4 h-4 mr-2" />
               GET IN TOUCH
             </Badge>
             
-            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
-              Let's Talk About <span className="text-accent">Your Future</span>
+            <h1 className="font-kanit text-5xl md:text-7xl font-bold leading-tight">
+              Let's Transform <br />
+              <span className="text-accent animate-pulse">Your Career Together</span>
             </h1>
             
-            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
-              Questions about our courses? Want to discuss your career goals? 
-              We're here to help you make the right decision.
+            <p className="font-sans text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-2xl mx-auto">
+              Have questions about our courses? Ready to discuss your career goals? 
+              Our expert team is here to guide you every step of the way.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
+                <CheckCircle2 className="w-5 h-5 text-accent" />
+                24-Hour Response
+              </div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
+                <CheckCircle2 className="w-5 h-5 text-accent" />
+                Free Consultation
+              </div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
+                <CheckCircle2 className="w-5 h-5 text-accent" />
+                Expert Guidance
+              </div>
+            </div>
           </div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent"></div>
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20 bg-background">
+      <section className="py-24 bg-background">
         <div className="container max-w-7xl">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
-              Multiple Ways to Connect
+          <div className="text-center mb-20 space-y-6 animate-fade-in">
+            <Badge className="bg-primary/10 text-primary border-primary/20">
+              <MessageCircle className="w-3 h-3 mr-2" />
+              REACH OUT ANYTIME
+            </Badge>
+            <h2 className="font-kanit text-4xl md:text-6xl font-bold text-primary">
+              Multiple Ways to <span className="text-accent">Connect</span>
             </h2>
             <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
-              Choose the communication method that works best for you
+              Choose your preferred communication method and get instant access to our expert team
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
             {contactMethods.map((method, index) => (
-              <ContactMethodCard key={index} {...method} />
+              <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                <ContactMethodCard {...method} />
+              </div>
             ))}
           </div>
         </div>
@@ -263,15 +297,21 @@ const Contact = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="font-sans text-foreground font-semibold">
-                    Message *
-                  </Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="message" className="font-sans text-foreground font-semibold">
+                      Message *
+                    </Label>
+                    <span className="text-xs text-muted-foreground">
+                      {charCount}/1000 characters
+                    </span>
+                  </div>
                   <Textarea
                     id="message"
                     {...register("message")}
-                    placeholder="Tell us about your career goals and how we can help..."
+                    onChange={(e) => setCharCount(e.target.value.length)}
+                    placeholder="Tell us about your career goals, current situation, and how we can help you achieve your dreams..."
                     rows={6}
-                    className="border-2 focus:border-accent resize-none"
+                    className="border-2 focus:border-accent resize-none transition-all"
                   />
                   {errors.message && (
                     <p className="font-sans text-sm text-destructive">{errors.message.message}</p>
@@ -282,15 +322,31 @@ const Contact = () => {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg"
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg py-7 transition-all hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed group"
                 >
-                  <Send className="w-5 h-5 mr-2" />
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-5 h-5 mr-2 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin"></div>
+                      Sending Your Message...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
+                      Send Message
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
                 </Button>
 
-                <p className="font-sans text-sm text-muted-foreground text-center">
-                  By submitting this form, you agree to our privacy policy and terms of service.
-                </p>
+                <div className="space-y-3">
+                  <p className="font-sans text-sm text-muted-foreground text-center">
+                    By submitting this form, you agree to our <a href="/privacy-policy" className="text-accent hover:underline">privacy policy</a> and <a href="/terms-conditions" className="text-accent hover:underline">terms of service</a>.
+                  </p>
+                  <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                    <CheckCircle2 className="w-4 h-4 text-accent" />
+                    <span>Your information is secure and will never be shared</span>
+                  </div>
+                </div>
               </form>
             </div>
 
@@ -328,28 +384,46 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-primary text-primary-foreground border-2 border-primary">
-                <CardContent className="p-8 space-y-4">
-                  <h3 className="font-kanit text-2xl font-bold">
-                    Prefer to Talk? <span className="text-accent">Let's Chat!</span>
-                  </h3>
+              <Card className="bg-gradient-to-br from-primary to-primary/90 text-primary-foreground border-2 border-accent/30 shadow-xl hover:shadow-2xl transition-all duration-300">
+                <CardContent className="p-8 space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                      <MessageCircle className="w-6 h-6 text-accent" />
+                    </div>
+                    <h3 className="font-kanit text-2xl font-bold">
+                      Prefer Instant Chat?
+                    </h3>
+                  </div>
                   
-                  <p className="font-sans text-primary-foreground/80 leading-relaxed">
-                    WhatsApp is our fastest way to connect. Send us a message and we'll 
-                    respond within minutes during business hours.
+                  <p className="font-sans text-primary-foreground/90 leading-relaxed text-lg">
+                    WhatsApp is our <span className="font-bold text-accent">fastest way to connect</span>. 
+                    Send us a message and get a response within minutes during business hours.
                   </p>
+
+                  <div className="space-y-3 pt-2">
+                    <div className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                      <CheckCircle2 className="w-4 h-4 text-accent" />
+                      <span>Average response time: <span className="font-bold text-primary-foreground">5 minutes</span></span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-primary-foreground/80">
+                      <CheckCircle2 className="w-4 h-4 text-accent" />
+                      <span>Available Monday-Saturday</span>
+                    </div>
+                  </div>
                   
                   <a 
                     href="https://wa.me/447539434403" 
                     target="_blank" 
                     rel="noopener noreferrer"
+                    className="block"
                   >
                     <Button 
                       size="lg" 
-                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold"
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg py-6 transition-all hover:scale-105 group"
                     >
-                      <MessageCircle className="w-5 h-5 mr-2" />
-                      Chat on WhatsApp
+                      <MessageCircle className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                      Start WhatsApp Chat
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </a>
                 </CardContent>
@@ -380,14 +454,18 @@ const Contact = () => {
       </section>
 
       {/* Office Location with Map */}
-      <section className="py-20 bg-secondary/30">
+      <section className="py-24 bg-gradient-to-b from-secondary/30 to-background">
         <div className="container max-w-7xl">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
-              Visit Our London Office
+          <div className="text-center mb-20 space-y-6 animate-fade-in">
+            <Badge className="bg-primary/10 text-primary border-primary/20">
+              <MapPin className="w-3 h-3 mr-2" />
+              VISIT US
+            </Badge>
+            <h2 className="font-kanit text-4xl md:text-6xl font-bold text-primary">
+              Visit Our <span className="text-accent">London Office</span>
             </h2>
-            <p className="font-sans text-xl text-muted-foreground">
-              Drop by for a consultation or just to say hello
+            <p className="font-sans text-xl text-muted-foreground max-w-2xl mx-auto">
+              Located in the heart of Mayfair, we're easily accessible and ready to welcome you
             </p>
           </div>
 
@@ -459,42 +537,66 @@ const Contact = () => {
       </section>
 
       {/* What to Expect Process */}
-      <section className="py-20 bg-background">
+      <section className="py-24 bg-gradient-to-b from-background to-secondary/20">
         <div className="container max-w-7xl">
-          <div className="text-center mb-16 space-y-4">
-            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
-              What to Expect When You Contact Us
+          <div className="text-center mb-20 space-y-6 animate-fade-in">
+            <Badge className="bg-primary/10 text-primary border-primary/20">
+              <Clock className="w-3 h-3 mr-2" />
+              OUR PROCESS
+            </Badge>
+            <h2 className="font-kanit text-4xl md:text-6xl font-bold text-primary">
+              What Happens <span className="text-accent">After You Reach Out</span>
             </h2>
             <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our streamlined process ensures you get the support you need, when you need it
+              We've designed a simple, effective process to ensure you get the guidance and support you deserve
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+            {/* Connection line for desktop */}
+            <div className="hidden lg:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-accent/0 via-accent/50 to-accent/0"></div>
+            
             {processSteps.map((step, index) => (
-              <ProcessStep key={index} {...step} />
+              <div key={index} className="animate-fade-in relative z-10" style={{ animationDelay: `${index * 150}ms` }}>
+                <ProcessStep {...step} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* FAQ Quick Links */}
-      <section className="py-20 bg-secondary/30">
-        <div className="container max-w-4xl text-center space-y-8">
-          <div>
-            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary mb-4">
-              Have Questions Before Reaching Out?
-            </h2>
-            <p className="font-sans text-lg text-muted-foreground">
-              Check our FAQ section for instant answers to common questions.
-            </p>
-          </div>
-          
-          <a href="/#faqs">
-            <Button size="lg" variant="outline" className="border-primary text-primary font-bold hover:bg-primary hover:text-primary-foreground transition-all">
-              View FAQs
-            </Button>
-          </a>
+      <section className="py-24 bg-gradient-to-br from-secondary/30 to-background">
+        <div className="container max-w-5xl">
+          <Card className="border-2 border-primary/20 shadow-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-12 text-center space-y-8">
+              <div className="space-y-4">
+                <Badge className="bg-primary/20 text-primary border-primary/30">
+                  <Sparkles className="w-3 h-3 mr-2" />
+                  QUICK ANSWERS
+                </Badge>
+                <h2 className="font-kanit text-3xl md:text-5xl font-bold text-primary">
+                  Need Answers <span className="text-accent">Right Now?</span>
+                </h2>
+                <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+                  Browse our comprehensive FAQ section for instant answers to the most common questions about our courses, pricing, and career support.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="/#faqs">
+                  <Button 
+                    size="lg" 
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-8 py-6 text-lg transition-all hover:scale-105 group"
+                  >
+                    Browse FAQs
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </a>
+                <p className="text-sm text-muted-foreground">or contact us directly below</p>
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 
