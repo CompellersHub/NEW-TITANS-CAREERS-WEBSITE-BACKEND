@@ -1,11 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X, User, LogOut, Shield } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import titansLogo from "@/assets/titans-logo.jpg";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
 
   return (
     <nav className="fixed top-0 w-full bg-primary/95 backdrop-blur-xl border-b border-white/10 z-50 shadow-lg">
@@ -63,6 +72,41 @@ export const Navbar = () => {
           
           {/* Desktop Buttons */}
           <div className="hidden lg:flex items-center gap-3">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-white hover:text-accent">
+                    <User className="w-4 h-4 mr-2" />
+                    Account
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer">
+                          <Shield className="w-4 h-4 mr-2" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={signOut} className="cursor-pointer">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <Button variant="ghost" size="sm" className="text-white hover:text-accent">
+                  <User className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
+            
             <Button 
               variant="default"
               size="default"
@@ -75,12 +119,6 @@ export const Navbar = () => {
               >
                 Join Free Session
               </a>
-            </Button>
-            <Button 
-              variant="outlineWhite"
-              size="default"
-            >
-              Student Login
             </Button>
           </div>
           
@@ -126,6 +164,34 @@ export const Navbar = () => {
               Contact
             </a>
             <div className="space-y-3 pt-4 border-t border-white/10">
+              {user ? (
+                <>
+                  {isAdmin && (
+                    <Link to="/admin">
+                      <Button variant="outline" className="w-full">
+                        <Shield className="w-4 h-4 mr-2" />
+                        Admin Dashboard
+                      </Button>
+                    </Link>
+                  )}
+                  <Button 
+                    variant="outline"
+                    className="w-full"
+                    onClick={signOut}
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth">
+                  <Button variant="outline" className="w-full">
+                    <User className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+              )}
+              
               <Button 
                 variant="default"
                 className="w-full"
@@ -138,12 +204,6 @@ export const Navbar = () => {
                 >
                   Join Free Session
                 </a>
-              </Button>
-              <Button 
-                variant="outlineWhite"
-                className="w-full"
-              >
-                Student Login
               </Button>
             </div>
           </div>
