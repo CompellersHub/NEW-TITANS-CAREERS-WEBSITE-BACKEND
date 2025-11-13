@@ -28,6 +28,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import RefundPolicy from "./pages/RefundPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
+import FormDemo from "./pages/FormDemo";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +60,7 @@ const AnimatedRoutes = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
+        <Route path="/form-demo" element={<FormDemo />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
