@@ -6,11 +6,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Mail, Phone, MessageCircle, MapPin, Clock, Send } from "lucide-react";
+import { Mail, Phone, MessageCircle, MapPin, Clock, Send, Navigation, Users as UsersIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
+import { ContactMethodCard } from "@/components/contact/ContactMethodCard";
+import { ProcessStep } from "@/components/contact/ProcessStep";
+import { InteractiveMap } from "@/components/contact/InteractiveMap";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -78,28 +81,54 @@ const Contact = () => {
 
   const contactMethods = [
     {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      value: "+44 7539 434403",
-      description: "Fastest response time",
-      action: "Message Us",
-      link: "https://wa.me/447539434403"
-    },
-    {
       icon: Mail,
-      title: "Email",
+      title: "Email Us",
       value: "info@titanscareers.com",
-      description: "We respond within 24 hours",
+      description: "Send your questions to our support team",
       action: "Send Email",
-      link: "mailto:info@titanscareers.com"
+      link: "mailto:info@titanscareers.com",
+      iconColor: "text-accent"
     },
     {
       icon: Phone,
-      title: "Phone",
-      value: "+44 7539 434403",
-      description: "Mon-Fri, 9am-6pm GMT",
+      title: "Call Us",
+      value: "+44 20 4572 0475",
+      description: "Speak directly with our career advisors",
       action: "Call Now",
-      link: "tel:+447539434403"
+      link: "tel:+442045720475",
+      iconColor: "text-accent"
+    },
+    {
+      icon: MessageCircle,
+      title: "WhatsApp",
+      value: "+44 7539 434403",
+      description: "Message us anytime for quick support",
+      action: "Start Chat",
+      link: "https://wa.me/447539434403",
+      iconColor: "text-accent"
+    }
+  ];
+
+  const processSteps = [
+    {
+      step: 1,
+      title: "Initial Contact",
+      description: "Initial Introduction"
+    },
+    {
+      step: 2,
+      title: "Consultation",
+      description: "Personalized discussion about your needs"
+    },
+    {
+      step: 3,
+      title: "Customized Plan",
+      description: "Tailored strategies for your goals"
+    },
+    {
+      step: 4,
+      title: "Ongoing Support",
+      description: "Continuous guidance on your journey"
     }
   ];
 
@@ -129,29 +158,20 @@ const Contact = () => {
       </section>
 
       {/* Contact Methods */}
-      <section className="py-20 bg-secondary/30">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
+              Multiple Ways to Connect
+            </h2>
+            <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
+              Choose the communication method that works best for you
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
             {contactMethods.map((method, index) => (
-              <Card key={index} className="border-2 hover:border-accent/50 transition-all hover:shadow-xl">
-                <CardContent className="p-6 text-center space-y-4">
-                  <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
-                    <method.icon className="w-8 h-8 text-accent" />
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-kanit text-xl font-bold text-primary mb-2">{method.title}</h3>
-                    <p className="font-sans text-lg font-semibold text-foreground mb-1">{method.value}</p>
-                    <p className="font-sans text-sm text-muted-foreground">{method.description}</p>
-                  </div>
-                  
-                  <a href={method.link} target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
-                      {method.action}
-                    </Button>
-                  </a>
-                </CardContent>
-              </Card>
+              <ContactMethodCard key={index} {...method} />
             ))}
           </div>
         </div>
@@ -358,6 +378,105 @@ const Contact = () => {
         </div>
       </section>
 
+      {/* Office Location with Map */}
+      <section className="py-20 bg-secondary/30">
+        <div className="container max-w-7xl">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
+              Visit Our London Office
+            </h2>
+            <p className="font-sans text-xl text-muted-foreground">
+              Drop by for a consultation or just to say hello
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-8">
+            {/* Office Details */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="border-2">
+                <CardContent className="p-8 space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <MapPin className="w-6 h-6 text-accent" />
+                      </div>
+                      <div>
+                        <h3 className="font-kanit text-xl font-bold text-primary mb-2">Address</h3>
+                        <p className="font-sans text-muted-foreground leading-relaxed">
+                          3rd Floor<br />
+                          45 Albemarle Street<br />
+                          Mayfair, London<br />
+                          W1S 4JL
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-border">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <Clock className="w-6 h-6 text-accent" />
+                      </div>
+                      <div>
+                        <h3 className="font-kanit text-xl font-bold text-primary mb-2">Office Hours</h3>
+                        <div className="space-y-1 font-sans text-muted-foreground">
+                          <p><span className="font-semibold text-foreground">Monday - Friday:</span> 9:00 AM - 5:00 PM</p>
+                          <p><span className="font-semibold text-foreground">Weekends:</span> By appointment</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-border">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                        <Navigation className="w-6 h-6 text-accent" />
+                      </div>
+                      <div>
+                        <h3 className="font-kanit text-xl font-bold text-primary mb-2">Nearby Transport</h3>
+                        <div className="space-y-2 font-sans text-muted-foreground">
+                          <p><span className="font-semibold text-foreground">Green Park Station</span> - 5 min walk</p>
+                          <p className="text-sm">Bus Routes: 8, 9, 14, 19, 22, 38</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Interactive Map */}
+            <div className="lg:col-span-3 h-[600px]">
+              <InteractiveMap 
+                latitude={51.5099}
+                longitude={-0.1415}
+                address="45 Albemarle Street, Mayfair, London W1S 4JL"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What to Expect Process */}
+      <section className="py-20 bg-background">
+        <div className="container max-w-7xl">
+          <div className="text-center mb-16 space-y-4">
+            <h2 className="font-kanit text-4xl md:text-5xl font-bold text-primary">
+              What to Expect When You Contact Us
+            </h2>
+            <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
+              Our streamlined process ensures you get the support you need, when you need it
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {processSteps.map((step, index) => (
+              <ProcessStep key={index} {...step} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Quick Links */}
       <section className="py-20 bg-secondary/30">
         <div className="container max-w-4xl text-center space-y-8">
@@ -371,7 +490,7 @@ const Contact = () => {
           </div>
           
           <a href="/#faqs">
-            <Button size="lg" variant="outline" className="border-primary text-primary font-bold">
+            <Button size="lg" variant="outline" className="border-primary text-primary font-bold hover:bg-primary hover:text-primary-foreground transition-all">
               View FAQs
             </Button>
           </a>
