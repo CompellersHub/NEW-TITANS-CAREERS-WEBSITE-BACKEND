@@ -74,6 +74,20 @@ export default function ABTestDashboard() {
     },
   });
 
+  // Check template active status
+  const { data: templatesStatus } = useQuery({
+    queryKey: ["templates-active-status"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("email_templates")
+        .select("id, is_active, ab_test_name")
+        .eq("is_ab_test", true);
+
+      if (error) throw error;
+      return data as Array<{ id: string; is_active: boolean; ab_test_name: string | null }>;
+    },
+  });
+
   // Filter data
   const filteredData = performanceData?.filter((item) => {
     const testMatch = selectedTest === "all" || item.ab_test_name === selectedTest;
@@ -130,6 +144,18 @@ export default function ABTestDashboard() {
           Compare template variants and identify winning strategies
         </p>
       </div>
+
+      {/* Automated Winner Selection Info */}
+      <Alert className="mb-8">
+        <TrendingUp className="h-4 w-4" />
+        <AlertDescription>
+          <div className="font-medium mb-1">Automated Winner Selection Active</div>
+          <div className="text-sm">
+            The system automatically evaluates A/B tests daily at 2 AM UTC. When a variant achieves statistical significance (95% confidence), 
+            underperforming variants are automatically deactivated, promoting the winner to 100% traffic.
+          </div>
+        </AlertDescription>
+      </Alert>
 
       {/* Filters */}
       <div className="grid gap-4 md:grid-cols-3 mb-8">
@@ -269,9 +295,14 @@ export default function ABTestDashboard() {
                             <CardTitle className="text-base">
                               Variant {variant.variant_letter}
                             </CardTitle>
-                            {variant.template_id === winner.template_id && (
-                              <Badge variant="default">Winner</Badge>
-                            )}
+                            <div className="flex gap-2">
+                              {variant.template_id === winner.template_id && (
+                                <Badge variant="default">Winner</Badge>
+                              )}
+                              {templatesStatus?.find(t => t.id === variant.template_id)?.is_active === false && (
+                                <Badge variant="destructive">Deactivated</Badge>
+                              )}
+                            </div>
                           </div>
                           <CardDescription className="text-xs">{variant.template_name}</CardDescription>
                         </CardHeader>
@@ -339,7 +370,7 @@ export default function ABTestDashboard() {
                             )}
                             {significance.significant && (
                               <div className="mt-2 text-xs text-green-600">
-                                The difference between variants is statistically significant. You can confidently choose the winner.
+                                ✓ The difference is statistically significant. The automated system will deactivate underperforming variants daily at 2 AM UTC.
                               </div>
                             )}
                           </div>

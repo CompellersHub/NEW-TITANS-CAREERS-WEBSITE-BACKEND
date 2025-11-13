@@ -29,11 +29,12 @@ serve(async (req) => {
 
     console.log("Starting lead nurture automation...");
 
-    // Get templates for each lead status
+    // Get templates for each lead status (only active ones)
     const { data: templates, error: templateError } = await supabase
       .from("email_templates")
       .select("*")
-      .eq("campaign_type", "nurture");
+      .eq("campaign_type", "nurture")
+      .eq("is_active", true);
 
     if (templateError) {
       console.log("No templates found, using default content");
