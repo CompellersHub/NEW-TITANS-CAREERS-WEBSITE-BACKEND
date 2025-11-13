@@ -190,7 +190,7 @@ What is the optimal send time for this subscriber?`
             optimal_send_day: recommendation.optimal_day,
             last_send_time_analysis: new Date().toISOString(),
             metadata: {
-              ...subscriber.metadata || {},
+              ...(subscriber as any).metadata || {},
               send_time_optimization: {
                 confidence: recommendation.confidence,
                 reasoning: recommendation.reasoning,
