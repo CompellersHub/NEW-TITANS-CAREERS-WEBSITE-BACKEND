@@ -2,13 +2,19 @@ import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
-import { MultiStepForm } from "@/components/forms/MultiStepForm";
+import { ValidatedMultiStepForm } from "@/components/forms/ValidatedMultiStepForm";
+import { FormField } from "@/components/forms/FormField";
 import { CircularProgress } from "@/components/forms/CircularProgress";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { 
+  personalInfoSchema, 
+  courseSelectionSchema, 
+  motivationSchema,
+  validateWithSchema 
+} from "@/lib/formSchemas";
 
 export default function FormDemo() {
   const [formData, setFormData] = useState({
@@ -20,41 +26,93 @@ export default function FormDemo() {
     motivation: ""
   });
 
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+
+  const handleFieldChange = (field: string, value: string) => {
+    setFormData({ ...formData, [field]: value });
+    setTouchedFields({ ...touchedFields, [field]: true });
+    
+    // Clear error when user starts typing
+    if (fieldErrors[field]) {
+      const newErrors = { ...fieldErrors };
+      delete newErrors[field];
+      setFieldErrors(newErrors);
+    }
+  };
+
+  const handleFieldBlur = (field: string, schema: any) => {
+    const result = validateWithSchema(schema, { [field]: formData[field as keyof typeof formData] });
+    if (!result.isValid) {
+      setFieldErrors({ ...fieldErrors, ...result.errors });
+    }
+  };
+
   const steps = [
     {
       id: 1,
       title: "Personal Info",
       description: "Tell us about yourself",
+      onValidate: () => {
+        return validateWithSchema(personalInfoSchema, {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        });
+      },
       content: (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">Full Name</Label>
+        <div className="space-y-6">
+          <FormField
+            label="Full Name"
+            error={fieldErrors.name}
+            success={touchedFields.name && !fieldErrors.name && formData.name.length > 0}
+            required
+            htmlFor="name"
+          >
             <Input
               id="name"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) => handleFieldChange("name", e.target.value)}
+              onBlur={() => handleFieldBlur("name", personalInfoSchema.pick({ name: true }))}
               placeholder="John Doe"
+              className={fieldErrors.name ? "border-destructive" : ""}
             />
-          </div>
-          <div>
-            <Label htmlFor="email">Email Address</Label>
+          </FormField>
+
+          <FormField
+            label="Email Address"
+            error={fieldErrors.email}
+            success={touchedFields.email && !fieldErrors.email && formData.email.length > 0}
+            required
+            htmlFor="email"
+          >
             <Input
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => handleFieldChange("email", e.target.value)}
+              onBlur={() => handleFieldBlur("email", personalInfoSchema.pick({ email: true }))}
               placeholder="john@example.com"
+              className={fieldErrors.email ? "border-destructive" : ""}
             />
-          </div>
-          <div>
-            <Label htmlFor="phone">Phone Number</Label>
+          </FormField>
+
+          <FormField
+            label="Phone Number"
+            error={fieldErrors.phone}
+            success={touchedFields.phone && !fieldErrors.phone && formData.phone.length > 0}
+            required
+            htmlFor="phone"
+          >
             <Input
               id="phone"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              onChange={(e) => handleFieldChange("phone", e.target.value)}
+              onBlur={() => handleFieldBlur("phone", personalInfoSchema.pick({ phone: true }))}
               placeholder="+44 7700 900000"
+              className={fieldErrors.phone ? "border-destructive" : ""}
             />
-          </div>
+          </FormField>
         </div>
       )
     },
@@ -62,27 +120,51 @@ export default function FormDemo() {
       id: 2,
       title: "Course Selection",
       description: "Choose your path",
+      onValidate: () => {
+        return validateWithSchema(courseSelectionSchema, {
+          course: formData.course,
+          experience: formData.experience
+        });
+      },
       content: (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="course">Preferred Course</Label>
+        <div className="space-y-6">
+          <FormField
+            label="Preferred Course"
+            error={fieldErrors.course}
+            success={touchedFields.course && !fieldErrors.course && formData.course.length > 0}
+            required
+            htmlFor="course"
+          >
             <Input
               id="course"
               value={formData.course}
-              onChange={(e) => setFormData({ ...formData, course: e.target.value })}
+              onChange={(e) => handleFieldChange("course", e.target.value)}
+              onBlur={() => handleFieldBlur("course", courseSelectionSchema.pick({ course: true }))}
               placeholder="e.g., Data Analytics, AML Compliance"
+              className={fieldErrors.course ? "border-destructive" : ""}
             />
-          </div>
-          <div>
-            <Label htmlFor="experience">Current Experience Level</Label>
+          </FormField>
+
+          <FormField
+            label="Current Experience Level"
+            error={fieldErrors.experience}
+            success={touchedFields.experience && !fieldErrors.experience && formData.experience.length > 0}
+            required
+            htmlFor="experience"
+          >
             <Textarea
               id="experience"
               value={formData.experience}
-              onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
+              onChange={(e) => handleFieldChange("experience", e.target.value)}
+              onBlur={() => handleFieldBlur("experience", courseSelectionSchema.pick({ experience: true }))}
               placeholder="Tell us about your current skills and experience..."
-              rows={4}
+              rows={5}
+              className={fieldErrors.experience ? "border-destructive" : ""}
             />
-          </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {formData.experience.length} / 1000 characters
+            </p>
+          </FormField>
         </div>
       )
     },
@@ -90,18 +172,33 @@ export default function FormDemo() {
       id: 3,
       title: "Motivation",
       description: "Why this course?",
+      onValidate: () => {
+        return validateWithSchema(motivationSchema, {
+          motivation: formData.motivation
+        });
+      },
       content: (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="motivation">What motivates you?</Label>
+        <div className="space-y-6">
+          <FormField
+            label="What motivates you?"
+            error={fieldErrors.motivation}
+            success={touchedFields.motivation && !fieldErrors.motivation && formData.motivation.length > 0}
+            required
+            htmlFor="motivation"
+          >
             <Textarea
               id="motivation"
               value={formData.motivation}
-              onChange={(e) => setFormData({ ...formData, motivation: e.target.value })}
+              onChange={(e) => handleFieldChange("motivation", e.target.value)}
+              onBlur={() => handleFieldBlur("motivation", motivationSchema)}
               placeholder="What are your career goals? Why is this course important to you?"
-              rows={6}
+              rows={8}
+              className={fieldErrors.motivation ? "border-destructive" : ""}
             />
-          </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {formData.motivation.length} / 2000 characters
+            </p>
+          </FormField>
         </div>
       )
     },
@@ -111,23 +208,42 @@ export default function FormDemo() {
       description: "Confirm your details",
       content: (
         <div className="space-y-6">
-          <div className="rounded-lg border p-4 space-y-3">
-            <h3 className="font-semibold">Personal Information</h3>
-            <div className="text-sm space-y-1">
-              <p><span className="text-muted-foreground">Name:</span> {formData.name || "Not provided"}</p>
-              <p><span className="text-muted-foreground">Email:</span> {formData.email || "Not provided"}</p>
-              <p><span className="text-muted-foreground">Phone:</span> {formData.phone || "Not provided"}</p>
+          <div className="rounded-lg border p-4 space-y-3 bg-accent/5">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              Personal Information
+            </h3>
+            <div className="text-sm space-y-2">
+              <div className="flex justify-between py-1 border-b border-border/50">
+                <span className="text-muted-foreground">Name:</span>
+                <span className="font-medium">{formData.name || "Not provided"}</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-border/50">
+                <span className="text-muted-foreground">Email:</span>
+                <span className="font-medium">{formData.email || "Not provided"}</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-muted-foreground">Phone:</span>
+                <span className="font-medium">{formData.phone || "Not provided"}</span>
+              </div>
             </div>
           </div>
-          <div className="rounded-lg border p-4 space-y-3">
-            <h3 className="font-semibold">Course Details</h3>
-            <div className="text-sm space-y-1">
-              <p><span className="text-muted-foreground">Course:</span> {formData.course || "Not selected"}</p>
-              <p><span className="text-muted-foreground">Experience:</span> {formData.experience || "Not provided"}</p>
+
+          <div className="rounded-lg border p-4 space-y-3 bg-accent/5">
+            <h3 className="font-semibold text-lg">Course Details</h3>
+            <div className="text-sm space-y-2">
+              <div className="flex justify-between py-1 border-b border-border/50">
+                <span className="text-muted-foreground">Course:</span>
+                <span className="font-medium">{formData.course || "Not selected"}</span>
+              </div>
+              <div className="py-1">
+                <span className="text-muted-foreground block mb-1">Experience:</span>
+                <p className="text-sm">{formData.experience || "Not provided"}</p>
+              </div>
             </div>
           </div>
-          <div className="rounded-lg border p-4 space-y-3">
-            <h3 className="font-semibold">Motivation</h3>
+
+          <div className="rounded-lg border p-4 space-y-3 bg-accent/5">
+            <h3 className="font-semibold text-lg">Motivation</h3>
             <p className="text-sm">{formData.motivation || "Not provided"}</p>
           </div>
         </div>
@@ -164,7 +280,7 @@ export default function FormDemo() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <MultiStepForm 
+                <ValidatedMultiStepForm 
                   steps={steps}
                   onComplete={handleComplete}
                   showProgress={true}
