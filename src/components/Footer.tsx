@@ -6,7 +6,7 @@ import { socialMediaLinks } from "@/config/socialMedia";
 
 export const Footer = () => {
   return (
-    <footer className="bg-primary text-white border-t border-white/10 py-12">
+    <footer className="bg-primary text-primary-foreground border-t border-primary-foreground/10 py-12">
       <div className="container px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div className="space-y-4">
@@ -20,17 +20,17 @@ export const Footer = () => {
               </div>
               <div className="flex flex-col">
                 <span className="text-base font-kanit font-bold">Titans Careers</span>
-                <span className="text-xs font-sans text-white/70">Practical training. Real careers.</span>
+                <span className="text-xs font-sans text-primary-foreground/70">Practical training. Real careers.</span>
               </div>
             </div>
-            <p className="text-sm font-sans text-white/80 leading-relaxed">
+            <p className="text-sm font-sans text-primary-foreground/80 leading-relaxed">
               Transform your career with practical tech training. Join 300+ career switchers.
             </p>
           </div>
           
           <div>
             <h3 className="font-kanit font-semibold mb-4 text-accent">Courses</h3>
-            <ul className="space-y-2 text-sm font-sans text-white/80">
+            <ul className="space-y-2 text-sm font-sans text-primary-foreground/80">
               <li><Link to="/courses" className="hover:text-accent transition-colors">AML/KYC Compliance</Link></li>
               <li><Link to="/courses" className="hover:text-accent transition-colors">Data Analysis</Link></li>
               <li><Link to="/courses" className="hover:text-accent transition-colors">Cybersecurity</Link></li>
@@ -40,7 +40,7 @@ export const Footer = () => {
           
           <div>
             <h3 className="font-kanit font-semibold mb-4 text-accent">Company</h3>
-            <ul className="space-y-2 text-sm font-sans text-white/80">
+            <ul className="space-y-2 text-sm font-sans text-primary-foreground/80">
               <li><Link to="/about" className="hover:text-accent transition-colors">About Us</Link></li>
               <li><Link to="/testimonials" className="hover:text-accent transition-colors">Success Stories</Link></li>
               <li><Link to="/blog" className="hover:text-accent transition-colors">Blog</Link></li>
@@ -50,7 +50,7 @@ export const Footer = () => {
           
           <div>
             <h3 className="font-kanit font-semibold mb-4 text-accent">Contact</h3>
-            <ul className="space-y-3 text-sm font-sans text-white/80">
+            <ul className="space-y-3 text-sm font-sans text-primary-foreground/80">
               <li className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-accent" />
                 <a href="mailto:info@titanscareers.com" className="hover:text-accent transition-colors">
@@ -73,27 +73,27 @@ export const Footer = () => {
 
           <div>
             <h3 className="font-kanit font-semibold mb-4 text-accent">Stay Updated</h3>
-            <p className="text-sm font-sans text-white/80 mb-4">
+            <p className="text-sm font-sans text-primary-foreground/80 mb-4">
               Weekly career tips & job alerts
             </p>
             <NewsletterSignup 
               variant="minimal" 
               source="footer" 
             />
-            <p className="text-xs font-sans text-white/60 mt-2">
+            <p className="text-xs font-sans text-primary-foreground/60 mt-2">
               Free. Unsubscribe anytime.
             </p>
           </div>
         </div>
         
-        <div className="border-t border-white/10 pt-8 space-y-6">
+        <div className="border-t border-primary-foreground/10 pt-8 space-y-6">
           {/* Social Media Icons */}
           <div className="flex items-center justify-center gap-4">
             <a 
               href={socialMediaLinks.facebook}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="Facebook"
             >
               <Facebook size={20} />
@@ -102,7 +102,7 @@ export const Footer = () => {
               href={socialMediaLinks.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="Instagram"
             >
               <Instagram size={20} />
@@ -111,7 +111,7 @@ export const Footer = () => {
               href={socialMediaLinks.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="LinkedIn"
             >
               <Linkedin size={20} />
@@ -120,7 +120,7 @@ export const Footer = () => {
               href={socialMediaLinks.twitter}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="Twitter"
             >
               <Twitter size={20} />
@@ -129,7 +129,7 @@ export const Footer = () => {
               href={socialMediaLinks.youtube}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="YouTube"
             >
               <Youtube size={20} />
@@ -138,7 +138,7 @@ export const Footer = () => {
               href={socialMediaLinks.tiktok}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:text-accent hover:bg-white/20 transition-all duration-300"
+              className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 transition-all duration-300"
               aria-label="TikTok"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -148,7 +148,7 @@ export const Footer = () => {
           </div>
 
           {/* Legal Links */}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-sans text-white/70">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-sans text-primary-foreground/70">
             <Link to="/privacy-policy" className="hover:text-accent transition-colors duration-300">Privacy Policy</Link>
             <span className="hidden sm:inline">·</span>
             <Link to="/refund-policy" className="hover:text-accent transition-colors duration-300">Refund Policy</Link>
@@ -157,7 +157,7 @@ export const Footer = () => {
           </div>
 
           {/* Company Information */}
-          <div className="flex flex-col items-center gap-2 text-xs font-sans text-white/60 text-center">
+          <div className="flex flex-col items-center gap-2 text-xs font-sans text-primary-foreground/60 text-center">
             <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
               <span>Company Number: 16369966</span>
               <span className="hidden sm:inline">·</span>
@@ -169,7 +169,7 @@ export const Footer = () => {
           </div>
 
           {/* Copyright */}
-          <p className="text-sm font-sans text-white/70 text-center">
+          <p className="text-sm font-sans text-primary-foreground/70 text-center">
             © 2025 Titans Careers. All rights reserved.
           </p>
         </div>

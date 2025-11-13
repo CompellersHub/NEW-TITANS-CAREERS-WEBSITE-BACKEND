@@ -18,17 +18,17 @@ export const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
 
   return (
-    <nav className="fixed top-0 w-full bg-primary/95 backdrop-blur-xl border-b border-white/10 z-50 shadow-lg">
+    <nav className="fixed top-0 w-full bg-primary/95 backdrop-blur-xl border-b border-primary-foreground/10 z-50 shadow-lg">
       <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 cursor-pointer group">
             <LogoWithEffects />
             <div className="flex flex-col">
-              <span className="font-kanit font-bold text-lg text-white leading-tight group-hover:text-accent transition-colors">
+              <span className="font-kanit font-bold text-lg text-primary-foreground leading-tight group-hover:text-accent transition-colors">
                 Titans Careers
               </span>
-              <span className="text-xs text-white/80 leading-tight font-sans">
+              <span className="text-xs text-primary-foreground/80 leading-tight font-sans">
                 Practical training. Real careers.
               </span>
             </div>
@@ -36,19 +36,19 @@ export const Navbar = () => {
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link to="/" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <Link to="/" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Home
             </Link>
-            <Link to="/courses" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <Link to="/courses" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Courses
             </Link>
-            <Link to="/about" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <Link to="/about" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               About Us
             </Link>
             
             {/* Resources Dropdown */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-white hover:text-accent transition-all duration-300 font-sans font-semibold text-sm outline-none group">
+              <DropdownMenuTrigger className="flex items-center gap-1 text-primary-foreground hover:text-accent transition-all duration-300 font-sans font-semibold text-sm outline-none group">
                 Resources
                 <ChevronDown className="w-4 h-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
               </DropdownMenuTrigger>
@@ -98,13 +98,13 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <a href="#how-it-works" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <a href="#how-it-works" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               How It Works
             </a>
-            <a href="#faqs" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <a href="#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               FAQs
             </a>
-            <a href="#contact" className="nav-link-underline text-white hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <a href="#contact" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Contact
             </a>
           </div>
@@ -114,7 +114,7 @@ export const Navbar = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-white hover:text-accent hover:bg-white/10 font-sans font-semibold">
+                  <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10 font-sans font-semibold">
                     <User className="w-4 h-4 mr-2" />
                     Account
                   </Button>
@@ -163,7 +163,7 @@ export const Navbar = () => {
               </DropdownMenu>
             ) : (
               <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-white hover:text-accent hover:bg-white/10 font-sans font-semibold">
+                <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10 font-sans font-semibold">
                   <User className="w-4 h-4 mr-2" />
                   Sign In
                 </Button>
@@ -190,7 +190,7 @@ export const Navbar = () => {
           <Button 
             variant="ghost" 
             size="icon"
-            className="lg:hidden text-white hover:text-accent hover:bg-white/10"
+            className="lg:hidden text-primary-foreground hover:text-accent hover:bg-primary-foreground/10"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <Menu className="w-6 h-6" />
@@ -199,14 +199,14 @@ export const Navbar = () => {
         
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden mt-6 pb-4 space-y-4 animate-fade-in border-t border-white/10 pt-4">
-            <Link to="/" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+          <div className="lg:hidden mt-6 pb-4 space-y-4 animate-fade-in border-t border-primary-foreground/10 pt-4">
+            <Link to="/" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Home
             </Link>
-            <Link to="/courses" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <Link to="/courses" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Courses
             </Link>
-            <Link to="/about" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <Link to="/about" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               About Us
             </Link>
             
@@ -214,7 +214,7 @@ export const Navbar = () => {
             <div className="space-y-2">
               <button
                 onClick={() => setIsResourcesOpen(!isResourcesOpen)}
-                className="flex items-center justify-between w-full text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2"
+                className="flex items-center justify-between w-full text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2"
               >
                 <span>Resources</span>
                 <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isResourcesOpen ? 'rotate-180' : ''}`} />
@@ -224,21 +224,21 @@ export const Navbar = () => {
                 <div className="pl-4 space-y-2 animate-fade-in border-l-2 border-accent">
                   <Link 
                     to="/resources" 
-                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
+                    className="flex items-center gap-3 text-primary-foreground hover:text-accent transition-colors py-2 font-sans"
                   >
                     <Library className="w-4 h-4 text-accent" />
                     <span className="font-medium">Resources Hub</span>
                   </Link>
                   <Link 
                     to="/blog" 
-                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
+                    className="flex items-center gap-3 text-primary-foreground hover:text-accent transition-colors py-2 font-sans"
                   >
                     <BookOpen className="w-4 h-4 text-accent" />
                     <span className="font-medium">Blog</span>
                   </Link>
                   <a 
                     href="#success-stories" 
-                    className="flex items-center gap-3 text-white hover:text-accent transition-colors py-2 font-sans"
+                    className="flex items-center gap-3 text-primary-foreground hover:text-accent transition-colors py-2 font-sans"
                   >
                     <Trophy className="w-4 h-4 text-accent" />
                     <span className="font-medium">Success Stories</span>
@@ -247,16 +247,16 @@ export const Navbar = () => {
               )}
             </div>
             
-            <a href="#how-it-works" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <a href="#how-it-works" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               How It Works
             </a>
-            <a href="#faqs" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <a href="#faqs" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               FAQs
             </a>
-            <a href="#contact" className="block text-white hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <a href="#contact" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Contact
             </a>
-            <div className="space-y-3 pt-4 border-t border-white/10">
+            <div className="space-y-3 pt-4 border-t border-primary-foreground/10">
               {user ? (
                 <>
                   {isAdmin && (
