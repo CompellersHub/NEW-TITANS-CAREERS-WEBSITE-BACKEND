@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { NotificationBell } from "@/components/admin/NotificationBell";
 import { format, subDays, formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -359,6 +360,7 @@ const FormSubmissionAnalytics = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <Select value={dateRange} onValueChange={(value: any) => setDateRange(value)}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
