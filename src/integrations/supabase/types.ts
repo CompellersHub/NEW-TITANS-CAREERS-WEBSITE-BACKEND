@@ -277,6 +277,41 @@ export type Database = {
         }
         Relationships: []
       }
+      engagement_events: {
+        Row: {
+          campaign_id: string | null
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          subscriber_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          subscriber_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          subscriber_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "engagement_events_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "newsletter_subscribers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       enrollments: {
         Row: {
           course_slug: string
@@ -311,35 +346,95 @@ export type Database = {
         Row: {
           active: boolean | null
           email: string
+          engagement_score: number | null
           id: string
+          last_engagement_at: string | null
           metadata: Json | null
           name: string | null
           source: string | null
           subscribed_at: string
+          tags: string[] | null
+          total_clicks: number | null
+          total_opens: number | null
           welcome_email_sent: boolean | null
           whatsapp: string | null
         }
         Insert: {
           active?: boolean | null
           email: string
+          engagement_score?: number | null
           id?: string
+          last_engagement_at?: string | null
           metadata?: Json | null
           name?: string | null
           source?: string | null
           subscribed_at?: string
+          tags?: string[] | null
+          total_clicks?: number | null
+          total_opens?: number | null
           welcome_email_sent?: boolean | null
           whatsapp?: string | null
         }
         Update: {
           active?: boolean | null
           email?: string
+          engagement_score?: number | null
           id?: string
+          last_engagement_at?: string | null
           metadata?: Json | null
           name?: string | null
           source?: string | null
           subscribed_at?: string
+          tags?: string[] | null
+          total_clicks?: number | null
+          total_opens?: number | null
           welcome_email_sent?: boolean | null
           whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      subscriber_segments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          filter_rules: Json
+          id: string
+          max_engagement_score: number | null
+          min_engagement_score: number | null
+          name: string
+          subscriber_count: number | null
+          tags_exclude: string[] | null
+          tags_include: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filter_rules?: Json
+          id?: string
+          max_engagement_score?: number | null
+          min_engagement_score?: number | null
+          name: string
+          subscriber_count?: number | null
+          tags_exclude?: string[] | null
+          tags_include?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filter_rules?: Json
+          id?: string
+          max_engagement_score?: number | null
+          min_engagement_score?: number | null
+          name?: string
+          subscriber_count?: number | null
+          tags_exclude?: string[] | null
+          tags_include?: string[] | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -369,6 +464,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_engagement_score: {
+        Args: { subscriber_id: string }
+        Returns: number
+      }
+      get_segment_count: { Args: { segment_id: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -376,6 +476,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      update_all_engagement_scores: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"

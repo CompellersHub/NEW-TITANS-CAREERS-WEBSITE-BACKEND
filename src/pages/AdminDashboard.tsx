@@ -49,6 +49,11 @@ interface Subscriber {
   subscribed_at: string;
   active: boolean;
   welcome_email_sent: boolean;
+  tags: string[];
+  engagement_score: number;
+  total_opens: number;
+  total_clicks: number;
+  last_engagement_at: string | null;
 }
 
 const AdminDashboard = () => {
@@ -214,12 +219,16 @@ const AdminDashboard = () => {
   };
 
   const exportToCSV = () => {
-    const csvHeaders = ["Email", "Name", "WhatsApp", "Source", "Subscribed At", "Active", "Welcome Email Sent"];
+    const csvHeaders = ["Email", "Name", "WhatsApp", "Source", "Tags", "Engagement Score", "Total Opens", "Total Clicks", "Subscribed At", "Active", "Welcome Email Sent"];
     const csvData = filteredSubscribers.map((sub) => [
       sub.email,
       sub.name || "",
       sub.whatsapp || "",
       sub.source || "",
+      sub.tags?.join("; ") || "",
+      sub.engagement_score || 0,
+      sub.total_opens || 0,
+      sub.total_clicks || 0,
       new Date(sub.subscribed_at).toLocaleString(),
       sub.active ? "Yes" : "No",
       sub.welcome_email_sent ? "Yes" : "No",
@@ -372,6 +381,8 @@ const AdminDashboard = () => {
                     <TableHead>Name</TableHead>
                     <TableHead>WhatsApp</TableHead>
                     <TableHead>Source</TableHead>
+                    <TableHead>Tags</TableHead>
+                    <TableHead>Engagement</TableHead>
                     <TableHead>Subscribed</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -380,7 +391,7 @@ const AdminDashboard = () => {
                 <TableBody>
                   {filteredSubscribers.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                         No subscribers found
                       </TableCell>
                     </TableRow>
@@ -406,6 +417,31 @@ const AdminDashboard = () => {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline">{subscriber.source || "unknown"}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {subscriber.tags && subscriber.tags.length > 0 ? (
+                              subscriber.tags.map((tag, i) => (
+                                <Badge key={i} variant="secondary" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))
+                            ) : (
+                              <span className="text-sm text-muted-foreground">-</span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Badge 
+                              variant={subscriber.engagement_score >= 70 ? "default" : subscriber.engagement_score >= 40 ? "secondary" : "outline"}
+                            >
+                              {subscriber.engagement_score || 0}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              ({subscriber.total_opens || 0} opens, {subscriber.total_clicks || 0} clicks)
+                            </span>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">

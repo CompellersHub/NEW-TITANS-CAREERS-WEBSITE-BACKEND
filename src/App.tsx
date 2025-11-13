@@ -19,6 +19,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import CampaignManager from "./pages/CampaignManager";
 import ABTestManager from "./pages/ABTestManager";
 import TemplateLibrary from "./pages/TemplateLibrary";
+import SegmentManager from "./pages/SegmentManager";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/admin/campaigns" element={<CampaignManager />} />
             <Route path="/admin/ab-tests" element={<ABTestManager />} />
             <Route path="/admin/templates" element={<TemplateLibrary />} />
+            <Route path="/admin/segments" element={<SegmentManager />} />
             <Route path="/thank-you" element={<ThankYou />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
