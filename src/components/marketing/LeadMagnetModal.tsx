@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Download, FileText, CheckCircle } from "lucide-react";
 
+const sb: any = supabase;
+
 interface LeadMagnet {
   id: string;
   title: string;
