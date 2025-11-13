@@ -108,19 +108,19 @@ const Contact = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-tc-navy text-white py-20 md:py-28">
+      <section className="bg-primary text-primary-foreground py-20 md:py-28">
         <div className="container max-w-7xl">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30">
+            <Badge className="bg-accent/20 text-accent border-accent/30">
               <MessageCircle className="w-3 h-3 mr-2" />
               GET IN TOUCH
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Let's Talk About <span className="text-tc-amber">Your Future</span>
+            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
+              Let's Talk About <span className="text-accent">Your Future</span>
             </h1>
             
-            <p className="text-xl text-white/80 leading-relaxed">
+            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
               Questions about our courses? Want to discuss your career goals? 
               We're here to help you make the right decision.
             </p>
@@ -133,20 +133,20 @@ const Contact = () => {
         <div className="container max-w-7xl">
           <div className="grid md:grid-cols-3 gap-6 mb-16">
             {contactMethods.map((method, index) => (
-              <Card key={index} className="border-2 hover:border-tc-amber/50 transition-all hover:shadow-xl">
+              <Card key={index} className="border-2 hover:border-accent/50 transition-all hover:shadow-xl">
                 <CardContent className="p-6 text-center space-y-4">
-                  <div className="w-16 h-16 bg-tc-amber/10 rounded-full flex items-center justify-center mx-auto">
-                    <method.icon className="w-8 h-8 text-tc-amber" />
+                  <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
+                    <method.icon className="w-8 h-8 text-accent" />
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-bold text-tc-navy mb-2">{method.title}</h3>
-                    <p className="text-lg font-semibold text-tc-navy mb-1">{method.value}</p>
-                    <p className="text-sm text-muted-foreground">{method.description}</p>
+                    <h3 className="font-kanit text-xl font-bold text-primary mb-2">{method.title}</h3>
+                    <p className="font-sans text-lg font-semibold text-foreground mb-1">{method.value}</p>
+                    <p className="font-sans text-sm text-muted-foreground">{method.description}</p>
                   </div>
                   
                   <a href={method.link} target="_blank" rel="noopener noreferrer">
-                    <Button className="w-full bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold">
+                    <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold">
                       {method.action}
                     </Button>
                   </a>
@@ -158,44 +158,44 @@ const Contact = () => {
       </section>
 
       {/* Contact Form & Info */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background">
         <div className="container max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
               <div className="mb-8">
-                <Badge className="bg-tc-amber/10 text-tc-navy border-tc-amber/30 mb-4">
+                <Badge className="bg-accent/10 text-primary border-accent/30 mb-4">
                   <Send className="w-3 h-3 mr-2" />
                   SEND A MESSAGE
                 </Badge>
                 
-                <h2 className="text-3xl md:text-4xl font-bold text-tc-navy mb-4">
+                <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary mb-4">
                   Drop Us a Line
                 </h2>
                 
-                <p className="text-lg text-muted-foreground">
+                <p className="font-sans text-lg text-muted-foreground">
                   Fill out the form below and we'll get back to you as soon as possible.
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name" className="text-tc-navy font-semibold">
+                  <Label htmlFor="name" className="font-sans text-foreground font-semibold">
                     Full Name *
                   </Label>
                   <Input
                     id="name"
                     {...register("name")}
                     placeholder="John Smith"
-                    className="border-2 focus:border-tc-amber"
+                    className="border-2 focus:border-accent"
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-600">{errors.name.message}</p>
+                    <p className="font-sans text-sm text-destructive">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-tc-navy font-semibold">
+                  <Label htmlFor="email" className="font-sans text-foreground font-semibold">
                     Email Address *
                   </Label>
                   <Input
@@ -203,15 +203,15 @@ const Contact = () => {
                     type="email"
                     {...register("email")}
                     placeholder="john@example.com"
-                    className="border-2 focus:border-tc-amber"
+                    className="border-2 focus:border-accent"
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-600">{errors.email.message}</p>
+                    <p className="font-sans text-sm text-destructive">{errors.email.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-tc-navy font-semibold">
+                  <Label htmlFor="phone" className="font-sans text-foreground font-semibold">
                     Phone Number (Optional)
                   </Label>
                   <Input
@@ -219,30 +219,30 @@ const Contact = () => {
                     type="tel"
                     {...register("phone")}
                     placeholder="+44 7XXX XXXXXX"
-                    className="border-2 focus:border-tc-amber"
+                    className="border-2 focus:border-accent"
                   />
                   {errors.phone && (
-                    <p className="text-sm text-red-600">{errors.phone.message}</p>
+                    <p className="font-sans text-sm text-destructive">{errors.phone.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="subject" className="text-tc-navy font-semibold">
+                  <Label htmlFor="subject" className="font-sans text-foreground font-semibold">
                     Subject *
                   </Label>
                   <Input
                     id="subject"
                     {...register("subject")}
                     placeholder="Course enquiry, career advice, etc."
-                    className="border-2 focus:border-tc-amber"
+                    className="border-2 focus:border-accent"
                   />
                   {errors.subject && (
-                    <p className="text-sm text-red-600">{errors.subject.message}</p>
+                    <p className="font-sans text-sm text-destructive">{errors.subject.message}</p>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-tc-navy font-semibold">
+                  <Label htmlFor="message" className="font-sans text-foreground font-semibold">
                     Message *
                   </Label>
                   <Textarea
@@ -250,10 +250,10 @@ const Contact = () => {
                     {...register("message")}
                     placeholder="Tell us about your career goals and how we can help..."
                     rows={6}
-                    className="border-2 focus:border-tc-amber resize-none"
+                    className="border-2 focus:border-accent resize-none"
                   />
                   {errors.message && (
-                    <p className="text-sm text-red-600">{errors.message.message}</p>
+                    <p className="font-sans text-sm text-destructive">{errors.message.message}</p>
                   )}
                 </div>
 
@@ -261,13 +261,13 @@ const Contact = () => {
                   type="submit"
                   size="lg"
                   disabled={isSubmitting}
-                  className="w-full bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold text-lg"
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg"
                 >
                   <Send className="w-5 h-5 mr-2" />
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
 
-                <p className="text-sm text-muted-foreground text-center">
+                <p className="font-sans text-sm text-muted-foreground text-center">
                   By submitting this form, you agree to our privacy policy and terms of service.
                 </p>
               </form>
@@ -276,27 +276,27 @@ const Contact = () => {
             {/* Office Info & Hours */}
             <div className="space-y-6">
               <Card className="border-2">
-                <CardHeader className="bg-tc-navy text-white rounded-t-xl">
-                  <CardTitle className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5 text-tc-amber" />
+                <CardHeader className="bg-primary text-primary-foreground rounded-t-xl">
+                  <CardTitle className="font-kanit flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-accent" />
                     Office Location
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-4">
                   <div>
-                    <h3 className="font-bold text-tc-navy mb-2">Titans Careers UK</h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <h3 className="font-kanit font-bold text-primary mb-2">Titans Careers UK</h3>
+                    <p className="font-sans text-muted-foreground leading-relaxed">
                       London, United Kingdom<br />
                       (Remote-first training with UK support)
                     </p>
                   </div>
                   
-                  <div className="pt-4 border-t">
+                  <div className="pt-4 border-t border-border">
                     <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-tc-amber mt-1" />
+                      <Clock className="w-5 h-5 text-accent mt-1" />
                       <div>
-                        <h4 className="font-bold text-tc-navy mb-2">Operating Hours</h4>
-                        <div className="space-y-1 text-muted-foreground">
+                        <h4 className="font-kanit font-bold text-primary mb-2">Operating Hours</h4>
+                        <div className="space-y-1 font-sans text-muted-foreground">
                           <p><span className="font-semibold">Monday - Friday:</span> 9:00 AM - 6:00 PM GMT</p>
                           <p><span className="font-semibold">Saturday:</span> 10:00 AM - 4:00 PM GMT</p>
                           <p><span className="font-semibold">Sunday:</span> Closed</p>
@@ -307,13 +307,13 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-tc-navy text-white border-2 border-tc-navy">
+              <Card className="bg-primary text-primary-foreground border-2 border-primary">
                 <CardContent className="p-8 space-y-4">
-                  <h3 className="text-2xl font-bold">
-                    Prefer to Talk? <span className="text-tc-amber">Let's Chat!</span>
+                  <h3 className="font-kanit text-2xl font-bold">
+                    Prefer to Talk? <span className="text-accent">Let's Chat!</span>
                   </h3>
                   
-                  <p className="text-white/80 leading-relaxed">
+                  <p className="font-sans text-primary-foreground/80 leading-relaxed">
                     WhatsApp is our fastest way to connect. Send us a message and we'll 
                     respond within minutes during business hours.
                   </p>
@@ -325,7 +325,7 @@ const Contact = () => {
                   >
                     <Button 
                       size="lg" 
-                      className="w-full bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold"
+                      className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold"
                     >
                       <MessageCircle className="w-5 h-5 mr-2" />
                       Chat on WhatsApp
@@ -334,20 +334,20 @@ const Contact = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-tc-amber/10 to-tc-gold/10 border-2 border-tc-amber/30">
+              <Card className="bg-gradient-to-br from-accent/10 to-gold/10 border-2 border-accent/30">
                 <CardContent className="p-6 space-y-3">
-                  <h4 className="font-bold text-tc-navy text-lg">Quick Response Guarantee</h4>
-                  <ul className="space-y-2 text-muted-foreground">
+                  <h4 className="font-kanit font-bold text-primary text-lg">Quick Response Guarantee</h4>
+                  <ul className="space-y-2 font-sans text-muted-foreground">
                     <li className="flex items-start gap-2">
-                      <span className="text-tc-amber font-bold">✓</span>
+                      <span className="text-accent font-bold">✓</span>
                       <span>WhatsApp messages: Within 1 hour (business hours)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-tc-amber font-bold">✓</span>
+                      <span className="text-accent font-bold">✓</span>
                       <span>Email enquiries: Within 24 hours</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-tc-amber font-bold">✓</span>
+                      <span className="text-accent font-bold">✓</span>
                       <span>Phone calls: Answered during operating hours</span>
                     </li>
                   </ul>
@@ -362,16 +362,16 @@ const Contact = () => {
       <section className="py-20 bg-secondary/30">
         <div className="container max-w-4xl text-center space-y-8">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-tc-navy mb-4">
+            <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary mb-4">
               Have Questions Before Reaching Out?
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="font-sans text-lg text-muted-foreground">
               Check our FAQ section for instant answers to common questions.
             </p>
           </div>
           
           <a href="/#faqs">
-            <Button size="lg" variant="outlineWhite" className="border-tc-navy text-tc-navy font-bold">
+            <Button size="lg" variant="outline" className="border-primary text-primary font-bold">
               View FAQs
             </Button>
           </a>

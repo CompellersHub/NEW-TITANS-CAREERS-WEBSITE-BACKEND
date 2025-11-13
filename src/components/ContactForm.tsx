@@ -30,10 +30,10 @@ export const ContactForm = () => {
       <div className="container px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12 space-y-4">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+            <h2 className="font-kanit text-4xl md:text-5xl font-bold tracking-tight text-primary">
               Get Started Today
             </h2>
-            <p className="text-xl text-muted-foreground">
+            <p className="font-sans text-xl text-muted-foreground">
               Let's discuss how Titan Careers can transform your hiring process
             </p>
           </div>
@@ -41,7 +41,7 @@ export const ContactForm = () => {
           <form onSubmit={handleSubmit} className="space-y-6 animate-fade-in">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
+                <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
                   <User className="w-4 h-4 text-primary" />
                   Full Name
                 </label>
@@ -53,7 +53,7 @@ export const ContactForm = () => {
               </div>
               
               <div className="space-y-2">
-                <label className="text-sm font-medium flex items-center gap-2">
+                <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
                   <Mail className="w-4 h-4 text-primary" />
                   Work Email
                 </label>
@@ -67,7 +67,7 @@ export const ContactForm = () => {
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
                 <Building2 className="w-4 h-4 text-primary" />
                 Company Name
               </label>
@@ -79,7 +79,7 @@ export const ContactForm = () => {
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
+              <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
                 <MessageSquare className="w-4 h-4 text-primary" />
                 How can we help?
               </label>
@@ -100,7 +100,7 @@ export const ContactForm = () => {
               {isSubmitting ? "Sending..." : "Request Demo"}
             </Button>
             
-            <p className="text-center text-sm text-muted-foreground">
+            <p className="font-sans text-center text-sm text-muted-foreground">
               By submitting this form, you agree to our privacy policy and terms of service.
             </p>
           </form>
