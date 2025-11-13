@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { format } from "date-fns";
+import { format, formatDistanceToNow, differenceInMilliseconds } from "date-fns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Button } from "@/components/ui/button";
@@ -76,6 +76,8 @@ interface FormSubmission {
   last_updated_at: string | null;
   assigned_to: string | null;
   tags: string[];
+  sla_deadline: string | null;
+  sla_status: 'on_track' | 'approaching' | 'overdue' | 'met' | null;
 }
 
 interface AdminUser {
@@ -115,6 +117,7 @@ const FormSubmissionsAdmin = () => {
   const [assigneeFilter, setAssigneeFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState("all");
   const [priorityFilter, setPriorityFilter] = useState("all");
+  const [slaFilter, setSlaFilter] = useState("all");
   const [sortBy, setSortBy] = useState<'date' | 'priority'>('date');
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [availableTags, setAvailableTags] = useState<string[]>([]);
@@ -698,6 +701,9 @@ const FormSubmissionsAdmin = () => {
       
       const basicInfo = [
         ['Form Type', submission.form_type],
+        ['Priority', (submission.priority || 'medium').toUpperCase()],
+        ['SLA Status', getSlaLabel(submission.sla_status)],
+        ['Time Remaining', formatSlaCountdown(submission.sla_deadline, submission.status).text],
         ['Status', submission.status.toUpperCase()],
         ['Submitted', format(new Date(submission.submitted_at), 'PPpp')],
         ['Assigned To', assignedEmail],
@@ -945,6 +951,10 @@ const FormSubmissionsAdmin = () => {
       filtered = filtered.filter(sub => sub.priority === priorityFilter);
     }
 
+    if (slaFilter !== "all") {
+      filtered = filtered.filter(sub => sub.sla_status === slaFilter);
+    }
+
     // Filter by date
     const now = new Date();
     if (dateFilter === "today") {
@@ -993,7 +1003,7 @@ const FormSubmissionsAdmin = () => {
     }
 
     setFilteredSubmissions(filtered);
-  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter, tagFilter, priorityFilter, sortBy]);
+  }, [submissions, searchQuery, formTypeFilter, dateFilter, statusFilter, assigneeFilter, tagFilter, priorityFilter, slaFilter, sortBy]);
 
   const exportToCSV = () => {
     if (filteredSubmissions.length === 0) {
@@ -1005,14 +1015,20 @@ const FormSubmissionsAdmin = () => {
       return;
     }
 
-    const headers = ["Form Type", "Email", "Name", "Message/Comment", "Submitted At"];
+    const headers = ["Form Type", "Priority", "SLA Status", "SLA Time Remaining", "Email", "Name", "Message/Comment", "Status", "Tags", "Submitted At"];
     const rows = filteredSubmissions.map(sub => {
       const data = sub.form_data;
+      const countdown = formatSlaCountdown(sub.sla_deadline, sub.status);
       return [
         sub.form_type,
+        (sub.priority || 'medium').toUpperCase(),
+        getSlaLabel(sub.sla_status),
+        countdown.text,
         data.email || "N/A",
         data.name || "N/A",
         data.message || data.comment || "N/A",
+        getStatusLabel(sub.status),
+        (sub.tags || []).join('; '),
         new Date(sub.submitted_at).toLocaleString()
       ];
     });
@@ -1101,6 +1117,70 @@ const FormSubmissionsAdmin = () => {
       low: "Low Priority",
     };
     return labels[priority] || "Medium Priority";
+  };
+
+  const getSlaStatusBadge = (slaStatus: string | null) => {
+    const styles: Record<string, { bg: string; text: string; border: string; icon: string }> = {
+      on_track: { 
+        bg: "bg-green-500/10", 
+        text: "text-green-500", 
+        border: "border-green-500/20",
+        icon: "✓"
+      },
+      approaching: { 
+        bg: "bg-amber-500/10", 
+        text: "text-amber-500", 
+        border: "border-amber-500/20",
+        icon: "⚠"
+      },
+      overdue: { 
+        bg: "bg-red-500/10", 
+        text: "text-red-500", 
+        border: "border-red-500/20",
+        icon: "⏰"
+      },
+      met: { 
+        bg: "bg-blue-500/10", 
+        text: "text-blue-500", 
+        border: "border-blue-500/20",
+        icon: "✓"
+      },
+    };
+    return styles[slaStatus || 'on_track'] || styles.on_track;
+  };
+
+  const getSlaLabel = (slaStatus: string | null) => {
+    const labels: Record<string, string> = {
+      on_track: "On Track",
+      approaching: "Approaching Deadline",
+      overdue: "Overdue",
+      met: "SLA Met",
+    };
+    return labels[slaStatus || 'on_track'] || "On Track";
+  };
+
+  const formatSlaCountdown = (deadline: string | null, status: string) => {
+    if (!deadline || status === 'resolved' || status === 'archived') {
+      return { text: 'Complete', isOverdue: false, isApproaching: false };
+    }
+
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+    const diff = differenceInMilliseconds(deadlineDate, now);
+
+    if (diff < 0) {
+      const overdue = formatDistanceToNow(deadlineDate, { addSuffix: false });
+      return { text: `${overdue} overdue`, isOverdue: true, isApproaching: false };
+    }
+
+    const remaining = formatDistanceToNow(deadlineDate, { addSuffix: false });
+    
+    // Check if approaching (less than 25% of time remaining)
+    const createdDate = new Date(deadlineDate.getTime() - diff);
+    const totalTime = deadlineDate.getTime() - createdDate.getTime();
+    const isApproaching = diff < totalTime * 0.25;
+
+    return { text: remaining, isOverdue: false, isApproaching };
   };
 
   const getStatusLabel = (status: string) => {
@@ -1708,6 +1788,22 @@ const FormSubmissionsAdmin = () => {
             </div>
 
             <div className="space-y-2">
+              <label className="text-sm font-medium">Filter by SLA Status</label>
+              <Select value={slaFilter} onValueChange={setSlaFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All SLA Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All SLA Status</SelectItem>
+                  <SelectItem value="overdue">⏰ Overdue</SelectItem>
+                  <SelectItem value="approaching">⚠ Approaching Deadline</SelectItem>
+                  <SelectItem value="on_track">✓ On Track</SelectItem>
+                  <SelectItem value="met">✓ SLA Met</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <label className="text-sm font-medium">Sort By</label>
               <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
                 <SelectTrigger>
@@ -1908,6 +2004,7 @@ const FormSubmissionsAdmin = () => {
                         />
                       </TableHead>
                       <TableHead>Priority</TableHead>
+                      <TableHead>SLA Status</TableHead>
                       <TableHead>Form Type</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Email</TableHead>
@@ -1956,6 +2053,37 @@ const FormSubmissionsAdmin = () => {
                                 <SelectItem value="low">🟢 Low</SelectItem>
                               </SelectContent>
                             </Select>
+                          </TableCell>
+                          <TableCell onClick={() => setSelectedSubmission(submission)}>
+                            {(() => {
+                              const countdown = formatSlaCountdown(submission.sla_deadline, submission.status);
+                              const slaStyle = getSlaStatusBadge(submission.sla_status);
+                              return (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={`${slaStyle.bg} ${slaStyle.text} ${slaStyle.border} cursor-pointer`}
+                                      >
+                                        <Clock className="h-3 w-3 mr-1" />
+                                        {countdown.text}
+                                      </Badge>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <div className="space-y-1">
+                                        <p className="font-semibold">{getSlaLabel(submission.sla_status)}</p>
+                                        {submission.sla_deadline && (
+                                          <p className="text-xs">
+                                            Deadline: {format(new Date(submission.sla_deadline), 'MMM d, h:mm a')}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              );
+                            })()}
                           </TableCell>
                           <TableCell onClick={() => setSelectedSubmission(submission)}>
                             <Badge variant="outline" className={getFormTypeBadge(submission.form_type)}>
@@ -2489,6 +2617,60 @@ const FormSubmissionsAdmin = () => {
                         </SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  {/* SLA Status Section */}
+                  <div className="space-y-2 pt-4 border-t">
+                    <span className="text-sm font-semibold">SLA Status</span>
+                    {(() => {
+                      const countdown = formatSlaCountdown(selectedSubmission.sla_deadline, selectedSubmission.status);
+                      const slaStyle = getSlaStatusBadge(selectedSubmission.sla_status);
+                      return (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between p-3 rounded-lg border bg-card">
+                            <div className="flex items-center gap-3">
+                              <Clock className={`h-5 w-5 ${slaStyle.text}`} />
+                              <div>
+                                <p className="font-semibold">{getSlaLabel(selectedSubmission.sla_status)}</p>
+                                <p className={`text-sm ${countdown.isOverdue ? 'text-red-500 font-semibold' : countdown.isApproaching ? 'text-amber-500' : 'text-muted-foreground'}`}>
+                                  {countdown.isOverdue ? '⏰ ' : countdown.isApproaching ? '⚠ ' : ''}
+                                  {countdown.text} {countdown.isOverdue ? '' : 'remaining'}
+                                </p>
+                              </div>
+                            </div>
+                            <Badge 
+                              variant="outline" 
+                              className={`${slaStyle.bg} ${slaStyle.text} ${slaStyle.border}`}
+                            >
+                              {slaStyle.icon}
+                            </Badge>
+                          </div>
+                          
+                          {selectedSubmission.sla_deadline && (
+                            <div className="text-xs text-muted-foreground space-y-1">
+                              <div className="flex justify-between">
+                                <span>Created:</span>
+                                <span className="font-medium">{format(new Date(selectedSubmission.created_at), 'MMM d, h:mm a')}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Deadline:</span>
+                                <span className={`font-medium ${countdown.isOverdue ? 'text-red-500' : countdown.isApproaching ? 'text-amber-500' : ''}`}>
+                                  {format(new Date(selectedSubmission.sla_deadline), 'MMM d, h:mm a')}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>Expected Response Time:</span>
+                                <span className="font-medium">
+                                  {selectedSubmission.priority === 'high' ? '1 hour' : 
+                                   selectedSubmission.priority === 'medium' ? '24 hours' : 
+                                   '48 hours'}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
 
                   {/* Tags Section */}
