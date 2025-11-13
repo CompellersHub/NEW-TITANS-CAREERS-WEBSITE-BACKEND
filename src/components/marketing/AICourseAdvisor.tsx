@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock, Search, Filter } from "lucide-react";
+import { Sparkles, Send, X, Minimize2, Maximize2, Mail, History, Plus, Clock, Search, Filter, Download, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,6 +11,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { jsPDF } from "jspdf";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Message {
   role: "user" | "assistant";
@@ -397,6 +404,89 @@ export function AICourseAdvisor() {
     }
   };
 
+  const exportAsText = () => {
+    const conversation = conversations.find(c => c.id === conversationId);
+    const title = conversation?.title || "AI Advisor Conversation";
+    const timestamp = new Date().toLocaleString();
+    
+    let textContent = `${title}\nExported: ${timestamp}\n${"=".repeat(50)}\n\n`;
+    
+    messages.forEach((msg) => {
+      const role = msg.role === "user" ? "You" : "AI Advisor";
+      textContent += `${role}:\n${msg.content}\n\n`;
+    });
+    
+    const blob = new Blob([textContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `conversation-${conversationId}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    toast.success("Conversation exported as text file");
+  };
+
+  const exportAsPDF = () => {
+    const conversation = conversations.find(c => c.id === conversationId);
+    const title = conversation?.title || "AI Advisor Conversation";
+    const timestamp = new Date().toLocaleString();
+    
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20;
+    const maxWidth = pageWidth - 2 * margin;
+    let yPosition = 20;
+    
+    // Title
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text(title, margin, yPosition);
+    yPosition += 10;
+    
+    // Timestamp
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Exported: ${timestamp}`, margin, yPosition);
+    yPosition += 15;
+    
+    // Messages
+    doc.setFontSize(11);
+    messages.forEach((msg) => {
+      const role = msg.role === "user" ? "You" : "AI Advisor";
+      
+      // Check if we need a new page
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      // Role header
+      doc.setFont("helvetica", "bold");
+      doc.text(`${role}:`, margin, yPosition);
+      yPosition += 7;
+      
+      // Message content
+      doc.setFont("helvetica", "normal");
+      const lines = doc.splitTextToSize(msg.content, maxWidth);
+      lines.forEach((line: string) => {
+        if (yPosition > 270) {
+          doc.addPage();
+          yPosition = 20;
+        }
+        doc.text(line, margin, yPosition);
+        yPosition += 5;
+      });
+      
+      yPosition += 8;
+    });
+    
+    doc.save(`conversation-${conversationId}.pdf`);
+    toast.success("Conversation exported as PDF");
+  };
+
   return (
     <>
       {/* Floating Button */}
@@ -465,6 +555,30 @@ export function AICourseAdvisor() {
                       <Plus className="h-4 w-4" />
                     </Button>
                   )}
+                  {!showHistory && messages.length > 1 && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-white hover:bg-white/20"
+                          title="Export Conversation"
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={exportAsPDF}>
+                          <FileText className="h-4 w-4 mr-2" />
+                          Export as PDF
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={exportAsText}>
+                          <FileText className="h-4 w-4 mr-2" />
+                          Export as Text
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                   <Button
                     size="icon"
                     variant="ghost"
@@ -505,33 +619,42 @@ export function AICourseAdvisor() {
                       </div>
                       <ScrollArea className="h-[380px]">
                         <div className="space-y-2">
-                          {conversations.map((conv) => (
-                            <button
+                          {filteredConversations.map((conv) => (
+                            <div
                               key={conv.id}
-                              onClick={() => switchConversation(conv.id)}
-                              disabled={isLoadingHistory}
-                              className={`w-full text-left p-3 rounded-lg border transition-colors ${
+                              className={`w-full p-3 rounded-lg border transition-colors ${
                                 conv.id === conversationId
                                   ? "border-accent bg-accent/10"
                                   : "border-border hover:border-accent/50 hover:bg-accent/5"
                               }`}
                             >
-                              <div className="flex items-start justify-between gap-2">
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium truncate">
-                                    {conv.title || "New conversation"}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    {conv.message_count} messages
-                                  </p>
+                              <button
+                                onClick={() => switchConversation(conv.id)}
+                                disabled={isLoadingHistory}
+                                className="w-full text-left"
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium truncate">
+                                      {conv.title || "New conversation"}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                      {conv.message_count} messages
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
+                                    <Clock className="h-3 w-3" />
+                                    {new Date(conv.last_message_at).toLocaleDateString()}
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-1 text-xs text-muted-foreground flex-shrink-0">
-                                  <Clock className="h-3 w-3" />
-                                  {new Date(conv.last_message_at).toLocaleDateString()}
-                                </div>
-                              </div>
-                            </button>
+                              </button>
+                            </div>
                           ))}
+                          {filteredConversations.length === 0 && conversations.length > 0 && (
+                            <p className="text-center text-muted-foreground text-sm py-8">
+                              No conversations match your filters
+                            </p>
+                          )}
                           {conversations.length === 0 && (
                             <p className="text-center text-muted-foreground text-sm py-8">
                               No previous conversations
