@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.populate-campaign-content]
 verify_jwt = false
+
+[functions.contact-chat]
+verify_jwt = false

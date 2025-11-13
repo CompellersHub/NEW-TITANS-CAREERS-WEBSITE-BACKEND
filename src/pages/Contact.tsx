@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ContactMethodCard } from "@/components/contact/ContactMethodCard";
 import { ProcessStep } from "@/components/contact/ProcessStep";
 import { InteractiveMap } from "@/components/contact/InteractiveMap";
+import { ContactChatbot } from "@/components/contact/ContactChatbot";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -498,6 +499,7 @@ const Contact = () => {
       </section>
 
       <Footer />
+      <ContactChatbot />
     </div>
   );
 };
