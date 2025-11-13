@@ -1,8 +1,9 @@
-import { Phone, Mail, MessageCircle, ArrowUp } from "lucide-react";
+import { Phone, Mail, MessageCircle, ArrowUp, MessagesSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useHapticFeedback } from "@/hooks/useHapticFeedback";
 import { useToast } from "@/hooks/use-toast";
+import { QuickContactFormModal } from "@/components/contact/QuickContactFormModal";
 
 export function MobileContactBar() {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -61,6 +62,18 @@ export function MobileContactBar() {
       {/* Main Action Bar */}
       <div className="bg-background/95 backdrop-blur-lg border-t-2 border-accent/30 shadow-2xl animate-fade-in">
         <div className="container px-4 py-3">
+          {/* Quick Contact Form Button */}
+          <div className="mb-3">
+            <QuickContactFormModal>
+              <Button
+                className="w-full h-12 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground font-bold flex items-center justify-center gap-2 transition-all active:scale-95 shadow-lg hover:shadow-xl"
+              >
+                <MessagesSquare className="w-5 h-5" />
+                <span>Quick Contact Form</span>
+              </Button>
+            </QuickContactFormModal>
+          </div>
+
           <div className="grid grid-cols-3 gap-3">
             {/* WhatsApp Button */}
             <a
