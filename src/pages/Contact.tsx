@@ -19,6 +19,7 @@ import { MobileContactBar } from "@/components/contact/MobileContactBar";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
 import { FeedbackWidget } from "@/components/contact/FeedbackWidget";
 import { SocialProofNotifications } from "@/components/marketing/SocialProofNotifications";
+import { ContactPageSkeleton } from "@/components/contact/ContactPageSkeleton";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 
@@ -53,6 +54,7 @@ const Contact = () => {
   const { toast } = useToast();
   const [charCount, setCharCount] = useState(0);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema)
@@ -63,6 +65,14 @@ const Contact = () => {
   useEffect(() => {
     setCharCount(message?.length || 0);
   }, [message]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 700);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Pull-to-refresh functionality
   const handleRefresh = async () => {
@@ -165,6 +175,10 @@ const Contact = () => {
       description: "Continuous guidance on your journey"
     }
   ];
+
+  if (isLoading) {
+    return <ContactPageSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0" key={refreshKey}>
