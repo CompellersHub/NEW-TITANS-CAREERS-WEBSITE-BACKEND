@@ -40,7 +40,7 @@ export function ABTestControls({ testName, variants }: ABTestControlsProps) {
       // Update all variants in this test
       const { error } = await supabase
         .from("email_templates")
-        .update({ auto_winner_paused: newPausedState })
+        .update({ auto_winner_paused: newPausedState } as any)
         .in("id", variants.map(v => v.template_id));
 
       if (error) throw error;
@@ -88,7 +88,7 @@ export function ABTestControls({ testName, variants }: ABTestControlsProps) {
       const updates = Object.entries(weights).map(([templateId, weight]) =>
         supabase
           .from("email_templates")
-          .update({ traffic_weight: weight })
+          .update({ traffic_weight: weight } as any)
           .eq("id", templateId)
       );
 
