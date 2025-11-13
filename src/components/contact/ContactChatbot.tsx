@@ -35,6 +35,7 @@ export const ContactChatbot = () => {
     const saved = localStorage.getItem('chatbot_sound_enabled');
     return saved !== null ? saved === 'true' : true;
   });
+  const [isDragging, setIsDragging] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -204,6 +205,87 @@ export const ContactChatbot = () => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Only set to false if leaving the chat area entirely
+    if (e.currentTarget === e.target) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    if (!files || files.length === 0) return;
+
+    const newAttachments: typeof attachments = [];
+
+    for (const file of Array.from(files)) {
+      // Check file size (20MB limit)
+      if (file.size > 20 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: `${file.name} exceeds 20MB limit`,
+          variant: "destructive"
+        });
+        continue;
+      }
+
+      // Only accept images
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Only image files are supported",
+          variant: "destructive"
+        });
+        continue;
+      }
+
+      try {
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64String = (reader.result as string).split(',')[1];
+            resolve(base64String);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        newAttachments.push({
+          type: 'image',
+          data: base64,
+          mimeType: file.type,
+          name: file.name
+        });
+      } catch (error) {
+        console.error('Error reading file:', error);
+        toast({
+          title: "Error",
+          description: `Failed to read ${file.name}`,
+          variant: "destructive"
+        });
+      }
+    }
+
+    setAttachments(prev => [...prev, ...newAttachments]);
+  };
+
   const sendMessage = async () => {
     if ((!input.trim() && attachments.length === 0) || isLoading) return;
 
@@ -353,7 +435,22 @@ export const ContactChatbot = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div 
+            className="flex-1 overflow-y-auto p-4 space-y-4 relative"
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {isDragging && (
+              <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-lg flex items-center justify-center z-10 pointer-events-none">
+                <div className="text-center">
+                  <ImageIcon className="h-12 w-12 mx-auto mb-2 text-primary" />
+                  <p className="text-lg font-semibold text-primary">Drop images here</p>
+                  <p className="text-sm text-muted-foreground">Images up to 20MB</p>
+                </div>
+              </div>
+            )}
             {messages.map((message, index) => (
               <div
                 key={index}
