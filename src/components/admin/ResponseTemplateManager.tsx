@@ -51,10 +51,10 @@ export const ResponseTemplateManager = () => {
         .from("response_templates")
         .select("*")
         .eq("is_active", true)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false }) as any;
 
       if (error) throw error;
-      setTemplates(data || []);
+      setTemplates((data || []) as any);
     } catch (error: any) {
       console.error("Error fetching templates:", error);
       toast({
