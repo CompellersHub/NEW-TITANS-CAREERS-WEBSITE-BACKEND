@@ -42,6 +42,9 @@ verify_jwt = false
 [functions.track-email-open]
 verify_jwt = false
 
+[functions.select-email-ab-winner]
+verify_jwt = false
+
 [functions.ai-course-advisor]
 verify_jwt = false
 
