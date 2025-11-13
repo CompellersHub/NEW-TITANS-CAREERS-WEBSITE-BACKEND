@@ -5,9 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
-import { TrendingUp, Calendar, Trophy, Users } from "lucide-react";
+import { TrendingUp, Calendar, Trophy, Users, Download } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 interface WinnerHistory {
   id: string;
@@ -52,15 +56,139 @@ export default function ABTestWinnerHistory() {
       }
     : null;
 
+  const exportToCSV = () => {
+    if (!history || history.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+
+    const headers = [
+      "Date",
+      "Test Name",
+      "Campaign Type",
+      "Winner Template",
+      "Variant",
+      "Open Rate (%)",
+      "Click Rate (%)",
+      "Sends",
+      "Improvement (%)",
+      "Deactivated Count",
+      "Selection Type",
+      "Admin Action"
+    ];
+
+    const rows = history.map((record) => [
+      format(new Date(record.created_at), "yyyy-MM-dd HH:mm"),
+      record.ab_test_name,
+      record.campaign_type,
+      record.winner_template_name,
+      record.winner_variant_letter,
+      record.winner_open_rate.toFixed(2),
+      record.winner_click_rate.toFixed(2),
+      record.winner_sends_count.toString(),
+      record.improvement_percent.toFixed(1),
+      record.deactivated_variants_count.toString(),
+      record.selected_by,
+      record.admin_action || "N/A"
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `ab-test-winner-history-${format(new Date(), "yyyy-MM-dd")}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success("CSV export completed successfully");
+  };
+
+  const exportToPDF = () => {
+    if (!history || history.length === 0) {
+      toast.error("No data to export");
+      return;
+    }
+
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(18);
+    doc.text("A/B Test Winner History Report", 14, 20);
+    
+    // Add summary stats
+    doc.setFontSize(12);
+    doc.text(`Generated: ${format(new Date(), "MMM dd, yyyy HH:mm")}`, 14, 30);
+    
+    if (stats) {
+      doc.setFontSize(10);
+      doc.text(`Total Winners: ${stats.totalWinners}`, 14, 40);
+      doc.text(`Average Improvement: +${stats.avgImprovement.toFixed(1)}%`, 14, 46);
+      doc.text(`Total Deactivated: ${stats.totalDeactivated}`, 14, 52);
+      doc.text(`Automated Selections: ${stats.automatedSelections}`, 14, 58);
+    }
+
+    // Add table
+    const tableData = history.map((record) => [
+      format(new Date(record.created_at), "MMM dd, yyyy"),
+      record.ab_test_name,
+      record.winner_template_name,
+      record.winner_variant_letter,
+      `${record.winner_open_rate.toFixed(2)}%`,
+      `${record.winner_click_rate.toFixed(2)}%`,
+      record.winner_sends_count.toLocaleString(),
+      `+${record.improvement_percent.toFixed(1)}%`,
+      record.selected_by
+    ]);
+
+    autoTable(doc, {
+      startY: 65,
+      head: [["Date", "Test Name", "Winner", "Variant", "Open %", "Click %", "Sends", "Improve", "Type"]],
+      body: tableData,
+      theme: "striped",
+      headStyles: { fillColor: [59, 130, 246] },
+      styles: { fontSize: 8 },
+    });
+
+    doc.save(`ab-test-winner-history-${format(new Date(), "yyyy-MM-dd")}.pdf`);
+    toast.success("PDF export completed successfully");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">A/B Test Winner History</h1>
-          <p className="text-muted-foreground">
-            Track all automated and manual A/B test winner selections over time
-          </p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">A/B Test Winner History</h1>
+            <p className="text-muted-foreground">
+              Track all automated and manual A/B test winner selections over time
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={exportToCSV}
+              disabled={!history || history.length === 0}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button
+              variant="outline"
+              onClick={exportToPDF}
+              disabled={!history || history.length === 0}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export PDF
+            </Button>
+          </div>
         </div>
 
         {/* Summary Stats */}
