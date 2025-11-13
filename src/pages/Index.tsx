@@ -16,6 +16,7 @@ import { SocialProofNotifications } from "@/components/marketing/SocialProofNoti
 import { CourseFinder } from "@/components/marketing/CourseFinder";
 import { LeadMagnetModal } from "@/components/marketing/LeadMagnetModal";
 import { ReferralProgram } from "@/components/marketing/ReferralProgram";
+import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { Sparkles, Download } from "lucide-react";
 
@@ -37,6 +38,7 @@ const Index = () => {
       <SocialProofNotifications />
       <CourseFinder isOpen={showCourseFinder} onClose={() => setShowCourseFinder(false)} />
       <LeadMagnetModal isOpen={showLeadMagnet} onClose={() => setShowLeadMagnet(false)} />
+      <AICourseAdvisor />
       
       <HeroSection />
       
