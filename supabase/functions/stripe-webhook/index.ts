@@ -61,8 +61,48 @@ serve(async (req) => {
       });
 
       const customerEmail = session.customer_details?.email;
-      const courseTitle = session.metadata?.courseTitle || 'Your Course';
-      const courseSlug = session.metadata?.courseSlug || '';
+      const { courseSlug, courseTitle, voucherId, voucherCode, originalPrice, discountAmount, userEmail } = session.metadata || {};
+      const amountTotal = session.amount_total ? session.amount_total / 100 : 0;
+
+      console.log('Processing enrollment:', { customerEmail, courseSlug, courseTitle, amountTotal, voucherCode });
+
+      // Record voucher usage if voucher was used
+      if (voucherId && voucherCode) {
+        const { error: usageError } = await supabase
+          .from('voucher_usage')
+          .insert({
+            voucher_id: voucherId,
+            user_email: userEmail || customerEmail,
+            course_slug: courseSlug,
+            original_price: parseFloat(originalPrice || amountTotal.toString()),
+            discount_amount: parseFloat(discountAmount || '0'),
+            final_price: amountTotal,
+            stripe_session_id: session.id
+          });
+
+        if (usageError) {
+          console.error('Error recording voucher usage:', usageError);
+        } else {
+          // Increment usage count
+          const { data: voucher } = await supabase
+            .from('vouchers')
+            .select('usage_count')
+            .eq('id', voucherId)
+            .single();
+
+          if (voucher) {
+            await supabase
+              .from('vouchers')
+              .update({ usage_count: voucher.usage_count + 1 })
+              .eq('id', voucherId);
+          }
+
+          console.log('Voucher usage recorded:', voucherCode);
+        }
+      }
+
+      const courseTitle2 = session.metadata?.courseTitle || 'Your Course';
+      const courseSlug2 = session.metadata?.courseSlug || '';
       const price = session.amount_total ? session.amount_total / 100 : 0;
 
       if (customerEmail) {
@@ -71,8 +111,8 @@ serve(async (req) => {
           .from('enrollments')
           .insert({
             customer_email: customerEmail,
-            course_slug: courseSlug,
-            course_title: courseTitle,
+            course_slug: courseSlug2,
+            course_title: courseTitle2,
             price: price,
             stripe_session_id: session.id,
           });
@@ -92,7 +132,7 @@ serve(async (req) => {
           body: JSON.stringify({
             from: 'Titans Careers <onboarding@resend.dev>',
             to: [customerEmail],
-            subject: `Welcome to ${courseTitle}!`,
+            subject: `Welcome to ${courseTitle2}!`,
             html: `
               <!DOCTYPE html>
               <html>
@@ -114,7 +154,7 @@ serve(async (req) => {
                       <h1 style="margin: 0;">🎉 Welcome to Titans Careers!</h1>
                     </div>
                     <div class="content">
-                      <h2>Thank you for enrolling in ${courseTitle}</h2>
+                      <h2>Thank you for enrolling in ${courseTitle2}</h2>
                       <p>We're excited to have you on board! Your payment has been successfully processed.</p>
                       
                       <h3>What's Next?</h3>
