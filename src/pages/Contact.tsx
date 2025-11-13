@@ -16,6 +16,8 @@ import { ProcessStep } from "@/components/contact/ProcessStep";
 import { InteractiveMap } from "@/components/contact/InteractiveMap";
 import { ContactChatbot } from "@/components/contact/ContactChatbot";
 import { MobileContactBar } from "@/components/contact/MobileContactBar";
+import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 
 const contactFormSchema = z.object({
@@ -48,6 +50,7 @@ type ContactFormData = z.infer<typeof contactFormSchema>;
 const Contact = () => {
   const { toast } = useToast();
   const [charCount, setCharCount] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
   
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema)
@@ -58,6 +61,25 @@ const Contact = () => {
   useEffect(() => {
     setCharCount(message?.length || 0);
   }, [message]);
+
+  // Pull-to-refresh functionality
+  const handleRefresh = async () => {
+    // Simulate content refresh
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Trigger a re-render to show fresh content
+    setRefreshKey(prev => prev + 1);
+    
+    toast({
+      title: "Page Refreshed",
+      description: "Contact information updated successfully",
+    });
+  };
+
+  const { pullDistance, isRefreshing, isAtThreshold } = usePullToRefresh({
+    onRefresh: handleRefresh,
+    threshold: 80,
+  });
 
   const onSubmit = async (data: ContactFormData) => {
     try {
@@ -143,8 +165,16 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0">
+    <div className="min-h-screen bg-background pb-20 md:pb-0" key={refreshKey}>
       <Navbar />
+      
+      {/* Pull-to-Refresh Indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isRefreshing={isRefreshing}
+        isAtThreshold={isAtThreshold}
+        threshold={80}
+      />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-24 md:py-32 overflow-hidden">
