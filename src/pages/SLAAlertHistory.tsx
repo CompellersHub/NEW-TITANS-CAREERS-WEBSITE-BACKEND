@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
 import { ArrowLeft, AlertCircle, Clock, CheckCircle, TrendingDown, TrendingUp } from "lucide-react";
 import { formatDistanceToNow, format, differenceInMinutes } from "date-fns";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from "recharts";
@@ -175,13 +176,7 @@ export default function SLAAlertHistory() {
     }));
 
   if (loading) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-muted-foreground">Loading alert history...</div>
-        </div>
-      </div>
-    );
+    return <AnalyticsPageSkeleton />;
   }
 
   return (

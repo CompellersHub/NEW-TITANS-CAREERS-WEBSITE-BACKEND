@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { NotificationBell } from "@/components/admin/NotificationBell";
+import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
 import { format, subDays, formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -316,11 +317,7 @@ const FormSubmissionAnalytics = () => {
   };
 
   if (authLoading || isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <AnalyticsPageSkeleton />;
   }
 
   return (
