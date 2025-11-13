@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download, Mail } from "lucide-react";
+import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download, Mail, LineChart } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -158,9 +158,14 @@ export default function VoucherManager() {
               Export
             </Button>
             
-            <Button variant="outline" onClick={() => navigate('/admin/voucher-analytics')}>
+            <Button variant="outline" onClick={() => navigate('/admin/vouchers/analytics')}>
               <BarChart3 className="h-4 w-4 mr-2" />
-              View Analytics
+              Voucher Analytics
+            </Button>
+            
+            <Button variant="outline" onClick={() => navigate('/admin/vouchers/campaign-analytics')}>
+              <LineChart className="h-4 w-4 mr-2" />
+              Campaign Analytics
             </Button>
 
             <Dialog open={isBulkDialogOpen} onOpenChange={setIsBulkDialogOpen}>
