@@ -19,7 +19,7 @@ export const Footer = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-base font-kanit font-bold">Titans Careers</span>
+                <span className="text-base font-kanit font-bold">TITANS CAREERS</span>
                 <span className="text-xs font-sans text-primary-foreground/70">Practical training. Real careers.</span>
               </div>
             </div>
@@ -162,15 +162,20 @@ export const Footer = () => {
               <span>Company Number: 16369966</span>
               <span className="hidden sm:inline">·</span>
               <span>UKRLP Number: 10098472</span>
+              <span className="hidden sm:inline">·</span>
+              <span>ICO Registered</span>
             </div>
             <p className="max-w-2xl">
               Pay later options are subject to eligibility and approval. Terms and conditions apply.
+            </p>
+            <p className="text-xs">
+              Partnering with Payl8r
             </p>
           </div>
 
           {/* Copyright */}
           <p className="text-sm font-sans text-primary-foreground/70 text-center">
-            © 2025 Titans Careers. All rights reserved.
+            © 2025 TITANS CAREERS. All rights reserved.
           </p>
         </div>
       </div>

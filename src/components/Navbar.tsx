@@ -26,7 +26,7 @@ export const Navbar = () => {
             <LogoWithEffects />
             <div className="flex flex-col">
               <span className="font-kanit font-bold text-lg text-primary-foreground leading-tight group-hover:text-accent transition-colors">
-                Titans Careers
+                TITANS CAREERS
               </span>
               <span className="text-xs text-primary-foreground/80 leading-tight font-sans">
                 Practical training. Real careers.
