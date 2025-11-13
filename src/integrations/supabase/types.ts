@@ -14,6 +14,81 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaign_content: {
+        Row: {
+          campaign_type: string
+          content_key: string
+          created_at: string
+          html_content: string
+          id: string
+          is_active: boolean | null
+          preview_text: string | null
+          priority: number | null
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          campaign_type: string
+          content_key: string
+          created_at?: string
+          html_content: string
+          id?: string
+          is_active?: boolean | null
+          preview_text?: string | null
+          priority?: number | null
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          campaign_type?: string
+          content_key?: string
+          created_at?: string
+          html_content?: string
+          id?: string
+          is_active?: boolean | null
+          preview_text?: string | null
+          priority?: number | null
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      email_campaigns: {
+        Row: {
+          campaign_type: string
+          content_key: string
+          failure_count: number
+          id: string
+          metadata: Json | null
+          recipient_count: number
+          sent_at: string
+          subject: string
+          success_count: number
+        }
+        Insert: {
+          campaign_type: string
+          content_key: string
+          failure_count?: number
+          id?: string
+          metadata?: Json | null
+          recipient_count?: number
+          sent_at?: string
+          subject: string
+          success_count?: number
+        }
+        Update: {
+          campaign_type?: string
+          content_key?: string
+          failure_count?: number
+          id?: string
+          metadata?: Json | null
+          recipient_count?: number
+          sent_at?: string
+          subject?: string
+          success_count?: number
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           course_slug: string

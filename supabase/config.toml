@@ -8,3 +8,9 @@ verify_jwt = false
 
 [functions.newsletter-signup]
 verify_jwt = false
+
+[functions.send-weekly-campaign]
+verify_jwt = false
+
+[functions.populate-campaign-content]
+verify_jwt = false

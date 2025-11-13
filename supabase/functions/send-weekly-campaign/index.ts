@@ -1,0 +1,194 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+interface Subscriber {
+  email: string;
+  name: string | null;
+}
+
+const handler = async (req: Request): Promise<Response> => {
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    console.log("Starting weekly campaign send...");
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Get Brevo API key
+    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+    if (!brevoApiKey) {
+      throw new Error("BREVO_API_KEY not configured");
+    }
+
+    // Determine campaign type rotation (cycle through types each week)
+    const campaignTypes = ["career_tips", "job_alerts", "course_updates"];
+    const weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+    const campaignType = campaignTypes[weekNumber % campaignTypes.length];
+
+    console.log(`Campaign type for this week: ${campaignType}`);
+
+    // Get next unsent content for this campaign type
+    const { data: content, error: contentError } = await supabase
+      .from("campaign_content")
+      .select("*")
+      .eq("campaign_type", campaignType)
+      .eq("is_active", true)
+      .not("content_key", "in", 
+        supabase
+          .from("email_campaigns")
+          .select("content_key")
+      )
+      .order("priority", { ascending: false })
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (contentError) {
+      console.error("Error fetching content:", contentError);
+      throw contentError;
+    }
+
+    if (!content) {
+      console.log("No unsent content available for this campaign type");
+      return new Response(
+        JSON.stringify({ 
+          message: "No content available",
+          campaignType 
+        }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log(`Selected content: ${content.subject}`);
+
+    // Fetch active subscribers
+    const { data: subscribers, error: subscribersError } = await supabase
+      .from("newsletter_subscribers")
+      .select("email, name")
+      .eq("active", true);
+
+    if (subscribersError) {
+      console.error("Error fetching subscribers:", subscribersError);
+      throw subscribersError;
+    }
+
+    if (!subscribers || subscribers.length === 0) {
+      console.log("No active subscribers found");
+      return new Response(
+        JSON.stringify({ message: "No active subscribers" }),
+        {
+          status: 200,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log(`Found ${subscribers.length} active subscribers`);
+
+    // Prepare recipients for Brevo
+    const recipients = subscribers.map((sub: Subscriber) => ({
+      email: sub.email,
+      name: sub.name || sub.email,
+    }));
+
+    // Send email via Brevo
+    console.log("Sending campaign via Brevo...");
+    
+    const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "api-key": brevoApiKey,
+      },
+      body: JSON.stringify({
+        sender: {
+          name: "Titans Careers",
+          email: "noreply@titanscareer.com", // Replace with your verified sender email
+        },
+        to: recipients.slice(0, 50), // Brevo free tier limit - adjust as needed
+        subject: content.subject,
+        htmlContent: content.html_content,
+        textContent: content.preview_text || content.subject,
+        params: {
+          unsubscribe_url: `${supabaseUrl}/unsubscribe`, // You'd implement this
+        },
+      }),
+    });
+
+    const brevoResult = await brevoResponse.json();
+    
+    if (!brevoResponse.ok) {
+      console.error("Brevo API error:", brevoResult);
+      throw new Error(`Brevo API error: ${JSON.stringify(brevoResult)}`);
+    }
+
+    console.log("Campaign sent successfully via Brevo:", brevoResult);
+
+    // Record campaign in database
+    const { error: insertError } = await supabase
+      .from("email_campaigns")
+      .insert({
+        campaign_type: campaignType,
+        subject: content.subject,
+        content_key: content.content_key,
+        recipient_count: recipients.length,
+        success_count: recipients.length,
+        failure_count: 0,
+        metadata: {
+          brevo_message_id: brevoResult.messageId,
+          sent_to: recipients.length > 50 ? 50 : recipients.length,
+        },
+      });
+
+    if (insertError) {
+      console.error("Error recording campaign:", insertError);
+      // Don't fail the whole operation if recording fails
+    }
+
+    console.log("Weekly campaign completed successfully");
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Campaign sent successfully",
+        campaignType,
+        subject: content.subject,
+        recipientCount: recipients.length,
+        messageId: brevoResult.messageId,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  } catch (error: any) {
+    console.error("Error in send-weekly-campaign function:", error);
+    return new Response(
+      JSON.stringify({ 
+        error: error.message || "Internal server error",
+        details: error.toString()
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      }
+    );
+  }
+};
+
+serve(handler);
