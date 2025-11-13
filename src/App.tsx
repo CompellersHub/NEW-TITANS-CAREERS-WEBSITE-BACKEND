@@ -38,6 +38,7 @@ import TemplateEditor from "./pages/TemplateEditor";
 import ABTestWinnerHistory from "./pages/ABTestWinnerHistory";
 import FormSubmissionsAdmin from "./pages/FormSubmissionsAdmin";
 import FormSubmissionAnalytics from "./pages/FormSubmissionAnalytics";
+import SLAAlertHistory from "./pages/SLAAlertHistory";
 import AdminNotificationSettings from "./pages/AdminNotificationSettings";
 import AdminTemplates from "./pages/AdminTemplates";
 
@@ -81,6 +82,7 @@ const AnimatedRoutes = () => {
         <Route path="/admin/template-editor" element={<TemplateEditor />} />
             <Route path="/admin/form-submissions" element={<FormSubmissionsAdmin />} />
             <Route path="/admin/form-analytics" element={<FormSubmissionAnalytics />} />
+            <Route path="/admin/sla-alert-history" element={<SLAAlertHistory />} />
         <Route path="/admin/notification-settings" element={<AdminNotificationSettings />} />
         <Route path="/admin/response-templates" element={<AdminTemplates />} />
         <Route path="*" element={<NotFound />} />
