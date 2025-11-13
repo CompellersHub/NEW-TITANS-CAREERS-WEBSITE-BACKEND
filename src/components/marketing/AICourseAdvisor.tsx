@@ -60,6 +60,7 @@ export function AICourseAdvisor() {
   const [courseFilter, setCourseFilter] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [isSendingSummary, setIsSendingSummary] = useState(false);
+  const [milestoneSummarySent, setMilestoneSummarySent] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const courseOptions = [
@@ -189,6 +190,7 @@ export function AICourseAdvisor() {
       setConversationId(convId);
       await loadMessages(convId);
       setShowHistory(false);
+      setMilestoneSummarySent(false);
     } catch (error) {
       console.error("Error switching conversation:", error);
       toast.error("Failed to load conversation");
@@ -269,6 +271,7 @@ export function AICourseAdvisor() {
         },
       ]);
       setShowHistory(false);
+      setMilestoneSummarySent(false);
       
       if (emailCaptured) {
         loadConversationHistory(email);
@@ -375,6 +378,10 @@ export function AICourseAdvisor() {
       if (emailCaptured && email) {
         loadConversationHistory(email);
       }
+
+      // Check for engagement milestones and send summary if reached
+      const allMessages = [...messages, userMessage, assistantMessage];
+      await checkEngagementMilestones(allMessages);
 
       // Check if we should suggest email capture
       if (data.suggestEmailCapture && !emailCaptured && !showEmailCapture) {
@@ -523,6 +530,66 @@ export function AICourseAdvisor() {
       toast.error("Failed to send conversation summary. Please try again.");
     } finally {
       setIsSendingSummary(false);
+    }
+  };
+
+  const checkEngagementMilestones = async (allMessages: Message[]) => {
+    if (!conversationId || !emailCaptured || !email || milestoneSummarySent) return;
+
+    // Milestone 1: Conversation reaches 10+ messages
+    if (allMessages.length === 10) {
+      setMilestoneSummarySent(true);
+      toast.success(
+        "🎉 Great conversation! We'll send you a summary via email.",
+        { description: "Keep chatting or review your recommendations anytime!" }
+      );
+      await sendConversationSummary();
+      return;
+    }
+
+    // Milestone 2: User mentions enrollment intent keywords
+    const enrollmentKeywords = ["enroll", "sign up", "register", "join", "start", "begin course", "price", "cost"];
+    const lastUserMessage = allMessages.filter(m => m.role === "user").pop();
+    
+    if (lastUserMessage) {
+      const hasIntent = enrollmentKeywords.some(keyword => 
+        lastUserMessage.content.toLowerCase().includes(keyword)
+      );
+      
+      if (hasIntent && allMessages.length >= 5) {
+        setMilestoneSummarySent(true);
+        setTimeout(async () => {
+          toast.success(
+            "📚 Ready to take the next step? We've sent you a detailed summary!",
+            { description: "Check your email for course recommendations and next steps." }
+          );
+          await sendConversationSummary();
+        }, 2000);
+        return;
+      }
+    }
+
+    // Milestone 3: Multiple courses discussed (3+)
+    const courseKeywords = ["Power BI", "SQL", "Python", "Tableau", "Excel", "Azure", "AWS", "Data Science"];
+    const coursesDiscussed = new Set<string>();
+    
+    allMessages.forEach(msg => {
+      courseKeywords.forEach(course => {
+        if (msg.content.toLowerCase().includes(course.toLowerCase())) {
+          coursesDiscussed.add(course);
+        }
+      });
+    });
+
+    if (coursesDiscussed.size >= 3 && allMessages.length >= 6) {
+      setMilestoneSummarySent(true);
+      setTimeout(async () => {
+        toast.success(
+          "🎯 You're exploring multiple paths! Summary on the way!",
+          { description: `We've discussed ${coursesDiscussed.size} different courses. Check your email!` }
+        );
+        await sendConversationSummary();
+      }, 2000);
     }
   };
 
