@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,7 +44,7 @@ export default function SendTimeOptimization() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("newsletter_subscribers")
         .select("id, email, optimal_send_hour, optimal_send_day, engagement_score, last_send_time_analysis, metadata")
         .eq("active", true)

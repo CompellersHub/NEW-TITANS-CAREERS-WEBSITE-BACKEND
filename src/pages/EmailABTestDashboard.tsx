@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,7 +49,7 @@ export default function EmailABTestDashboard() {
     setIsLoading(true);
     try {
       // Load variants
-      const { data: variantsData, error: variantsError } = await supabase
+      const { data: variantsData, error: variantsError } = await sb
         .from("email_ab_variants")
         .select("*")
         .eq("email_type", "conversation_summary")
@@ -57,7 +59,7 @@ export default function EmailABTestDashboard() {
       setVariants(variantsData || []);
 
       // Load stats for each variant
-      const { data: sendsData, error: sendsError } = await supabase
+      const { data: sendsData, error: sendsError } = await sb
         .from("email_sends")
         .select(`
           variant_id,
@@ -115,7 +117,7 @@ export default function EmailABTestDashboard() {
 
   const handleToggleVariant = async (variantId: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
+      const { error } = await sb
         .from("email_ab_variants")
         .update({ is_active: !currentStatus })
         .eq("id", variantId);
@@ -138,7 +140,7 @@ export default function EmailABTestDashboard() {
     }
 
     try {
-      const { error } = await supabase
+      const { error } = await sb
         .from("email_ab_variants")
         .insert({
           variant_name: newVariant.variant_name,

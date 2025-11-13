@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -65,7 +67,7 @@ export default function ABTestDashboard() {
   const { data: performanceData, isLoading } = useQuery({
     queryKey: ["template-performance"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("template_performance")
         .select("*")
         .order("sends_count", { ascending: false });
@@ -79,7 +81,7 @@ export default function ABTestDashboard() {
   const { data: templatesStatus } = useQuery({
     queryKey: ["templates-active-status"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from("email_templates")
         .select("id, is_active, ab_test_name, auto_winner_paused, traffic_weight, name, variant_letter")
         .eq("is_ab_test", true);

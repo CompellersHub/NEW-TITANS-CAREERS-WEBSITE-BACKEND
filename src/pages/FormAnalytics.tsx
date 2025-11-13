@@ -4,6 +4,8 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+
+const sb: any = supabase;
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Clock, TrendingUp, TrendingDown, Users } from "lucide-react";
@@ -33,7 +35,7 @@ export default function FormAnalytics() {
 
   const loadAnalytics = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await sb
         .from('form_analytics_summary')
         .select('*')
         .order('error_count', { ascending: false });
