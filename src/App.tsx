@@ -48,6 +48,7 @@ import VoucherManager from "./pages/VoucherManager";
 import VoucherAnalytics from "./pages/VoucherAnalytics";
 import VoucherExport from "./pages/VoucherExport";
 import ScheduledCampaigns from "./pages/ScheduledCampaigns";
+import PaymentStatus from "./pages/PaymentStatus";
 import CampaignApprovalQueue from "./pages/CampaignApprovalQueue";
 import CampaignAnalytics from "./pages/CampaignAnalytics";
 import RecoveryAnalytics from "./pages/RecoveryAnalytics";

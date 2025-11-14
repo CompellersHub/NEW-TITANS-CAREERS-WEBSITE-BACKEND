@@ -86,3 +86,18 @@ verify_jwt = true
 
 [functions.validate-predictions]
 verify_jwt = true
+
+[functions.create-paypal-order]
+verify_jwt = false
+
+[functions.paypal-webhook]
+verify_jwt = false
+
+[functions.create-bank-transfer]
+verify_jwt = false
+
+[functions.create-payl8r-application]
+verify_jwt = false
+
+[functions.payl8r-webhook]
+verify_jwt = false

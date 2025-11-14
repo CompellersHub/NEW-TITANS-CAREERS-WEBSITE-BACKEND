@@ -147,6 +147,24 @@ export const Footer = () => {
             </a>
           </div>
 
+          {/* Payment Partners Section */}
+          <div className="flex flex-col items-center gap-3 py-4">
+            <p className="text-xs font-sans text-primary-foreground/60 uppercase tracking-wider">Flexible Payment Options</p>
+            <a 
+              href="https://www.payl8r.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <div className="text-primary-foreground font-semibold text-lg tracking-wider">
+                PAYL<span className="text-accent">8</span>R
+              </div>
+            </a>
+            <p className="text-[10px] text-primary-foreground/50 max-w-md text-center">
+              Finance available. 0% APR options. 3-12 month terms.
+            </p>
+          </div>
+
           {/* Legal Links */}
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-sans text-primary-foreground/70">
             <Link to="/privacy-policy" className="hover:text-accent transition-colors duration-300">Privacy Policy</Link>
