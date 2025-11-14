@@ -33,13 +33,6 @@ export function CourseEnrollmentButton({
   const finalPrice = price - voucherDiscount;
 
   const handlePaymentMethodSelected = async (method: string) => {
-    // Pre-open a blank window for external checkouts to avoid popup blockers in iframe
-    const needsNewWindow = method === 'stripe' || method === 'paypal' || method === 'payl8r';
-    const inIframe = (() => {
-      try { return window.self !== window.top; } catch { return true; }
-    })();
-    const targetWindow = needsNewWindow && inIframe ? window.open('', '_blank', 'noopener,noreferrer') : null;
-
     setIsProcessing(true);
 
     try {
@@ -50,23 +43,21 @@ export function CourseEnrollmentButton({
       // Route to appropriate payment handler
       switch (method) {
         case 'stripe':
-          await handleStripeCheckout(customerEmail, customerName, targetWindow || undefined);
+          await handleStripeCheckout(customerEmail, customerName);
           break;
         case 'paypal':
-          await handlePayPalCheckout(customerEmail, customerName, targetWindow || undefined);
+          await handlePayPalCheckout(customerEmail, customerName);
           break;
         case 'bank_transfer':
           await handleBankTransfer(customerEmail, customerName);
           break;
         case 'payl8r':
-          await handlePayl8r(customerEmail, customerName, targetWindow || undefined);
+          await handlePayl8r(customerEmail, customerName);
           break;
         default:
           throw new Error('Invalid payment method');
       }
     } catch (error) {
-      // Close any pre-opened blank tab on error
-      try { if (targetWindow && !targetWindow.closed) targetWindow.close(); } catch {}
       console.error('Payment error:', error);
       toast({
         variant: 'destructive',
@@ -77,7 +68,7 @@ export function CourseEnrollmentButton({
     }
   };
 
-  const handleStripeCheckout = async (email: string, name: string, targetWindow?: Window | null) => {
+  const handleStripeCheckout = async (email: string, name: string) => {
     const { data, error } = await supabase.functions.invoke('create-checkout-session', {
       body: {
         courseSlug,
@@ -92,25 +83,11 @@ export function CourseEnrollmentButton({
     if (error) throw error;
     if (!data?.url) throw new Error('No checkout URL received');
 
-    const inIframe = (() => {
-      try { return window.self !== window.top; } catch { return true; }
-    })();
-
-    if (targetWindow && !targetWindow.closed) {
-      targetWindow.location.href = data.url;
-    } else if (inIframe) {
-      const win = window.open(data.url, '_blank', 'noopener,noreferrer');
-      if (!win) {
-        toast({ title: 'Popup blocked', description: 'Please allow popups to continue.' });
-        // Fallback to navigating inside the iframe
-        window.location.assign(data.url);
-      }
-    } else {
-      window.location.assign(data.url);
-    }
+    // Direct navigation to Stripe checkout
+    window.location.href = data.url;
   };
 
-  const handlePayPalCheckout = async (email: string, name: string, targetWindow?: Window | null) => {
+  const handlePayPalCheckout = async (email: string, name: string) => {
     const { data, error } = await supabase.functions.invoke('create-paypal-order', {
       body: {
         courseSlug,
@@ -125,21 +102,8 @@ export function CourseEnrollmentButton({
     if (error) throw error;
     if (!data?.approvalUrl) throw new Error('No PayPal approval URL received');
 
-    const inIframe = (() => {
-      try { return window.self !== window.top; } catch { return true; }
-    })();
-
-    if (targetWindow && !targetWindow.closed) {
-      targetWindow.location.href = data.approvalUrl;
-    } else if (inIframe) {
-      const win = window.open(data.approvalUrl, '_blank', 'noopener,noreferrer');
-      if (!win) {
-        toast({ title: 'Popup blocked', description: 'Please allow popups to continue.' });
-        window.location.assign(data.approvalUrl);
-      }
-    } else {
-      window.location.assign(data.approvalUrl);
-    }
+    // Direct navigation to PayPal
+    window.location.href = data.approvalUrl;
   };
 
   const handleBankTransfer = async (email: string, name: string) => {
@@ -168,7 +132,7 @@ export function CourseEnrollmentButton({
     window.location.href = `/payment-status?ref=${data.reference}`;
   };
 
-  const handlePayl8r = async (email: string, name: string, targetWindow?: Window | null) => {
+  const handlePayl8r = async (email: string, name: string) => {
     const { data, error } = await supabase.functions.invoke('create-payl8r-application', {
       body: {
         courseSlug,
@@ -183,21 +147,8 @@ export function CourseEnrollmentButton({
     if (error) throw error;
     if (!data?.applicationUrl) throw new Error('No Payl8r application URL received');
 
-    const inIframe = (() => {
-      try { return window.self !== window.top; } catch { return true; }
-    })();
-
-    if (targetWindow && !targetWindow.closed) {
-      targetWindow.location.href = data.applicationUrl;
-    } else if (inIframe) {
-      const win = window.open(data.applicationUrl, '_blank', 'noopener,noreferrer');
-      if (!win) {
-        toast({ title: 'Popup blocked', description: 'Please allow popups to continue.' });
-        window.location.assign(data.applicationUrl);
-      }
-    } else {
-      window.location.assign(data.applicationUrl);
-    }
+    // Direct navigation to Payl8r
+    window.location.href = data.applicationUrl;
   };
 
   return (
