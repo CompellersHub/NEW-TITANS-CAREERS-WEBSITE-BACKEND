@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut, Shield, Mail, TestTube, FileText, Users, ChevronDown, BookOpen, Trophy, Library } from "lucide-react";
+import { Menu, X, User, LogOut, Shield, Mail, TestTube, FileText, Users, ChevronDown, BookOpen, Trophy, Library, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -150,6 +150,12 @@ export const Navbar = () => {
                         <Link to="/admin/segments" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Users className="w-4 h-4 mr-2 text-accent" />
                           <span className="font-sans font-medium text-primary">Segments</span>
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin/campaign-approval" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                          <CheckCircle className="w-4 h-4 mr-2 text-accent" />
+                          <span className="font-sans font-medium text-primary">Approval Queue</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />

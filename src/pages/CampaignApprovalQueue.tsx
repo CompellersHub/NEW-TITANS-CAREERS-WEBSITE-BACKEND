@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { CheckCircle, XCircle, Clock, Calendar, Users, Mail } from "lucide-react";
+import { CheckCircle, XCircle, Clock, Calendar, Users, Mail, Package, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface PendingCampaign {
   id: string;
@@ -34,7 +34,7 @@ interface PendingCampaign {
 }
 
 export default function CampaignApprovalQueue() {
-  const [pendingCampaigns, setpendingCampaigns] = useState<PendingCampaign[]>([]);
+  const [pendingCampaigns, setPendingCampaigns] = useState<PendingCampaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState("");
@@ -46,18 +46,18 @@ export default function CampaignApprovalQueue() {
   const fetchPendingCampaigns = async () => {
     setLoading(true);
     try {
-    const { data, error } = await (supabase as any)
-      .from("scheduled_voucher_campaigns")
-      .select(`
-        *,
-        vouchers:voucher_id (code, discount_type, discount_value),
-        subscriber_segments:segment_id (name, subscriber_count)
-      `)
-      .eq("status", "pending")
-      .order("created_at", { ascending: false });
+      const { data, error } = await (supabase as any)
+        .from("scheduled_voucher_campaigns")
+        .select(`
+          *,
+          vouchers:voucher_id (code, discount_type, discount_value),
+          subscriber_segments:segment_id (name, subscriber_count)
+        `)
+        .eq("status", "pending")
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setpendingCampaigns(data || []);
+      setPendingCampaigns(data || []);
     } catch (error: any) {
       console.error("Error fetching pending campaigns:", error);
       toast.error("Failed to load pending campaigns");
@@ -81,7 +81,7 @@ export default function CampaignApprovalQueue() {
 
       if (error) throw error;
 
-      toast.success("Campaign approved successfully");
+      toast.success("Campaign approved and scheduled successfully");
       fetchPendingCampaigns();
     } catch (error: any) {
       console.error("Error approving campaign:", error);
@@ -138,15 +138,62 @@ export default function CampaignApprovalQueue() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-background to-muted/20">
       <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <main className="flex-1 container mx-auto px-4 py-8 mt-20">
+        {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Campaign Approval Queue</h1>
-          <p className="text-muted-foreground">
-            Review and approve pending voucher campaigns before they are scheduled
-          </p>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-3 bg-accent/10 rounded-xl">
+              <CheckCircle className="h-8 w-8 text-accent" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-foreground">Campaign Approval Queue</h1>
+              <p className="text-muted-foreground mt-1">
+                Review and approve pending voucher campaigns before they are scheduled
+              </p>
+            </div>
+          </div>
         </div>
+
+        {/* Stats Overview */}
+        {!loading && (
+          <div className="grid gap-4 md:grid-cols-3 mb-8">
+            <Card className="border-accent/20 bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">Pending Review</CardDescription>
+                <CardTitle className="text-3xl font-bold text-accent">{pendingCampaigns.length}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Campaigns awaiting approval</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">Total Recipients</CardDescription>
+                <CardTitle className="text-3xl font-bold text-foreground">
+                  {pendingCampaigns.reduce((sum, c) => sum + getRecipientCount(c), 0)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Users awaiting campaigns</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border bg-card/50 backdrop-blur-sm">
+              <CardHeader className="pb-3">
+                <CardDescription className="text-xs uppercase tracking-wider font-semibold text-muted-foreground">Recurring Campaigns</CardDescription>
+                <CardTitle className="text-3xl font-bold text-foreground">
+                  {pendingCampaigns.filter(c => c.recurrence_type !== 'none').length}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Auto-recurring schedules</p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {loading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
