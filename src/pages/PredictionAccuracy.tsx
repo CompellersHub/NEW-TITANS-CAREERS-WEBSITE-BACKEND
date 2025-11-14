@@ -65,7 +65,7 @@ const PredictionAccuracy = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("alert_predictions")
+        .from("alert_predictions" as any)
         .select("*")
         .not("validated_at", "is", null)
         .order("validated_at", { ascending: false })
