@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Calendar, TrendingUp, MousePointer, Users, Mail, Award } from "lucide-react";
 import { format, subDays, startOfDay, endOfDay } from "date-fns";
+import { AnalyticsDashboardSkeleton } from "@/components/skeletons/AnalyticsDashboardSkeleton";
 
 interface EngagementMetrics {
   totalOpens: number;
@@ -214,24 +215,7 @@ export default function EngagementAnalytics() {
   };
 
   if (loading) {
-    return (
-      <div className="container mx-auto py-8 px-4 animate-fade-in">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-6 p-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
-              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-accent/30 border-t-accent mx-auto mb-4"></div>
-                <div className="space-y-2">
-                  <p className="text-foreground font-semibold text-lg">Loading Analytics</p>
-                  <p className="text-muted-foreground text-sm">Processing engagement data...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <AnalyticsDashboardSkeleton />;
   }
 
   return (

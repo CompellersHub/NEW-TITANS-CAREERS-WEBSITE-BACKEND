@@ -4,9 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
+import { EngagementDashboardSkeleton } from "@/components/skeletons/EngagementDashboardSkeleton";
 
 interface EngagementMetrics {
   totalClicks: number;
@@ -228,22 +228,7 @@ export default function EmailEngagementDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-background to-secondary/20 animate-fade-in">
-        <div className="text-center space-y-6 p-8">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
-            <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
-              <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
-              <div className="space-y-2">
-                <p className="text-foreground font-semibold text-lg">Loading Engagement Analytics</p>
-                <p className="text-muted-foreground text-sm">Fetching email performance data...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <EngagementDashboardSkeleton />;
   }
 
   if (error && !loading) {
