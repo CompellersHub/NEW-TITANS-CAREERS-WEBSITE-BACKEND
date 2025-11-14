@@ -31,6 +31,7 @@ import RefundPolicy from "./pages/RefundPolicy";
 import TermsConditions from "./pages/TermsConditions";
 import NotFound from "./pages/NotFound";
 import FormDemo from "./pages/FormDemo";
+import Profile from "./pages/Profile";
 import FormAnalytics from "./pages/FormAnalytics";
 import FormAlertSettings from "./pages/FormAlertSettings";
 import ABTestDashboard from "./pages/ABTestDashboard";
@@ -115,6 +116,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/alert-analytics" element={<AlertAnalytics />} />
           <Route path="/admin/predictive-analytics" element={<PredictiveAnalytics />} />
           <Route path="/admin/prediction-accuracy" element={<PredictionAccuracy />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>

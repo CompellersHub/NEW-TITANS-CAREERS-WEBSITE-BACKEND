@@ -120,8 +120,15 @@ export const Navbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-card/98 backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] rounded-xl">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
+                      <User className="w-4 h-4 mr-2 text-accent" />
+                      <span className="font-sans font-medium text-primary">My Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
                   {isAdmin && (
                     <>
+                      <DropdownMenuSeparator />
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Shield className="w-4 h-4 mr-2 text-accent" />
