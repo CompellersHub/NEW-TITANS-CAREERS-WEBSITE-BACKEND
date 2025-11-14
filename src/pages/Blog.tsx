@@ -1,16 +1,17 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
-import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
+import { BlogGrid } from "@/components/blog/BlogGrid";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { blogPosts, BlogPost } from "@/data/blogPosts";
-import { BookOpen, Clock, Calendar, ArrowRight } from "lucide-react";
+import { blogPosts } from "@/data/blogPosts";
+import { BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { SEO } from "@/components/SEO";
+import { usePagination } from "@/hooks/usePagination";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -18,7 +19,8 @@ const Blog = () => {
 
   // Simulate loading state for data fetching
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 600);
+    setIsLoading(true);
+    const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
   }, [selectedCategory]);
 
@@ -35,6 +37,18 @@ const Blog = () => {
   const filteredPosts = selectedCategory === "all" 
     ? blogPosts 
     : blogPosts.filter(post => post.category === selectedCategory);
+
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    goToPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+    totalItems,
+  } = usePagination({ items: filteredPosts, itemsPerPage: 9 });
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -108,91 +122,24 @@ const Blog = () => {
       {/* Blog Posts Grid */}
       <section className="py-20 bg-muted/30">
         <div className="container max-w-7xl">
-          {filteredPosts.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="font-sans text-xl text-muted-foreground">
-                No articles found in this category yet. Check back soon!
-              </p>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post) => (
-                <article key={post.id}>
-                  <Card className="h-full border-2 hover:border-accent/50 transition-all hover:shadow-xl group">
-                    <CardContent className="p-0">
-                      {/* Featured Image */}
-                      {post.featuredImage && (
-                        <div className="relative h-48 overflow-hidden rounded-t-xl">
-                          <img 
-                            src={post.featuredImage} 
-                            alt={post.title}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      )}
-                      
-                      {/* Content */}
-                      <div className="p-6 space-y-4">
-                        {/* Category Badge */}
-                        <Badge 
-                          variant="outline" 
-                          className={`font-sans ${getCategoryColor(post.category)}`}
-                        >
-                          {post.category.replace('-', ' ').toUpperCase()}
-                        </Badge>
-                        
-                        {/* Title */}
-                        <h2 className="font-kanit text-xl font-bold text-primary leading-tight group-hover:text-accent transition-colors">
-                          {post.title}
-                        </h2>
-                        
-                        {/* Excerpt */}
-                        <p className="font-sans text-muted-foreground leading-relaxed line-clamp-3">
-                          {post.excerpt}
-                        </p>
-                        
-                        {/* Meta Info */}
-                        <div className="flex flex-wrap items-center gap-4 text-sm font-sans text-muted-foreground pt-4 border-t border-border">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            <time dateTime={post.publishedAt}>
-                              {formatDate(post.publishedAt)}
-                            </time>
-                          </div>
-                          
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{post.readTime} min read</span>
-                          </div>
-                        </div>
-                        
-                        {/* Author */}
-                        <div className="pt-2">
-                          <p className="font-sans text-sm font-semibold text-primary">
-                            {post.author.name}
-                          </p>
-                          <p className="font-sans text-xs text-muted-foreground">
-                            {post.author.role}
-                          </p>
-                        </div>
-                        
-                        {/* Read More Link */}
-                        <Link to={`/blog/${post.slug}`}>
-                          <Button 
-                            variant="ghost" 
-                            className="w-full group-hover:bg-accent/10 text-accent font-sans font-bold hover:text-accent/90"
-                          >
-                            Read Full Article
-                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                          </Button>
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </article>
-              ))}
-            </div>
-          )}
+          <BlogGrid 
+            posts={currentItems} 
+            loading={isLoading} 
+            getCategoryColor={getCategoryColor}
+            formatDate={formatDate}
+          />
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+            className="mt-12"
+          />
         </div>
       </section>
 
