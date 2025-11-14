@@ -84,8 +84,9 @@ export async function syncProgressToAcademy(
 export async function createAcademySSOLink(email: string): Promise<string> {
   const token = await generateAcademyToken(email);
   
-  // TODO: Replace with actual Titans Academy domain when ready
-  const academyDomain = "https://academy.titanscareers.com";
+  // Use environment variable or default to placeholder
+  // Set VITE_ACADEMY_DOMAIN in production with actual Titans Academy domain
+  const academyDomain = import.meta.env.VITE_ACADEMY_DOMAIN || "https://academy.titanscareers.com";
   return `${academyDomain}/sso?token=${token}`;
 }
 
