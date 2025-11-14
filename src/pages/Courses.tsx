@@ -1,27 +1,12 @@
-import { useState, useEffect } from "react";
 import { CourseGrid } from "@/components/courses/CourseGrid";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
-import { CoursesPageSkeleton } from "@/components/courses/CoursesPageSkeleton";
 import { SEO } from "@/components/SEO";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 700);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <CoursesPageSkeleton />;
-  }
   
   return (
     <PageTransition variant="slide">

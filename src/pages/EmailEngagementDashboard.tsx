@@ -215,8 +215,19 @@ export default function EmailEngagementDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-background to-secondary/20 animate-fade-in">
+        <div className="text-center space-y-6 p-8">
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
+            <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
+              <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
+              <div className="space-y-2">
+                <p className="text-foreground font-semibold text-lg">Loading Engagement Analytics</p>
+                <p className="text-muted-foreground text-sm">Fetching email performance data...</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -239,7 +250,7 @@ export default function EmailEngagementDashboard() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
         <Card>
           <CardHeader>
             <CardTitle>Total Sends</CardTitle>
