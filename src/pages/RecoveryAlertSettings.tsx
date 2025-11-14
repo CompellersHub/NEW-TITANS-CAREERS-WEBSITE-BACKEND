@@ -11,7 +11,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Bell, Mail, MessageSquare, Send, TrendingDown, DollarSign } from "lucide-react";
+import { Loader2, Bell, Mail, MessageSquare, Send, TrendingDown, DollarSign, MessageCircle } from "lucide-react";
 
 export default function RecoveryAlertSettings() {
   const navigate = useNavigate();
@@ -35,6 +35,8 @@ export default function RecoveryAlertSettings() {
     overall_roi_threshold: 0,
     check_interval_hours: 24,
     alert_cooldown_hours: 6,
+    slack_webhook_url: '',
+    slack_enabled: false,
   });
 
   useEffect(() => {
@@ -105,6 +107,8 @@ export default function RecoveryAlertSettings() {
             overall_roi_threshold: settings.overall_roi_threshold,
             check_interval_hours: settings.check_interval_hours,
             alert_cooldown_hours: settings.alert_cooldown_hours,
+            slack_webhook_url: settings.slack_webhook_url,
+            slack_enabled: settings.slack_enabled,
           })
           .eq('id', settings.id);
 
@@ -414,6 +418,60 @@ export default function RecoveryAlertSettings() {
                   />
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Slack Integration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageCircle className="h-5 w-5" />
+                Slack Integration
+              </CardTitle>
+              <CardDescription>
+                Send real-time alerts to your team's Slack channel
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label>Enable Slack Alerts</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Send instant notifications to Slack when thresholds are breached
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.slack_enabled}
+                  onCheckedChange={(checked) => setSettings({ ...settings, slack_enabled: checked })}
+                />
+              </div>
+
+              {settings.slack_enabled && (
+                <div className="space-y-2">
+                  <Label htmlFor="slack_webhook">Slack Webhook URL</Label>
+                  <Input
+                    id="slack_webhook"
+                    type="url"
+                    value={settings.slack_webhook_url}
+                    onChange={(e) => setSettings({ ...settings, slack_webhook_url: e.target.value })}
+                    placeholder="https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Create an incoming webhook in your Slack workspace settings
+                  </p>
+                </div>
+              )}
+
+              {settings.slack_enabled && !settings.slack_webhook_url && (
+                <Alert>
+                  <Bell className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Setup Required:</strong> To use Slack alerts, you need to create an 
+                    incoming webhook in your Slack workspace. Go to Slack → Apps → Incoming Webhooks → 
+                    Add to Slack → Choose a channel → Copy the webhook URL.
+                  </AlertDescription>
+                </Alert>
+              )}
             </CardContent>
           </Card>
 

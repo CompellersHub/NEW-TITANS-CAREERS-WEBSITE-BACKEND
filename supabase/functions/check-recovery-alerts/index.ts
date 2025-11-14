@@ -21,6 +21,8 @@ interface AlertSettings {
   overall_roi_threshold: number;
   check_interval_hours: number;
   alert_cooldown_hours: number;
+  slack_webhook_url?: string;
+  slack_enabled: boolean;
 }
 
 interface ChannelMetrics {
@@ -257,7 +259,18 @@ async function checkAndSendAlerts(
 
   // Send alerts if any
   if (alerts.length > 0) {
+    // Send email alert
     await sendAlertEmail(setting.admin_email, alerts);
+
+    // Send Slack alert if enabled
+    if (setting.slack_enabled && setting.slack_webhook_url) {
+      try {
+        await sendSlackAlerts(setting.slack_webhook_url, alerts);
+        console.log(`Slack alerts sent for ${alerts.length} issues`);
+      } catch (error) {
+        console.error('Error sending Slack alerts:', error);
+      }
+    }
 
     // Record alerts in history
     for (const alert of alerts) {
@@ -398,6 +411,117 @@ async function sendAlertEmail(adminEmail: string, alerts: any[]): Promise<void> 
   } catch (error) {
     console.error('Error sending alert email:', error);
     throw error;
+  }
+}
+
+async function sendSlackAlerts(webhookUrl: string, alerts: any[]): Promise<void> {
+  for (const alert of alerts) {
+    try {
+      const alertType = alert.type === 'conversion_drop' ? 'conversion_rate' : 'roi';
+      await sendSlackAlert(
+        webhookUrl,
+        alertType,
+        alert.channel,
+        alert.metricValue,
+        alert.thresholdValue
+      );
+    } catch (error) {
+      console.error(`Error sending Slack alert for ${alert.channel}:`, error);
+    }
+  }
+}
+
+async function sendSlackAlert(
+  webhookUrl: string,
+  alertType: 'conversion_rate' | 'roi',
+  channel: 'email' | 'sms' | 'whatsapp' | 'overall',
+  metricValue: number,
+  thresholdValue: number
+): Promise<void> {
+  const channelEmojis = {
+    email: '📧',
+    sms: '📱',
+    whatsapp: '💬',
+    overall: '📊',
+  };
+
+  const alertEmojis = {
+    conversion_rate: '📉',
+    roi: '💰',
+  };
+
+  const channelName = channel.charAt(0).toUpperCase() + channel.slice(1);
+  const emoji = channelEmojis[channel];
+  const alertEmoji = alertEmojis[alertType];
+
+  let color = '#FF0000'; // Red for critical
+  let title = '';
+  let message = '';
+
+  if (alertType === 'conversion_rate') {
+    title = `${alertEmoji} Conversion Rate Alert: ${channelName} ${emoji}`;
+    message = `${channelName} conversion rate has dropped to *${metricValue.toFixed(2)}%* (threshold: ${thresholdValue.toFixed(2)}%)`;
+    
+    if (metricValue < thresholdValue * 0.5) {
+      color = '#FF0000'; // Critical - Red
+    } else if (metricValue < thresholdValue * 0.75) {
+      color = '#FFA500'; // Warning - Orange
+    } else {
+      color = '#FFFF00'; // Caution - Yellow
+    }
+  } else {
+    title = `${alertEmoji} Negative ROI Alert: ${channelName} ${emoji}`;
+    message = `${channelName} ROI is *${metricValue.toFixed(2)}%* (losing money!)`;
+    color = '#FF0000'; // Always critical for negative ROI
+  }
+
+  const slackPayload = {
+    attachments: [
+      {
+        color,
+        title,
+        text: message,
+        fields: [
+          {
+            title: 'Channel',
+            value: channelName,
+            short: true,
+          },
+          {
+            title: 'Current Value',
+            value: `${metricValue.toFixed(2)}%`,
+            short: true,
+          },
+          {
+            title: 'Threshold',
+            value: `${thresholdValue.toFixed(2)}%`,
+            short: true,
+          },
+          {
+            title: 'Action Required',
+            value: alertType === 'conversion_rate' 
+              ? 'Review messaging, targeting, or timing'
+              : 'Pause campaign or adjust strategy',
+            short: true,
+          },
+        ],
+        footer: 'Recovery Alerts System',
+        footer_icon: 'https://platform.slack-edge.com/img/default_application_icon.png',
+        ts: Math.floor(Date.now() / 1000),
+      },
+    ],
+  };
+
+  const response = await fetch(webhookUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(slackPayload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Slack webhook failed: ${response.statusText}`);
   }
 }
 
