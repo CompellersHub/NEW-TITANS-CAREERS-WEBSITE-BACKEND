@@ -109,7 +109,7 @@ export default function AlertAnalytics() {
 
   const loadAlerts = async () => {
     const { data, error } = await supabase
-      .from('recovery_alert_history')
+      .from('recovery_alert_history' as any)
       .select('*')
       .order('sent_at', { ascending: false });
 
@@ -157,7 +157,7 @@ export default function AlertAnalytics() {
       }
 
       const { error } = await supabase
-        .from('recovery_alert_history')
+        .from('recovery_alert_history' as any)
         .update(updates)
         .eq('id', selectedAlert.id);
 

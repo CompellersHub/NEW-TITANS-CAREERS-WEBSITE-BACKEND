@@ -63,13 +63,13 @@ const PredictiveAnalytics = () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("alert_predictions")
+        .from("alert_predictions" as any)
         .select("*")
         .order("prediction_date", { ascending: false })
         .limit(100);
 
       if (error) throw error;
-      setPredictions(data || []);
+      setPredictions((data as any) || []);
     } catch (error: any) {
       toast({
         title: "Error",

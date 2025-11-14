@@ -69,7 +69,7 @@ export default function RecoveryAlertSettings() {
 
       // Load existing settings
       const { data: existingSettings } = await supabase
-        .from('recovery_alert_settings')
+        .from('recovery_alert_settings' as any)
         .select('*')
         .single();
 
@@ -93,7 +93,7 @@ export default function RecoveryAlertSettings() {
       if (settings.id) {
         // Update existing settings
         const { error } = await supabase
-          .from('recovery_alert_settings')
+          .from('recovery_alert_settings' as any)
           .update({
             admin_email: settings.admin_email,
             enabled: settings.enabled,
@@ -109,15 +109,15 @@ export default function RecoveryAlertSettings() {
             alert_cooldown_hours: settings.alert_cooldown_hours,
             slack_webhook_url: settings.slack_webhook_url,
             slack_enabled: settings.slack_enabled,
-          })
+          } as any)
           .eq('id', settings.id);
 
         if (error) throw error;
       } else {
         // Insert new settings
         const { data, error } = await supabase
-          .from('recovery_alert_settings')
-          .insert([settings])
+          .from('recovery_alert_settings' as any)
+          .insert([settings] as any)
           .select()
           .single();
 
