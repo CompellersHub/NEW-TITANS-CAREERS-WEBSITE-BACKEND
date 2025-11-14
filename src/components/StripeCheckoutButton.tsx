@@ -147,7 +147,26 @@ export function StripeCheckoutButton({
         console.log('Redirecting to checkout URL:', data.url);
         // Store session ID for completion tracking
         localStorage.setItem('checkoutSessionId', sessionId);
-        window.location.href = data.url;
+
+        const checkoutUrl: string = data.url;
+        // If running inside the Lovable preview iframe, open a new tab to avoid sandbox navigation blocks
+        const inIframe = (() => {
+          try { return window.self !== window.top; } catch { return true; }
+        })();
+
+        if (inIframe) {
+          const win = window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
+          if (!win) {
+            console.warn('Popup blocked. Showing manual link.');
+            toast.info('Popup blocked. Click the banner to continue to checkout.');
+            // As a last resort, set top location if allowed
+            try { (window.top as Window).location.href = checkoutUrl; } catch (e) {
+              console.warn('Unable to update top.location', e);
+            }
+          }
+        } else {
+          window.location.assign(checkoutUrl);
+        }
       } else {
         console.error('No checkout URL in response. Full response:', data);
         throw new Error(data?.error || 'No checkout URL received');
