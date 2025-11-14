@@ -83,3 +83,6 @@ verify_jwt = false
 
 [functions.predict-alerts]
 verify_jwt = false
+
+[functions.validate-predictions]
+verify_jwt = false

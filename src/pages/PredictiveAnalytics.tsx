@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, TrendingUp, TrendingDown, AlertTriangle, Lightbulb, RefreshCw, Brain } from "lucide-react";
+import { Loader2, TrendingUp, TrendingDown, AlertTriangle, Lightbulb, RefreshCw, Brain, Target } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
@@ -150,19 +150,25 @@ const PredictiveAnalytics = () => {
             ML-powered forecasting to prevent alerts before they happen
           </p>
         </div>
-        <Button onClick={generatePredictions} disabled={generating}>
-          {generating ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Generate Predictions
-            </>
-          )}
-        </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/prediction-accuracy')}>
+              <Target className="mr-2 h-4 w-4" />
+              Model Accuracy
+            </Button>
+            <Button onClick={generatePredictions} disabled={generating}>
+              {generating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Generate Predictions
+                </>
+              )}
+            </Button>
+          </div>
       </div>
 
       {highRiskPredictions.length > 0 && (
