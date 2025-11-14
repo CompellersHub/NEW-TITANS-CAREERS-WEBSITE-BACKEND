@@ -11,8 +11,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Loader2, User, GraduationCap, Settings, Save } from "lucide-react";
+import { Loader2, User, GraduationCap, Settings, Save, Award } from "lucide-react";
 import { SEO } from "@/components/SEO";
+import { CertificateView } from "@/components/course/CertificateView";
 
 interface Profile {
   id: string;
@@ -36,6 +37,7 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
+  const [certificates, setCertificates] = useState<any[]>([]);
   
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -92,6 +94,16 @@ const Profile = () => {
 
       if (enrollmentsError) throw enrollmentsError;
       setEnrollments(enrollmentsData || []);
+
+      // Load certificates
+      const { data: certificatesData, error: certificatesError } = await supabase
+        .from("course_certificates")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("completion_date", { ascending: false });
+
+      if (certificatesError) throw certificatesError;
+      setCertificates(certificatesData || []);
     } catch (error: any) {
       toast.error("Error loading profile", {
         description: error.message,
@@ -161,7 +173,7 @@ const Profile = () => {
             </div>
 
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8">
+              <TabsList className="grid w-full grid-cols-4 mb-8">
                 <TabsTrigger value="profile" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   Profile
@@ -169,6 +181,10 @@ const Profile = () => {
                 <TabsTrigger value="courses" className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4" />
                   My Courses
+                </TabsTrigger>
+                <TabsTrigger value="certificates" className="flex items-center gap-2">
+                  <Award className="h-4 w-4" />
+                  Certificates
                 </TabsTrigger>
                 <TabsTrigger value="settings" className="flex items-center gap-2">
                   <Settings className="h-4 w-4" />
@@ -276,6 +292,34 @@ const Profile = () => {
                               View Course
                             </Button>
                           </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="certificates">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>My Certificates</CardTitle>
+                    <CardDescription>
+                      Certificates earned from completed courses ({certificates.length})
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {certificates.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Award className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                        <p className="text-muted-foreground mb-4">No certificates earned yet</p>
+                        <p className="text-sm text-muted-foreground">
+                          Complete a course to earn your first certificate
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-6">
+                        {certificates.map((cert) => (
+                          <CertificateView key={cert.id} certificate={cert} />
                         ))}
                       </div>
                     )}

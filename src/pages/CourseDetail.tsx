@@ -10,25 +10,65 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Clock, BookOpen, Award, Users, CheckCircle } from "lucide-react";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { SEO } from "@/components/SEO";
 import { generateCourseSchema } from "@/lib/structuredData";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { LessonList } from "@/components/course/LessonList";
+import { CertificateView } from "@/components/course/CertificateView";
 
 export default function CourseDetail() {
   const { slug } = useParams();
   const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [certificate, setCertificate] = useState<any>(null);
   const coursesArray = Object.values(courses);
   const course = coursesArray.find(c => c.slug === slug);
   const { trackCourseView } = useBehaviorTracking();
+  const { user } = useAuth();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, [slug]);
+
+  useEffect(() => {
+    checkEnrollmentAndCertificate();
+  }, [user, slug]);
+
+  const checkEnrollmentAndCertificate = async () => {
+    if (!user || !slug) return;
+
+    try {
+      // Check if user is enrolled
+      const { data: enrollment } = await supabase
+        .from("enrollments")
+        .select("id")
+        .eq("customer_email", user.email)
+        .eq("course_slug", slug)
+        .single();
+
+      setIsEnrolled(!!enrollment);
+
+      // Check for certificate
+      const { data: cert } = await supabase
+        .from("course_certificates")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("course_slug", slug)
+        .single();
+
+      setCertificate(cert);
+    } catch (error) {
+      console.error("Error checking enrollment:", error);
+    }
+  };
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -142,44 +182,64 @@ export default function CourseDetail() {
                   </div>
                 </div>
               </div>
-              
-              <div>
-                <h2 className="text-2xl font-kanit font-bold mb-4 text-foreground">Course Overview</h2>
-                <p className="font-sans text-muted-foreground leading-relaxed">{course.description}</p>
-              </div>
-              
-              <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Course Overview</h2>
-                <ul className="space-y-3 font-sans text-muted-foreground">
-                  {course.overview.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Tools & Technologies</h2>
-                <div className="flex flex-wrap gap-3">
-                  {course.tools.map((tool, index) => (
-                    <Badge key={index} variant="secondary">{tool}</Badge>
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Who This Course is For</h2>
-                <ul className="space-y-3 font-sans text-muted-foreground">
-                  {course.whoItsFor.map((item, index) => (
-                    <li key={index} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="lessons">Course Content</TabsTrigger>
+                  <TabsTrigger value="certificate" disabled={!certificate}>
+                    Certificate
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="overview" className="space-y-8 mt-8">
+                  <div>
+                    <h2 className="text-2xl font-kanit font-bold mb-4 text-foreground">Course Overview</h2>
+                    <p className="font-sans text-muted-foreground leading-relaxed">{course.description}</p>
+                  </div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">What You'll Learn</h2>
+                    <ul className="space-y-3 font-sans text-muted-foreground">
+                      {course.overview.map((item, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Tools & Technologies</h2>
+                    <div className="flex flex-wrap gap-3">
+                      {course.tools.map((tool, index) => (
+                        <Badge key={index} variant="secondary">{tool}</Badge>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h2 className="text-2xl font-kanit font-bold mb-6 text-foreground">Who This Course is For</h2>
+                    <ul className="space-y-3 font-sans text-muted-foreground">
+                      {course.whoItsFor.map((item, index) => (
+                        <li key={index} className="flex items-start gap-3">
+                          <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="lessons" className="mt-8">
+                  <LessonList courseSlug={slug || ""} isEnrolled={isEnrolled} />
+                </TabsContent>
+
+                <TabsContent value="certificate" className="mt-8">
+                  {certificate && <CertificateView certificate={certificate} />}
+                </TabsContent>
+              </Tabs>
             </div>
             
             <div className="lg:col-span-1">
