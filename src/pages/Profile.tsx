@@ -17,6 +17,7 @@ import { CertificateView } from "@/components/course/CertificateView";
 import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
+import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
 
 interface Profile {
   id: string;
@@ -177,26 +178,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col animate-fade-in">
-        <Navbar />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-6 p-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
-              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
-                <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
-                <div className="space-y-2">
-                  <p className="text-foreground font-semibold text-lg">Loading Your Profile</p>
-                  <p className="text-muted-foreground text-sm">Fetching your account data...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   if (error && !loading) {

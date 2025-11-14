@@ -8,6 +8,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import { useToast } from "@/hooks/use-toast";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
+import { CampaignAnalyticsSkeleton } from "@/components/skeletons/CampaignAnalyticsSkeleton";
 
 interface CampaignStats {
   totalCampaigns: number;
@@ -183,25 +184,7 @@ export default function EmailAnalyticsDashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center space-y-6 p-8">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
-              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
-                <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
-                <div className="space-y-2">
-                  <p className="text-foreground font-semibold text-lg">Loading Campaign Analytics</p>
-                  <p className="text-muted-foreground text-sm">Fetching email campaign data...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
+    return <CampaignAnalyticsSkeleton />;
   }
 
   return (
