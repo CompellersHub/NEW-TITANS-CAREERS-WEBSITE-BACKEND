@@ -21,6 +21,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { LessonList } from "@/components/course/LessonList";
 import { CertificateView } from "@/components/course/CertificateView";
+import { DiscussionForum } from "@/components/course/DiscussionForum";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -184,9 +185,10 @@ export default function CourseDetail() {
               </div>
 
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="lessons">Course Content</TabsTrigger>
+                  <TabsTrigger value="discussions">Discussions</TabsTrigger>
                   <TabsTrigger value="certificate" disabled={!certificate}>
                     Certificate
                   </TabsTrigger>
@@ -234,6 +236,10 @@ export default function CourseDetail() {
 
                 <TabsContent value="lessons" className="mt-8">
                   <LessonList courseSlug={slug || ""} isEnrolled={isEnrolled} />
+                </TabsContent>
+
+                <TabsContent value="discussions" className="mt-8">
+                  <DiscussionForum courseSlug={slug || ""} isEnrolled={isEnrolled} />
                 </TabsContent>
 
                 <TabsContent value="certificate" className="mt-8">
