@@ -93,6 +93,30 @@ export function StripeCheckoutButton({
     
     setIsLoading(true);
     try {
+      // Create unique session ID for abandonment tracking
+      const sessionId = `checkout_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Get user info from localStorage if available
+      const userEmail = localStorage.getItem('userEmail') || '';
+      const userName = localStorage.getItem('userName') || '';
+
+      // Track checkout session in database for abandonment tracking
+      if (userEmail) {
+        await supabase.from('checkout_sessions').insert({
+          session_id: sessionId,
+          email: userEmail,
+          name: userName,
+          course_slug: courseSlug,
+          course_title: courseTitle,
+          original_price: price,
+          voucher_code: appliedVoucher?.code,
+          metadata: {
+            final_price: finalPrice,
+            discount_applied: appliedVoucher ? appliedVoucher.discountAmount : 0
+          }
+        });
+      }
+
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`, {
         method: 'POST',
         headers: {
@@ -103,13 +127,16 @@ export function StripeCheckoutButton({
           courseTitle, 
           price,
           voucherCode: appliedVoucher?.code,
-          userEmail: null
+          userEmail: userEmail || null,
+          sessionId
         })
       });
 
       const data = await response.json();
       
       if (data?.url) {
+        // Store session ID for completion tracking
+        localStorage.setItem('checkoutSessionId', sessionId);
         window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
