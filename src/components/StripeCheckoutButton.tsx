@@ -86,6 +86,9 @@ export function StripeCheckoutButton({
   };
 
   const handleCheckout = async () => {
+    console.log('🔴 BUTTON CLICKED - handleCheckout started');
+    console.log('Course:', courseSlug, courseTitle, 'Price:', price);
+    
     const finalPrice = appliedVoucher ? appliedVoucher.finalPrice : price;
     
     // Track checkout initiation
@@ -233,7 +236,10 @@ export function StripeCheckoutButton({
         variant={variant}
         size={size}
         className={className}
-        onClick={handleCheckout}
+        onClick={(e) => {
+          console.log('🟢 BUTTON CLICK EVENT FIRED', e);
+          handleCheckout();
+        }}
         disabled={isLoading}
       >
         {showIcon && <ShoppingCart className="h-4 w-4 mr-2" />}
