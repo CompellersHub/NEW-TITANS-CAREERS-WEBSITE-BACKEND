@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogoWithEffects } from "@/components/LogoWithEffects";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -112,7 +113,9 @@ export const Navbar = () => {
           {/* Desktop Buttons */}
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
-              <DropdownMenu>
+              <>
+                <NotificationBell />
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10 font-sans font-semibold">
                     <User className="w-4 h-4 mr-2" />
@@ -174,6 +177,7 @@ export const Navbar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              </>
             ) : (
               <Link to="/auth">
                 <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10 font-sans font-semibold">
