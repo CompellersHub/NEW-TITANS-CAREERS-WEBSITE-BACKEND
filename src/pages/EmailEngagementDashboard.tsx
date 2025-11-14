@@ -8,10 +8,14 @@ import { Loader2 } from "lucide-react";
 
 interface EngagementMetrics {
   totalClicks: number;
+  totalSends: number;
+  totalOpens: number;
+  openRate: number;
+  clickRate: number;
   unsubscribeRate: number;
   clicksByType: Array<{ link_type: string; count: number }>;
   clicksByEmail: Array<{ email_type: string; count: number }>;
-  dailyTrend: Array<{ date: string; clicks: number }>;
+  dailyTrend: Array<{ date: string; clicks: number; opens: number; sends: number }>;
 }
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -29,7 +33,7 @@ export default function EmailEngagementDashboard() {
     try {
       setLoading(true);
 
-      // Fetch all engagement data
+      // Fetch all engagement data (clicks)
       const { data: engagementData, error } = await supabase
         .from("email_engagement_tracking")
         .select("*")
@@ -37,9 +41,21 @@ export default function EmailEngagementDashboard() {
 
       if (error) throw error;
 
-      if (!engagementData) {
+      // Fetch all email sends and opens
+      const { data: emailSends, error: sendsError } = await supabase
+        .from("email_sends")
+        .select("*")
+        .order("sent_at", { ascending: false });
+
+      if (sendsError) throw sendsError;
+
+      if (!engagementData || !emailSends) {
         setMetrics({
           totalClicks: 0,
+          totalSends: 0,
+          totalOpens: 0,
+          openRate: 0,
+          clickRate: 0,
           unsubscribeRate: 0,
           clicksByType: [],
           clicksByEmail: [],
@@ -48,8 +64,14 @@ export default function EmailEngagementDashboard() {
         return;
       }
 
-      // Calculate metrics
+      // Calculate email send metrics
+      const totalSends = emailSends.length;
+      const totalOpens = emailSends.filter((e) => e.opened_at !== null).length;
+      const openRate = totalSends > 0 ? (totalOpens / totalSends) * 100 : 0;
+
+      // Calculate click metrics
       const totalClicks = engagementData.length;
+      const clickRate = totalSends > 0 ? (totalClicks / totalSends) * 100 : 0;
       const unsubscribeClicks = engagementData.filter(
         (e) => e.link_type === "unsubscribe_digest" || e.link_type === "unsubscribe_all"
       ).length;
@@ -77,20 +99,39 @@ export default function EmailEngagementDashboard() {
         count,
       }));
 
-      // Group by day for trend
-      const dailyTrend = Object.entries(
-        engagementData.reduce((acc, item) => {
-          const date = new Date(item.clicked_at).toLocaleDateString();
-          acc[date] = (acc[date] || 0) + 1;
-          return acc;
-        }, {} as Record<string, number>)
-      )
-        .map(([date, clicks]) => ({ date, clicks }))
-        .reverse()
+      // Group by day for trend - combine sends, opens, and clicks
+      const allDates = new Set<string>();
+      emailSends.forEach((item) => {
+        const date = new Date(item.sent_at).toLocaleDateString();
+        allDates.add(date);
+      });
+      engagementData.forEach((item) => {
+        const date = new Date(item.clicked_at).toLocaleDateString();
+        allDates.add(date);
+      });
+
+      const dailyTrend = Array.from(allDates)
+        .map((date) => {
+          const sends = emailSends.filter(
+            (item) => new Date(item.sent_at).toLocaleDateString() === date
+          ).length;
+          const opens = emailSends.filter(
+            (item) => item.opened_at && new Date(item.opened_at).toLocaleDateString() === date
+          ).length;
+          const clicks = engagementData.filter(
+            (item) => new Date(item.clicked_at).toLocaleDateString() === date
+          ).length;
+          return { date, sends, opens, clicks };
+        })
+        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .slice(-30); // Last 30 days
 
       setMetrics({
         totalClicks,
+        totalSends,
+        totalOpens,
+        openRate,
+        clickRate,
         unsubscribeRate,
         clicksByType,
         clicksByEmail,
@@ -134,21 +175,51 @@ export default function EmailEngagementDashboard() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Total Clicks</CardTitle>
-            <CardDescription>All email link clicks</CardDescription>
+            <CardTitle>Total Sends</CardTitle>
+            <CardDescription>Emails sent</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold text-primary">{metrics.totalClicks}</p>
+            <p className="text-4xl font-bold text-primary">{metrics.totalSends}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Open Rate</CardTitle>
+            <CardDescription>Emails opened</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold text-primary">
+              {metrics.openRate.toFixed(1)}%
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {metrics.totalOpens} opens
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Click Rate</CardTitle>
+            <CardDescription>Link clicks</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-4xl font-bold text-accent">
+              {metrics.clickRate.toFixed(1)}%
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {metrics.totalClicks} clicks
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
             <CardTitle>Unsubscribe Rate</CardTitle>
-            <CardDescription>Users who unsubscribed</CardDescription>
+            <CardDescription>Of total clicks</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-4xl font-bold text-destructive">
@@ -160,10 +231,10 @@ export default function EmailEngagementDashboard() {
         <Card>
           <CardHeader>
             <CardTitle>Preference Clicks</CardTitle>
-            <CardDescription>Users managing settings</CardDescription>
+            <CardDescription>Settings managed</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-4xl font-bold text-accent">
+            <p className="text-4xl font-bold text-secondary">
               {metrics.clicksByType.find((t) => t.link_type.includes("Preferences"))?.count || 0}
             </p>
           </CardContent>
@@ -181,8 +252,8 @@ export default function EmailEngagementDashboard() {
         <TabsContent value="trends" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Daily Click Trends</CardTitle>
-              <CardDescription>Email engagement over the last 30 days</CardDescription>
+              <CardTitle>Daily Engagement Trends</CardTitle>
+              <CardDescription>Email sends, opens, and clicks over the last 30 days</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={350}>
@@ -200,8 +271,22 @@ export default function EmailEngagementDashboard() {
                   <Legend />
                   <Line
                     type="monotone"
-                    dataKey="clicks"
+                    dataKey="sends"
+                    stroke="hsl(var(--muted))"
+                    strokeWidth={2}
+                    name="Sends"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="opens"
                     stroke="hsl(var(--primary))"
+                    strokeWidth={2}
+                    name="Opens"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="clicks"
+                    stroke="hsl(var(--accent))"
                     strokeWidth={2}
                     name="Clicks"
                   />

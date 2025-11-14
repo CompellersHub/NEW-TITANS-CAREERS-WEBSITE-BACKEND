@@ -98,6 +98,25 @@ const handler = async (req: Request): Promise<Response> => {
       const preferencesUrl = `${trackingBaseUrl}?email=${encodeURIComponent(userEmail)}&link_type=preferences&email_type=digest&user_id=${pref.user_id}&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
       const unsubscribeUrl = `${trackingBaseUrl}?email=${encodeURIComponent(userEmail)}&link_type=unsubscribe_digest&email_type=digest&user_id=${pref.user_id}&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
 
+      // Create tracking record for email opens
+      const trackingId = crypto.randomUUID();
+      const { error: trackingError } = await supabase
+        .from("email_sends")
+        .insert({
+          email: userEmail,
+          template_id: null,
+          tracking_id: trackingId,
+          variant_id: null,
+          ab_variant_letter: null,
+        });
+
+      if (trackingError) {
+        console.error("Error creating tracking record:", trackingError);
+      }
+
+      // Construct the tracking pixel URL
+      const trackingPixelUrl = `${supabaseUrl}/functions/v1/track-email-open?id=${trackingId}`;
+
       // Build digest email
       const notificationsList = notifications
         .slice(0, 10)
@@ -177,6 +196,7 @@ const handler = async (req: Request): Promise<Response> => {
                 ${userData.user.email}
               </p>
             </div>
+            <img src="${trackingPixelUrl}" width="1" height="1" alt="" style="display:block;border:0;outline:none;" />
           </body>
         </html>
       `;

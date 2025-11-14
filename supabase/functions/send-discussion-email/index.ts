@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.81.1";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -28,15 +29,41 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { to, subject, content, metadata }: EmailRequest = await req.json();
+    const emailRequest: EmailRequest = await req.json();
+    
+    const { to, subject, content, metadata } = emailRequest;
 
     console.log("Sending discussion email to:", to);
+
+    // Initialize Supabase client for tracking
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Create tracking record for email opens
+    const trackingId = crypto.randomUUID();
+    const { error: trackingError } = await supabase
+      .from("email_sends")
+      .insert({
+        email: to,
+        template_id: null,
+        tracking_id: trackingId,
+        variant_id: null,
+        ab_variant_letter: null,
+      });
+
+    if (trackingError) {
+      console.error("Error creating tracking record:", trackingError);
+    }
+
+    // Construct the tracking pixel URL
+    const trackingPixelUrl = `${supabaseUrl}/functions/v1/track-email-open?id=${trackingId}`;
 
     const appUrl = Deno.env.get("APP_URL") || "https://your-domain.com";
     const threadUrl = `${appUrl}/courses/${metadata.course_slug}?tab=discussions&thread=${metadata.thread_id}`;
 
     // Generate tracking URL for preferences link
-    const trackingBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/track-email-link`;
+    const trackingBaseUrl = `${supabaseUrl}/functions/v1/track-email-link`;
     const preferencesUrl = `${trackingBaseUrl}?email=${encodeURIComponent(to)}&link_type=preferences&email_type=instant_notification&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
 
     const emailResponse = await resend.emails.send({
@@ -92,6 +119,7 @@ const handler = async (req: Request): Promise<Response> => {
                 ${to}
               </p>
             </div>
+            <img src="${trackingPixelUrl}" width="1" height="1" alt="" style="display:block;border:0;outline:none;" />
           </body>
         </html>
       `,
