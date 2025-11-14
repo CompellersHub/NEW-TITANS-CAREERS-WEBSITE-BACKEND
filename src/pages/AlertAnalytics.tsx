@@ -23,7 +23,10 @@ import {
   MessageSquare,
   Send,
   BarChart3,
-  Users
+  Users,
+  Brain,
+  ArrowRight,
+  Settings
 } from "lucide-react";
 import {
   LineChart,
@@ -333,11 +336,24 @@ export default function AlertAnalytics() {
     <PageTransition>
       <Navbar />
       <div className="container mx-auto px-4 py-24">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Alert Analytics Dashboard</h1>
-          <p className="text-muted-foreground">
-            Track alert volume, response times, and team performance metrics
-          </p>
+        <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Alert Analytics Dashboard</h1>
+            <p className="text-muted-foreground">
+              Track alert volume, response times, and team performance metrics
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/predictive-analytics')}>
+              <Brain className="mr-2 h-4 w-4" />
+              Predictive Analytics
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/admin/recovery-alert-settings')}>
+              <Settings className="mr-2 h-4 w-4" />
+              Alert Settings
+            </Button>
+          </div>
         </div>
 
         {/* Key Metrics */}
