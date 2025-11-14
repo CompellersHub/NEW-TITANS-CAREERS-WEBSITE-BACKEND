@@ -104,7 +104,7 @@ export function StripeCheckoutButton({
 
       // Track checkout session in database for abandonment tracking
       if (userEmail) {
-        await supabase.from('checkout_sessions').insert({
+        await supabase.from('checkout_sessions' as any).insert({
           session_id: sessionId,
           email: userEmail,
           name: userName,
