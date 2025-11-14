@@ -271,8 +271,8 @@ export default function CourseDetail() {
             </div>
             
             <div className="lg:col-span-1">
-              <div className="sticky top-4 p-6 border border-border rounded-lg bg-card shadow-lg">
-                <div className="text-4xl font-kanit font-bold mb-6 text-foreground">£{course.price}</div>
+              <div className="sticky top-4 p-6 border border-border rounded-lg bg-card shadow-lg space-y-6">
+                <div className="text-4xl font-kanit font-bold text-foreground">£{course.price}</div>
                 
                 {isEnrolled ? (
                   <Button
