@@ -7,7 +7,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Bell, Mail, Clock } from "lucide-react";
+import { Bell, Mail, Clock, Eye } from "lucide-react";
+import { DigestPreviewDialog } from "./DigestPreviewDialog";
 
 interface Preferences {
   reply_notifications: boolean;
@@ -26,6 +27,7 @@ export const NotificationPreferences = () => {
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     loadPreferences();
@@ -209,6 +211,19 @@ export const NotificationPreferences = () => {
               </p>
             </div>
           )}
+
+          {(preferences.frequency === "daily" || preferences.frequency === "weekly") && (
+            <div className="pt-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowPreview(true)}
+                className="w-full"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                Preview Digest Email
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end pt-4 border-t">
@@ -217,6 +232,13 @@ export const NotificationPreferences = () => {
           </Button>
         </div>
       </CardContent>
+
+      <DigestPreviewDialog
+        open={showPreview}
+        onOpenChange={setShowPreview}
+        frequency={preferences.frequency}
+        digestTime={preferences.digest_time}
+      />
     </Card>
   );
 };
