@@ -50,6 +50,22 @@ const Profile = () => {
     }
     
     loadProfileData();
+    
+    // Handle URL parameters from email links
+    const params = new URLSearchParams(window.location.search);
+    const action = params.get("action");
+    
+    if (action === "unsubscribe_digest") {
+      toast.success("You've been unsubscribed from digest emails", {
+        description: "You'll still receive instant notifications for important activity.",
+      });
+    } else if (action === "unsubscribe_all") {
+      toast.success("You've been unsubscribed from all email notifications", {
+        description: "You can re-enable notifications anytime from this page.",
+      });
+    } else if (action === "preferences") {
+      toast.info("Manage your notification preferences below");
+    }
   }, [user, navigate]);
 
   const loadProfileData = async () => {

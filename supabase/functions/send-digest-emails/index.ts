@@ -85,9 +85,18 @@ const handler = async (req: Request): Promise<Response> => {
         continue;
       }
 
+      const userEmail = userData.user.email;
+
       // Group notifications by type
       const replyCount = notifications.filter((n) => n.notification_type === "reply").length;
       const mentionCount = notifications.filter((n) => n.notification_type === "mention").length;
+
+      // Generate tracking URLs
+      const appUrl = Deno.env.get("APP_URL") || "https://your-domain.com";
+      const trackingBaseUrl = `${supabaseUrl}/functions/v1/track-email-link`;
+      
+      const preferencesUrl = `${trackingBaseUrl}?email=${encodeURIComponent(userEmail)}&link_type=preferences&email_type=digest&user_id=${pref.user_id}&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
+      const unsubscribeUrl = `${trackingBaseUrl}?email=${encodeURIComponent(userEmail)}&link_type=unsubscribe_digest&email_type=digest&user_id=${pref.user_id}&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
 
       // Build digest email
       const notificationsList = notifications
@@ -99,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
           <p style="margin: 0; color: #6b7280; font-size: 14px;">${n.content}</p>
           ${
             n.metadata?.thread_id
-              ? `<a href="${supabaseUrl.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/courses/${n.metadata.course_slug}?tab=discussions&thread=${n.metadata.thread_id}" style="color: #667eea; text-decoration: none; font-size: 13px;">View →</a>`
+              ? `<a href="${appUrl}/courses/${n.metadata.course_slug}?tab=discussions&thread=${n.metadata.thread_id}" style="color: #667eea; text-decoration: none; font-size: 13px;">View →</a>`
               : ""
           }
         </div>

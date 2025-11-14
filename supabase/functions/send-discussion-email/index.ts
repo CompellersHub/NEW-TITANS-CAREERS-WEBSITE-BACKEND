@@ -32,7 +32,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending discussion email to:", to);
 
-    const threadUrl = `${Deno.env.get("SUPABASE_URL")?.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/courses/${metadata.course_slug}?tab=discussions&thread=${metadata.thread_id}`;
+    const appUrl = Deno.env.get("APP_URL") || "https://your-domain.com";
+    const threadUrl = `${appUrl}/courses/${metadata.course_slug}?tab=discussions&thread=${metadata.thread_id}`;
+
+    // Generate tracking URL for preferences link
+    const trackingBaseUrl = `${Deno.env.get("SUPABASE_URL")}/functions/v1/track-email-link`;
+    const preferencesUrl = `${trackingBaseUrl}?email=${encodeURIComponent(to)}&link_type=preferences&email_type=instant_notification&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
 
     const emailResponse = await resend.emails.send({
       from: "Titans Careers <notifications@resend.dev>",
@@ -70,7 +75,7 @@ const handler = async (req: Request): Promise<Response> => {
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
               
               <p style="color: #6b7280; font-size: 14px; text-align: center; margin: 15px 0;">
-                <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications" style="color: #667eea; text-decoration: none;">
+                <a href="${preferencesUrl}" style="color: #667eea; text-decoration: none;">
                   📧 Manage Email Preferences
                 </a>
               </p>
