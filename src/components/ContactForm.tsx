@@ -22,6 +22,10 @@ export const ContactForm = () => {
       message: formData.get('message') as string,
     };
     
+    // Store user info for abandoned checkout tracking
+    localStorage.setItem('userEmail', data.email);
+    localStorage.setItem('userName', data.name);
+    
     // Track form submission
     trackFormSubmission('contact_form', {
       form_type: 'contact',
