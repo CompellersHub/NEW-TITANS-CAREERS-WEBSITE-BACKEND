@@ -424,7 +424,7 @@ export const ThreadView = ({ threadId, onBack, isEnrolled }: ThreadViewProps) =>
           {isEnrolled && (
             <form onSubmit={handleSubmitReply} className="space-y-3 pt-4 border-t">
               <Textarea
-                placeholder="Write your reply..."
+                placeholder="Write your reply... (Tip: Use @username to mention someone)"
                 value={replyContent}
                 onChange={(e) => setReplyContent(e.target.value)}
                 rows={4}
