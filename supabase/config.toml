@@ -80,3 +80,6 @@ verify_jwt = false
 
 [functions.validate-voucher]
 verify_jwt = false
+
+[functions.predict-alerts]
+verify_jwt = false
