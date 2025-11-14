@@ -51,6 +51,7 @@ import CampaignApprovalQueue from "./pages/CampaignApprovalQueue";
 import CampaignAnalytics from "./pages/CampaignAnalytics";
 import RecoveryAnalytics from "./pages/RecoveryAnalytics";
 import RecoveryAlertSettings from "./pages/RecoveryAlertSettings";
+import AlertAnalytics from "./pages/AlertAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +110,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/campaign-approval" element={<CampaignApprovalQueue />} />
           <Route path="/admin/recovery-analytics" element={<RecoveryAnalytics />} />
           <Route path="/admin/recovery-alert-settings" element={<RecoveryAlertSettings />} />
+          <Route path="/admin/alert-analytics" element={<AlertAnalytics />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
