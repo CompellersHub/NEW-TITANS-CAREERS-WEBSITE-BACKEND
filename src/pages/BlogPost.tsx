@@ -93,7 +93,7 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <ReadingProgressBar />
+      <ReadingProgressBar readTime={post.readTime} />
       <SEO
         title={post.title}
         description={post.excerpt}

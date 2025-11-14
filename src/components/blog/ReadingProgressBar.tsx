@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
+import { Clock } from "lucide-react";
 
-export const ReadingProgressBar = () => {
+interface ReadingProgressBarProps {
+  readTime: number | string;
+}
+
+export const ReadingProgressBar = ({ readTime }: ReadingProgressBarProps) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -25,6 +30,12 @@ export const ReadingProgressBar = () => {
     return () => window.removeEventListener("scroll", updateProgress);
   }, []);
 
+  // Calculate time remaining
+  const totalMinutes = typeof readTime === 'string' 
+    ? parseInt(readTime.replace(" min read", "")) 
+    : readTime;
+  const timeRemaining = Math.ceil(totalMinutes * (1 - progress / 100));
+  
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
       <Progress 
@@ -32,6 +43,14 @@ export const ReadingProgressBar = () => {
         className="h-1 rounded-none bg-transparent"
         indicatorClassName="bg-accent transition-all duration-150"
       />
+      {progress > 5 && (
+        <div className="absolute top-2 right-4 bg-background/95 backdrop-blur-sm border border-border rounded-full px-3 py-1 shadow-lg animate-fade-in">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+            <Clock className="w-3 h-3" />
+            <span>{timeRemaining} min left</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
