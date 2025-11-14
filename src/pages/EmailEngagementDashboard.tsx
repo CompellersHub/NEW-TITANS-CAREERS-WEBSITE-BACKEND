@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { DataFetchError } from "@/components/error/DataFetchError";
 
 interface EngagementMetrics {
   totalClicks: number;
@@ -26,6 +28,8 @@ const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accen
 export default function EmailEngagementDashboard() {
   const [metrics, setMetrics] = useState<EngagementMetrics | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [retrying, setRetrying] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -35,6 +39,7 @@ export default function EmailEngagementDashboard() {
   const fetchEngagementMetrics = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       // Fetch all engagement data (clicks)
       const { data: engagementData, error } = await supabase
@@ -203,14 +208,23 @@ export default function EmailEngagementDashboard() {
       });
     } catch (error: any) {
       console.error("Error fetching engagement metrics:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load engagement metrics",
-        variant: "destructive",
-      });
+      setError(error);
+      if (!retrying) {
+        toast({
+          title: "Error",
+          description: "Failed to load engagement metrics",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
+      setRetrying(false);
     }
+  };
+
+  const handleRetry = async () => {
+    setRetrying(true);
+    await fetchEngagementMetrics();
   };
 
   if (loading) {
@@ -232,7 +246,21 @@ export default function EmailEngagementDashboard() {
     );
   }
 
-  if (!metrics) {
+  if (error && !loading) {
+    return (
+      <ErrorBoundary onReset={handleRetry}>
+        <DataFetchError
+          title="Failed to Load Engagement Data"
+          description="We couldn't fetch your email engagement metrics. This might be a temporary issue with the connection."
+          error={error}
+          onRetry={handleRetry}
+          retrying={retrying}
+        />
+      </ErrorBoundary>
+    );
+  }
+
+  if (!metrics && !loading) {
     return (
       <div className="container mx-auto p-6">
         <p className="text-muted-foreground">No engagement data available</p>
@@ -241,7 +269,8 @@ export default function EmailEngagementDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <ErrorBoundary onReset={fetchEngagementMetrics}>
+      <div className="container mx-auto p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-foreground">Email Engagement Analytics</h1>
         <p className="text-muted-foreground mt-2">
@@ -662,5 +691,6 @@ export default function EmailEngagementDashboard() {
         </TabsContent>
       </Tabs>
     </div>
+    </ErrorBoundary>
   );
 }

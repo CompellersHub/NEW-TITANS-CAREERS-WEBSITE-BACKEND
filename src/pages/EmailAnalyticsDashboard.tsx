@@ -6,7 +6,8 @@ import { Footer } from "@/components/Footer";
 import { Mail, TrendingUp, Users, MousePointerClick, Loader2 } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
-import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { DataFetchError } from "@/components/error/DataFetchError";
 
 interface CampaignStats {
   totalCampaigns: number;
@@ -43,6 +44,8 @@ export default function EmailAnalyticsDashboard() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [trendData, setTrendData] = useState<TrendData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [retrying, setRetrying] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -52,6 +55,7 @@ export default function EmailAnalyticsDashboard() {
   const loadAnalytics = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       // Fetch campaign data
       const { data: campaignsData, error: campaignsError } = await supabase
@@ -138,17 +142,45 @@ export default function EmailAnalyticsDashboard() {
         .sort((a, b) => a.date.localeCompare(b.date));
 
       setTrendData(trends);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error loading analytics:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load analytics data",
-        variant: "destructive",
-      });
+      setError(error);
+      if (!retrying) {
+        toast({
+          title: "Error",
+          description: "Failed to load analytics data",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
+      setRetrying(false);
     }
   };
+
+  const handleRetry = async () => {
+    setRetrying(true);
+    await loadAnalytics();
+  };
+
+  if (error && !loading) {
+    return (
+      <ErrorBoundary onReset={handleRetry}>
+        <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
+          <Navbar />
+          <main className="flex-1 flex items-center justify-center">
+            <DataFetchError
+              title="Failed to Load Campaign Analytics"
+              description="We couldn't fetch your email campaign data. This might be a temporary connection issue."
+              error={error}
+              onRetry={handleRetry}
+              retrying={retrying}
+            />
+          </main>
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
   if (loading) {
     return (
@@ -173,7 +205,8 @@ export default function EmailAnalyticsDashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
+    <ErrorBoundary onReset={loadAnalytics}>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8 animate-fade-in">
@@ -341,5 +374,6 @@ export default function EmailAnalyticsDashboard() {
       </main>
       <Footer />
     </div>
+    </ErrorBoundary>
   );
 }
