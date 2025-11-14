@@ -49,6 +49,7 @@ import VoucherExport from "./pages/VoucherExport";
 import ScheduledCampaigns from "./pages/ScheduledCampaigns";
 import CampaignApprovalQueue from "./pages/CampaignApprovalQueue";
 import CampaignAnalytics from "./pages/CampaignAnalytics";
+import RecoveryAnalytics from "./pages/RecoveryAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +106,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/vouchers/scheduled" element={<ScheduledCampaigns />} />
           <Route path="/admin/vouchers/campaign-analytics" element={<CampaignAnalytics />} />
           <Route path="/admin/campaign-approval" element={<CampaignApprovalQueue />} />
+          <Route path="/admin/recovery-analytics" element={<RecoveryAnalytics />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
