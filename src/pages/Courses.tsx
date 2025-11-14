@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { CoursesPageSkeleton } from "@/components/courses/CoursesPageSkeleton";
+import { SEO } from "@/components/SEO";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
@@ -24,6 +25,11 @@ export default function Courses() {
   
   return (
     <PageTransition variant="slide">
+      <SEO 
+        title="Professional Training Courses - Transform Your Career"
+        description="Browse our complete catalog of professional training courses including AML/KYC, Data Analysis, Cybersecurity, Business Analysis, and more. Industry-leading programs with 85% job placement rate."
+        keywords="training courses catalog, professional courses, AML certification, data analysis training, cybersecurity courses, business analyst training, compliance courses"
+      />
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container mx-auto py-32 px-4">
