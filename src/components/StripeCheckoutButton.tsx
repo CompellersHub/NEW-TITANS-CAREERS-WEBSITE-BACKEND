@@ -100,6 +100,7 @@ export function StripeCheckoutButton({
       const userEmail = localStorage.getItem('userEmail') || '';
       const userName = localStorage.getItem('userName') || '';
       const userPhone = localStorage.getItem('userPhone') || '';
+      const userWhatsApp = localStorage.getItem('userWhatsApp') || '';
 
       // Track checkout session in database for abandonment tracking
       if (userEmail) {
@@ -108,6 +109,7 @@ export function StripeCheckoutButton({
           email: userEmail,
           name: userName,
           phone: userPhone || null,
+          whatsapp: userWhatsApp || null,
           course_slug: courseSlug,
           course_title: courseTitle,
           original_price: price,

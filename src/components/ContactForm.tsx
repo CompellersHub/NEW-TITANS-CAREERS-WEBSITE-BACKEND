@@ -20,6 +20,7 @@ export const ContactForm = () => {
       email: formData.get('email') as string,
       company: formData.get('company') as string,
       phone: formData.get('phone') as string,
+      whatsapp: formData.get('whatsapp') as string,
       message: formData.get('message') as string,
     };
     
@@ -28,6 +29,9 @@ export const ContactForm = () => {
     localStorage.setItem('userName', data.name);
     if (data.phone) {
       localStorage.setItem('userPhone', data.phone);
+    }
+    if (data.whatsapp) {
+      localStorage.setItem('userWhatsApp', data.whatsapp);
     }
     
     // Track form submission
@@ -123,6 +127,22 @@ export const ContactForm = () => {
                   className="h-12"
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
+                <MessageSquare className="w-4 h-4 text-primary" />
+                WhatsApp Number (Optional)
+              </label>
+              <Input 
+                name="whatsapp"
+                type="tel" 
+                placeholder="+44 7123 456789" 
+                className="h-12"
+              />
+              <p className="text-xs text-muted-foreground">
+                Get course updates and exclusive offers on WhatsApp
+              </p>
             </div>
             
             <div className="space-y-2">
