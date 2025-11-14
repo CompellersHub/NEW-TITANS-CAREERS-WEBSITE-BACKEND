@@ -16,6 +16,7 @@ interface EngagementMetrics {
   clicksByType: Array<{ link_type: string; count: number }>;
   clicksByEmail: Array<{ email_type: string; count: number }>;
   dailyTrend: Array<{ date: string; clicks: number; opens: number; sends: number }>;
+  emailClientDistribution: Array<{ client: string; count: number; percentage: number }>;
 }
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -60,6 +61,7 @@ export default function EmailEngagementDashboard() {
           clicksByType: [],
           clicksByEmail: [],
           dailyTrend: [],
+          emailClientDistribution: [],
         });
         return;
       }
@@ -126,6 +128,22 @@ export default function EmailEngagementDashboard() {
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
         .slice(-30); // Last 30 days
 
+      // Get email client distribution
+      const clientCounts = new Map<string, number>();
+      engagementData.forEach((row) => {
+        const client = (row.metadata as any)?.email_client || "Unknown";
+        clientCounts.set(client, (clientCounts.get(client) || 0) + 1);
+      });
+
+      const totalClientEvents = engagementData.length || 1;
+      const emailClientDistribution = Array.from(clientCounts.entries())
+        .map(([client, count]) => ({
+          client,
+          count,
+          percentage: (count / totalClientEvents) * 100,
+        }))
+        .sort((a, b) => b.count - a.count);
+
       setMetrics({
         totalClicks,
         totalSends,
@@ -136,6 +154,7 @@ export default function EmailEngagementDashboard() {
         clicksByType,
         clicksByEmail,
         dailyTrend,
+        emailClientDistribution,
       });
     } catch (error: any) {
       console.error("Error fetching engagement metrics:", error);
@@ -247,6 +266,7 @@ export default function EmailEngagementDashboard() {
           <TabsTrigger value="trends">Click Trends</TabsTrigger>
           <TabsTrigger value="types">Link Types</TabsTrigger>
           <TabsTrigger value="emails">Email Types</TabsTrigger>
+          <TabsTrigger value="clients">Email Clients</TabsTrigger>
         </TabsList>
 
         <TabsContent value="trends" className="space-y-4">
@@ -418,6 +438,67 @@ export default function EmailEngagementDashboard() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        <TabsContent value="clients" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Email Client Distribution</CardTitle>
+              <CardDescription>Which email clients your users are using</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={metrics.emailClientDistribution}
+                        dataKey="count"
+                        nameKey="client"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        label={(entry) => `${entry.client}: ${entry.percentage.toFixed(1)}%`}
+                      >
+                        {metrics.emailClientDistribution.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value: number) => [value, "Events"]}
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--background))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="space-y-3">
+                  <h3 className="font-semibold text-lg">Top Email Clients</h3>
+                  {metrics.emailClientDistribution.slice(0, 10).map((client, index) => (
+                    <div key={client.client} className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
+                      <div className="flex items-center gap-3">
+                        <div 
+                          className="w-3 h-3 rounded-full" 
+                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        />
+                        <span className="font-medium">{client.client}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold">{client.count} events</span>
+                        <span className="text-sm text-muted-foreground">
+                          ({client.percentage.toFixed(1)}%)
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
