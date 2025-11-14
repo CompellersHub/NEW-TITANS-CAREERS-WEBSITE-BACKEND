@@ -119,6 +119,21 @@ export const DigestPreviewDialog = ({ open, onOpenChange, frequency, digestTime 
           </div>
 
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
+            <p style="color: #6b7280; font-size: 14px; margin: 0 0 10px 0;">
+              <a href="#" style="color: #3b82f6; text-decoration: none; margin-right: 15px;">
+                Manage Email Preferences
+              </a>
+              <span style="color: #d1d5db;">|</span>
+              <a href="#" style="color: #9ca3af; text-decoration: none; margin-left: 15px;">
+                Unsubscribe from Digests
+              </a>
+            </p>
+            <p style="color: #9ca3af; font-size: 12px; margin: 10px 0 0 0;">
+              your-email@example.com
+            </p>
+          </div>
+
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
             <p style="color: #9ca3af; font-size: 12px; margin: 0;">
               This is a preview of your ${frequencyText.toLowerCase()} digest email
             </p>

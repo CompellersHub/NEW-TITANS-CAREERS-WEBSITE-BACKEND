@@ -61,16 +61,30 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="color: #4b5563; margin: 20px 0;">Discussion: <strong>${metadata.thread_title}</strong></p>
               
-              <a href="${threadUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; margin: 20px 0;">
-                View Discussion
-              </a>
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="${threadUrl}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                  View Discussion
+                </a>
+              </div>
               
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
               
-              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+              <p style="color: #6b7280; font-size: 14px; text-align: center; margin: 15px 0;">
+                <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications" style="color: #667eea; text-decoration: none;">
+                  📧 Manage Email Preferences
+                </a>
+              </p>
+
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 10px 0;">
                 You're receiving this email because you're enrolled in this course and have notifications enabled.
-                <br>
-                <a href="${Deno.env.get("SUPABASE_URL")?.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications" style="color: #667eea; text-decoration: none;">Manage notification preferences</a>
+              </p>
+
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 5px 0;">
+                Change how often you receive notifications or turn them off entirely
+              </p>
+
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 5px 0;">
+                ${to}
               </p>
             </div>
           </body>

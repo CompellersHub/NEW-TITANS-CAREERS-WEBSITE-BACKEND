@@ -142,10 +142,30 @@ const handler = async (req: Request): Promise<Response> => {
               
               <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
               
-              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+              <div style="text-align: center; padding: 20px 0;">
+                <a href="${supabaseUrl.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/courses" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+                  View All Discussions
+                </a>
+              </div>
+
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
+              
+              <p style="color: #6b7280; font-size: 14px; text-align: center; margin: 15px 0;">
+                <a href="${supabaseUrl.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications" style="color: #667eea; text-decoration: none; margin-right: 15px;">
+                  📧 Manage Email Preferences
+                </a>
+                <span style="color: #d1d5db;">|</span>
+                <a href="${supabaseUrl.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications&action=unsubscribe_digest" style="color: #9ca3af; text-decoration: none; margin-left: 15px;">
+                  🔕 Unsubscribe from Digests
+                </a>
+              </p>
+
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 10px 0;">
                 You're receiving this ${pref.frequency} digest based on your notification preferences.
-                <br>
-                <a href="${supabaseUrl.replace("https://gfmhhnynyxvmekhvytgg.supabase.co", "https://your-app-domain.com")}/profile?tab=notifications" style="color: #667eea; text-decoration: none;">Manage notification preferences</a>
+              </p>
+
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 5px 0;">
+                ${userData.user.email}
               </p>
             </div>
           </body>
