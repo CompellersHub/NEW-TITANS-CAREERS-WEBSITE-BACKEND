@@ -32,6 +32,19 @@ export function CourseEnrollmentButton({
 
   const finalPrice = price - voucherDiscount;
 
+  // Open external checkout in a new tab to avoid iframe restrictions or X-Frame-Options issues
+  const openExternal = (url: string) => {
+    try {
+      const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+      if (!newWindow) {
+        // Fallback: same-tab navigation
+        window.location.assign(url);
+      }
+    } catch (e) {
+      window.location.assign(url);
+    }
+  };
+
   const handlePaymentMethodSelected = async (method: string) => {
     setIsProcessing(true);
 
@@ -84,7 +97,7 @@ export function CourseEnrollmentButton({
     if (!data?.url) throw new Error('No checkout URL received');
 
     // Direct navigation to Stripe checkout
-    window.location.href = data.url;
+    openExternal(data.url);
   };
 
   const handlePayPalCheckout = async (email: string, name: string) => {
@@ -103,7 +116,7 @@ export function CourseEnrollmentButton({
     if (!data?.approvalUrl) throw new Error('No PayPal approval URL received');
 
     // Direct navigation to PayPal
-    window.location.href = data.approvalUrl;
+    openExternal(data.approvalUrl);
   };
 
   const handleBankTransfer = async (email: string, name: string) => {
@@ -148,7 +161,7 @@ export function CourseEnrollmentButton({
     if (!data?.applicationUrl) throw new Error('No Payl8r application URL received');
 
     // Direct navigation to Payl8r
-    window.location.href = data.applicationUrl;
+    openExternal(data.applicationUrl);
   };
 
   return (
