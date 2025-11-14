@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,10 +9,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { testimonials } from "@/data/testimonials";
 import { Star, TrendingUp, Award, Play, Users, Briefcase, DollarSign, X } from "lucide-react";
 import { useState } from "react";
+import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 const Testimonials = () => {
   const [selectedTrack, setSelectedTrack] = useState<string>("all");
   const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  
+  // Enable keyboard shortcuts
+  useNavigationShortcuts();
 
   const filteredTestimonials = selectedTrack === "all" 
     ? testimonials 
@@ -479,6 +484,7 @@ const Testimonials = () => {
 
       <Footer />
       <ScrollToTop />
+      <KeyboardShortcutsHelper />
     </div>
   );
 };

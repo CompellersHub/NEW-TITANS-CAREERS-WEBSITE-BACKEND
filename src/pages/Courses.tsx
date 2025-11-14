@@ -3,6 +3,7 @@ import { CourseCardSkeleton } from "@/components/courses/CourseCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -11,6 +12,7 @@ import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
+import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,9 @@ export default function Courses() {
   const isMobile = useIsMobile();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  
+  // Enable keyboard shortcuts
+  useNavigationShortcuts();
   
   // Pagination for desktop
   const {
@@ -186,6 +191,7 @@ export default function Courses() {
         </div>
         <Footer />
         <ScrollToTop />
+        <KeyboardShortcutsHelper />
       </div>
     </PageTransition>
   );

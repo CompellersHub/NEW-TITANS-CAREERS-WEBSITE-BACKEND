@@ -10,6 +10,7 @@ import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { NewsletterSection } from "@/components/NewsletterSection";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { courses } from "@/data/courses";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -20,6 +21,7 @@ import { LeadMagnetModal } from "@/components/marketing/LeadMagnetModal";
 import { ReferralProgram } from "@/components/marketing/ReferralProgram";
 import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
+import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { Sparkles, Download } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
@@ -31,6 +33,9 @@ const Index = () => {
   const [showLeadMagnet, setShowLeadMagnet] = useState(false);
 
   useBehaviorTracking({ enableAutoTracking: true });
+  
+  // Enable keyboard shortcuts
+  useNavigationShortcuts();
 
   return (
     <PageTransition variant="default">
@@ -137,6 +142,7 @@ const Index = () => {
         <CTA />
         <Footer />
         <ScrollToTop />
+        <KeyboardShortcutsHelper />
       </div>
     </PageTransition>
   );
