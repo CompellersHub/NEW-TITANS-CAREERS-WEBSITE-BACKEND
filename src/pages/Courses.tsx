@@ -1,4 +1,5 @@
 import { CourseGrid } from "@/components/courses/CourseGrid";
+import { CourseCardSkeleton } from "@/components/courses/CourseCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
@@ -6,14 +7,21 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
-import { useState, useEffect } from "react";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
   const [isLoading, setIsLoading] = useState(true);
+  const isMobile = useIsMobile();
+  const sentinelRef = useRef<HTMLDivElement>(null);
   
+  // Pagination for desktop
   const {
-    currentItems,
+    currentItems: paginatedItems,
     currentPage,
     totalPages,
     goToPage,
@@ -24,10 +32,41 @@ export default function Courses() {
     totalItems,
   } = usePagination({ items: coursesArray, itemsPerPage: 12 });
 
+  // Infinite scroll for mobile
+  const {
+    displayedItems: infiniteScrollItems,
+    hasMore,
+    isLoadingMore,
+    loadMore,
+    totalDisplayed,
+  } = useInfiniteScroll({ items: coursesArray, itemsPerPage: 12, enabled: isMobile });
+
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 400);
     return () => clearTimeout(timer);
   }, []);
+
+  // Set up intersection observer for infinite scroll
+  useEffect(() => {
+    if (!isMobile || !hasMore || isLoadingMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isMobile, hasMore, isLoadingMore, loadMore]);
+
+  const displayItems = isMobile ? infiniteScrollItems : paginatedItems;
   
   return (
     <PageTransition variant="slide">
@@ -53,19 +92,61 @@ export default function Courses() {
             </p>
           </div>
           
-          <CourseGrid courses={currentItems} loading={isLoading} />
+          <CourseGrid courses={displayItems} loading={isLoading} />
           
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-            canGoPrevious={canGoPrevious}
-            canGoNext={canGoNext}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalItems={totalItems}
-            className="mt-12"
-          />
+          {/* Infinite scroll loading indicator for mobile */}
+          {isMobile && !isLoading && (
+            <>
+              {isLoadingMore && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                  {[1, 2, 3].map((i) => (
+                    <CourseCardSkeleton key={i} />
+                  ))}
+                </div>
+              )}
+              
+              {hasMore && (
+                <div ref={sentinelRef} className="flex justify-center mt-12">
+                  <Button
+                    variant="outline"
+                    onClick={loadMore}
+                    disabled={isLoadingMore}
+                    className="font-sans"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Loading more courses...
+                      </>
+                    ) : (
+                      `Load More (${totalDisplayed} of ${totalItems})`
+                    )}
+                  </Button>
+                </div>
+              )}
+              
+              {!hasMore && coursesArray.length > 12 && (
+                <p className="text-center text-muted-foreground font-sans mt-12">
+                  You've reached the end of our courses
+                </p>
+              )}
+            </>
+          )}
+          
+          {/* Pagination for desktop */}
+          {!isMobile && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalItems={totalItems}
+              className="mt-12"
+            />
+          )}
         </div>
         <Footer />
       </div>
