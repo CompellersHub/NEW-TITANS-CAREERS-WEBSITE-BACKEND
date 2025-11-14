@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { StripeCheckoutButton } from "@/components/StripeCheckoutButton";
+import { CourseEnrollmentButton } from "../payment/CourseEnrollmentButton";
 import { Link } from "react-router-dom";
 import { Clock, BookOpen } from "lucide-react";
 
@@ -56,20 +56,30 @@ export function CourseCard({ course }: CourseCardProps) {
       
       <p className="font-sans mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
       
-      <div className="flex items-center justify-between mt-auto pt-6 border-t border-border">
-        <div>
-          <p className="font-sans text-xs text-muted-foreground mb-1">One-time payment</p>
-          <span className="font-kanit text-4xl font-bold text-primary">
-            £{course.price}
-          </span>
+      <div className="space-y-4 mt-auto pt-6 border-t border-border">
+        {/* Financing Badge */}
+        <div className="w-full text-center py-2 px-3 bg-secondary/20 rounded-lg">
+          <p className="text-xs font-medium text-muted-foreground">
+            💳 From <span className="text-primary font-semibold">£{(course.price / 12).toFixed(2)}/month</span> with Payl8r
+          </p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">0% APR available • 3-12 months</p>
         </div>
-        <StripeCheckoutButton
-          courseSlug={course.slug}
-          courseTitle={course.title}
-          price={course.price}
-          variant="default"
-          size="lg"
-        />
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="font-sans text-xs text-muted-foreground mb-1">One-time payment</p>
+            <span className="font-kanit text-4xl font-bold text-primary">
+              £{course.price}
+            </span>
+          </div>
+          <CourseEnrollmentButton
+            courseSlug={course.slug}
+            courseTitle={course.title}
+            price={course.price}
+            variant="default"
+            size="lg"
+          />
+        </div>
       </div>
     </Card>
   );

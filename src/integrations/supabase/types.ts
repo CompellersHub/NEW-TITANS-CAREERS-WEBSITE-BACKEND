@@ -428,6 +428,71 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_transfer_orders: {
+        Row: {
+          amount: number
+          course_slug: string
+          course_title: string
+          created_at: string | null
+          customer_email: string
+          customer_name: string | null
+          expires_at: string
+          id: string
+          instructions_sent_at: string | null
+          payment_intent_id: string | null
+          payment_proof_url: string | null
+          payment_reference: string
+          status: string | null
+          updated_at: string | null
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          amount: number
+          course_slug: string
+          course_title: string
+          created_at?: string | null
+          customer_email: string
+          customer_name?: string | null
+          expires_at: string
+          id?: string
+          instructions_sent_at?: string | null
+          payment_intent_id?: string | null
+          payment_proof_url?: string | null
+          payment_reference: string
+          status?: string | null
+          updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          amount?: number
+          course_slug?: string
+          course_title?: string
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string | null
+          expires_at?: string
+          id?: string
+          instructions_sent_at?: string | null
+          payment_intent_id?: string | null
+          payment_proof_url?: string | null
+          payment_reference?: string
+          status?: string | null
+          updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_transfer_orders_payment_intent_id_fkey"
+            columns: ["payment_intent_id"]
+            isOneToOne: false
+            referencedRelation: "payment_intents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campaign_content: {
         Row: {
           campaign_type: string
@@ -1243,6 +1308,11 @@ export type Database = {
           created_at: string
           customer_email: string
           id: string
+          installment_plan: Json | null
+          payment_metadata: Json | null
+          payment_method: string | null
+          payment_provider_reference: string | null
+          payment_status: string | null
           price: number
           stripe_session_id: string | null
         }
@@ -1252,6 +1322,11 @@ export type Database = {
           created_at?: string
           customer_email: string
           id?: string
+          installment_plan?: Json | null
+          payment_metadata?: Json | null
+          payment_method?: string | null
+          payment_provider_reference?: string | null
+          payment_status?: string | null
           price: number
           stripe_session_id?: string | null
         }
@@ -1261,6 +1336,11 @@ export type Database = {
           created_at?: string
           customer_email?: string
           id?: string
+          installment_plan?: Json | null
+          payment_metadata?: Json | null
+          payment_method?: string | null
+          payment_provider_reference?: string | null
+          payment_status?: string | null
           price?: number
           stripe_session_id?: string | null
         }
@@ -1648,6 +1728,66 @@ export type Database = {
           total_opens?: number | null
           welcome_email_sent?: boolean | null
           whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      payment_intents: {
+        Row: {
+          completed_at: string | null
+          course_slug: string
+          course_title: string
+          created_at: string | null
+          customer_email: string
+          customer_name: string | null
+          expires_at: string | null
+          final_price: number
+          id: string
+          metadata: Json | null
+          original_price: number
+          payment_method: string
+          payment_reference: string | null
+          payment_status: string | null
+          provider_session_id: string | null
+          updated_at: string | null
+          voucher_code: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          course_slug: string
+          course_title: string
+          created_at?: string | null
+          customer_email: string
+          customer_name?: string | null
+          expires_at?: string | null
+          final_price: number
+          id?: string
+          metadata?: Json | null
+          original_price: number
+          payment_method: string
+          payment_reference?: string | null
+          payment_status?: string | null
+          provider_session_id?: string | null
+          updated_at?: string | null
+          voucher_code?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          course_slug?: string
+          course_title?: string
+          created_at?: string | null
+          customer_email?: string
+          customer_name?: string | null
+          expires_at?: string | null
+          final_price?: number
+          id?: string
+          metadata?: Json | null
+          original_price?: number
+          payment_method?: string
+          payment_reference?: string | null
+          payment_status?: string | null
+          provider_session_id?: string | null
+          updated_at?: string | null
+          voucher_code?: string | null
         }
         Relationships: []
       }
