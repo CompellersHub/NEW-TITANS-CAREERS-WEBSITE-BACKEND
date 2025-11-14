@@ -21,7 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
-  const [isLoading, setIsLoading] = useState(false); // Changed to false - no need for artificial loading
+  console.log("📚 Total courses loaded:", coursesArray.length);
   const isMobile = useIsMobile();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -94,6 +94,8 @@ export default function Courses() {
   }, [isMobile, hasMore, isLoadingMore, loadMore]);
 
   const displayItems = isMobile ? infiniteScrollItems : paginatedItems;
+  console.log("📱 Display mode:", isMobile ? "mobile" : "desktop");
+  console.log("🎯 Display items count:", displayItems.length);
   
   return (
     <PageTransition variant="slide">
@@ -125,10 +127,10 @@ export default function Courses() {
             </p>
           </div>
           
-          <CourseGrid courses={displayItems} loading={isLoading} />
+          <CourseGrid courses={displayItems} loading={false} />
           
           {/* Infinite scroll loading indicator for mobile */}
-          {isMobile && !isLoading && (
+          {isMobile && (
             <>
               {isLoadingMore && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
