@@ -163,10 +163,21 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col animate-fade-in">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="text-center space-y-6 p-8">
+            <div className="relative inline-block">
+              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
+              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
+                <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
+                <div className="space-y-2">
+                  <p className="text-foreground font-semibold text-lg">Loading Your Profile</p>
+                  <p className="text-muted-foreground text-sm">Fetching your account data...</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <Footer />
       </div>
@@ -179,17 +190,17 @@ const Profile = () => {
         title="My Profile"
         description="Manage your profile, view purchased courses, and update account settings"
       />
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col animate-fade-in">
         <Navbar />
         
         <div className="flex-1 py-12 px-4">
           <div className="container max-w-4xl mx-auto">
-            <div className="mb-8">
+            <div className="mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
               <h1 className="text-4xl font-bold text-foreground mb-2">My Profile</h1>
               <p className="text-muted-foreground">Manage your account and view your courses</p>
             </div>
 
-            <Tabs defaultValue="profile" className="w-full">
+            <Tabs defaultValue="profile" className="w-full animate-fade-in" style={{ animationDelay: '200ms' }}>
               <TabsList className="grid w-full grid-cols-5 mb-8">
                 <TabsTrigger value="profile" className="flex items-center gap-2">
                   <User className="h-4 w-4" />

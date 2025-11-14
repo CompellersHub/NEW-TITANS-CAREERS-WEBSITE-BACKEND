@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Mail, TrendingUp, Users, MousePointerClick } from "lucide-react";
+import { Mail, TrendingUp, Users, MousePointerClick, Loader2 } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
@@ -151,20 +151,38 @@ export default function EmailAnalyticsDashboard() {
   };
 
   if (loading) {
-    return <AnalyticsPageSkeleton />;
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center space-y-6 p-8">
+            <div className="relative inline-block">
+              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
+              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
+                <Loader2 className="h-16 w-16 animate-spin text-accent mx-auto mb-4" />
+                <div className="space-y-2">
+                  <p className="text-foreground font-semibold text-lg">Loading Campaign Analytics</p>
+                  <p className="text-muted-foreground text-sm">Fetching email campaign data...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
       <Navbar />
       <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl font-kanit font-bold mb-2">Email Campaign Analytics</h1>
           <p className="text-muted-foreground">Monitor your email marketing performance</p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Campaigns</CardTitle>

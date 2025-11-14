@@ -215,11 +215,19 @@ export default function EngagementAnalytics() {
 
   if (loading) {
     return (
-      <div className="container mx-auto py-8 px-4">
+      <div className="container mx-auto py-8 px-4 animate-fade-in">
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading analytics...</p>
+          <div className="text-center space-y-6 p-8">
+            <div className="relative inline-block">
+              <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full animate-pulse" />
+              <div className="relative bg-card border border-border rounded-2xl p-8 shadow-lg">
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-accent/30 border-t-accent mx-auto mb-4"></div>
+                <div className="space-y-2">
+                  <p className="text-foreground font-semibold text-lg">Loading Analytics</p>
+                  <p className="text-muted-foreground text-sm">Processing engagement data...</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -227,14 +235,14 @@ export default function EngagementAnalytics() {
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="container mx-auto py-8 px-4 animate-fade-in">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">Engagement Analytics</h1>
         <p className="text-muted-foreground">Track email opens, clicks, and lead scoring performance</p>
       </div>
 
       {/* Time Range Filter */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
         <Button
           variant={timeRange === 7 ? "default" : "outline"}
           onClick={() => setTimeRange(7)}
@@ -262,7 +270,7 @@ export default function EngagementAnalytics() {
       </div>
 
       {/* Metrics Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8 animate-fade-in" style={{ animationDelay: '200ms' }}>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Opens</CardTitle>
