@@ -11,7 +11,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Bell, Mail, MessageSquare, Send, TrendingDown, DollarSign, MessageCircle } from "lucide-react";
+import { Loader2, Bell, Mail, MessageSquare, Send, TrendingDown, DollarSign, MessageCircle, Brain, ArrowRight } from "lucide-react";
 
 export default function RecoveryAlertSettings() {
   const navigate = useNavigate();
@@ -194,11 +194,24 @@ export default function RecoveryAlertSettings() {
     <PageTransition>
       <Navbar />
       <div className="container mx-auto px-4 py-24 max-w-4xl">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Recovery Alert Settings</h1>
-          <p className="text-muted-foreground">
-            Configure automated alerts for conversion rate drops and negative ROI
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Recovery Alert Settings</h1>
+            <p className="text-muted-foreground">
+              Configure automated alerts for conversion rate drops and negative ROI
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate('/admin/predictive-analytics')}>
+              <Brain className="mr-2 h-4 w-4" />
+              Predictive Analytics
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/admin/alert-analytics')}>
+              <Bell className="mr-2 h-4 w-4" />
+              Alert Analytics
+            </Button>
+          </div>
         </div>
 
         <div className="space-y-6">

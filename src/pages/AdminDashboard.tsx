@@ -20,7 +20,11 @@ import {
   MessageCircle, 
   Calendar,
   Filter,
-  Trash2
+  Trash2,
+  Brain,
+  Bell,
+  BarChart3,
+  Settings
 } from "lucide-react";
 import {
   Select,
@@ -317,6 +321,65 @@ const AdminDashboard = () => {
                   ).length
                 }
               </CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+
+        {/* Quick Links */}
+        <div className="grid md:grid-cols-4 gap-6 mb-8">
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/admin/predictive-analytics')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Brain className="h-5 w-5" />
+                  Predictive Analytics
+                </CardTitle>
+              </div>
+              <CardDescription className="mt-2">
+                ML-powered forecasting to prevent alerts before they happen
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/admin/alert-analytics')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Bell className="h-5 w-5" />
+                  Alert Analytics
+                </CardTitle>
+              </div>
+              <CardDescription className="mt-2">
+                Monitor alert volume, response times, and team performance
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/admin/recovery-analytics')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Recovery Analytics
+                </CardTitle>
+              </div>
+              <CardDescription className="mt-2">
+                Track abandoned checkout recovery performance across channels
+              </CardDescription>
+            </CardHeader>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/admin/recovery-alert-settings')}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Alert Settings
+                </CardTitle>
+              </div>
+              <CardDescription className="mt-2">
+                Configure alert thresholds and notification preferences
+              </CardDescription>
             </CardHeader>
           </Card>
         </div>
