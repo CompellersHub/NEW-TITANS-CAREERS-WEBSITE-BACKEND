@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -477,6 +478,7 @@ const Testimonials = () => {
       </section>
 
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };

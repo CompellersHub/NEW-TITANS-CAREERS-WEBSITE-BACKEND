@@ -9,6 +9,7 @@ import { CourseGrid } from "@/components/courses/CourseGrid";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 import { NewsletterSection } from "@/components/NewsletterSection";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { courses } from "@/data/courses";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -135,6 +136,7 @@ const Index = () => {
         
         <CTA />
         <Footer />
+        <ScrollToTop />
       </div>
     </PageTransition>
   );

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -305,6 +306,7 @@ const About = () => {
       </section>
 
       <Footer />
+      <ScrollToTop />
       </div>
     </PageTransition>
   );
