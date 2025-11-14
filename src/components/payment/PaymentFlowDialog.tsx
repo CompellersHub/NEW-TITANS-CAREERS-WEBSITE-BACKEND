@@ -7,8 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { PaymentMethodSelector } from './PaymentMethodSelector';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2, ArrowLeft, ExternalLink } from 'lucide-react';
 
 interface PaymentFlowDialogProps {
   open: boolean;
@@ -34,17 +35,22 @@ export function PaymentFlowDialog({
 }: PaymentFlowDialogProps) {
   const [selectedMethod, setSelectedMethod] = useState<string>('');
   const [step, setStep] = useState<'select' | 'processing'>('select');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
+  const [agreedToRefund, setAgreedToRefund] = useState(false);
 
   const handleMethodSelect = (methodId: string) => {
     setSelectedMethod(methodId);
   };
 
   const handleContinue = () => {
-    if (selectedMethod) {
+    if (selectedMethod && agreedToTerms && agreedToPrivacy && agreedToRefund) {
       setStep('processing');
       onPaymentMethodSelected(selectedMethod);
     }
   };
+  
+  const canContinue = selectedMethod && agreedToTerms && agreedToPrivacy && agreedToRefund;
 
   const handleBack = () => {
     setStep('select');
@@ -77,6 +83,71 @@ export function PaymentFlowDialog({
               discount={discount}
             />
 
+            {/* Legal Agreements */}
+            <div className="space-y-4 p-6 bg-gradient-to-br from-muted/30 to-secondary/20 rounded-xl border-2 border-accent/20">
+              <h3 className="font-bold text-lg text-foreground mb-4">Before You Continue</h3>
+              
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="terms"
+                  checked={agreedToTerms}
+                  onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
+                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
+                />
+                <label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer">
+                  I agree to the{' '}
+                  <a 
+                    href="/terms-conditions" 
+                    target="_blank" 
+                    className="text-accent hover:text-gold underline font-semibold inline-flex items-center gap-1"
+                  >
+                    Terms & Conditions
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </label>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="privacy"
+                  checked={agreedToPrivacy}
+                  onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
+                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
+                />
+                <label htmlFor="privacy" className="text-sm font-medium leading-relaxed cursor-pointer">
+                  I have read and agree to the{' '}
+                  <a 
+                    href="/privacy-policy" 
+                    target="_blank" 
+                    className="text-accent hover:text-gold underline font-semibold inline-flex items-center gap-1"
+                  >
+                    Privacy Policy
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </label>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="refund"
+                  checked={agreedToRefund}
+                  onCheckedChange={(checked) => setAgreedToRefund(checked as boolean)}
+                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
+                />
+                <label htmlFor="refund" className="text-sm font-medium leading-relaxed cursor-pointer">
+                  I understand the{' '}
+                  <a 
+                    href="/refund-policy" 
+                    target="_blank" 
+                    className="text-accent hover:text-gold underline font-semibold inline-flex items-center gap-1"
+                  >
+                    Refund Policy
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </label>
+              </div>
+            </div>
+
             <div className="flex gap-4 pt-4">
               <Button
                 variant="outline"
@@ -88,8 +159,8 @@ export function PaymentFlowDialog({
               </Button>
               <Button
                 onClick={handleContinue}
-                disabled={!selectedMethod || isProcessing}
-                className="flex-1 h-12 font-bold text-base bg-gradient-to-r from-accent to-gold hover:from-accent/90 hover:to-gold/90 text-primary shadow-lg hover:shadow-xl transition-all"
+                disabled={!canContinue || isProcessing}
+                className="flex-1 h-12 font-bold text-base bg-gradient-to-r from-accent to-gold hover:from-accent/90 hover:to-gold/90 text-primary shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isProcessing ? (
                   <>

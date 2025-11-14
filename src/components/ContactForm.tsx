@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, User, Building2, MessageSquare } from "lucide-react";
+import { Mail, User, Building2, MessageSquare, ExternalLink } from "lucide-react";
 import { trackFormSubmission, trackLead } from "@/lib/analytics";
+import { PhoneInput } from "@/components/forms/PhoneInput";
 import { z } from "zod";
 
 const contactFormSchema = z.object({
@@ -20,25 +22,24 @@ const contactFormSchema = z.object({
     .trim()
     .min(1, "Company name is required")
     .max(100, "Company name must be less than 100 characters"),
-  phone: z.string()
-    .trim()
-    .max(20, "Phone number must be less than 20 characters")
-    .optional()
-    .or(z.literal("")),
   whatsapp: z.string()
     .trim()
-    .max(20, "WhatsApp number must be less than 20 characters")
-    .optional()
-    .or(z.literal("")),
+    .min(8, "WhatsApp number is required")
+    .max(20, "WhatsApp number must be less than 20 characters"),
   message: z.string()
     .trim()
     .min(1, "Message is required")
     .max(1000, "Message must be less than 1000 characters"),
+  agreedToPrivacy: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the privacy policy"
+  })
 });
 
 export const ContactForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,9 +51,9 @@ export const ContactForm = () => {
         name: formData.get('name') as string,
         email: formData.get('email') as string,
         company: formData.get('company') as string,
-        phone: formData.get('phone') as string || "",
-        whatsapp: formData.get('whatsapp') as string || "",
+        whatsapp: whatsappNumber,
         message: formData.get('message') as string,
+        agreedToPrivacy,
       };
       
       // Validate input data
@@ -74,12 +75,7 @@ export const ContactForm = () => {
       // Store validated user info for abandoned checkout tracking
       localStorage.setItem('userEmail', data.email);
       localStorage.setItem('userName', data.name);
-      if (data.phone) {
-        localStorage.setItem('userPhone', data.phone);
-      }
-      if (data.whatsapp) {
-        localStorage.setItem('userWhatsApp', data.whatsapp);
-      }
+      localStorage.setItem('userWhatsApp', data.whatsapp);
       
       // Track form submission
       trackFormSubmission('contact_form', {
@@ -103,6 +99,8 @@ export const ContactForm = () => {
       
       setIsSubmitting(false);
       (e.target as HTMLFormElement).reset();
+      setWhatsappNumber('');
+      setAgreedToPrivacy(false);
     } catch (error) {
       console.error("Form submission error:", error);
       toast({
@@ -171,34 +169,14 @@ export const ContactForm = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
-                  <Mail className="w-4 h-4 text-primary" />
-                  Phone Number (Optional)
-                </label>
-                <Input 
-                  name="phone"
-                  type="tel" 
-                  placeholder="+44 7123 456789" 
-                  className="h-12"
+              <div>
+                <PhoneInput
+                  value={whatsappNumber}
+                  onChange={setWhatsappNumber}
+                  label="WhatsApp Number"
+                  required
                 />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
-                <MessageSquare className="w-4 h-4 text-primary" />
-                WhatsApp Number (Optional)
-              </label>
-              <Input 
-                name="whatsapp"
-                type="tel" 
-                placeholder="+44 7123 456789" 
-                className="h-12"
-              />
-              <p className="text-xs text-muted-foreground">
-                Get course updates and exclusive offers on WhatsApp
-              </p>
             </div>
             
             <div className="space-y-2">
@@ -214,19 +192,36 @@ export const ContactForm = () => {
                 className="resize-none"
               />
             </div>
+
+            {/* Privacy Policy Agreement */}
+            <div className="flex items-start gap-3 p-4 bg-gradient-to-br from-muted/30 to-secondary/20 rounded-xl border-2 border-accent/20">
+              <Checkbox
+                id="privacy"
+                checked={agreedToPrivacy}
+                onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
+                className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
+              />
+              <label htmlFor="privacy" className="text-sm font-medium leading-relaxed cursor-pointer">
+                I have read and agree to the{' '}
+                <a 
+                  href="/privacy-policy" 
+                  target="_blank" 
+                  className="text-accent hover:text-gold underline font-semibold inline-flex items-center gap-1"
+                >
+                  Privacy Policy
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </label>
+            </div>
             
             <Button 
               type="submit" 
               size="lg" 
-              className="w-full text-lg py-6 shadow-lg hover:shadow-xl transition-all"
-              disabled={isSubmitting}
+              className="w-full text-lg py-6 bg-gradient-to-r from-accent to-gold hover:from-accent/90 hover:to-gold/90 text-primary shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+              disabled={isSubmitting || !agreedToPrivacy}
             >
               {isSubmitting ? "Sending..." : "Request Demo"}
             </Button>
-            
-            <p className="font-sans text-center text-sm text-muted-foreground">
-              By submitting this form, you agree to our privacy policy and terms of service.
-            </p>
           </form>
         </div>
       </div>
