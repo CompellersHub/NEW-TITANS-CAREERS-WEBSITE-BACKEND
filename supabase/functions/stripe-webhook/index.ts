@@ -101,6 +101,19 @@ serve(async (req) => {
         }
       }
 
+      // Update payment intent status
+      const paymentIntentId = session.metadata?.paymentIntentId;
+      if (paymentIntentId) {
+        await supabase
+          .from('payment_intents')
+          .update({
+            payment_status: 'completed',
+            completed_at: new Date().toISOString(),
+            payment_provider_reference: session.id
+          })
+          .eq('id', paymentIntentId);
+      }
+
       const courseTitle2 = session.metadata?.courseTitle || 'Your Course';
       const courseSlug2 = session.metadata?.courseSlug || '';
       const price = session.amount_total ? session.amount_total / 100 : 0;

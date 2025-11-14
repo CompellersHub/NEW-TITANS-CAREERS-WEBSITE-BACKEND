@@ -108,6 +108,39 @@ serve(async (req) => {
       userEmail
     });
 
+    // Create payment intent in database first
+    const { createClient } = await import('https://esm.sh/@supabase/supabase-js@2.81.1');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const { data: paymentIntent, error: intentError } = await supabase
+      .from('payment_intents')
+      .insert({
+        customer_email: userEmail || '',
+        course_slug: courseSlug,
+        course_title: courseTitle,
+        original_price: price,
+        final_price: finalPrice,
+        voucher_code: voucherData?.code || null,
+        payment_method: 'stripe',
+        payment_status: 'pending',
+        metadata: voucherData ? {
+          voucherId: voucherData.id,
+          voucherCode: voucherData.code,
+          discountAmount: discountAmount
+        } : {}
+      })
+      .select()
+      .single();
+
+    if (intentError) {
+      console.error('Error creating payment intent:', intentError);
+      throw new Error('Failed to create payment intent');
+    }
+
+    console.log('Payment intent created:', paymentIntent.id);
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -131,6 +164,7 @@ serve(async (req) => {
       metadata: {
         courseSlug,
         courseTitle,
+        paymentIntentId: paymentIntent.id,
         ...(voucherData && {
           voucherId: voucherData.id,
           voucherCode: voucherData.code,
@@ -140,6 +174,12 @@ serve(async (req) => {
         })
       },
     });
+
+    // Update payment intent with Stripe session ID
+    await supabase
+      .from('payment_intents')
+      .update({ provider_session_id: session.id })
+      .eq('id', paymentIntent.id);
 
     console.log('Checkout session created successfully:', {
       sessionId: session.id,

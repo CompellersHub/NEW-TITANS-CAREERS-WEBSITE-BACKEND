@@ -120,6 +120,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/prediction-accuracy" element={<PredictionAccuracy />} />
           <Route path="/admin/email-engagement" element={<EmailEngagementDashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
