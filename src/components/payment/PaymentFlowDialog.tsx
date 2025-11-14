@@ -83,6 +83,13 @@ export function PaymentFlowDialog({
               discount={discount}
             />
 
+            {(agreedToTerms && agreedToPrivacy && agreedToRefund && !selectedMethod) && (
+              <div className="text-sm font-semibold text-destructive/90 bg-destructive/5 border border-destructive/20 rounded-md p-3">
+                Please select a payment method above to continue.
+              </div>
+            )}
+
+
             {/* Legal Agreements */}
             <div className="space-y-4 p-6 bg-gradient-to-br from-muted/30 to-secondary/20 rounded-xl border-2 border-accent/20">
               <h3 className="font-bold text-lg text-foreground mb-4">Before You Continue</h3>
