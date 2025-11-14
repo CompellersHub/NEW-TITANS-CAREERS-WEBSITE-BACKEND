@@ -25,6 +25,9 @@ serve(async (req) => {
       email1_sent: 0,
       email2_sent: 0,
       email3_sent: 0,
+      sms1_sent: 0,
+      sms2_sent: 0,
+      sms3_sent: 0,
       errors: [] as string[],
     };
 
@@ -47,19 +50,26 @@ serve(async (req) => {
         const sessionAge = now.getTime() - new Date(session.created_at).getTime();
         const hoursOld = sessionAge / (1000 * 60 * 60);
 
-        // Check which emails have been sent
+        // Check which emails and SMS have been sent
         const { data: sentEmails } = await supabase
           .from("checkout_abandonment_emails")
           .select("email_sequence_number")
           .eq("checkout_session_id", session.id);
 
-        const sentSequences = new Set(sentEmails?.map(e => e.email_sequence_number) || []);
+        const { data: sentSMS } = await supabase
+          .from("checkout_abandonment_sms")
+          .select("sms_sequence_number")
+          .eq("checkout_session_id", session.id);
+
+        const sentEmailSequences = new Set(sentEmails?.map(e => e.email_sequence_number) || []);
+        const sentSMSSequences = new Set(sentSMS?.map(s => s.sms_sequence_number) || []);
 
         let emailToSend = null;
+        let smsToSend = null;
         let discountCode = null;
 
         // Email 1: After 1 hour - Gentle reminder
-        if (hoursOld >= 1 && !sentSequences.has(1)) {
+        if (hoursOld >= 1 && !sentEmailSequences.has(1)) {
           emailToSend = {
             sequence: 1,
             type: "reminder",
@@ -88,9 +98,18 @@ serve(async (req) => {
               </div>
             `,
           };
+          
+          // SMS 1: After 1 hour
+          if (session.phone && !sentSMSSequences.has(1)) {
+            smsToSend = {
+              sequence: 1,
+              type: "reminder",
+              content: `Hi ${session.name || "there"}! You left ${session.course_title} in your cart. Complete your enrollment now: https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+            };
+          }
         }
         // Email 2: After 24 hours - 10% discount offer
-        else if (hoursOld >= 24 && !sentSequences.has(2)) {
+        else if (hoursOld >= 24 && !sentEmailSequences.has(2)) {
           discountCode = "COMEBACK10";
           emailToSend = {
             sequence: 2,
@@ -126,7 +145,7 @@ serve(async (req) => {
           };
         }
         // Email 3: After 72 hours - Final urgency + 15% discount
-        else if (hoursOld >= 72 && !sentSequences.has(3)) {
+        else if (hoursOld >= 72 && !sentEmailSequences.has(3)) {
           discountCode = "LASTCHANCE15";
           emailToSend = {
             sequence: 3,
@@ -166,8 +185,18 @@ serve(async (req) => {
               </div>
             `,
           };
+          
+          // SMS 3: After 72 hours
+          if (session.phone && !sentSMSSequences.has(3)) {
+            smsToSend = {
+              sequence: 3,
+              type: "urgency",
+              content: `⏰ LAST CHANCE! 15% OFF ${session.course_title} with code LASTCHANCE15. Expires tonight: https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+            };
+          }
         }
 
+        // Send Email
         if (emailToSend) {
           // Send email via Brevo
           const brevoResponse = await fetch("https://api.brevo.com/v3/smtp/email", {

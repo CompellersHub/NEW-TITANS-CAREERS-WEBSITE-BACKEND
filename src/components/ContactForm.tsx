@@ -19,12 +19,16 @@ export const ContactForm = () => {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       company: formData.get('company') as string,
+      phone: formData.get('phone') as string,
       message: formData.get('message') as string,
     };
     
     // Store user info for abandoned checkout tracking
     localStorage.setItem('userEmail', data.email);
     localStorage.setItem('userName', data.name);
+    if (data.phone) {
+      localStorage.setItem('userPhone', data.phone);
+    }
     
     // Track form submission
     trackFormSubmission('contact_form', {
@@ -92,18 +96,33 @@ export const ContactForm = () => {
                 />
               </div>
             </div>
-            
-            <div className="space-y-2">
-              <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
-                <Building2 className="w-4 h-4 text-primary" />
-                Company Name
-              </label>
-              <Input 
-                name="company"
-                placeholder="Your Company" 
-                required 
-                className="h-12"
-              />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
+                  <Building2 className="w-4 h-4 text-primary" />
+                  Company Name
+                </label>
+                <Input 
+                  name="company"
+                  placeholder="Your Company" 
+                  required 
+                  className="h-12"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="font-sans text-sm font-medium flex items-center gap-2 text-foreground">
+                  <Mail className="w-4 h-4 text-primary" />
+                  Phone Number (Optional)
+                </label>
+                <Input 
+                  name="phone"
+                  type="tel" 
+                  placeholder="+44 7123 456789" 
+                  className="h-12"
+                />
+              </div>
             </div>
             
             <div className="space-y-2">
