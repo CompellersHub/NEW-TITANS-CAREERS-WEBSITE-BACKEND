@@ -9,7 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PaymentMethodSelector } from './PaymentMethodSelector';
-import { Loader2, ArrowLeft, ExternalLink } from 'lucide-react';
+import { paymentMethods } from './PaymentMethodCard';
+import { Loader2, ArrowLeft, ArrowRight, ExternalLink, Check } from 'lucide-react';
 
 interface PaymentFlowDialogProps {
   open: boolean;
@@ -34,7 +35,7 @@ export function PaymentFlowDialog({
   isProcessing = false
 }: PaymentFlowDialogProps) {
   const [selectedMethod, setSelectedMethod] = useState<string>('');
-  const [step, setStep] = useState<'select' | 'processing'>('select');
+  const [step, setStep] = useState<'select' | 'review' | 'processing'>('select');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
   const [agreedToRefund, setAgreedToRefund] = useState(false);
@@ -45,16 +46,27 @@ export function PaymentFlowDialog({
 
   const handleContinue = () => {
     if (selectedMethod && agreedToTerms && agreedToPrivacy && agreedToRefund) {
-      setStep('processing');
-      onPaymentMethodSelected(selectedMethod);
+      setStep('review');
     }
+  };
+
+  const handleConfirmPayment = () => {
+    setStep('processing');
+    onPaymentMethodSelected(selectedMethod);
   };
   
   const canContinue = selectedMethod && agreedToTerms && agreedToPrivacy && agreedToRefund;
 
   const handleBack = () => {
+    if (step === 'review') {
+      setStep('select');
+    } else if (step === 'processing') {
+      setStep('review');
+    }
+  };
+
+  const handleChangeMethod = () => {
     setStep('select');
-    setSelectedMethod('');
   };
 
   const finalPrice = price - discount;
@@ -64,11 +76,13 @@ export function PaymentFlowDialog({
       <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background via-background to-accent/5">
         <DialogHeader className="border-b-2 border-accent/20 pb-4">
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
-            {step === 'select' ? 'Choose Your Payment Method' : 'Processing Payment'}
+            {step === 'select' ? 'Choose Your Payment Method' : step === 'review' ? 'Review Your Order' : 'Processing Payment'}
           </DialogTitle>
           <DialogDescription className="text-base font-medium">
             {step === 'select' 
               ? `Select how you'd like to pay for ${courseTitle}`
+              : step === 'review'
+              ? 'Please review your order details before proceeding'
               : 'Please wait while we process your payment...'
             }
           </DialogDescription>
@@ -172,7 +186,10 @@ export function PaymentFlowDialog({
                     Processing...
                   </>
                 ) : (
-                  `Continue - £${finalPrice.toFixed(2)}`
+                  <>
+                    Review Order
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </>
                 )}
               </Button>
             </div>
@@ -184,6 +201,119 @@ export function PaymentFlowDialog({
                 </p>
               </div>
             )}
+          </div>
+        ) : step === 'review' ? (
+          <div className="space-y-6 pt-4">
+            {/* Selected Payment Method Summary */}
+            <div className="p-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl border-2 border-accent/20">
+              <h3 className="font-bold text-lg text-foreground mb-4 flex items-center gap-2">
+                <Check className="w-5 h-5 text-accent" />
+                Selected Payment Method
+              </h3>
+              {(() => {
+                const method = paymentMethods.find(m => m.id === selectedMethod);
+                if (!method) return null;
+                return (
+                  <div className="flex items-start gap-4 p-4 bg-card rounded-lg border border-accent/30">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-gold flex items-center justify-center flex-shrink-0">
+                      {method.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-base text-foreground">{method.name}</h4>
+                      <p className="text-sm text-muted-foreground">{method.tagline}</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleChangeMethod}
+                      className="border-2 border-accent/30 hover:border-accent font-semibold"
+                    >
+                      Change
+                    </Button>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Order Summary */}
+            <div className="p-6 bg-gradient-to-br from-muted/30 to-secondary/20 rounded-xl border-2 border-accent/20">
+              <h3 className="font-bold text-lg text-foreground mb-4">Order Summary</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-muted-foreground">Course:</span>
+                  <span className="text-sm font-bold text-foreground">{courseTitle}</span>
+                </div>
+                {discount > 0 && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-muted-foreground">Original Price:</span>
+                      <span className="text-sm line-through text-muted-foreground">£{price.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-medium text-muted-foreground">Discount:</span>
+                      <span className="text-sm font-bold text-success">-£{discount.toFixed(2)}</span>
+                    </div>
+                  </>
+                )}
+                <div className="flex justify-between items-center pt-3 border-t-2 border-accent/30">
+                  <span className="font-bold text-lg">Total Amount:</span>
+                  <span className="text-2xl font-bold bg-gradient-to-r from-accent to-gold bg-clip-text text-transparent">
+                    £{finalPrice.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Legal Agreements Confirmation */}
+            <div className="p-6 bg-gradient-to-br from-success/5 to-success/10 rounded-xl border-2 border-success/20">
+              <h3 className="font-bold text-base text-foreground mb-3 flex items-center gap-2">
+                <Check className="w-5 h-5 text-success" />
+                Legal Agreements Confirmed
+              </h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-success" />
+                  Terms & Conditions accepted
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-success" />
+                  Privacy Policy accepted
+                </li>
+                <li className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-success" />
+                  Refund Policy understood
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <Button
+                variant="outline"
+                onClick={handleBack}
+                disabled={isProcessing}
+                className="flex-1 h-12 font-semibold border-2 hover:bg-muted"
+              >
+                <ArrowLeft className="mr-2 h-5 w-5" />
+                Back
+              </Button>
+              <Button
+                onClick={handleConfirmPayment}
+                disabled={isProcessing}
+                className="flex-1 h-12 font-bold text-base bg-gradient-to-r from-accent to-gold hover:from-accent/90 hover:to-gold/90 text-primary shadow-lg hover:shadow-xl transition-all"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    Confirm & Pay
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="py-16 text-center">
