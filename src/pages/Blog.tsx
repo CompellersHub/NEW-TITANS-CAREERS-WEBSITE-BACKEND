@@ -10,6 +10,7 @@ import { BookOpen, Clock, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { SEO } from "@/components/SEO";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -54,6 +55,11 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Career Insights & Training Tips Blog"
+        description="Practical career advice, industry insights, and expert tips to help you break into high-paying professional roles. Learn about AML, data analysis, cybersecurity, and more."
+        keywords="career blog, professional development tips, AML insights, data analysis advice, cybersecurity news, training tips, career change advice"
+      />
       <Navbar />
       
       {/* Hero Section */}

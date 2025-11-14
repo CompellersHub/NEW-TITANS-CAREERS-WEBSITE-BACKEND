@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, Award, Heart, TrendingUp, Zap, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AboutPageSkeleton } from "@/components/admin/AboutPageSkeleton";
+import { SEO } from "@/components/SEO";
+import { organizationSchema } from "@/lib/structuredData";
 
 const About = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -75,6 +77,12 @@ const About = () => {
 
   return (
     <PageTransition variant="slide">
+      <SEO 
+        title="About Titans Training Group - Our Mission & Story"
+        description="Learn about Titans Training Group's mission to transform careers through practical training. Meet our team and discover how we've helped 300+ people switch careers with an 85% job placement rate."
+        keywords="about titans training, training company, career transformation, professional training team, practical education"
+        structuredData={organizationSchema}
+      />
       <div className="min-h-screen bg-background">
         <Navbar />
       

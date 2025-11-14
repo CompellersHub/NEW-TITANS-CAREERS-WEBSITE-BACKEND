@@ -22,6 +22,7 @@ import { SocialProofNotifications } from "@/components/marketing/SocialProofNoti
 import { ContactPageSkeleton } from "@/components/contact/ContactPageSkeleton";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
+import { SEO } from "@/components/SEO";
 
 const contactFormSchema = z.object({
   name: z.string()
@@ -182,6 +183,11 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0" key={refreshKey}>
+      <SEO 
+        title="Contact Us - Get in Touch with Titans Training Group"
+        description="Have questions about our training courses? Contact Titans Training Group via email, phone, or WhatsApp. We're here to help you start your career transformation journey."
+        keywords="contact titans training, training enquiries, course questions, career advice contact, training support"
+      />
       <Navbar />
       
       {/* Pull-to-Refresh Indicator */}

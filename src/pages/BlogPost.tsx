@@ -8,6 +8,8 @@ import { Calendar, Clock, ArrowLeft, Share2, BookOpen } from "lucide-react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import { SEO } from "@/components/SEO";
+import { generateBlogPostSchema } from "@/lib/structuredData";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -90,6 +92,22 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title={post.title}
+        description={post.excerpt}
+        type="article"
+        keywords={`${post.category}, ${post.title}, career advice, professional development`}
+        author={post.author.name}
+        publishedTime={post.publishedAt}
+        structuredData={generateBlogPostSchema({
+          title: post.title,
+          description: post.excerpt,
+          image: post.featuredImage,
+          author: post.author.name,
+          publishedDate: post.publishedAt,
+          url: typeof window !== 'undefined' ? window.location.href : ''
+        })}
+      />
       <Navbar />
       
       {/* Article Header */}

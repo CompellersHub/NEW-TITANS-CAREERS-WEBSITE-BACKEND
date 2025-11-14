@@ -21,6 +21,8 @@ import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { HomePageSkeleton } from "@/components/homepage/HomePageSkeleton";
 import { Sparkles, Download } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { organizationSchema } from "@/lib/structuredData";
 
 const Index = () => {
   const coursesArray = Object.values(courses);
@@ -46,6 +48,12 @@ const Index = () => {
 
   return (
     <PageTransition variant="default">
+      <SEO 
+        title="Titans Training Group - Professional Training Courses"
+        description="Transform your career with practical training courses from Titans Training Group. Learn AML/KYC, Data Analysis, Cybersecurity, and more with hands-on projects. 85% job placement rate."
+        keywords="training courses, professional development, career change, AML training, KYC certification, data analysis courses, cybersecurity training, compliance training, tech training"
+        structuredData={organizationSchema}
+      />
       <div className="min-h-screen bg-background">
         <Navbar />
         

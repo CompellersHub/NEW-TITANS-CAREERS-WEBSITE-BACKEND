@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Clock, BookOpen, Award, Users, CheckCircle } from "lucide-react";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
+import { SEO } from "@/components/SEO";
+import { generateCourseSchema } from "@/lib/structuredData";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -91,6 +93,18 @@ export default function CourseDetail() {
 
   return (
     <PageTransition variant="slideUp">
+      <SEO 
+        title={`${course.title} - Professional Training Course`}
+        description={course.description}
+        type="product"
+        keywords={`${course.title}, ${course.category}, professional training, certification, ${course.tools.join(', ')}`}
+        structuredData={generateCourseSchema({
+          name: course.title,
+          description: course.description,
+          price: course.price,
+          duration: course.duration
+        })}
+      />
       <div className="min-h-screen bg-background">
         <Navbar />
         
