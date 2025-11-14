@@ -57,6 +57,9 @@ import AlertAnalytics from "./pages/AlertAnalytics";
 import PredictiveAnalytics from "./pages/PredictiveAnalytics";
 import PredictionAccuracy from "./pages/PredictionAccuracy";
 import EmailEngagementDashboard from "./pages/EmailEngagementDashboard";
+import BankTransferVerification from "./pages/admin/BankTransferVerification";
+import PaymentAnalytics from "./pages/admin/PaymentAnalytics";
+import PaymentManagement from "./pages/admin/PaymentManagement";
 
 const queryClient = new QueryClient();
 
@@ -119,6 +122,9 @@ const AnimatedRoutes = () => {
           <Route path="/admin/predictive-analytics" element={<PredictiveAnalytics />} />
           <Route path="/admin/prediction-accuracy" element={<PredictionAccuracy />} />
           <Route path="/admin/email-engagement" element={<EmailEngagementDashboard />} />
+          <Route path="/admin/bank-transfers" element={<BankTransferVerification />} />
+          <Route path="/admin/payment-analytics" element={<PaymentAnalytics />} />
+          <Route path="/admin/payment-management" element={<PaymentManagement />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="*" element={<NotFound />} />
