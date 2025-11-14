@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { generateBlogPostSchema } from "@/lib/structuredData";
 import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar";
+import { SocialShareButtons } from "@/components/blog/SocialShareButtons";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -94,6 +95,10 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen bg-background">
       <ReadingProgressBar readTime={post.readTime} />
+      <SocialShareButtons 
+        title={post.title}
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+      />
       <SEO
         title={post.title}
         description={post.excerpt}
