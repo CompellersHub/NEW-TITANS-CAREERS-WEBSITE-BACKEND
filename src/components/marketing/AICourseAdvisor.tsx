@@ -106,6 +106,18 @@ export function AICourseAdvisor() {
 
   const loadOrCreateConversation = async () => {
     try {
+      // Set session context for RLS
+      await sb.rpc('set_config', {
+        setting: 'app.session_id',
+        value: sessionId
+      });
+      if (emailCaptured && email) {
+        await sb.rpc('set_config', {
+          setting: 'app.user_email',
+          value: email
+        });
+      }
+
       // Check if conversation exists for this session
       const { data: existing } = await sb
         .from("ai_advisor_conversations")
@@ -139,6 +151,18 @@ export function AICourseAdvisor() {
 
   const loadMessages = async (convId: string) => {
     try {
+      // Set session context for RLS
+      await sb.rpc('set_config', {
+        setting: 'app.session_id',
+        value: sessionId
+      });
+      if (emailCaptured && email) {
+        await sb.rpc('set_config', {
+          setting: 'app.user_email',
+          value: email
+        });
+      }
+
       const { data, error } = await sb
         .from("ai_advisor_messages")
         .select("role, content")
@@ -158,6 +182,16 @@ export function AICourseAdvisor() {
   const loadConversationHistory = async (userEmail: string) => {
     setIsLoadingHistory(true);
     try {
+      // Set session context for RLS
+      await sb.rpc('set_config', {
+        setting: 'app.session_id',
+        value: sessionId
+      });
+      await sb.rpc('set_config', {
+        setting: 'app.user_email',
+        value: userEmail
+      });
+
       const { data, error } = await sb
         .from("ai_advisor_conversations")
         .select(`
@@ -254,6 +288,18 @@ export function AICourseAdvisor() {
       localStorage.setItem("ai_advisor_session_id", newSessionId);
       setSessionId(newSessionId);
 
+      // Set session context for RLS
+      await sb.rpc('set_config', {
+        setting: 'app.session_id',
+        value: newSessionId
+      });
+      if (emailCaptured && email) {
+        await sb.rpc('set_config', {
+          setting: 'app.user_email',
+          value: email
+        });
+      }
+
       const { data: newConv, error } = await sb
         .from("ai_advisor_conversations")
         .insert({
@@ -288,6 +334,18 @@ export function AICourseAdvisor() {
     if (!conversationId) return;
 
     try {
+      // Set session context for RLS
+      await sb.rpc('set_config', {
+        setting: 'app.session_id',
+        value: sessionId
+      });
+      if (emailCaptured && email) {
+        await sb.rpc('set_config', {
+          setting: 'app.user_email',
+          value: email
+        });
+      }
+
       await sb.from("ai_advisor_messages").insert({
         conversation_id: conversationId,
         role: message.role,

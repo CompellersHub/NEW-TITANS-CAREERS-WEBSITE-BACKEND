@@ -2674,6 +2674,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      set_config: {
+        Args: { setting: string; value: string }
+        Returns: undefined
+      }
       update_all_engagement_scores: { Args: never; Returns: undefined }
       update_lead_score: {
         Args: { p_behavior: string; p_email: string; p_score_change: number }
