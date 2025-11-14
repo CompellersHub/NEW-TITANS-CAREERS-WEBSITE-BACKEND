@@ -83,15 +83,7 @@ export function PaymentMethodCard({ method, selected, onSelect, price }: Payment
         </div>
       </div>
 
-      {/* Monthly Payment Preview for Payl8r */}
-      {method.monthlyFrom && price && (
-        <div className="mb-4 p-4 bg-gradient-to-br from-accent/10 to-gold/10 rounded-xl border border-accent/20">
-          <p className="text-sm font-medium text-foreground">
-            From <span className="text-2xl font-bold bg-gradient-to-r from-accent to-gold bg-clip-text text-transparent">{method.monthlyFrom}</span>
-          </p>
-          <p className="text-xs text-muted-foreground font-medium">with 0% APR available</p>
-        </div>
-      )}
+      {/* Removed monthly payment preview as per requirements */}
 
       {/* Benefits */}
       <ul className="space-y-2.5 mb-4">

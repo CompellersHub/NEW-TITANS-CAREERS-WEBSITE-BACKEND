@@ -27,9 +27,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log('Sending bank transfer instructions to:', customerEmail);
 
-    const accountName = Deno.env.get("BANK_TRANSFER_ACCOUNT_NAME") || "Titans Corporate Training Ltd";
-    const sortCode = Deno.env.get("BANK_TRANSFER_SORT_CODE") || "12-34-56";
-    const accountNumber = Deno.env.get("BANK_TRANSFER_ACCOUNT_NUMBER") || "12345678";
+    const accountName = Deno.env.get("BANK_ACCOUNT_NAME") || "Titans Careers Limited";
+    const sortCode = Deno.env.get("BANK_SORT_CODE") || "20-11-43";
+    const accountNumber = Deno.env.get("BANK_ACCOUNT_NUMBER") || "53818284";
 
     const expiryDate = new Date(expiresAt).toLocaleDateString('en-GB', {
       day: 'numeric',
