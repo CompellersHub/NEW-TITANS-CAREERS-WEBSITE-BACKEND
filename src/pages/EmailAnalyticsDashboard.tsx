@@ -3,12 +3,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { Mail, TrendingUp, Users, MousePointerClick, Loader2 } from "lucide-react";
+import { Mail, TrendingUp, Users, MousePointerClick, Loader2, Inbox } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
 import { CampaignAnalyticsSkeleton } from "@/components/skeletons/CampaignAnalyticsSkeleton";
+import { EmptyState } from "@/components/error/EmptyState";
 
 interface CampaignStats {
   totalCampaigns: number;
@@ -335,7 +336,21 @@ export default function EmailAnalyticsDashboard() {
                 </div>
               ))}
               {campaigns.length === 0 && (
-                <p className="text-center text-muted-foreground py-8">No campaigns sent yet</p>
+                <EmptyState
+                  icon={Inbox}
+                  title="No Campaigns Sent"
+                  description="Your campaign history will appear here once you start sending emails to your subscribers."
+                >
+                  <div className="text-sm text-muted-foreground space-y-2 text-left">
+                    <p className="font-semibold">Campaign features include:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Newsletter broadcasts</li>
+                      <li>Automated digest emails</li>
+                      <li>Discussion notifications</li>
+                      <li>Targeted campaigns</li>
+                    </ul>
+                  </div>
+                </EmptyState>
               )}
             </div>
           </CardContent>

@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Calendar, TrendingUp, MousePointer, Users, Mail, Award } from "lucide-react";
+import { Calendar, TrendingUp, MousePointer, Users, Mail, Award, Inbox } from "lucide-react";
 import { format, subDays, startOfDay, endOfDay } from "date-fns";
 import { AnalyticsDashboardSkeleton } from "@/components/skeletons/AnalyticsDashboardSkeleton";
+import { EmptyState } from "@/components/error/EmptyState";
 
 interface EngagementMetrics {
   totalOpens: number;
@@ -361,7 +362,24 @@ export default function EngagementAnalytics() {
               <CardTitle>Top Performers</CardTitle>
               <CardDescription>Leads with highest engagement scores</CardDescription>
             </CardHeader>
-            <CardContent>
+          <CardContent>
+            {topPerformers.length === 0 ? (
+              <EmptyState
+                icon={Users}
+                title="No Engagement Data"
+                description="User engagement data will appear here once your users start interacting with emails and notifications."
+              >
+                <div className="text-sm text-muted-foreground space-y-2 text-left">
+                  <p className="font-semibold">Tracked interactions:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Email opens and clicks</li>
+                    <li>Link engagement</li>
+                    <li>Discussion participation</li>
+                    <li>Lead scoring activities</li>
+                  </ul>
+                </div>
+              </EmptyState>
+            ) : (
               <div className="space-y-4">
                 {topPerformers.map((performer, index) => (
                   <div
@@ -391,11 +409,12 @@ export default function EngagementAnalytics() {
                       }`}>
                         {performer.status}
                       </span>
-                    </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
+                </div>
+              ))}
+            </div>
+            )}
+          </CardContent>
           </Card>
         </TabsContent>
       </Tabs>

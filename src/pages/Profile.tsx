@@ -11,13 +11,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Loader2, User, GraduationCap, Settings, Save, Award } from "lucide-react";
+import { Loader2, User, GraduationCap, Settings, Save, Award, BookOpen, Trophy } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { CertificateView } from "@/components/course/CertificateView";
 import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
 import { ProfileSkeleton } from "@/components/skeletons/ProfileSkeleton";
+import { EmptyState } from "@/components/error/EmptyState";
 
 interface Profile {
   id: string;
@@ -314,13 +315,16 @@ const Profile = () => {
                   </CardHeader>
                   <CardContent>
                     {enrollments.length === 0 ? (
-                      <div className="text-center py-8">
-                        <GraduationCap className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <p className="text-muted-foreground mb-4">No courses purchased yet</p>
-                        <Button onClick={() => navigate("/courses")}>
-                          Browse Courses
-                        </Button>
-                      </div>
+                      <EmptyState
+                        icon={BookOpen}
+                        title="No Courses Yet"
+                        description="You haven't enrolled in any courses. Browse our catalog to start learning new skills today."
+                        action={{
+                          label: "Browse Courses",
+                          onClick: () => navigate("/courses"),
+                          variant: "default"
+                        }}
+                      />
                     ) : (
                       <div className="space-y-4">
                         {enrollments.map((enrollment) => (
@@ -359,13 +363,28 @@ const Profile = () => {
                   </CardHeader>
                   <CardContent>
                     {certificates.length === 0 ? (
-                      <div className="text-center py-8">
-                        <Award className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                        <p className="text-muted-foreground mb-4">No certificates earned yet</p>
-                        <p className="text-sm text-muted-foreground">
-                          Complete a course to earn your first certificate
-                        </p>
-                      </div>
+                      <EmptyState
+                        icon={Trophy}
+                        title="No Certificates Yet"
+                        description="Complete courses to earn certificates and showcase your achievements."
+                        action={{
+                          label: "View My Courses",
+                          onClick: () => {
+                            const coursesTab = document.querySelector('[value="courses"]') as HTMLElement;
+                            coursesTab?.click();
+                          },
+                          variant: "default"
+                        }}
+                      >
+                        <div className="text-sm text-muted-foreground space-y-2 text-left">
+                          <p className="font-semibold">Earn certificates by:</p>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Completing all course modules</li>
+                            <li>Passing final assessments</li>
+                            <li>Meeting course requirements</li>
+                          </ul>
+                        </div>
+                      </EmptyState>
                     ) : (
                       <div className="space-y-6">
                         {certificates.map((cert) => (
