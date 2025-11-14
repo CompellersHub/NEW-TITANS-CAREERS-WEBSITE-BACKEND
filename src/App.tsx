@@ -55,6 +55,7 @@ import RecoveryAlertSettings from "./pages/RecoveryAlertSettings";
 import AlertAnalytics from "./pages/AlertAnalytics";
 import PredictiveAnalytics from "./pages/PredictiveAnalytics";
 import PredictionAccuracy from "./pages/PredictionAccuracy";
+import EmailEngagementDashboard from "./pages/EmailEngagementDashboard";
 
 const queryClient = new QueryClient();
 
@@ -116,6 +117,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/alert-analytics" element={<AlertAnalytics />} />
           <Route path="/admin/predictive-analytics" element={<PredictiveAnalytics />} />
           <Route path="/admin/prediction-accuracy" element={<PredictionAccuracy />} />
+          <Route path="/admin/email-engagement" element={<EmailEngagementDashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
       </Routes>
