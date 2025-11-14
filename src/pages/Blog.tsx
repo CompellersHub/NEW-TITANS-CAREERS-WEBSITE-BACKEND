@@ -2,20 +2,25 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { BlogGrid } from "@/components/blog/BlogGrid";
+import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { blogPosts } from "@/data/blogPosts";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
+  const isMobile = useIsMobile();
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   // Simulate loading state for data fetching
   useEffect(() => {
@@ -38,8 +43,9 @@ const Blog = () => {
     ? blogPosts 
     : blogPosts.filter(post => post.category === selectedCategory);
 
+  // Pagination for desktop
   const {
-    currentItems,
+    currentItems: paginatedItems,
     currentPage,
     totalPages,
     goToPage,
@@ -49,6 +55,37 @@ const Blog = () => {
     endIndex,
     totalItems,
   } = usePagination({ items: filteredPosts, itemsPerPage: 9 });
+
+  // Infinite scroll for mobile
+  const {
+    displayedItems: infiniteScrollItems,
+    hasMore,
+    isLoadingMore,
+    loadMore,
+    totalDisplayed,
+  } = useInfiniteScroll({ items: filteredPosts, itemsPerPage: 9, enabled: isMobile });
+
+  // Set up intersection observer for infinite scroll
+  useEffect(() => {
+    if (!isMobile || !hasMore || isLoadingMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isMobile, hasMore, isLoadingMore, loadMore]);
+
+  const displayItems = isMobile ? infiniteScrollItems : paginatedItems;
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
@@ -123,23 +160,66 @@ const Blog = () => {
       <section className="py-20 bg-muted/30">
         <div className="container max-w-7xl">
           <BlogGrid 
-            posts={currentItems} 
+            posts={displayItems} 
             loading={isLoading} 
             getCategoryColor={getCategoryColor}
             formatDate={formatDate}
           />
           
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={goToPage}
-            canGoPrevious={canGoPrevious}
-            canGoNext={canGoNext}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalItems={totalItems}
-            className="mt-12"
-          />
+          {/* Infinite scroll loading indicator for mobile */}
+          {isMobile && !isLoading && (
+            <>
+              {isLoadingMore && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 animate-fade-in">
+                  {[1, 2, 3].map((i) => (
+                    <BlogCardSkeleton key={i} />
+                  ))}
+                </div>
+              )}
+              
+              {hasMore && (
+                <div ref={sentinelRef} className="flex justify-center mt-12 animate-fade-in">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={loadMore}
+                    disabled={isLoadingMore}
+                    className="font-sans font-semibold"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Loading more articles...
+                      </>
+                    ) : (
+                      `Load More Articles (${totalDisplayed} of ${filteredPosts.length})`
+                    )}
+                  </Button>
+                </div>
+              )}
+              
+              {!hasMore && filteredPosts.length > 9 && (
+                <p className="text-center text-muted-foreground font-sans mt-12 animate-fade-in">
+                  You've reached the end of the articles
+                </p>
+              )}
+            </>
+          )}
+          
+          {/* Pagination for desktop */}
+          {!isMobile && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+              canGoPrevious={canGoPrevious}
+              canGoNext={canGoNext}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalItems={totalItems}
+              className="mt-12"
+            />
+          )}
         </div>
       </section>
 
