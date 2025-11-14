@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { generateBlogPostSchema } from "@/lib/structuredData";
+import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -92,7 +93,8 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO 
+      <ReadingProgressBar />
+      <SEO
         title={post.title}
         description={post.excerpt}
         type="article"
