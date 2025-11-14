@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { CheckCircle2, Circle, Clock, Lock, Play } from "lucide-react";
+import { CheckCircle2, Circle, Clock, Lock, Play, Award } from "lucide-react";
 import { toast } from "sonner";
 import { VideoPlayer } from "./VideoPlayer";
+import { ModuleQuiz } from "./ModuleQuiz";
 
 interface Lesson {
   id: string;
@@ -35,10 +36,47 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
   const [loading, setLoading] = useState(true);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
+  const [quizResults, setQuizResults] = useState<Record<number, boolean>>({});
+  const [showQuiz, setShowQuiz] = useState<number | null>(null);
 
   useEffect(() => {
     loadLessons();
+    loadQuizResults();
   }, [courseSlug, user]);
+
+  const loadQuizResults = async () => {
+    if (!user) return;
+
+    try {
+      const { data: quizData } = await supabase
+        .from("module_quizzes")
+        .select("id, module_number")
+        .eq("course_slug", courseSlug);
+
+      if (!quizData) return;
+
+      const results: Record<number, boolean> = {};
+      
+      for (const quiz of quizData) {
+        const { data: attemptData } = await supabase
+          .from("quiz_attempts")
+          .select("passed")
+          .eq("user_id", user.id)
+          .eq("quiz_id", quiz.id)
+          .order("completed_at", { ascending: false })
+          .limit(1)
+          .single();
+
+        if (attemptData) {
+          results[quiz.module_number] = attemptData.passed;
+        }
+      }
+
+      setQuizResults(results);
+    } catch (error) {
+      console.error("Error loading quiz results:", error);
+    }
+  };
 
   const loadLessons = async () => {
     setLoading(true);
@@ -198,6 +236,12 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
     }
   };
 
+  const isModuleUnlocked = (moduleNumber: number) => {
+    if (moduleNumber === 1) return true;
+    // Check if previous module quiz is passed
+    return quizResults[moduleNumber - 1] === true;
+  };
+
   // Group lessons by module
   const moduleGroups = lessons.reduce((acc, lesson) => {
     if (!acc[lesson.module_number]) {
@@ -248,21 +292,44 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
         </CardHeader>
         <CardContent>
           <Accordion type="single" collapsible className="w-full">
-            {Object.entries(moduleGroups).map(([moduleNum, moduleLessons]) => (
-              <AccordionItem key={moduleNum} value={`module-${moduleNum}`}>
-                <AccordionTrigger className="text-left">
-                  <div className="flex items-center gap-3">
-                    <Badge variant="outline">Module {moduleNum}</Badge>
-                    <span className="font-semibold">
-                      {moduleLessons.length} Lessons
-                    </span>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-2 pt-2">
-                    {moduleLessons.map((lesson) => {
-                      const isCompleted = progress[lesson.id] || false;
-                      const canAccess = isEnrolled || lesson.is_free_preview;
+            {Object.entries(moduleGroups).map(([moduleNum, moduleLessons]) => {
+              const moduleNumber = parseInt(moduleNum);
+              const moduleUnlocked = isModuleUnlocked(moduleNumber);
+              const quizPassed = quizResults[moduleNumber];
+              
+              return (
+                <AccordionItem key={moduleNum} value={`module-${moduleNum}`}>
+                  <AccordionTrigger className="text-left">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline">Module {moduleNum}</Badge>
+                      <span className="font-semibold">
+                        {moduleLessons.length} Lessons
+                      </span>
+                      {!moduleUnlocked && (
+                        <Lock className="w-4 h-4 text-muted-foreground" />
+                      )}
+                      {quizPassed && (
+                        <Badge variant="default" className="ml-auto">
+                          <Award className="w-3 h-3 mr-1" />
+                          Quiz Passed
+                        </Badge>
+                      )}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {!moduleUnlocked && (
+                      <div className="mb-4 p-4 bg-muted rounded-lg border">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Lock className="w-4 h-4" />
+                          <span>Complete and pass Module {moduleNumber - 1} quiz to unlock this module</span>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <div className="space-y-2 pt-2">
+                      {moduleLessons.map((lesson) => {
+                        const isCompleted = progress[lesson.id] || false;
+                        const canAccess = (isEnrolled || lesson.is_free_preview) && moduleUnlocked;
 
                       return (
                         <div
@@ -322,13 +389,39 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
                               <Play className="w-4 h-4" />
                             </Button>
                           )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Module Quiz Section */}
+                    {isEnrolled && moduleUnlocked && (
+                      <div className="mt-4 pt-4 border-t">
+                        {showQuiz === moduleNumber ? (
+                          <ModuleQuiz
+                            courseSlug={courseSlug}
+                            moduleNumber={moduleNumber}
+                            onComplete={() => {
+                              loadQuizResults();
+                              setShowQuiz(null);
+                            }}
+                          />
+                        ) : (
+                          <Button
+                            onClick={() => setShowQuiz(moduleNumber)}
+                            variant={quizPassed ? "outline" : "default"}
+                            className="w-full"
+                          >
+                            <Award className="w-4 h-4 mr-2" />
+                            {quizPassed ? "Review Quiz" : "Take Module Quiz"}
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
           </Accordion>
         </CardContent>
       </Card>
