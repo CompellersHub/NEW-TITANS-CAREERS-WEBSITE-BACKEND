@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
+import { trackPageView } from "./lib/analytics";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -52,6 +54,12 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  
+  // Track page views on route change
+  useEffect(() => {
+    const title = document.title || 'Titans Training Group';
+    trackPageView(location.pathname, title);
+  }, [location]);
   
   return (
     <AnimatePresence mode="wait" initial={false}>

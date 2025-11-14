@@ -4,6 +4,7 @@ import { ShoppingCart, Tag, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { trackBeginCheckout, trackCourseInterest } from "@/lib/analytics";
 
 interface StripeCheckoutButtonProps {
   courseSlug: string;
@@ -61,6 +62,10 @@ export function StripeCheckoutButton({
           discountAmount,
           finalPrice
         });
+        
+        // Track voucher application
+        trackCourseInterest(courseSlug, courseTitle, 'voucher_applied');
+        
         toast.success(`Voucher applied! You save £${discountAmount.toFixed(2)}`);
         setShowVoucherInput(false);
       } else {
@@ -81,6 +86,11 @@ export function StripeCheckoutButton({
   };
 
   const handleCheckout = async () => {
+    const finalPrice = appliedVoucher ? appliedVoucher.finalPrice : price;
+    
+    // Track checkout initiation
+    trackBeginCheckout(courseSlug, courseTitle, finalPrice);
+    
     setIsLoading(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`, {

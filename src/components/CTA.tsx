@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Mail, MessageCircle } from "lucide-react";
+import { trackCTA } from "@/lib/analytics";
 
 export const CTA = () => {
   return (
@@ -27,6 +28,7 @@ export const CTA = () => {
                 href="https://wa.me/447539434403"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackCTA('WhatsApp CTA', 'hero_section', 'whatsapp_click')}
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 WhatsApp: +44 7539 434403
@@ -39,7 +41,10 @@ export const CTA = () => {
               className="text-lg"
               asChild
             >
-              <a href="mailto:info@titanscareers.com">
+              <a 
+                href="mailto:info@titanscareers.com"
+                onClick={() => trackCTA('Email CTA', 'hero_section', 'email_click')}
+              >
                 <Mail className="w-5 h-5 mr-2" />
                 info@titanscareers.com
               </a>

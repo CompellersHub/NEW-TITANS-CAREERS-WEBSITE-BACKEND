@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, User, Building2, MessageSquare } from "lucide-react";
+import { trackFormSubmission, trackLead } from "@/lib/analytics";
 
 export const ContactForm = () => {
   const { toast } = useToast();
@@ -12,6 +13,26 @@ export const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get('name') as string,
+      email: formData.get('email') as string,
+      company: formData.get('company') as string,
+      message: formData.get('message') as string,
+    };
+    
+    // Track form submission
+    trackFormSubmission('contact_form', {
+      form_type: 'contact',
+      company: data.company
+    });
+    
+    // Track lead generation
+    trackLead('contact_form', {
+      lead_name: data.name,
+      lead_company: data.company
+    });
     
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
@@ -46,6 +67,7 @@ export const ContactForm = () => {
                   Full Name
                 </label>
                 <Input 
+                  name="name"
                   placeholder="John Doe" 
                   required 
                   className="h-12"
@@ -58,6 +80,7 @@ export const ContactForm = () => {
                   Work Email
                 </label>
                 <Input 
+                  name="email"
                   type="email" 
                   placeholder="john@company.com" 
                   required 
@@ -72,6 +95,7 @@ export const ContactForm = () => {
                 Company Name
               </label>
               <Input 
+                name="company"
                 placeholder="Your Company" 
                 required 
                 className="h-12"
@@ -84,6 +108,7 @@ export const ContactForm = () => {
                 How can we help?
               </label>
               <Textarea 
+                name="message"
                 placeholder="Tell us about your hiring goals and challenges..."
                 rows={5}
                 required
