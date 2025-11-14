@@ -55,23 +55,37 @@ const handler = async (req: Request): Promise<Response> => {
       if (segment) {
         const { data: subscribers } = await supabase
           .from("newsletter_subscribers")
-          .select("email")
+          .select("email, tags, engagement_score")
           .eq("active", true);
 
         if (subscribers) {
-          // Apply segment filters
+          console.log(`Filtering ${subscribers.length} subscribers for segment:`, {
+            tags_include: segment.tags_include,
+            tags_exclude: segment.tags_exclude,
+            min_engagement: segment.min_engagement_score,
+            max_engagement: segment.max_engagement_score
+          });
+
+          // Apply segment filters (matching get_segment_count function logic)
           emailList = subscribers
             .filter((sub: any) => {
+              // Check tags_include: empty array means no filter, otherwise must have overlap
               const hasRequiredTags = segment.tags_include.length === 0 || 
-                segment.tags_include.some((tag: string) => sub.tags?.includes(tag));
+                (sub.tags && sub.tags.some((tag: string) => segment.tags_include.includes(tag)));
+              
+              // Check tags_exclude: empty array means no filter, otherwise must NOT have overlap
               const hasNoExcludedTags = segment.tags_exclude.length === 0 || 
-                !segment.tags_exclude.some((tag: string) => sub.tags?.includes(tag));
+                !sub.tags || !sub.tags.some((tag: string) => segment.tags_exclude.includes(tag));
+              
+              // Check engagement score range
               const meetsEngagement = sub.engagement_score >= segment.min_engagement_score &&
                 sub.engagement_score <= segment.max_engagement_score;
               
               return hasRequiredTags && hasNoExcludedTags && meetsEngagement;
             })
             .map((sub: any) => sub.email);
+
+          console.log(`Filtered down to ${emailList.length} matching subscribers`);
         }
       }
     }
