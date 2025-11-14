@@ -10,6 +10,28 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Email client detection function
+function detectEmailClient(userAgent: string): string {
+  const ua = userAgent.toLowerCase();
+  
+  if (ua.includes('outlook')) return 'Outlook';
+  if (ua.includes('apple mail') || (ua.includes('applewebkit') && ua.includes('mobile'))) return 'Apple Mail';
+  if (ua.includes('thunderbird')) return 'Thunderbird';
+  if (ua.includes('gmail')) return 'Gmail';
+  if (ua.includes('yahoo')) return 'Yahoo Mail';
+  if (ua.includes('aol')) return 'AOL Mail';
+  if (ua.includes('windows mail')) return 'Windows Mail';
+  if (ua.includes('spark')) return 'Spark';
+  if (ua.includes('airmail')) return 'Airmail';
+  if (ua.includes('edison')) return 'Edison Mail';
+  
+  // Device-based detection
+  if (ua.includes('iphone') || ua.includes('ipad')) return 'iOS Mail';
+  if (ua.includes('android')) return 'Android Mail';
+  
+  return 'Unknown';
+}
+
 interface TrackingParams {
   email: string;
   link_type: string; // 'preferences', 'unsubscribe_digest', 'unsubscribe_all'
@@ -37,8 +59,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Tracking email link click:", { email, linkType, emailType });
 
-    // Get user agent
+    // Get user agent and detect email client
     const userAgent = req.headers.get("user-agent") || "unknown";
+    const emailClient = detectEmailClient(userAgent);
 
     // Insert tracking record
     const { error: trackingError } = await supabase
@@ -51,6 +74,7 @@ const handler = async (req: Request): Promise<Response> => {
         user_agent: userAgent,
         metadata: {
           timestamp: new Date().toISOString(),
+          email_client: emailClient,
         },
       });
 
