@@ -17,6 +17,8 @@ interface EngagementMetrics {
   clicksByEmail: Array<{ email_type: string; count: number }>;
   dailyTrend: Array<{ date: string; clicks: number; opens: number; sends: number }>;
   emailClientDistribution: Array<{ client: string; count: number; percentage: number }>;
+  geoDistribution: Array<{ country: string; count: number; percentage: number }>;
+  topCities: Array<{ city: string; country: string; count: number }>;
 }
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
@@ -62,6 +64,8 @@ export default function EmailEngagementDashboard() {
           clicksByEmail: [],
           dailyTrend: [],
           emailClientDistribution: [],
+          geoDistribution: [],
+          topCities: [],
         });
         return;
       }
@@ -144,6 +148,45 @@ export default function EmailEngagementDashboard() {
         }))
         .sort((a, b) => b.count - a.count);
 
+      // Get geographic distribution
+      const countryCounts = new Map<string, number>();
+      engagementData.forEach((row) => {
+        if (row.country) {
+          countryCounts.set(row.country, (countryCounts.get(row.country) || 0) + 1);
+        }
+      });
+
+      const totalGeoEvents = Array.from(countryCounts.values()).reduce((sum, count) => sum + count, 0) || 1;
+      const geoDistribution = Array.from(countryCounts.entries())
+        .map(([country, count]) => ({
+          country,
+          count,
+          percentage: (count / totalGeoEvents) * 100,
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      // Get top cities
+      const cityCounts = new Map<string, { country: string; count: number }>();
+      engagementData.forEach((row) => {
+        if (row.city && row.country) {
+          const key = `${row.city}, ${row.country}`;
+          const existing = cityCounts.get(key);
+          cityCounts.set(key, {
+            country: row.country,
+            count: (existing?.count || 0) + 1,
+          });
+        }
+      });
+
+      const topCities = Array.from(cityCounts.entries())
+        .map(([cityKey, data]) => ({
+          city: cityKey,
+          country: data.country,
+          count: data.count,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
+
       setMetrics({
         totalClicks,
         totalSends,
@@ -155,6 +198,8 @@ export default function EmailEngagementDashboard() {
         clicksByEmail,
         dailyTrend,
         emailClientDistribution,
+        geoDistribution,
+        topCities,
       });
     } catch (error: any) {
       console.error("Error fetching engagement metrics:", error);
@@ -267,6 +312,7 @@ export default function EmailEngagementDashboard() {
           <TabsTrigger value="types">Link Types</TabsTrigger>
           <TabsTrigger value="emails">Email Types</TabsTrigger>
           <TabsTrigger value="clients">Email Clients</TabsTrigger>
+          <TabsTrigger value="geography">Geography</TabsTrigger>
         </TabsList>
 
         <TabsContent value="trends" className="space-y-4">
@@ -496,6 +542,109 @@ export default function EmailEngagementDashboard() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="geography" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Geographic Distribution</CardTitle>
+                <CardDescription>Where your users are opening emails</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={metrics.geoDistribution}
+                        dataKey="count"
+                        nameKey="country"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        label={(entry) => `${entry.country}: ${entry.percentage.toFixed(1)}%`}
+                      >
+                        {metrics.geoDistribution.map((_, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value: number) => [value, "Events"]}
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--background))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Countries</CardTitle>
+                <CardDescription>Countries by engagement</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={350}>
+                  <BarChart data={metrics.geoDistribution.slice(0, 10)}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis 
+                      dataKey="country" 
+                      stroke="hsl(var(--muted-foreground))"
+                      angle={-45}
+                      textAnchor="end"
+                      height={100}
+                    />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--background))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "8px",
+                      }}
+                    />
+                    <Bar dataKey="count" fill="hsl(var(--primary))" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Cities</CardTitle>
+              <CardDescription>Most active cities</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {metrics.topCities.map((city, index) => (
+                  <div key={city.city} className="flex justify-between items-center p-3 rounded-lg bg-muted/50">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary font-bold">
+                        {index + 1}
+                      </div>
+                      <div>
+                        <p className="font-medium">{city.city}</p>
+                        <p className="text-sm text-muted-foreground">{city.country}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{city.count} events</p>
+                    </div>
+                  </div>
+                ))}
+                {metrics.topCities.length === 0 && (
+                  <p className="text-center text-muted-foreground py-8">
+                    No geographic data available yet
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

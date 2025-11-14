@@ -5,7 +5,7 @@ This document explains how email engagement tracking works for discussion notifi
 ## Overview
 
 All email links to preferences and unsubscribe actions now go through a tracking endpoint that:
-1. Records the click event in the database
+1. Records the click event in the database with geolocation data
 2. Handles automatic unsubscribe actions
 3. Redirects users to the appropriate page with feedback
 
@@ -13,14 +13,21 @@ All email links to preferences and unsubscribe actions now go through a tracking
 
 **Table:** `email_engagement_tracking`
 
-Tracks all clicks on email links with the following information:
+Tracks all clicks on email links and email opens with the following information:
 - `user_id`: ID of the user who clicked (if available)
 - `email`: Email address of the recipient
-- `link_type`: Type of link clicked (`preferences`, `unsubscribe_digest`, `unsubscribe_all`, `discussion_link`)
-- `email_type`: Type of email (`digest`, `instant_notification`)
+- `link_type`: Type of link clicked (`preferences`, `unsubscribe_digest`, `unsubscribe_all`, `discussion_link`, `email_open`)
+- `email_type`: Type of email (`digest`, `instant_notification`, `tracking_pixel`)
 - `clicked_at`: Timestamp of the click
 - `user_agent`: Browser/client information
-- `metadata`: Additional data in JSON format
+- `ip_address`: IP address of the user
+- `country`: Country name derived from IP
+- `country_code`: ISO country code
+- `region`: State/region name
+- `city`: City name
+- `latitude`: Geographic latitude
+- `longitude`: Geographic longitude
+- `metadata`: Additional data in JSON format (includes `email_client`)
 
 ## Tracking Endpoint
 
@@ -96,6 +103,26 @@ GROUP BY link_type
 ORDER BY click_count DESC;
 ```
 
+### View geographic distribution
+```sql
+SELECT country, COUNT(*) as events, 
+       ROUND(COUNT(*)::numeric / SUM(COUNT(*)) OVER () * 100, 2) as percentage
+FROM email_engagement_tracking
+WHERE country IS NOT NULL
+GROUP BY country
+ORDER BY events DESC;
+```
+
+### Top cities by engagement
+```sql
+SELECT city, country, COUNT(*) as events
+FROM email_engagement_tracking
+WHERE city IS NOT NULL AND country IS NOT NULL
+GROUP BY city, country
+ORDER BY events DESC
+LIMIT 20;
+```
+
 ### Track unsubscribe rate
 ```sql
 SELECT
@@ -123,6 +150,23 @@ ORDER BY clicked_at DESC
 LIMIT 50;
 ```
 
+## Geographic Tracking
+
+The system automatically tracks geographic location data based on IP addresses using the ipapi.co service:
+
+- **IP Address Collection**: Captured from `x-forwarded-for` or `x-real-ip` headers
+- **Geolocation Service**: Uses ipapi.co free API for IP-to-location conversion
+- **Data Collected**: Country, region, city, and coordinates
+- **Privacy**: Only aggregated data is displayed in dashboards
+- **Rate Limits**: ipapi.co provides 1,000 requests/day on free tier
+
+### Privacy Considerations
+
+- IP addresses are stored but not displayed in public dashboards
+- Geographic data is aggregated for analytics
+- Users cannot be individually identified from location data alone
+- Consider GDPR compliance if tracking EU users
+
 ## Security
 
 - RLS is enabled on the `email_engagement_tracking` table
@@ -140,8 +184,12 @@ Update the following environment variables in your edge functions:
 ## Future Enhancements
 
 Potential improvements to the tracking system:
-1. Add click-through rate analytics dashboard
-2. Track email open rates with pixel tracking
+1. Add click-through rate analytics dashboard ✅ (Implemented)
+2. Track email open rates with pixel tracking ✅ (Implemented)
 3. A/B test different email templates
 4. Implement one-click unsubscribe RFC 8058 compliance
 5. Add re-engagement campaigns for inactive users
+6. Email client detection ✅ (Implemented)
+7. Geographic location tracking ✅ (Implemented)
+8. Device type detection (mobile vs desktop)
+9. Heatmap visualization for geographic data

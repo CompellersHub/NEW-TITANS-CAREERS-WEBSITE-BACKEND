@@ -109,6 +109,66 @@ export type Database = {
           },
         ]
       }
+      ab_test_winner_history: {
+        Row: {
+          ab_test_name: string
+          admin_action: string | null
+          admin_user_id: string | null
+          campaign_type: string
+          created_at: string
+          deactivated_variants: Json
+          deactivated_variants_count: number
+          id: string
+          improvement_percent: number
+          selected_by: string
+          winner_click_rate: number
+          winner_combined_score: number
+          winner_open_rate: number
+          winner_sends_count: number
+          winner_template_id: string
+          winner_template_name: string
+          winner_variant_letter: string
+        }
+        Insert: {
+          ab_test_name: string
+          admin_action?: string | null
+          admin_user_id?: string | null
+          campaign_type: string
+          created_at?: string
+          deactivated_variants?: Json
+          deactivated_variants_count: number
+          id?: string
+          improvement_percent: number
+          selected_by?: string
+          winner_click_rate: number
+          winner_combined_score: number
+          winner_open_rate: number
+          winner_sends_count: number
+          winner_template_id: string
+          winner_template_name: string
+          winner_variant_letter: string
+        }
+        Update: {
+          ab_test_name?: string
+          admin_action?: string | null
+          admin_user_id?: string | null
+          campaign_type?: string
+          created_at?: string
+          deactivated_variants?: Json
+          deactivated_variants_count?: number
+          id?: string
+          improvement_percent?: number
+          selected_by?: string
+          winner_click_rate?: number
+          winner_combined_score?: number
+          winner_open_rate?: number
+          winner_sends_count?: number
+          winner_template_id?: string
+          winner_template_name?: string
+          winner_variant_letter?: string
+        }
+        Relationships: []
+      }
       ab_tests: {
         Row: {
           campaign_type: string
@@ -145,6 +205,226 @@ export type Database = {
           status?: string
           test_percentage?: number
           winner_variant_id?: string | null
+        }
+        Relationships: []
+      }
+      admin_notification_preferences: {
+        Row: {
+          admin_user_id: string
+          created_at: string
+          daily_digest: boolean | null
+          digest_time: number | null
+          email: string
+          id: string
+          instant_alerts: boolean | null
+          notify_archived_status: boolean | null
+          notify_contact_form: boolean | null
+          notify_feedback: boolean | null
+          notify_in_progress_status: boolean | null
+          notify_new_status: boolean | null
+          notify_quick_contact: boolean | null
+          notify_resolved_status: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          admin_user_id: string
+          created_at?: string
+          daily_digest?: boolean | null
+          digest_time?: number | null
+          email: string
+          id?: string
+          instant_alerts?: boolean | null
+          notify_archived_status?: boolean | null
+          notify_contact_form?: boolean | null
+          notify_feedback?: boolean | null
+          notify_in_progress_status?: boolean | null
+          notify_new_status?: boolean | null
+          notify_quick_contact?: boolean | null
+          notify_resolved_status?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          admin_user_id?: string
+          created_at?: string
+          daily_digest?: boolean | null
+          digest_time?: number | null
+          email?: string
+          id?: string
+          instant_alerts?: boolean | null
+          notify_archived_status?: boolean | null
+          notify_contact_form?: boolean | null
+          notify_feedback?: boolean | null
+          notify_in_progress_status?: boolean | null
+          notify_new_status?: boolean | null
+          notify_quick_contact?: boolean | null
+          notify_resolved_status?: boolean | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_notifications: {
+        Row: {
+          admin_user_id: string
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          notification_type: string
+          read: boolean | null
+          related_submission_id: string | null
+          title: string
+        }
+        Insert: {
+          admin_user_id: string
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          read?: boolean | null
+          related_submission_id?: string | null
+          title: string
+        }
+        Update: {
+          admin_user_id?: string
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          read?: boolean | null
+          related_submission_id?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_notifications_related_submission_id_fkey"
+            columns: ["related_submission_id"]
+            isOneToOne: false
+            referencedRelation: "form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_advisor_conversations: {
+        Row: {
+          auto_summary_sent: boolean | null
+          auto_summary_sent_at: string | null
+          created_at: string
+          email: string | null
+          id: string
+          last_message_at: string
+          lead_captured: boolean
+          message_count: number
+          session_id: string
+          title: string | null
+        }
+        Insert: {
+          auto_summary_sent?: boolean | null
+          auto_summary_sent_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_message_at?: string
+          lead_captured?: boolean
+          message_count?: number
+          session_id: string
+          title?: string | null
+        }
+        Update: {
+          auto_summary_sent?: boolean | null
+          auto_summary_sent_at?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          last_message_at?: string
+          lead_captured?: boolean
+          message_count?: number
+          session_id?: string
+          title?: string | null
+        }
+        Relationships: []
+      }
+      ai_advisor_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_advisor_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_advisor_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      alert_predictions: {
+        Row: {
+          actual_alert_triggered: boolean | null
+          channel: string
+          confidence_score: number
+          contributing_factors: Json | null
+          created_at: string
+          id: string
+          predicted_alert_probability: number
+          predicted_conversion_rate: number | null
+          predicted_roi: number | null
+          prediction_accuracy: number | null
+          prediction_date: string
+          prediction_period: string
+          recommendations: Json | null
+          validated_at: string | null
+        }
+        Insert: {
+          actual_alert_triggered?: boolean | null
+          channel: string
+          confidence_score: number
+          contributing_factors?: Json | null
+          created_at?: string
+          id?: string
+          predicted_alert_probability: number
+          predicted_conversion_rate?: number | null
+          predicted_roi?: number | null
+          prediction_accuracy?: number | null
+          prediction_date?: string
+          prediction_period: string
+          recommendations?: Json | null
+          validated_at?: string | null
+        }
+        Update: {
+          actual_alert_triggered?: boolean | null
+          channel?: string
+          confidence_score?: number
+          contributing_factors?: Json | null
+          created_at?: string
+          id?: string
+          predicted_alert_probability?: number
+          predicted_conversion_rate?: number | null
+          predicted_roi?: number | null
+          prediction_accuracy?: number | null
+          prediction_date?: string
+          prediction_period?: string
+          recommendations?: Json | null
+          validated_at?: string | null
         }
         Relationships: []
       }
@@ -251,6 +531,403 @@ export type Database = {
           },
         ]
       }
+      checkout_abandonment_emails: {
+        Row: {
+          checkout_session_id: string
+          clicked: boolean | null
+          converted: boolean | null
+          discount_code: string | null
+          email_sequence_number: number
+          email_type: string
+          id: string
+          opened: boolean | null
+          sent_at: string
+        }
+        Insert: {
+          checkout_session_id: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          discount_code?: string | null
+          email_sequence_number: number
+          email_type: string
+          id?: string
+          opened?: boolean | null
+          sent_at?: string
+        }
+        Update: {
+          checkout_session_id?: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          discount_code?: string | null
+          email_sequence_number?: number
+          email_type?: string
+          id?: string
+          opened?: boolean | null
+          sent_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkout_abandonment_emails_checkout_session_id_fkey"
+            columns: ["checkout_session_id"]
+            isOneToOne: false
+            referencedRelation: "checkout_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checkout_abandonment_sms: {
+        Row: {
+          checkout_session_id: string
+          clicked: boolean | null
+          converted: boolean | null
+          delivered: boolean | null
+          discount_code: string | null
+          id: string
+          sent_at: string
+          sms_sequence_number: number
+          sms_type: string
+        }
+        Insert: {
+          checkout_session_id: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          delivered?: boolean | null
+          discount_code?: string | null
+          id?: string
+          sent_at?: string
+          sms_sequence_number: number
+          sms_type: string
+        }
+        Update: {
+          checkout_session_id?: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          delivered?: boolean | null
+          discount_code?: string | null
+          id?: string
+          sent_at?: string
+          sms_sequence_number?: number
+          sms_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkout_abandonment_sms_checkout_session_id_fkey"
+            columns: ["checkout_session_id"]
+            isOneToOne: false
+            referencedRelation: "checkout_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checkout_abandonment_whatsapp: {
+        Row: {
+          checkout_session_id: string
+          clicked: boolean | null
+          converted: boolean | null
+          delivered: boolean | null
+          discount_code: string | null
+          id: string
+          message_id: string | null
+          read: boolean | null
+          sent_at: string
+          whatsapp_sequence_number: number
+          whatsapp_type: string
+        }
+        Insert: {
+          checkout_session_id: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          delivered?: boolean | null
+          discount_code?: string | null
+          id?: string
+          message_id?: string | null
+          read?: boolean | null
+          sent_at?: string
+          whatsapp_sequence_number: number
+          whatsapp_type: string
+        }
+        Update: {
+          checkout_session_id?: string
+          clicked?: boolean | null
+          converted?: boolean | null
+          delivered?: boolean | null
+          discount_code?: string | null
+          id?: string
+          message_id?: string | null
+          read?: boolean | null
+          sent_at?: string
+          whatsapp_sequence_number?: number
+          whatsapp_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkout_abandonment_whatsapp_checkout_session_id_fkey"
+            columns: ["checkout_session_id"]
+            isOneToOne: false
+            referencedRelation: "checkout_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checkout_sessions: {
+        Row: {
+          abandoned: boolean | null
+          completed_at: string | null
+          course_slug: string
+          course_title: string
+          created_at: string
+          email: string
+          id: string
+          metadata: Json | null
+          name: string | null
+          original_price: number
+          phone: string | null
+          session_id: string
+          voucher_code: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          abandoned?: boolean | null
+          completed_at?: string | null
+          course_slug: string
+          course_title: string
+          created_at?: string
+          email: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          original_price: number
+          phone?: string | null
+          session_id: string
+          voucher_code?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          abandoned?: boolean | null
+          completed_at?: string | null
+          course_slug?: string
+          course_title?: string
+          created_at?: string
+          email?: string
+          id?: string
+          metadata?: Json | null
+          name?: string | null
+          original_price?: number
+          phone?: string | null
+          session_id?: string
+          voucher_code?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      course_certificates: {
+        Row: {
+          certificate_number: string
+          completion_date: string
+          course_slug: string
+          course_title: string
+          created_at: string
+          id: string
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          certificate_number: string
+          completion_date?: string
+          course_slug: string
+          course_title: string
+          created_at?: string
+          id?: string
+          user_id: string
+          user_name: string
+        }
+        Update: {
+          certificate_number?: string
+          completion_date?: string
+          course_slug?: string
+          course_title?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
+      course_lessons: {
+        Row: {
+          content_type: string | null
+          course_slug: string
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_free_preview: boolean | null
+          lesson_number: number
+          module_number: number
+          title: string
+          updated_at: string
+          video_duration_seconds: number | null
+          video_url: string | null
+        }
+        Insert: {
+          content_type?: string | null
+          course_slug: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_free_preview?: boolean | null
+          lesson_number: number
+          module_number: number
+          title: string
+          updated_at?: string
+          video_duration_seconds?: number | null
+          video_url?: string | null
+        }
+        Update: {
+          content_type?: string | null
+          course_slug?: string
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_free_preview?: boolean | null
+          lesson_number?: number
+          module_number?: number
+          title?: string
+          updated_at?: string
+          video_duration_seconds?: number | null
+          video_url?: string | null
+        }
+        Relationships: []
+      }
+      discussion_replies: {
+        Row: {
+          author_id: string
+          author_name: string
+          content: string
+          created_at: string
+          id: string
+          is_solution: boolean | null
+          thread_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          content: string
+          created_at?: string
+          id?: string
+          is_solution?: boolean | null
+          thread_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_solution?: boolean | null
+          thread_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discussion_replies_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      discussion_threads: {
+        Row: {
+          author_id: string
+          author_name: string
+          content: string
+          course_slug: string
+          created_at: string
+          id: string
+          is_pinned: boolean | null
+          is_resolved: boolean | null
+          lesson_id: string | null
+          module_number: number | null
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          content: string
+          course_slug: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          is_resolved?: boolean | null
+          lesson_id?: string | null
+          module_number?: number | null
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          content?: string
+          course_slug?: string
+          created_at?: string
+          id?: string
+          is_pinned?: boolean | null
+          is_resolved?: boolean | null
+          lesson_id?: string | null
+          module_number?: number | null
+          title?: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discussion_threads_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_ab_variants: {
+        Row: {
+          created_at: string | null
+          email_type: string
+          id: string
+          is_active: boolean | null
+          preview_text: string | null
+          subject_line: string
+          variant_name: string
+        }
+        Insert: {
+          created_at?: string | null
+          email_type?: string
+          id?: string
+          is_active?: boolean | null
+          preview_text?: string | null
+          subject_line: string
+          variant_name: string
+        }
+        Update: {
+          created_at?: string | null
+          email_type?: string
+          id?: string
+          is_active?: boolean | null
+          preview_text?: string | null
+          subject_line?: string
+          variant_name?: string
+        }
+        Relationships: []
+      }
       email_campaigns: {
         Row: {
           campaign_type: string
@@ -298,14 +975,163 @@ export type Database = {
           },
         ]
       }
+      email_engagement_tracking: {
+        Row: {
+          city: string | null
+          clicked_at: string
+          country: string | null
+          country_code: string | null
+          email: string
+          email_type: string
+          id: string
+          ip_address: string | null
+          latitude: number | null
+          link_type: string
+          longitude: number | null
+          metadata: Json | null
+          region: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          clicked_at?: string
+          country?: string | null
+          country_code?: string | null
+          email: string
+          email_type: string
+          id?: string
+          ip_address?: string | null
+          latitude?: number | null
+          link_type: string
+          longitude?: number | null
+          metadata?: Json | null
+          region?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          clicked_at?: string
+          country?: string | null
+          country_code?: string | null
+          email?: string
+          email_type?: string
+          id?: string
+          ip_address?: string | null
+          latitude?: number | null
+          link_type?: string
+          longitude?: number | null
+          metadata?: Json | null
+          region?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      email_notification_preferences: {
+        Row: {
+          created_at: string
+          digest_time: number | null
+          frequency: string
+          id: string
+          last_digest_sent_at: string | null
+          mention_notifications: boolean | null
+          reply_notifications: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          digest_time?: number | null
+          frequency?: string
+          id?: string
+          last_digest_sent_at?: string | null
+          mention_notifications?: boolean | null
+          reply_notifications?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          digest_time?: number | null
+          frequency?: string
+          id?: string
+          last_digest_sent_at?: string | null
+          mention_notifications?: boolean | null
+          reply_notifications?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_sends: {
+        Row: {
+          ab_variant_letter: string | null
+          clicked_at: string | null
+          conversation_id: string | null
+          email: string
+          id: string
+          opened_at: string | null
+          sent_at: string | null
+          template_id: string | null
+          tracking_id: string | null
+          variant_id: string | null
+        }
+        Insert: {
+          ab_variant_letter?: string | null
+          clicked_at?: string | null
+          conversation_id?: string | null
+          email: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string | null
+          template_id?: string | null
+          tracking_id?: string | null
+          variant_id?: string | null
+        }
+        Update: {
+          ab_variant_letter?: string | null
+          clicked_at?: string | null
+          conversation_id?: string | null
+          email?: string
+          id?: string
+          opened_at?: string | null
+          sent_at?: string | null
+          template_id?: string | null
+          tracking_id?: string | null
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_sends_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_advisor_conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "email_sends_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "email_ab_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_templates: {
         Row: {
+          ab_test_group_id: string | null
+          ab_test_name: string | null
+          auto_winner_paused: boolean | null
           campaign_type: string
           created_at: string
           created_by: string | null
           description: string | null
           html_content: string
           id: string
+          is_ab_test: boolean | null
+          is_active: boolean | null
           last_used_at: string | null
           name: string
           preview_text: string | null
@@ -313,16 +1139,23 @@ export type Database = {
           source_type: string
           subject: string
           tags: string[] | null
+          traffic_weight: number | null
           updated_at: string
           usage_count: number
+          variant_letter: string | null
         }
         Insert: {
+          ab_test_group_id?: string | null
+          ab_test_name?: string | null
+          auto_winner_paused?: boolean | null
           campaign_type: string
           created_at?: string
           created_by?: string | null
           description?: string | null
           html_content: string
           id?: string
+          is_ab_test?: boolean | null
+          is_active?: boolean | null
           last_used_at?: string | null
           name: string
           preview_text?: string | null
@@ -330,16 +1163,23 @@ export type Database = {
           source_type: string
           subject: string
           tags?: string[] | null
+          traffic_weight?: number | null
           updated_at?: string
           usage_count?: number
+          variant_letter?: string | null
         }
         Update: {
+          ab_test_group_id?: string | null
+          ab_test_name?: string | null
+          auto_winner_paused?: boolean | null
           campaign_type?: string
           created_at?: string
           created_by?: string | null
           description?: string | null
           html_content?: string
           id?: string
+          is_ab_test?: boolean | null
+          is_active?: boolean | null
           last_used_at?: string | null
           name?: string
           preview_text?: string | null
@@ -347,8 +1187,10 @@ export type Database = {
           source_type?: string
           subject?: string
           tags?: string[] | null
+          traffic_weight?: number | null
           updated_at?: string
           usage_count?: number
+          variant_letter?: string | null
         }
         Relationships: []
       }
@@ -385,6 +1227,13 @@ export type Database = {
             referencedRelation: "newsletter_subscribers"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "engagement_events_subscriber_id_fkey"
+            columns: ["subscriber_id"]
+            isOneToOne: false
+            referencedRelation: "subscriber_engagement_patterns"
+            referencedColumns: ["subscriber_id"]
+          },
         ]
       }
       enrollments: {
@@ -417,6 +1266,331 @@ export type Database = {
         }
         Relationships: []
       }
+      exit_captures: {
+        Row: {
+          converted: boolean
+          created_at: string
+          email: string
+          id: string
+          offer_type: string
+        }
+        Insert: {
+          converted?: boolean
+          created_at?: string
+          email: string
+          id?: string
+          offer_type: string
+        }
+        Update: {
+          converted?: boolean
+          created_at?: string
+          email?: string
+          id?: string
+          offer_type?: string
+        }
+        Relationships: []
+      }
+      form_analytics: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          event_type: string
+          field_name: string | null
+          form_name: string
+          id: string
+          metadata: Json | null
+          session_id: string
+          step_number: number | null
+          step_title: string | null
+          time_spent_ms: number | null
+          user_email: string | null
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          event_type: string
+          field_name?: string | null
+          form_name: string
+          id?: string
+          metadata?: Json | null
+          session_id: string
+          step_number?: number | null
+          step_title?: string | null
+          time_spent_ms?: number | null
+          user_email?: string | null
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          event_type?: string
+          field_name?: string | null
+          form_name?: string
+          id?: string
+          metadata?: Json | null
+          session_id?: string
+          step_number?: number | null
+          step_title?: string | null
+          time_spent_ms?: number | null
+          user_email?: string | null
+        }
+        Relationships: []
+      }
+      form_submission_audit_log: {
+        Row: {
+          action_type: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          new_value: Json | null
+          old_value: Json | null
+          submission_id: string
+        }
+        Insert: {
+          action_type: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          submission_id: string
+        }
+        Update: {
+          action_type?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          new_value?: Json | null
+          old_value?: Json | null
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_submission_audit_log_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      form_submissions: {
+        Row: {
+          admin_notes: string | null
+          assigned_to: string | null
+          created_at: string
+          form_data: Json
+          form_type: string
+          id: string
+          last_updated_at: string | null
+          last_updated_by: string | null
+          priority: string | null
+          sla_deadline: string | null
+          sla_status: string | null
+          status: string | null
+          submitted_at: string
+          tags: string[] | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          assigned_to?: string | null
+          created_at?: string
+          form_data: Json
+          form_type: string
+          id?: string
+          last_updated_at?: string | null
+          last_updated_by?: string | null
+          priority?: string | null
+          sla_deadline?: string | null
+          sla_status?: string | null
+          status?: string | null
+          submitted_at?: string
+          tags?: string[] | null
+        }
+        Update: {
+          admin_notes?: string | null
+          assigned_to?: string | null
+          created_at?: string
+          form_data?: Json
+          form_type?: string
+          id?: string
+          last_updated_at?: string | null
+          last_updated_by?: string | null
+          priority?: string | null
+          sla_deadline?: string | null
+          sla_status?: string | null
+          status?: string | null
+          submitted_at?: string
+          tags?: string[] | null
+        }
+        Relationships: []
+      }
+      integration_tokens: {
+        Row: {
+          academy_user_id: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          token: string
+        }
+        Insert: {
+          academy_user_id?: string | null
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          token: string
+        }
+        Update: {
+          academy_user_id?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          token?: string
+        }
+        Relationships: []
+      }
+      lead_magnet_downloads: {
+        Row: {
+          downloaded_at: string
+          email: string
+          id: string
+          lead_magnet_id: string
+          name: string | null
+        }
+        Insert: {
+          downloaded_at?: string
+          email: string
+          id?: string
+          lead_magnet_id: string
+          name?: string | null
+        }
+        Update: {
+          downloaded_at?: string
+          email?: string
+          id?: string
+          lead_magnet_id?: string
+          name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_magnet_downloads_lead_magnet_id_fkey"
+            columns: ["lead_magnet_id"]
+            isOneToOne: false
+            referencedRelation: "lead_magnets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_magnets: {
+        Row: {
+          active: boolean
+          course_related: string | null
+          created_at: string
+          description: string
+          downloads_count: number
+          file_url: string | null
+          id: string
+          resource_type: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          course_related?: string | null
+          created_at?: string
+          description: string
+          downloads_count?: number
+          file_url?: string | null
+          id?: string
+          resource_type: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          course_related?: string | null
+          created_at?: string
+          description?: string
+          downloads_count?: number
+          file_url?: string | null
+          id?: string
+          resource_type?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      lead_scores: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          last_activity: string
+          name: string | null
+          source: string | null
+          status: string
+          total_score: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          last_activity?: string
+          name?: string | null
+          source?: string | null
+          status?: string
+          total_score?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          last_activity?: string
+          name?: string | null
+          source?: string | null
+          status?: string
+          total_score?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      module_quizzes: {
+        Row: {
+          course_slug: string
+          created_at: string
+          description: string | null
+          id: string
+          module_number: number
+          passing_score: number
+          time_limit_minutes: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          course_slug: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          module_number: number
+          passing_score?: number
+          time_limit_minutes?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          course_slug?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          module_number?: number
+          passing_score?: number
+          time_limit_minutes?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           active: boolean | null
@@ -424,8 +1598,11 @@ export type Database = {
           engagement_score: number | null
           id: string
           last_engagement_at: string | null
+          last_send_time_analysis: string | null
           metadata: Json | null
           name: string | null
+          optimal_send_day: string | null
+          optimal_send_hour: number | null
           source: string | null
           subscribed_at: string
           tags: string[] | null
@@ -440,8 +1617,11 @@ export type Database = {
           engagement_score?: number | null
           id?: string
           last_engagement_at?: string | null
+          last_send_time_analysis?: string | null
           metadata?: Json | null
           name?: string | null
+          optimal_send_day?: string | null
+          optimal_send_hour?: number | null
           source?: string | null
           subscribed_at?: string
           tags?: string[] | null
@@ -456,8 +1636,11 @@ export type Database = {
           engagement_score?: number | null
           id?: string
           last_engagement_at?: string | null
+          last_send_time_analysis?: string | null
           metadata?: Json | null
           name?: string | null
+          optimal_send_day?: string | null
+          optimal_send_hour?: number | null
           source?: string | null
           subscribed_at?: string
           tags?: string[] | null
@@ -467,6 +1650,506 @@ export type Database = {
           whatsapp?: string | null
         }
         Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      queued_email_notifications: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          notification_type: string
+          sent: boolean | null
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notification_type: string
+          sent?: boolean | null
+          subject: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notification_type?: string
+          sent?: boolean | null
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          answers: Json
+          completed_at: string
+          correct_answers: number
+          id: string
+          passed: boolean
+          quiz_id: string
+          score: number
+          started_at: string
+          time_taken_seconds: number | null
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string
+          correct_answers: number
+          id?: string
+          passed: boolean
+          quiz_id: string
+          score: number
+          started_at?: string
+          time_taken_seconds?: number | null
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          correct_answers?: number
+          id?: string
+          passed?: boolean
+          quiz_id?: string
+          score?: number
+          started_at?: string
+          time_taken_seconds?: number | null
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "module_quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          explanation: string | null
+          id: string
+          options: Json
+          order_number: number
+          points: number
+          question_text: string
+          question_type: string
+          quiz_id: string
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options: Json
+          order_number: number
+          points?: number
+          question_text: string
+          question_type?: string
+          quiz_id: string
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          explanation?: string | null
+          id?: string
+          options?: Json
+          order_number?: number
+          points?: number
+          question_text?: string
+          question_type?: string
+          quiz_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "module_quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_results: {
+        Row: {
+          answers: Json
+          completed_at: string
+          email: string | null
+          id: string
+          name: string | null
+          recommended_courses: string[]
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          recommended_courses: string[]
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          recommended_courses?: string[]
+        }
+        Relationships: []
+      }
+      recovery_alert_history: {
+        Row: {
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          admin_email: string
+          alert_data: Json | null
+          alert_type: string
+          channel: string
+          id: string
+          metric_value: number
+          resolution_notes: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          sent_at: string | null
+          status: string | null
+          threshold_value: number
+        }
+        Insert: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          admin_email: string
+          alert_data?: Json | null
+          alert_type: string
+          channel: string
+          id?: string
+          metric_value: number
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          sent_at?: string | null
+          status?: string | null
+          threshold_value: number
+        }
+        Update: {
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          admin_email?: string
+          alert_data?: Json | null
+          alert_type?: string
+          channel?: string
+          id?: string
+          metric_value?: number
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          sent_at?: string | null
+          status?: string | null
+          threshold_value?: number
+        }
+        Relationships: []
+      }
+      recovery_alert_settings: {
+        Row: {
+          admin_email: string
+          alert_cooldown_hours: number | null
+          check_interval_hours: number | null
+          created_at: string | null
+          email_conversion_threshold: number | null
+          email_roi_threshold: number | null
+          enabled: boolean | null
+          id: string
+          overall_conversion_threshold: number | null
+          overall_roi_threshold: number | null
+          slack_enabled: boolean | null
+          slack_webhook_url: string | null
+          sms_conversion_threshold: number | null
+          sms_roi_threshold: number | null
+          updated_at: string | null
+          whatsapp_conversion_threshold: number | null
+          whatsapp_roi_threshold: number | null
+        }
+        Insert: {
+          admin_email: string
+          alert_cooldown_hours?: number | null
+          check_interval_hours?: number | null
+          created_at?: string | null
+          email_conversion_threshold?: number | null
+          email_roi_threshold?: number | null
+          enabled?: boolean | null
+          id?: string
+          overall_conversion_threshold?: number | null
+          overall_roi_threshold?: number | null
+          slack_enabled?: boolean | null
+          slack_webhook_url?: string | null
+          sms_conversion_threshold?: number | null
+          sms_roi_threshold?: number | null
+          updated_at?: string | null
+          whatsapp_conversion_threshold?: number | null
+          whatsapp_roi_threshold?: number | null
+        }
+        Update: {
+          admin_email?: string
+          alert_cooldown_hours?: number | null
+          check_interval_hours?: number | null
+          created_at?: string | null
+          email_conversion_threshold?: number | null
+          email_roi_threshold?: number | null
+          enabled?: boolean | null
+          id?: string
+          overall_conversion_threshold?: number | null
+          overall_roi_threshold?: number | null
+          slack_enabled?: boolean | null
+          slack_webhook_url?: string | null
+          sms_conversion_threshold?: number | null
+          sms_roi_threshold?: number | null
+          updated_at?: string | null
+          whatsapp_conversion_threshold?: number | null
+          whatsapp_roi_threshold?: number | null
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          id: string
+          referred_email: string
+          referrer_email: string
+          reward_given: boolean
+          status: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referred_email: string
+          referrer_email: string
+          reward_given?: boolean
+          status?: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          referred_email?: string
+          referrer_email?: string
+          reward_given?: boolean
+          status?: string
+        }
+        Relationships: []
+      }
+      reply_likes: {
+        Row: {
+          created_at: string
+          id: string
+          reply_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reply_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reply_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reply_likes_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_replies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      response_templates: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          name: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      scheduled_voucher_campaigns: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          last_sent_at: string | null
+          manual_emails: string[] | null
+          message: string | null
+          next_send_at: string | null
+          recurrence_type: string
+          rejection_reason: string | null
+          scheduled_time: string
+          segment_id: string | null
+          status: string
+          subject: string
+          updated_at: string
+          voucher_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_sent_at?: string | null
+          manual_emails?: string[] | null
+          message?: string | null
+          next_send_at?: string | null
+          recurrence_type?: string
+          rejection_reason?: string | null
+          scheduled_time: string
+          segment_id?: string | null
+          status?: string
+          subject: string
+          updated_at?: string
+          voucher_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_sent_at?: string | null
+          manual_emails?: string[] | null
+          message?: string | null
+          next_send_at?: string | null
+          recurrence_type?: string
+          rejection_reason?: string | null
+          scheduled_time?: string
+          segment_id?: string | null
+          status?: string
+          subject?: string
+          updated_at?: string
+          voucher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_voucher_campaigns_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "subscriber_segments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_voucher_campaigns_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sla_alerts: {
+        Row: {
+          alert_data: Json | null
+          alert_type: string
+          id: string
+          sent_at: string
+          sent_to: string
+          submission_id: string
+        }
+        Insert: {
+          alert_data?: Json | null
+          alert_type: string
+          id?: string
+          sent_at?: string
+          sent_to: string
+          submission_id: string
+        }
+        Update: {
+          alert_data?: Json | null
+          alert_type?: string
+          id?: string
+          sent_at?: string
+          sent_to?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sla_alerts_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "form_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriber_segments: {
         Row: {
@@ -513,6 +2196,160 @@ export type Database = {
         }
         Relationships: []
       }
+      thread_likes: {
+        Row: {
+          created_at: string
+          id: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          thread_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thread_likes_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_behaviors: {
+        Row: {
+          behavior_data: Json | null
+          behavior_type: string
+          created_at: string
+          email: string
+          id: string
+          score_value: number
+        }
+        Insert: {
+          behavior_data?: Json | null
+          behavior_type: string
+          created_at?: string
+          email: string
+          id?: string
+          score_value?: number
+        }
+        Update: {
+          behavior_data?: Json | null
+          behavior_type?: string
+          created_at?: string
+          email?: string
+          id?: string
+          score_value?: number
+        }
+        Relationships: []
+      }
+      user_lesson_progress: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string
+          id: string
+          last_accessed_at: string | null
+          lesson_id: string
+          user_id: string
+          video_progress_seconds: number | null
+          video_watched_percentage: number | null
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_accessed_at?: string | null
+          lesson_id: string
+          user_id: string
+          video_progress_seconds?: number | null
+          video_watched_percentage?: number | null
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_accessed_at?: string | null
+          lesson_id?: string
+          user_id?: string
+          video_progress_seconds?: number | null
+          video_watched_percentage?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_lesson_progress_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "course_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          read: boolean | null
+          reply_id: string | null
+          thread_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          read?: boolean | null
+          reply_id?: string | null
+          thread_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read?: boolean | null
+          reply_id?: string | null
+          thread_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_notifications_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_replies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_notifications_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "discussion_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -534,16 +2371,288 @@ export type Database = {
         }
         Relationships: []
       }
+      voucher_distributions: {
+        Row: {
+          created_at: string
+          distributed_by: string | null
+          distribution_method: string
+          id: string
+          recipient_count: number
+          segment_id: string | null
+          voucher_id: string
+        }
+        Insert: {
+          created_at?: string
+          distributed_by?: string | null
+          distribution_method: string
+          id?: string
+          recipient_count?: number
+          segment_id?: string | null
+          voucher_id: string
+        }
+        Update: {
+          created_at?: string
+          distributed_by?: string | null
+          distribution_method?: string
+          id?: string
+          recipient_count?: number
+          segment_id?: string | null
+          voucher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voucher_distributions_segment_id_fkey"
+            columns: ["segment_id"]
+            isOneToOne: false
+            referencedRelation: "subscriber_segments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "voucher_distributions_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voucher_usage: {
+        Row: {
+          course_slug: string
+          discount_amount: number
+          final_price: number
+          id: string
+          original_price: number
+          stripe_session_id: string | null
+          used_at: string
+          user_email: string
+          voucher_id: string
+        }
+        Insert: {
+          course_slug: string
+          discount_amount: number
+          final_price: number
+          id?: string
+          original_price: number
+          stripe_session_id?: string | null
+          used_at?: string
+          user_email: string
+          voucher_id: string
+        }
+        Update: {
+          course_slug?: string
+          discount_amount?: number
+          final_price?: number
+          id?: string
+          original_price?: number
+          stripe_session_id?: string | null
+          used_at?: string
+          user_email?: string
+          voucher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voucher_usage_voucher_id_fkey"
+            columns: ["voucher_id"]
+            isOneToOne: false
+            referencedRelation: "vouchers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vouchers: {
+        Row: {
+          applicable_courses: string[] | null
+          code: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          discount_type: Database["public"]["Enums"]["discount_type"]
+          discount_value: number
+          id: string
+          is_active: boolean
+          max_discount_amount: number | null
+          min_purchase_amount: number | null
+          name: string
+          per_user_limit: number | null
+          updated_at: string
+          usage_count: number
+          usage_limit: number | null
+          valid_from: string
+          valid_until: string
+        }
+        Insert: {
+          applicable_courses?: string[] | null
+          code: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_type: Database["public"]["Enums"]["discount_type"]
+          discount_value: number
+          id?: string
+          is_active?: boolean
+          max_discount_amount?: number | null
+          min_purchase_amount?: number | null
+          name: string
+          per_user_limit?: number | null
+          updated_at?: string
+          usage_count?: number
+          usage_limit?: number | null
+          valid_from: string
+          valid_until: string
+        }
+        Update: {
+          applicable_courses?: string[] | null
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount_type?: Database["public"]["Enums"]["discount_type"]
+          discount_value?: number
+          id?: string
+          is_active?: boolean
+          max_discount_amount?: number | null
+          min_purchase_amount?: number | null
+          name?: string
+          per_user_limit?: number | null
+          updated_at?: string
+          usage_count?: number
+          usage_limit?: number | null
+          valid_from?: string
+          valid_until?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      daily_submission_trends: {
+        Row: {
+          high_priority_count: number | null
+          low_priority_count: number | null
+          medium_priority_count: number | null
+          overdue_count: number | null
+          resolved_count: number | null
+          submission_date: string | null
+          total_submissions: number | null
+        }
+        Relationships: []
+      }
+      form_analytics_summary: {
+        Row: {
+          abandon_count: number | null
+          avg_time_spent_ms: number | null
+          complete_count: number | null
+          error_count: number | null
+          field_name: string | null
+          form_name: string | null
+          step_number: number | null
+          step_title: string | null
+          total_events: number | null
+          unique_sessions: number | null
+        }
+        Relationships: []
+      }
+      form_type_distribution: {
+        Row: {
+          form_type: string | null
+          in_progress_count: number | null
+          new_count: number | null
+          overdue_count: number | null
+          resolution_rate: number | null
+          resolved_count: number | null
+          total_count: number | null
+        }
+        Relationships: []
+      }
+      submission_metrics_by_assignee: {
+        Row: {
+          assigned_to: string | null
+          assignee_email: string | null
+          avg_resolution_hours: number | null
+          overdue_count: number | null
+          resolved_count: number | null
+          sla_compliance_rate: number | null
+          sla_met_count: number | null
+          total_assigned: number | null
+        }
+        Relationships: []
+      }
+      submission_metrics_by_priority: {
+        Row: {
+          archived_count: number | null
+          avg_resolution_hours: number | null
+          overdue_count: number | null
+          priority: string | null
+          resolved_count: number | null
+          sla_met_count: number | null
+          total_submissions: number | null
+        }
+        Relationships: []
+      }
+      subscriber_engagement_patterns: {
+        Row: {
+          avg_open_day: number | null
+          avg_open_hour: number | null
+          email: string | null
+          engagement_score: number | null
+          last_open_at: string | null
+          subscriber_id: string | null
+          total_clicks: number | null
+          total_emails_received: number | null
+          total_opens: number | null
+        }
+        Relationships: []
+      }
+      tag_distribution: {
+        Row: {
+          avg_resolution_hours: number | null
+          resolved_count: number | null
+          tag_name: string | null
+          usage_count: number | null
+        }
+        Relationships: []
+      }
+      template_performance: {
+        Row: {
+          ab_test_name: string | null
+          campaign_type: string | null
+          click_rate: number | null
+          clicks_count: number | null
+          is_ab_test: boolean | null
+          open_rate: number | null
+          opens_count: number | null
+          sends_count: number | null
+          tags: string[] | null
+          template_id: string | null
+          template_name: string | null
+          variant_letter: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_engagement_score: {
         Args: { subscriber_id: string }
         Returns: number
       }
+      calculate_sla_deadline: {
+        Args: { created_at: string; priority_level: string }
+        Returns: string
+      }
+      calculate_sla_status: {
+        Args: { current_status: string; deadline: string }
+        Returns: string
+      }
+      can_view_template_performance: { Args: never; Returns: boolean }
+      check_and_send_sla_alerts: { Args: never; Returns: undefined }
+      check_team_sla_compliance: { Args: never; Returns: undefined }
+      create_test_admin: {
+        Args: { test_email?: string; test_password?: string }
+        Returns: string
+      }
+      generate_certificate_number: { Args: never; Returns: string }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
+      grant_admin_role: { Args: { user_email: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -551,10 +2660,29 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_enrolled_in_course: {
+        Args: { p_course_slug: string; p_user_id: string }
+        Returns: boolean
+      }
+      send_email_notification: {
+        Args: {
+          p_content: string
+          p_metadata: Json
+          p_notification_type: string
+          p_subject: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       update_all_engagement_scores: { Args: never; Returns: undefined }
+      update_lead_score: {
+        Args: { p_behavior: string; p_email: string; p_score_change: number }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user"
+      discount_type: "percentage" | "fixed_amount"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -683,6 +2811,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      discount_type: ["percentage", "fixed_amount"],
     },
   },
 } as const

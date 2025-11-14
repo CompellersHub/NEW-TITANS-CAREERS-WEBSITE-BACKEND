@@ -26,6 +26,32 @@ function detectEmailClient(userAgent: string): string {
   return 'Unknown';
 }
 
+// Get geolocation from IP address
+async function getGeolocation(ipAddress: string) {
+  try {
+    // Skip private/local IPs
+    if (!ipAddress || ipAddress === 'unknown' || ipAddress.includes('127.0.0.1') || ipAddress.includes('localhost')) {
+      return null;
+    }
+
+    const response = await fetch(`https://ipapi.co/${ipAddress}/json/`);
+    if (!response.ok) return null;
+    
+    const data = await response.json();
+    return {
+      country: data.country_name || null,
+      country_code: data.country_code || null,
+      region: data.region || null,
+      city: data.city || null,
+      latitude: data.latitude || null,
+      longitude: data.longitude || null,
+    };
+  } catch (error) {
+    console.error('Error fetching geolocation:', error);
+    return null;
+  }
+}
+
 serve(async (req) => {
   const url = new URL(req.url);
   const trackingId = url.searchParams.get("id");
@@ -47,6 +73,12 @@ serve(async (req) => {
     // Detect email client from user agent
     const userAgent = req.headers.get("user-agent") || "unknown";
     const emailClient = detectEmailClient(userAgent);
+
+    // Get IP address and geolocation
+    const ipAddress = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || 
+                      req.headers.get("x-real-ip") || 
+                      "unknown";
+    const geolocation = await getGeolocation(ipAddress);
 
     // Update the email_sends record to mark as opened with email client info
     const { error } = await supabase
@@ -73,6 +105,13 @@ serve(async (req) => {
             link_type: "email_open",
             email_type: "tracking_pixel",
             user_agent: userAgent,
+            ip_address: ipAddress,
+            country: geolocation?.country || null,
+            country_code: geolocation?.country_code || null,
+            region: geolocation?.region || null,
+            city: geolocation?.city || null,
+            latitude: geolocation?.latitude || null,
+            longitude: geolocation?.longitude || null,
             metadata: {
               email_client: emailClient,
             },
