@@ -5,6 +5,7 @@ import { BlogGrid } from "@/components/blog/BlogGrid";
 import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { blogPosts } from "@/data/blogPosts";
@@ -311,6 +312,7 @@ const Blog = () => {
       </section>
 
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };

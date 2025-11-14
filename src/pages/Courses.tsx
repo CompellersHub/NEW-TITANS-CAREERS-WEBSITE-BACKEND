@@ -2,6 +2,7 @@ import { CourseGrid } from "@/components/courses/CourseGrid";
 import { CourseCardSkeleton } from "@/components/courses/CourseCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
 import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -184,6 +185,7 @@ export default function Courses() {
           )}
         </div>
         <Footer />
+        <ScrollToTop />
       </div>
     </PageTransition>
   );
