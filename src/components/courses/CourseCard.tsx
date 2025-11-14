@@ -30,7 +30,7 @@ export function CourseCard({ course }: CourseCardProps) {
   };
 
   return (
-    <Card className="group p-8 hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-hidden">
+    <Card className="group p-8 hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-visible">
       <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
         {course.category}
       </Badge>
