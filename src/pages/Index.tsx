@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { PageTransition } from "@/components/PageTransition";
 import { HeroSection } from "@/components/homepage/HeroSection";
@@ -19,7 +19,6 @@ import { LeadMagnetModal } from "@/components/marketing/LeadMagnetModal";
 import { ReferralProgram } from "@/components/marketing/ReferralProgram";
 import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
-import { HomePageSkeleton } from "@/components/homepage/HomePageSkeleton";
 import { Sparkles, Download } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
@@ -29,22 +28,8 @@ const Index = () => {
   const featuredCourses = coursesArray.slice(0, 3);
   const [showCourseFinder, setShowCourseFinder] = useState(false);
   const [showLeadMagnet, setShowLeadMagnet] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   useBehaviorTracking({ enableAutoTracking: true });
-
-  useEffect(() => {
-    // Simulate content loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <HomePageSkeleton />;
-  }
 
   return (
     <PageTransition variant="default">
