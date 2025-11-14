@@ -5,6 +5,36 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, User, Building2, MessageSquare } from "lucide-react";
 import { trackFormSubmission, trackLead } from "@/lib/analytics";
+import { z } from "zod";
+
+const contactFormSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
+  email: z.string()
+    .trim()
+    .email("Invalid email address")
+    .max(255, "Email must be less than 255 characters"),
+  company: z.string()
+    .trim()
+    .min(1, "Company name is required")
+    .max(100, "Company name must be less than 100 characters"),
+  phone: z.string()
+    .trim()
+    .max(20, "Phone number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
+  whatsapp: z.string()
+    .trim()
+    .max(20, "WhatsApp number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
+  message: z.string()
+    .trim()
+    .min(1, "Message is required")
+    .max(1000, "Message must be less than 1000 characters"),
+});
 
 export const ContactForm = () => {
   const { toast } = useToast();
@@ -14,48 +44,74 @@ export const ContactForm = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    const formData = new FormData(e.currentTarget);
-    const data = {
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-      company: formData.get('company') as string,
-      phone: formData.get('phone') as string,
-      whatsapp: formData.get('whatsapp') as string,
-      message: formData.get('message') as string,
-    };
-    
-    // Store user info for abandoned checkout tracking
-    localStorage.setItem('userEmail', data.email);
-    localStorage.setItem('userName', data.name);
-    if (data.phone) {
-      localStorage.setItem('userPhone', data.phone);
+    try {
+      const formData = new FormData(e.currentTarget);
+      const rawData = {
+        name: formData.get('name') as string,
+        email: formData.get('email') as string,
+        company: formData.get('company') as string,
+        phone: formData.get('phone') as string || "",
+        whatsapp: formData.get('whatsapp') as string || "",
+        message: formData.get('message') as string,
+      };
+      
+      // Validate input data
+      const validationResult = contactFormSchema.safeParse(rawData);
+      
+      if (!validationResult.success) {
+        const errors = validationResult.error.errors;
+        toast({
+          title: "Validation Error",
+          description: errors[0].message,
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+      
+      const data = validationResult.data;
+      
+      // Store validated user info for abandoned checkout tracking
+      localStorage.setItem('userEmail', data.email);
+      localStorage.setItem('userName', data.name);
+      if (data.phone) {
+        localStorage.setItem('userPhone', data.phone);
+      }
+      if (data.whatsapp) {
+        localStorage.setItem('userWhatsApp', data.whatsapp);
+      }
+      
+      // Track form submission
+      trackFormSubmission('contact_form', {
+        form_type: 'contact',
+        company: data.company
+      });
+      
+      // Track lead generation
+      trackLead('contact_form', {
+        lead_name: data.name,
+        lead_company: data.company
+      });
+      
+      // Simulate form submission
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you within 24 hours.",
+      });
+      
+      setIsSubmitting(false);
+      (e.target as HTMLFormElement).reset();
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit form. Please try again.",
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
     }
-    if (data.whatsapp) {
-      localStorage.setItem('userWhatsApp', data.whatsapp);
-    }
-    
-    // Track form submission
-    trackFormSubmission('contact_form', {
-      form_type: 'contact',
-      company: data.company
-    });
-    
-    // Track lead generation
-    trackLead('contact_form', {
-      lead_name: data.name,
-      lead_company: data.company
-    });
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    
-    setIsSubmitting(false);
-    (e.target as HTMLFormElement).reset();
   };
 
   return (
