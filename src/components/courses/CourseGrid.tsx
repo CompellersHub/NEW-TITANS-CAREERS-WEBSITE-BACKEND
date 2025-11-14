@@ -1,5 +1,5 @@
 import { CourseCard } from "./CourseCard";
-import { Skeleton } from "@/components/ui/skeleton";
+import { CourseCardSkeleton } from "./CourseCardSkeleton";
 
 interface CourseGridProps {
   courses: any[];
@@ -10,12 +10,8 @@ export function CourseGrid({ courses, loading }: CourseGridProps) {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
-          <div key={i} className="space-y-4">
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-          </div>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
+          <CourseCardSkeleton key={i} />
         ))}
       </div>
     );

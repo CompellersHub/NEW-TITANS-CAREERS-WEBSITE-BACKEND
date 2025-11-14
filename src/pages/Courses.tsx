@@ -1,12 +1,33 @@
 import { CourseGrid } from "@/components/courses/CourseGrid";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { SEO } from "@/components/SEO";
+import { usePagination } from "@/hooks/usePagination";
+import { useState, useEffect } from "react";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    goToPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+    totalItems,
+  } = usePagination({ items: coursesArray, itemsPerPage: 12 });
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
   
   return (
     <PageTransition variant="slide">
@@ -31,7 +52,20 @@ export default function Courses() {
               Transform your career with industry-leading training programs designed by experts
             </p>
           </div>
-          <CourseGrid courses={coursesArray} />
+          
+          <CourseGrid courses={currentItems} loading={isLoading} />
+          
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={totalItems}
+            className="mt-12"
+          />
         </div>
         <Footer />
       </div>
