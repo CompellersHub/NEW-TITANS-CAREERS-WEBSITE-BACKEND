@@ -21,7 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Changed to false - no need for artificial loading
   const isMobile = useIsMobile();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -71,10 +71,7 @@ export default function Courses() {
     threshold: 80,
   });
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 400);
-    return () => clearTimeout(timer);
-  }, []);
+  // Remove artificial loading delay - courses are available immediately
 
   // Set up intersection observer for infinite scroll
   useEffect(() => {
