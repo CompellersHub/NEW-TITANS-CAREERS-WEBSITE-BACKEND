@@ -3,17 +3,22 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
+import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Users, Award, Heart, TrendingUp, Zap, BookOpen, Briefcase } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AboutPageSkeleton } from "@/components/admin/AboutPageSkeleton";
+import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
 
 const About = () => {
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Enable keyboard shortcuts
+  useNavigationShortcuts();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -307,6 +312,7 @@ const About = () => {
 
       <Footer />
       <ScrollToTop />
+      <KeyboardShortcutsHelper />
       </div>
     </PageTransition>
   );
