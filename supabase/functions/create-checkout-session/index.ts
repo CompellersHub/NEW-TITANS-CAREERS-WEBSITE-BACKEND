@@ -101,6 +101,13 @@ serve(async (req) => {
       }
     }
 
+    console.log('Creating Stripe checkout session with:', {
+      finalPrice,
+      discountAmount,
+      voucherApplied: !!voucherData,
+      userEmail
+    });
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -134,7 +141,17 @@ serve(async (req) => {
       },
     });
 
-    console.log('Checkout session created:', session.id);
+    console.log('Checkout session created successfully:', {
+      sessionId: session.id,
+      checkoutUrl: session.url,
+      amount: session.amount_total,
+      currency: session.currency
+    });
+
+    if (!session.url) {
+      console.error('ERROR: Stripe did not return a checkout URL!', session);
+      throw new Error('Stripe checkout session created but no URL returned');
+    }
 
     return new Response(
       JSON.stringify({ url: session.url }),
