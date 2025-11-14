@@ -55,12 +55,12 @@ export function PaymentFlowDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-background via-background to-accent/5">
+        <DialogHeader className="border-b-2 border-accent/20 pb-4">
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
             {step === 'select' ? 'Choose Your Payment Method' : 'Processing Payment'}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-base font-medium">
             {step === 'select' 
               ? `Select how you'd like to pay for ${courseTitle}`
               : 'Please wait while we process your payment...'
@@ -69,7 +69,7 @@ export function PaymentFlowDialog({
         </DialogHeader>
 
         {step === 'select' ? (
-          <div className="space-y-6">
+          <div className="space-y-6 pt-4">
             <PaymentMethodSelector
               onSelect={handleMethodSelect}
               selectedMethod={selectedMethod}
@@ -77,22 +77,23 @@ export function PaymentFlowDialog({
               discount={discount}
             />
 
-            <div className="flex justify-between items-center pt-4">
+            <div className="flex gap-4 pt-4">
               <Button
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 disabled={isProcessing}
+                className="flex-1 h-12 font-semibold border-2 hover:bg-muted"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleContinue}
                 disabled={!selectedMethod || isProcessing}
-                size="lg"
+                className="flex-1 h-12 font-bold text-base bg-gradient-to-r from-accent to-gold hover:from-accent/90 hover:to-gold/90 text-primary shadow-lg hover:shadow-xl transition-all"
               >
                 {isProcessing ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Processing...
                   </>
                 ) : (
@@ -102,22 +103,29 @@ export function PaymentFlowDialog({
             </div>
 
             {voucherCode && (
-              <p className="text-sm text-center text-muted-foreground">
-                Voucher code <span className="font-mono font-semibold">{voucherCode}</span> applied
-              </p>
+              <div className="text-center py-3 px-4 bg-gradient-to-r from-success/10 to-success/5 rounded-lg border border-success/20">
+                <p className="text-sm font-semibold text-success">
+                  ✓ Voucher code <span className="font-mono font-bold">{voucherCode}</span> applied
+                </p>
+              </div>
             )}
           </div>
         ) : (
-          <div className="py-12 text-center">
-            <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
-            <h3 className="text-lg font-semibold mb-2">Setting up your payment...</h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="py-16 text-center">
+            <div className="relative inline-block mb-6">
+              <div className="absolute inset-0 bg-gradient-to-r from-accent to-gold rounded-full blur-xl opacity-50 animate-pulse" />
+              <Loader2 className="relative h-16 w-16 animate-spin text-accent mx-auto" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-primary to-primary-hover bg-clip-text text-transparent">
+              Setting up your payment...
+            </h3>
+            <p className="text-sm text-muted-foreground font-medium max-w-md mx-auto">
               You'll be redirected to complete your payment securely.
             </p>
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleBack}
-              className="mt-6"
+              className="mt-8 font-semibold border-2"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Go Back

@@ -45,11 +45,16 @@ All colors MUST be HSL.
     --success: 142 76% 36%;
     --warning: 38 92% 50%;
     
-    /* Removed gradients - using solid colors only */
+    /* Premium Payment Card Styling */
+    --payment-card-gradient: linear-gradient(135deg, hsl(213 69% 13%) 0%, hsl(213 69% 18%) 100%);
+    --payment-card-hover: linear-gradient(135deg, hsl(213 69% 16%) 0%, hsl(213 69% 22%) 100%);
+    --payment-accent-gradient: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
     
     --shadow-sm: 0 2px 8px -2px hsl(213 69% 13% / 0.08);
     --shadow-md: 0 8px 24px -4px hsl(213 69% 13% / 0.12);
     --shadow-lg: 0 16px 48px -8px hsl(213 69% 13% / 0.2);
+    --shadow-accent: 0 8px 32px -4px hsl(43 100% 50% / 0.3);
+    --shadow-glow: 0 0 40px hsl(43 100% 50% / 0.2);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
