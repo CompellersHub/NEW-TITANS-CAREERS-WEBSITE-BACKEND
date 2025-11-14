@@ -6,6 +6,7 @@ import { EventDetailAccordion } from "@/components/events/EventDetailAccordion";
 import { StatisticsOverview } from "@/components/events/StatisticsOverview";
 import { SkillLogo } from "@/components/homepage/SkillLogo";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
@@ -13,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Clock, BookOpen, Award, Users, CheckCircle } from "lucide-react";
+import { Clock, BookOpen, Award, Users, CheckCircle, ExternalLink } from "lucide-react";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { SEO } from "@/components/SEO";
 import { generateCourseSchema } from "@/lib/structuredData";
@@ -22,6 +23,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { LessonList } from "@/components/course/LessonList";
 import { CertificateView } from "@/components/course/CertificateView";
 import { DiscussionForum } from "@/components/course/DiscussionForum";
+import { createAcademySSOLink } from "@/lib/academy-integration";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -29,6 +31,7 @@ export default function CourseDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [certificate, setCertificate] = useState<any>(null);
+  const [generatingSSOLink, setGeneratingSSOLink] = useState(false);
   const coursesArray = Object.values(courses);
   const course = coursesArray.find(c => c.slug === slug);
   const { trackCourseView } = useBehaviorTracking();
@@ -85,6 +88,25 @@ export default function CourseDetail() {
       trackCourseView(course.slug, course.title);
     }
   }, [course, trackCourseView]);
+
+  const handleAccessAcademy = async () => {
+    if (!user?.email) {
+      toast.error("Please log in to access the course");
+      return;
+    }
+
+    setGeneratingSSOLink(true);
+    try {
+      const ssoLink = await createAcademySSOLink(user.email);
+      window.open(ssoLink, '_blank');
+      toast.success("Opening Titans Academy...");
+    } catch (error) {
+      console.error("Error generating SSO link:", error);
+      toast.error("Failed to generate access link. Please try again.");
+    } finally {
+      setGeneratingSSOLink(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -251,13 +273,27 @@ export default function CourseDetail() {
             <div className="lg:col-span-1">
               <div className="sticky top-4 p-6 border border-border rounded-lg bg-card shadow-lg">
                 <div className="text-4xl font-kanit font-bold mb-6 text-foreground">£{course.price}</div>
-                <StripeCheckoutButton
-                  courseSlug={course.slug}
-                  courseTitle={course.title}
-                  price={course.price}
-                  size="lg"
-                  className="w-full mb-6"
-                />
+                
+                {isEnrolled ? (
+                  <Button
+                    onClick={handleAccessAcademy}
+                    disabled={generatingSSOLink}
+                    size="lg"
+                    className="w-full mb-6"
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    {generatingSSOLink ? "Generating Link..." : "Access on Titans Academy"}
+                  </Button>
+                ) : (
+                  <StripeCheckoutButton
+                    courseSlug={course.slug}
+                    courseTitle={course.title}
+                    price={course.price}
+                    size="lg"
+                    className="w-full mb-6"
+                  />
+                )}
+                
                 <ul className="space-y-3 text-sm font-sans text-muted-foreground">
                   <li className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-primary" />
