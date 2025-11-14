@@ -195,11 +195,10 @@ export const ContactForm = () => {
 
             {/* Privacy Policy Agreement */}
             <div className="flex items-start gap-3 p-4 bg-gradient-to-br from-muted/30 to-secondary/20 rounded-xl border-2 border-accent/20">
-              <Checkbox
+              <Checkbox 
                 id="privacy"
                 checked={agreedToPrivacy}
                 onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
-                className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
               />
               <label htmlFor="privacy" className="text-sm font-medium leading-relaxed cursor-pointer">
                 I have read and agree to the{' '}

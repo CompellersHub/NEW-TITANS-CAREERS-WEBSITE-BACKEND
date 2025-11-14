@@ -92,7 +92,6 @@ export function PaymentFlowDialog({
                   id="terms"
                   checked={agreedToTerms}
                   onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
                 />
                 <label htmlFor="terms" className="text-sm font-medium leading-relaxed cursor-pointer">
                   I agree to the{' '}
@@ -112,7 +111,6 @@ export function PaymentFlowDialog({
                   id="privacy"
                   checked={agreedToPrivacy}
                   onCheckedChange={(checked) => setAgreedToPrivacy(checked as boolean)}
-                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
                 />
                 <label htmlFor="privacy" className="text-sm font-medium leading-relaxed cursor-pointer">
                   I have read and agree to the{' '}
@@ -132,7 +130,6 @@ export function PaymentFlowDialog({
                   id="refund"
                   checked={agreedToRefund}
                   onCheckedChange={(checked) => setAgreedToRefund(checked as boolean)}
-                  className="mt-1 border-2 data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-accent data-[state=checked]:to-gold"
                 />
                 <label htmlFor="refund" className="text-sm font-medium leading-relaxed cursor-pointer">
                   I understand the{' '}
