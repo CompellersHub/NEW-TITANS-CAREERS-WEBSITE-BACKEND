@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CheckCircle2, Circle, Clock, Lock, Play } from "lucide-react";
 import { toast } from "sonner";
+import { VideoPlayer } from "./VideoPlayer";
 
 interface Lesson {
   id: string;
@@ -18,6 +19,8 @@ interface Lesson {
   duration_minutes: number;
   is_free_preview: boolean;
   completed?: boolean;
+  video_url: string | null;
+  video_duration_seconds: number | null;
 }
 
 interface LessonListProps {
@@ -30,6 +33,8 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [progress, setProgress] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   useEffect(() => {
     loadLessons();
@@ -304,7 +309,16 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
                             </div>
                           </div>
                           {canAccess && (
-                            <Button variant="ghost" size="sm">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                if (lesson.video_url) {
+                                  setSelectedLesson(lesson);
+                                  setIsVideoOpen(true);
+                                }
+                              }}
+                            >
                               <Play className="w-4 h-4" />
                             </Button>
                           )}
@@ -318,6 +332,22 @@ export const LessonList = ({ courseSlug, isEnrolled }: LessonListProps) => {
           </Accordion>
         </CardContent>
       </Card>
+
+      {/* Video Player Modal */}
+      {selectedLesson && selectedLesson.video_url && (
+        <VideoPlayer
+          lessonId={selectedLesson.id}
+          lessonTitle={selectedLesson.title}
+          videoUrl={selectedLesson.video_url}
+          isOpen={isVideoOpen}
+          onClose={() => {
+            setIsVideoOpen(false);
+            setSelectedLesson(null);
+          }}
+          onComplete={() => toggleLessonComplete(selectedLesson.id, false)}
+          userId={user?.id}
+        />
+      )}
     </div>
   );
 };
