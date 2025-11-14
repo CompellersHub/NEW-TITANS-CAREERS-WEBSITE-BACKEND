@@ -4,6 +4,7 @@ import { PageTransition } from "@/components/PageTransition";
 import { BlogGrid } from "@/components/blog/BlogGrid";
 import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
+import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { blogPosts } from "@/data/blogPosts";
@@ -14,13 +15,16 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [isLoading, setIsLoading] = useState(true);
   const isMobile = useIsMobile();
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   // Simulate loading state for data fetching
   useEffect(() => {
@@ -63,7 +67,29 @@ const Blog = () => {
     isLoadingMore,
     loadMore,
     totalDisplayed,
+    reset: resetInfiniteScroll,
   } = useInfiniteScroll({ items: filteredPosts, itemsPerPage: 9, enabled: isMobile });
+
+  // Pull to refresh functionality
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    resetInfiniteScroll();
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 400);
+    toast({
+      title: "Articles refreshed",
+      description: "The article list has been updated.",
+    });
+  };
+
+  const {
+    pullDistance,
+    isRefreshing: isPullRefreshing,
+    isAtThreshold,
+  } = usePullToRefresh({
+    onRefresh: handleRefresh,
+    threshold: 80,
+  });
 
   // Set up intersection observer for infinite scroll
   useEffect(() => {
@@ -111,6 +137,17 @@ const Blog = () => {
         description="Practical career advice, industry insights, and expert tips to help you break into high-paying professional roles. Learn about AML, data analysis, cybersecurity, and more."
         keywords="career blog, professional development tips, AML insights, data analysis advice, cybersecurity news, training tips, career change advice"
       />
+      
+      {/* Pull to Refresh Indicator */}
+      {isMobile && (
+        <PullToRefreshIndicator
+          pullDistance={pullDistance}
+          isRefreshing={isPullRefreshing}
+          isAtThreshold={isAtThreshold}
+          threshold={80}
+        />
+      )}
+      
       <Navbar />
       
       {/* Hero Section */}
