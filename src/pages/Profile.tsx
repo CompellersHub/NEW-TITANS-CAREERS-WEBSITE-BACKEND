@@ -15,6 +15,8 @@ import { Loader2, User, GraduationCap, Settings, Save, Award } from "lucide-reac
 import { SEO } from "@/components/SEO";
 import { CertificateView } from "@/components/course/CertificateView";
 import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { DataFetchError } from "@/components/error/DataFetchError";
 
 interface Profile {
   id: string;
@@ -36,6 +38,8 @@ const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [retrying, setRetrying] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -72,6 +76,7 @@ const Profile = () => {
     if (!user) return;
     
     setLoading(true);
+    setError(null);
     try {
       // Load profile
       const { data: profileData, error: profileError } = await supabase
@@ -122,12 +127,22 @@ const Profile = () => {
       if (certificatesError) throw certificatesError;
       setCertificates(certificatesData || []);
     } catch (error: any) {
-      toast.error("Error loading profile", {
-        description: error.message,
-      });
+      console.error("Error loading profile:", error);
+      setError(error);
+      if (!retrying) {
+        toast.error("Error loading profile", {
+          description: error.message,
+        });
+      }
     } finally {
       setLoading(false);
+      setRetrying(false);
     }
+  };
+
+  const handleRetry = async () => {
+    setRetrying(true);
+    await loadProfileData();
   };
 
   const handleSaveProfile = async () => {
@@ -184,9 +199,30 @@ const Profile = () => {
     );
   }
 
+  if (error && !loading) {
+    return (
+      <ErrorBoundary onReset={handleRetry}>
+        <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col">
+          <Navbar />
+          <div className="flex-1 flex items-center justify-center">
+            <DataFetchError
+              title="Failed to Load Profile"
+              description="We couldn't load your profile data. This might be a temporary connection issue."
+              error={error}
+              onRetry={handleRetry}
+              retrying={retrying}
+            />
+          </div>
+          <Footer />
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
   return (
-    <>
-      <SEO 
+    <ErrorBoundary onReset={loadProfileData}>
+      <>
+        <SEO
         title="My Profile"
         description="Manage your profile, view purchased courses, and update account settings"
       />
@@ -398,6 +434,7 @@ const Profile = () => {
         <Footer />
       </div>
     </>
+    </ErrorBoundary>
   );
 };
 
