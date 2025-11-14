@@ -10,6 +10,11 @@ interface EmptyStateProps {
   action?: {
     label: string;
     onClick: () => void;
+    variant?: "default" | "outline" | "secondary";
+  };
+  secondaryAction?: {
+    label: string;
+    onClick: () => void;
   };
   children?: ReactNode;
 }
@@ -19,6 +24,7 @@ export function EmptyState({
   title,
   description,
   action,
+  secondaryAction,
   children,
 }: EmptyStateProps) {
   return (
@@ -35,11 +41,26 @@ export function EmptyState({
         </CardHeader>
         <CardContent className="space-y-4">
           {children}
-          {action && (
-            <Button onClick={action.onClick} className="w-full">
-              {action.label}
-            </Button>
-          )}
+          <div className="flex flex-col gap-3">
+            {action && (
+              <Button 
+                onClick={action.onClick} 
+                className="w-full"
+                variant={action.variant || "default"}
+              >
+                {action.label}
+              </Button>
+            )}
+            {secondaryAction && (
+              <Button 
+                onClick={secondaryAction.onClick} 
+                variant="outline"
+                className="w-full"
+              >
+                {secondaryAction.label}
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

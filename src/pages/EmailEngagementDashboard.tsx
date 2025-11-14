@@ -7,6 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { DataFetchError } from "@/components/error/DataFetchError";
 import { EngagementDashboardSkeleton } from "@/components/skeletons/EngagementDashboardSkeleton";
+import { EmptyState } from "@/components/error/EmptyState";
+import { Mail, BarChart3, MousePointer } from "lucide-react";
 
 interface EngagementMetrics {
   totalClicks: number;
@@ -247,9 +249,31 @@ export default function EmailEngagementDashboard() {
 
   if (!metrics && !loading) {
     return (
-      <div className="container mx-auto p-6">
-        <p className="text-muted-foreground">No engagement data available</p>
-      </div>
+      <ErrorBoundary onReset={fetchEngagementMetrics}>
+        <EmptyState
+          icon={Mail}
+          title="No Engagement Data Yet"
+          description="Start sending emails to see engagement metrics, open rates, and click tracking analytics here."
+          action={{
+            label: "Refresh Data",
+            onClick: fetchEngagementMetrics,
+            variant: "default"
+          }}
+          secondaryAction={{
+            label: "View Documentation",
+            onClick: () => window.open("/docs", "_blank")
+          }}
+        >
+          <div className="text-sm text-muted-foreground space-y-2 text-left">
+            <p className="font-semibold">Get started by:</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Sending digest emails to users</li>
+              <li>Enabling email notifications</li>
+              <li>Tracking discussion replies via email</li>
+            </ul>
+          </div>
+        </EmptyState>
+      </ErrorBoundary>
     );
   }
 
