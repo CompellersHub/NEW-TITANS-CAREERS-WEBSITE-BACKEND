@@ -28,6 +28,9 @@ serve(async (req) => {
       sms1_sent: 0,
       sms2_sent: 0,
       sms3_sent: 0,
+      whatsapp1_sent: 0,
+      whatsapp2_sent: 0,
+      whatsapp3_sent: 0,
       errors: [] as string[],
     };
 
@@ -50,7 +53,7 @@ serve(async (req) => {
         const sessionAge = now.getTime() - new Date(session.created_at).getTime();
         const hoursOld = sessionAge / (1000 * 60 * 60);
 
-        // Check which emails and SMS have been sent
+        // Check which emails, SMS, and WhatsApp messages have been sent
         const { data: sentEmails } = await supabase
           .from("checkout_abandonment_emails")
           .select("email_sequence_number")
@@ -61,11 +64,18 @@ serve(async (req) => {
           .select("sms_sequence_number")
           .eq("checkout_session_id", session.id);
 
+        const { data: sentWhatsApp } = await supabase
+          .from("checkout_abandonment_whatsapp")
+          .select("whatsapp_sequence_number")
+          .eq("checkout_session_id", session.id);
+
         const sentEmailSequences = new Set(sentEmails?.map(e => e.email_sequence_number) || []);
         const sentSMSSequences = new Set(sentSMS?.map(s => s.sms_sequence_number) || []);
+        const sentWhatsAppSequences = new Set(sentWhatsApp?.map(w => w.whatsapp_sequence_number) || []);
 
         let emailToSend = null;
         let smsToSend = null;
+        let whatsappToSend = null;
         let discountCode = null;
 
         // Email 1: After 1 hour - Gentle reminder
@@ -107,6 +117,20 @@ serve(async (req) => {
               content: `Hi ${session.name || "there"}! You left ${session.course_title} in your cart. Complete your enrollment now: https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
             };
           }
+
+          // WhatsApp 1: After 1 hour
+          if (session.whatsapp && !sentWhatsAppSequences.has(1)) {
+            whatsappToSend = {
+              sequence: 1,
+              type: "reminder",
+              templateId: 1,
+              params: {
+                name: session.name || "there",
+                course: session.course_title,
+                link: `https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+              }
+            };
+          }
         }
         // Email 2: After 24 hours - 10% discount offer
         else if (hoursOld >= 24 && !sentEmailSequences.has(2)) {
@@ -143,6 +167,32 @@ serve(async (req) => {
               </div>
             `,
           };
+
+          // SMS 2: After 24 hours  
+          if (session.phone && !sentSMSSequences.has(2)) {
+            smsToSend = {
+              sequence: 2,
+              type: "discount",
+              content: `🎉 Special offer! Get 10% OFF ${session.course_title} with code COMEBACK10. Valid 48hrs: https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+            };
+          }
+
+          // WhatsApp 2: After 24 hours
+          if (session.whatsapp && !sentWhatsAppSequences.has(2)) {
+            whatsappToSend = {
+              sequence: 2,
+              type: "discount",
+              templateId: 2,
+              params: {
+                name: session.name || "there",
+                course: session.course_title,
+                discount: "10%",
+                code: "COMEBACK10",
+                validity: "48 hours",
+                link: `https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+              }
+            };
+          }
         }
         // Email 3: After 72 hours - Final urgency + 15% discount
         else if (hoursOld >= 72 && !sentEmailSequences.has(3)) {
@@ -192,6 +242,23 @@ serve(async (req) => {
               sequence: 3,
               type: "urgency",
               content: `⏰ LAST CHANCE! 15% OFF ${session.course_title} with code LASTCHANCE15. Expires tonight: https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+            };
+          }
+
+          // WhatsApp 3: After 72 hours
+          if (session.whatsapp && !sentWhatsAppSequences.has(3)) {
+            whatsappToSend = {
+              sequence: 3,
+              type: "urgency",
+              templateId: 3,
+              params: {
+                name: session.name || "there",
+                course: session.course_title,
+                discount: "15%",
+                code: "LASTCHANCE15",
+                urgency: "TONIGHT",
+                link: `https://gfmhhnynyxvmekhvytgg.supabase.co/courses/${session.course_slug}`
+              }
             };
           }
         }
@@ -245,6 +312,89 @@ serve(async (req) => {
               .eq("id", session.id);
           }
         }
+
+        // Send SMS via Brevo
+        if (smsToSend && session.phone) {
+          try {
+            const smsResponse = await fetch("https://api.brevo.com/v3/transactionalSMS/sms", {
+              method: "POST",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "api-key": brevoApiKey,
+              },
+              body: JSON.stringify({
+                type: "transactional",
+                sender: "TitansAcad",
+                recipient: session.phone,
+                content: smsToSend.content,
+              }),
+            });
+
+            if (!smsResponse.ok) {
+              const errorText = await smsResponse.text();
+              throw new Error(`Brevo SMS API error: ${smsResponse.status} - ${errorText}`);
+            }
+
+            // Track SMS send
+            await supabase.from("checkout_abandonment_sms").insert({
+              checkout_session_id: session.id,
+              sms_type: smsToSend.type,
+              sms_sequence_number: smsToSend.sequence,
+              discount_code: discountCode,
+            });
+
+            console.log(`SMS ${smsToSend.sequence} sent to ${session.phone} for session ${session.id}`);
+            results[`sms${smsToSend.sequence}_sent` as keyof typeof results]++;
+          } catch (smsError: any) {
+            console.error(`Failed to send SMS to ${session.phone}:`, smsError.message);
+            results.errors.push(`SMS error for ${session.email}: ${smsError.message}`);
+          }
+        }
+
+        // Send WhatsApp via Brevo
+        if (whatsappToSend && session.whatsapp) {
+          try {
+            const whatsappResponse = await fetch("https://api.brevo.com/v3/whatsappCampaigns/send", {
+              method: "POST",
+              headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "api-key": brevoApiKey,
+              },
+              body: JSON.stringify({
+                recipientPhoneNumber: session.whatsapp,
+                templateId: whatsappToSend.templateId,
+                language: "en",
+                parameters: whatsappToSend.params,
+              }),
+            });
+
+            if (!whatsappResponse.ok) {
+              const errorText = await whatsappResponse.text();
+              throw new Error(`Brevo WhatsApp API error: ${whatsappResponse.status} - ${errorText}`);
+            }
+
+            const whatsappData = await whatsappResponse.json();
+
+            // Track WhatsApp send
+            await supabase.from("checkout_abandonment_whatsapp").insert({
+              checkout_session_id: session.id,
+              whatsapp_type: whatsappToSend.type,
+              whatsapp_sequence_number: whatsappToSend.sequence,
+              discount_code: discountCode,
+              message_id: whatsappData.messageId || null,
+            });
+
+            console.log(`WhatsApp ${whatsappToSend.sequence} sent to ${session.whatsapp} for session ${session.id}`);
+            results[`whatsapp${whatsappToSend.sequence}_sent` as keyof typeof results]++;
+          } catch (whatsappError: any) {
+            console.error(`Failed to send WhatsApp to ${session.whatsapp}:`, whatsappError.message);
+            results.errors.push(`WhatsApp error for ${session.email}: ${whatsappError.message}`);
+          }
+        }
+
+        results.processed++;
       } catch (error) {
         const errorMsg = `Error processing session ${session.id}: ${error instanceof Error ? error.message : "Unknown error"}`;
         console.error(errorMsg);
