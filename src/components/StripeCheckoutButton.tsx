@@ -136,14 +136,18 @@ export function StripeCheckoutButton({
         })
       });
 
+      console.log('Checkout response status:', response.status);
       const data = await response.json();
+      console.log('Checkout session data:', data);
       
       if (data?.url) {
+        console.log('Redirecting to checkout URL:', data.url);
         // Store session ID for completion tracking
         localStorage.setItem('checkoutSessionId', sessionId);
         window.location.href = data.url;
       } else {
-        throw new Error('No checkout URL received');
+        console.error('No checkout URL in response. Full response:', data);
+        throw new Error(data?.error || 'No checkout URL received');
       }
     } catch (error) {
       toast.error('Failed to start checkout. Please try again.');
