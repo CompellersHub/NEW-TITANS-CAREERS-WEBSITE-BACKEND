@@ -33,64 +33,85 @@ export function PaymentMethodCard({ method, selected, onSelect, price }: Payment
   return (
     <Card
       className={cn(
-        "relative cursor-pointer transition-all duration-200 p-6 hover:shadow-lg",
-        selected && "ring-2 ring-primary shadow-lg",
+        "relative cursor-pointer transition-all duration-300 p-6 border-2 overflow-hidden",
+        "hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1",
+        selected 
+          ? "border-accent shadow-accent bg-gradient-to-br from-primary/5 to-accent/5" 
+          : "border-border hover:border-accent/50 bg-card",
         "group"
       )}
       onClick={onSelect}
     >
+      {/* Accent bar on selected */}
+      {selected && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent via-gold to-accent" />
+      )}
+
       {/* Selection Check */}
       {selected && (
-        <div className="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-          <Check className="w-4 h-4 text-primary-foreground" />
+        <div className="absolute top-4 right-4 w-8 h-8 bg-gradient-to-br from-accent to-gold rounded-full flex items-center justify-center shadow-md">
+          <Check className="w-5 h-5 text-primary font-bold" />
         </div>
       )}
 
       {/* Badge */}
       {method.badge && (
-        <Badge className={cn("mb-3", badgeColors[method.badge])}>
+        <Badge className={cn(
+          "mb-3 uppercase text-xs font-semibold tracking-wide",
+          method.badge === 'popular' && "bg-gradient-to-r from-accent to-gold text-primary border-0",
+          method.badge === 'secure' && "bg-gradient-to-r from-accent to-gold text-primary border-0",
+          method.badge === 'flexible' && "bg-primary text-primary-foreground",
+          method.badge === 'traditional' && "bg-muted text-muted-foreground"
+        )}>
           {method.badge.charAt(0).toUpperCase() + method.badge.slice(1)}
         </Badge>
       )}
 
       {/* Icon and Title */}
-      <div className="flex items-start gap-4 mb-3">
+      <div className="flex items-start gap-4 mb-4">
         <div className={cn(
-          "w-12 h-12 rounded-lg flex items-center justify-center transition-colors",
-          selected ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+          "w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 shadow-md",
+          selected 
+            ? "bg-gradient-to-br from-accent to-gold text-primary scale-110" 
+            : "bg-gradient-to-br from-muted to-secondary text-muted-foreground group-hover:from-accent/20 group-hover:to-gold/20"
         )}>
           {method.icon}
         </div>
         <div className="flex-1">
-          <h3 className="font-semibold text-lg mb-1">{method.name}</h3>
-          <p className="text-sm text-muted-foreground">{method.tagline}</p>
+          <h3 className="font-bold text-xl mb-1 text-foreground">{method.name}</h3>
+          <p className="text-sm text-muted-foreground font-medium">{method.tagline}</p>
         </div>
       </div>
 
       {/* Monthly Payment Preview for Payl8r */}
       {method.monthlyFrom && price && (
-        <div className="mb-3 p-3 bg-secondary/20 rounded-lg">
-          <p className="text-sm font-medium">
-            From <span className="text-lg font-bold text-primary">{method.monthlyFrom}</span>
+        <div className="mb-4 p-4 bg-gradient-to-br from-accent/10 to-gold/10 rounded-xl border border-accent/20">
+          <p className="text-sm font-medium text-foreground">
+            From <span className="text-2xl font-bold bg-gradient-to-r from-accent to-gold bg-clip-text text-transparent">{method.monthlyFrom}</span>
           </p>
-          <p className="text-xs text-muted-foreground">with 0% APR available</p>
+          <p className="text-xs text-muted-foreground font-medium">with 0% APR available</p>
         </div>
       )}
 
       {/* Benefits */}
-      <ul className="space-y-2 mb-4">
+      <ul className="space-y-2.5 mb-4">
         {method.benefits.map((benefit, index) => (
-          <li key={index} className="flex items-start gap-2 text-sm">
-            <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-            <span>{benefit}</span>
+          <li key={index} className="flex items-start gap-3 text-sm">
+            <div className="w-5 h-5 rounded-full bg-gradient-to-br from-accent to-gold flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Check className="w-3 h-3 text-primary font-bold" />
+            </div>
+            <span className="text-foreground font-medium">{benefit}</span>
           </li>
         ))}
       </ul>
 
       {/* Processing Time */}
-      <p className="text-xs text-muted-foreground mb-3">
-        <span className="font-medium">Processing:</span> {method.processingTime}
-      </p>
+      <div className="flex items-center gap-2 mb-3 text-sm">
+        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-accent to-gold" />
+        <p className="text-muted-foreground">
+          <span className="font-semibold text-foreground">Processing:</span> {method.processingTime}
+        </p>
+      </div>
 
       {/* Disclaimer (for Payl8r) */}
       {method.disclaimer && (

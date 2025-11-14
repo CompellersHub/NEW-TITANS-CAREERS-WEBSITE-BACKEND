@@ -81,12 +81,16 @@ export default {
         'md': 'var(--shadow-md)',
         'lg': 'var(--shadow-lg)',
         'accent': 'var(--shadow-accent)',
+        'glow': 'var(--shadow-glow)',
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
         'gradient-hero': 'var(--gradient-hero)',
         'gradient-accent': 'var(--gradient-accent)',
         'gradient-card': 'var(--gradient-card)',
+        'payment-card': 'var(--payment-card-gradient)',
+        'payment-card-hover': 'var(--payment-card-hover)',
+        'payment-accent': 'var(--payment-accent-gradient)',
       },
       keyframes: {
         "accordion-down": {
