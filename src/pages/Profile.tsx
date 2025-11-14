@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { Loader2, User, GraduationCap, Settings, Save, Award } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { CertificateView } from "@/components/course/CertificateView";
+import { NotificationPreferences } from "@/components/notifications/NotificationPreferences";
 
 interface Profile {
   id: string;
@@ -173,7 +174,7 @@ const Profile = () => {
             </div>
 
             <Tabs defaultValue="profile" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 mb-8">
+              <TabsList className="grid w-full grid-cols-5 mb-8">
                 <TabsTrigger value="profile" className="flex items-center gap-2">
                   <User className="h-4 w-4" />
                   Profile
@@ -185,6 +186,10 @@ const Profile = () => {
                 <TabsTrigger value="certificates" className="flex items-center gap-2">
                   <Award className="h-4 w-4" />
                   Certificates
+                </TabsTrigger>
+                <TabsTrigger value="notifications" className="flex items-center gap-2">
+                  <Settings className="h-4 w-4" />
+                  Notifications
                 </TabsTrigger>
                 <TabsTrigger value="settings" className="flex items-center gap-2">
                   <Settings className="h-4 w-4" />
@@ -325,6 +330,10 @@ const Profile = () => {
                     )}
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="notifications">
+                <NotificationPreferences />
               </TabsContent>
 
               <TabsContent value="settings">
