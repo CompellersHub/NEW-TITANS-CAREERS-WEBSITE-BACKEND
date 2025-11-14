@@ -1,6 +1,7 @@
 import { CourseGrid } from "@/components/courses/CourseGrid";
 import { CourseCardSkeleton } from "@/components/courses/CourseCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
+import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndicator";
 import { courses } from "@/data/courses";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -8,16 +9,19 @@ import { PageTransition } from "@/components/PageTransition";
 import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Courses() {
   const coursesArray = Object.values(courses);
   const [isLoading, setIsLoading] = useState(true);
   const isMobile = useIsMobile();
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
   
   // Pagination for desktop
   const {
@@ -39,7 +43,27 @@ export default function Courses() {
     isLoadingMore,
     loadMore,
     totalDisplayed,
+    reset: resetInfiniteScroll,
   } = useInfiniteScroll({ items: coursesArray, itemsPerPage: 12, enabled: isMobile });
+
+  // Pull to refresh functionality
+  const handleRefresh = async () => {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    resetInfiniteScroll();
+    toast({
+      title: "Courses refreshed",
+      description: "The course list has been updated.",
+    });
+  };
+
+  const {
+    pullDistance,
+    isRefreshing: isPullRefreshing,
+    isAtThreshold,
+  } = usePullToRefresh({
+    onRefresh: handleRefresh,
+    threshold: 80,
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 400);
@@ -75,6 +99,17 @@ export default function Courses() {
         description="Browse our complete catalog of professional training courses including AML/KYC, Data Analysis, Cybersecurity, Business Analysis, and more. Industry-leading programs with 85% job placement rate."
         keywords="training courses catalog, professional courses, AML certification, data analysis training, cybersecurity courses, business analyst training, compliance courses"
       />
+      
+      {/* Pull to Refresh Indicator */}
+      {isMobile && (
+        <PullToRefreshIndicator
+          pullDistance={pullDistance}
+          isRefreshing={isPullRefreshing}
+          isAtThreshold={isAtThreshold}
+          threshold={80}
+        />
+      )}
+      
       <div className="min-h-screen bg-background">
         <Navbar />
         <div className="container mx-auto py-32 px-4">
