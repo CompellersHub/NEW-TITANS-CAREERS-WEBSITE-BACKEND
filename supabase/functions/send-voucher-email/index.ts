@@ -96,136 +96,194 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log(`Sending to ${emailList.length} recipients`);
 
-    // Create HTML email template
-    const discountText = voucher.discount_type === "percentage" 
-      ? `${voucher.discount_value}% OFF`
-      : `$${voucher.discount_value} OFF`;
-
-    const expiryText = voucher.expires_at 
-      ? `Expires: ${new Date(voucher.expires_at).toLocaleDateString()}`
-      : "No expiration";
-
-    const courseText = voucher.course_id 
-      ? `Valid for specific course`
-      : "Valid for any course";
-
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: #ffffff; padding: 40px 20px; border: 1px solid #e0e0e0; }
-            .voucher-code { background: #f8f9fa; border: 2px dashed #667eea; padding: 20px; text-align: center; margin: 30px 0; border-radius: 8px; }
-            .code { font-size: 32px; font-weight: bold; color: #667eea; letter-spacing: 2px; font-family: monospace; }
-            .details { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
-            .detail-label { font-weight: 600; color: #666; }
-            .detail-value { color: #333; }
-            .cta { text-align: center; margin: 30px 0; }
-            .button { display: inline-block; background: #667eea; color: white; padding: 15px 40px; text-decoration: none; border-radius: 6px; font-weight: 600; }
-            .footer { text-align: center; color: #999; font-size: 14px; padding: 20px; }
-            .message { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🎉 Your Exclusive Voucher</h1>
-              <p style="margin: 10px 0 0 0; opacity: 0.9;">Special discount just for you!</p>
-            </div>
-            <div class="content">
-              ${message ? `<div class="message">${message}</div>` : ''}
-              
-              <p>We're excited to share this exclusive voucher code with you!</p>
-              
-              <div class="voucher-code">
-                <div style="color: #666; font-size: 14px; margin-bottom: 10px;">YOUR VOUCHER CODE</div>
-                <div class="code">${voucher.code}</div>
-                <div style="color: #666; font-size: 14px; margin-top: 10px;">Copy and paste this code at checkout</div>
-              </div>
-              
-              <div class="details">
-                <div class="detail-row">
-                  <span class="detail-label">Discount:</span>
-                  <span class="detail-value" style="color: #28a745; font-weight: bold;">${discountText}</span>
-                </div>
-                <div class="detail-row">
-                  <span class="detail-label">Applicability:</span>
-                  <span class="detail-value">${courseText}</span>
-                </div>
-                ${voucher.usage_limit ? `
-                <div class="detail-row">
-                  <span class="detail-label">Usage Limit:</span>
-                  <span class="detail-value">${voucher.usage_limit} time(s)</span>
-                </div>
-                ` : ''}
-                <div class="detail-row" style="border: none;">
-                  <span class="detail-label">Valid Until:</span>
-                  <span class="detail-value">${expiryText}</span>
-                </div>
-              </div>
-              
-              <div class="cta">
-                <a href="${Deno.env.get("SUPABASE_URL")?.replace('.supabase.co', '') || ''}/courses" class="button">Browse Courses</a>
-              </div>
-              
-              <p style="color: #666; font-size: 14px; margin-top: 30px;">
-                <strong>How to use:</strong><br>
-                1. Browse our course catalog<br>
-                2. Add your desired course to cart<br>
-                3. Enter code <strong>${voucher.code}</strong> at checkout<br>
-                4. Enjoy your discount!
-              </p>
-            </div>
-            <div class="footer">
-              <p>This voucher was sent to you from Titans Careers</p>
-              <p style="font-size: 12px;">If you didn't expect this email, you can safely ignore it.</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `;
-
-    // Send emails in batches to avoid rate limits
+    // Batch process emails (send in groups of 50 to avoid rate limits)
     const batchSize = 50;
-    const results = [];
-    
+    const batches = [];
     for (let i = 0; i < emailList.length; i += batchSize) {
-      const batch = emailList.slice(i, i + batchSize);
-      
-      try {
-        const emailResponse = await resend.emails.send({
-          from: "Titans Careers <onboarding@resend.dev>",
-          to: batch,
-          subject: subject || `Your Exclusive Voucher: ${voucher.code}`,
-          html: htmlContent,
-        });
-
-        console.log(`Batch ${i / batchSize + 1} sent successfully:`, emailResponse);
-        results.push({ batch: i / batchSize + 1, success: true, count: batch.length });
-      } catch (batchError: any) {
-        console.error(`Error sending batch ${i / batchSize + 1}:`, batchError);
-        results.push({ batch: i / batchSize + 1, success: false, error: batchError.message, count: batch.length });
-      }
+      batches.push(emailList.slice(i, i + batchSize));
     }
 
-    // Log distribution
-    await supabase.from("voucher_distributions").insert({
-      voucher_id: voucherId,
-      segment_id: segmentId || null,
-      recipient_count: emailList.length,
-      distributed_by: null, // Could be populated from auth context if needed
-      distribution_method: segmentId ? "segment" : "manual",
-    });
+    let totalSent = 0;
+    let totalFailed = 0;
+    const trackingRecords: Array<{
+      voucher_id: string;
+      recipient_email: string;
+      tracking_id: string;
+      sent_at: string;
+      status: string;
+    }> = [];
+
+    for (const batch of batches) {
+      const sendPromises = batch.map(async (recipientEmail) => {
+        try {
+          // Generate unique tracking ID for this send
+          const trackingId = crypto.randomUUID();
+          
+          // Create email send tracking record
+          const { data: sendRecord, error: sendError } = await supabase
+            .from("email_sends")
+            .insert({
+              email: recipientEmail,
+              tracking_id: trackingId,
+            })
+            .select()
+            .single();
+
+          if (sendError) {
+            console.error("Error creating send record:", sendError);
+            throw sendError;
+          }
+
+          // Create HTML email template with tracking
+          const discountText = voucher.discount_type === "percentage"
+            ? `${voucher.discount_value}% OFF`
+            : `$${voucher.discount_value} OFF`;
+
+          const expiryText = voucher.expires_at 
+            ? `Expires: ${new Date(voucher.expires_at).toLocaleDateString()}`
+            : "No expiration";
+
+          const courseText = voucher.course_id 
+            ? `Valid for specific course`
+            : "Valid for any course";
+
+          // Build tracking URLs
+          const trackingPixelUrl = `${supabaseUrl}/functions/v1/track-email-open?id=${trackingId}`;
+          const coursesUrl = `${supabaseUrl}/functions/v1/track-email-click?id=${trackingId}&url=${encodeURIComponent(`${supabaseUrl?.replace('.supabase.co', '') || ''}/courses`)}`;
+
+          const htmlContent = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; line-height: 1.6; color: #333; }
+      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+      .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+      .content { background: #ffffff; padding: 40px 20px; border: 1px solid #e0e0e0; }
+      .voucher-code { background: #f8f9fa; border: 2px dashed #667eea; padding: 20px; text-align: center; margin: 30px 0; border-radius: 8px; }
+      .code { font-size: 32px; font-weight: bold; color: #667eea; letter-spacing: 2px; font-family: monospace; }
+      .details { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+      .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e0e0e0; }
+      .detail-label { font-weight: 600; color: #666; }
+      .detail-value { color: #333; }
+      .cta { text-align: center; margin: 30px 0; }
+      .button { display: inline-block; background: #667eea; color: white; padding: 15px 40px; text-decoration: none; border-radius: 6px; font-weight: 600; }
+      .footer { text-align: center; color: #999; font-size: 14px; padding: 20px; }
+      .message { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 style="margin: 0; font-size: 28px;">🎉 Your Exclusive Voucher</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.9;">Special discount just for you!</p>
+      </div>
+      <div class="content">
+        ${message ? `<div class="message">${message}</div>` : ''}
+        
+        <p>We're excited to share this exclusive voucher code with you!</p>
+        
+        <div class="voucher-code">
+          <div style="color: #666; font-size: 14px; margin-bottom: 10px;">YOUR VOUCHER CODE</div>
+          <div class="code">${voucher.code}</div>
+          <div style="color: #666; font-size: 14px; margin-top: 10px;">Copy and paste this code at checkout</div>
+        </div>
+        
+        <div class="details">
+          <div class="detail-row">
+            <span class="detail-label">Discount:</span>
+            <span class="detail-value" style="color: #28a745; font-weight: bold;">${discountText}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Applicability:</span>
+            <span class="detail-value">${courseText}</span>
+          </div>
+          ${voucher.usage_limit ? `
+          <div class="detail-row">
+            <span class="detail-label">Usage Limit:</span>
+            <span class="detail-value">${voucher.usage_limit} time(s)</span>
+          </div>
+          ` : ''}
+          <div class="detail-row" style="border: none;">
+            <span class="detail-label">Valid Until:</span>
+            <span class="detail-value">${expiryText}</span>
+          </div>
+        </div>
+        
+        <div class="cta">
+          <a href="${coursesUrl}" class="button">Browse Courses</a>
+        </div>
+        
+        <p style="color: #666; font-size: 14px; margin-top: 30px;">
+          Questions? Contact our support team at support@example.com
+        </p>
+      </div>
+      <div class="footer">
+        <p>© ${new Date().getFullYear()} Titans Careers. All rights reserved.</p>
+        <p style="font-size: 12px; margin-top: 10px;">You received this email because you're a valued subscriber.</p>
+      </div>
+    </div>
+    <!-- Tracking pixel -->
+    <img src="${trackingPixelUrl}" width="1" height="1" style="display:none;" alt="" />
+  </body>
+</html>
+          `;
+
+          // Send email via Resend
+          const { data: resendData, error: resendError } = await resend.emails.send({
+            from: "Titans Careers <onboarding@resend.dev>",
+            to: [recipientEmail],
+            subject: subject || `Your Exclusive Voucher Code: ${voucher.code}`,
+            html: htmlContent,
+          });
+
+          if (resendError) {
+            console.error(`Failed to send to ${recipientEmail}:`, resendError);
+            throw resendError;
+          }
+
+          console.log(`Sent to ${recipientEmail}, messageId: ${resendData?.id || 'unknown'}`);
+
+          // Create voucher distribution record
+          trackingRecords.push({
+            voucher_id: voucherId,
+            recipient_email: recipientEmail,
+            tracking_id: trackingId,
+            sent_at: new Date().toISOString(),
+            status: 'sent',
+          });
+
+          return { success: true, email: recipientEmail };
+        } catch (error: any) {
+          console.error(`Error sending to ${recipientEmail}:`, error);
+          return { success: false, email: recipientEmail, error: error.message };
+        }
+      });
+
+      const results = await Promise.all(sendPromises);
+      totalSent += results.filter(r => r.success).length;
+      totalFailed += results.filter(r => !r.success).length;
+
+      console.log(`Batch complete: ${results.filter(r => r.success).length} sent, ${results.filter(r => !r.success).length} failed`);
+    }
+
+    // Insert all voucher distribution records
+    if (trackingRecords.length > 0) {
+      const { error: distError } = await supabase
+        .from("voucher_distributions")
+        .insert(trackingRecords);
+
+      if (distError) {
+        console.error("Error recording voucher distributions:", distError);
+      }
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        totalSent: emailList.length,
-        results 
+        totalSent,
+        totalFailed,
+        message: `Successfully sent ${totalSent} emails${totalFailed > 0 ? `, ${totalFailed} failed` : ''}`
       }),
       {
         status: 200,
