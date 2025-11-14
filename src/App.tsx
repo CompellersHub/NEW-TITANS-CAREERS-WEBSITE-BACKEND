@@ -60,6 +60,7 @@ import EmailEngagementDashboard from "./pages/EmailEngagementDashboard";
 import BankTransferVerification from "./pages/admin/BankTransferVerification";
 import PaymentAnalytics from "./pages/admin/PaymentAnalytics";
 import PaymentManagement from "./pages/admin/PaymentManagement";
+import PayL8rInfo from "./pages/PayL8rInfo";
 
 const queryClient = new QueryClient();
 

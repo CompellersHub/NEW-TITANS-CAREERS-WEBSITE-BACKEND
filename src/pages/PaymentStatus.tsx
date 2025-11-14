@@ -10,23 +10,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { CheckCircle, Clock, AlertCircle, Copy, Upload, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface PaymentOrder {
-  id: string;
-  course_title: string;
-  status: string;
-  amount?: number;
-  final_price?: number;
-  payment_reference?: string;
-  customer_email?: string;
-  customer_name?: string;
-  payment_proof_url?: string;
-  _type?: string;
-}
-
 export default function PaymentStatus() {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get('reference') || searchParams.get('ref');
-  const [order, setOrder] = useState<PaymentOrder | null>(null);
+  const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [proofFile, setProofFile] = useState<File | null>(null);
@@ -40,7 +27,7 @@ export default function PaymentStatus() {
 
   const fetchOrderStatus = async () => {
     // Try bank_transfer_orders first
-    let { data, error } = await supabase
+    let { data, error }: { data: any; error: any } = await supabase
       .from('bank_transfer_orders')
       .select('*')
       .eq('payment_reference', reference)
@@ -62,7 +49,7 @@ export default function PaymentStatus() {
     }
 
     if (!error && data) {
-      setOrder({ ...data, _type: orderType });
+      setOrder(data);
     }
     setLoading(false);
   };
@@ -123,8 +110,8 @@ export default function PaymentStatus() {
           customerEmail: order.customer_email,
           customerName: order.customer_name || 'Student',
           courseTitle: order.course_title,
-          amount: order.amount,
-          paymentReference: order.payment_reference,
+          amount: order.amount || order.final_price,
+          paymentReference: order.payment_reference || reference,
           expiresAt: order.expires_at,
         },
       });
@@ -225,7 +212,7 @@ export default function PaymentStatus() {
                     </Button>
                   </div>
 
-                  {order._type === 'bank_transfer' && !order.payment_proof_url && (
+                  {!order.payment_proof_url && (
                     <div className="border border-border rounded-lg p-4 space-y-4">
                       <h3 className="font-semibold">Upload Payment Proof</h3>
                       <p className="text-sm text-muted-foreground">
