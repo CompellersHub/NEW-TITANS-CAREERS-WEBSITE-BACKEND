@@ -10,6 +10,7 @@ import { Calendar, TrendingUp, MousePointer, Users, Mail, Award, Inbox } from "l
 import { format, subDays, startOfDay, endOfDay } from "date-fns";
 import { AnalyticsDashboardSkeleton } from "@/components/skeletons/AnalyticsDashboardSkeleton";
 import { EmptyState } from "@/components/error/EmptyState";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 
 interface EngagementMetrics {
   totalOpens: number;
@@ -215,18 +216,16 @@ export default function EngagementAnalytics() {
     }
   };
 
-  if (loading) {
-    return <AnalyticsDashboardSkeleton />;
-  }
-
   return (
-    <div className="container mx-auto py-8 px-4 animate-fade-in">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Engagement Analytics</h1>
-        <p className="text-muted-foreground">Track email opens, clicks, and lead scoring performance</p>
-      </div>
-
-      {/* Time Range Filter */}
+    <AdminLayout
+      title="Engagement Analytics"
+      description="Track email opens, clicks, and lead scoring performance"
+    >
+      {loading ? (
+        <AnalyticsDashboardSkeleton />
+      ) : (
+        <div className="animate-fade-in">
+          {/* Time Range Filter */}
       <div className="flex gap-2 mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
         <Button
           variant={timeRange === 7 ? "default" : "outline"}
@@ -418,6 +417,8 @@ export default function EngagementAnalytics() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+        </div>
+      )}
+    </AdminLayout>
   );
 }
