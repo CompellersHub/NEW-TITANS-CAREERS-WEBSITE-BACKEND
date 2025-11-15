@@ -5,38 +5,20 @@ import { Link } from "react-router-dom";
 export const HeroSection = () => {
   return (
     <section className="relative overflow-hidden bg-primary min-h-[90vh] flex items-center">
-      {/* Animated gradient background */}
+      {/* Smooth animated gradient background */}
       <div 
-        className="absolute inset-0 animate-gradient-shift"
+        className="absolute inset-0 bg-gradient-hero animate-gradient-shift"
         style={{
-          background: `linear-gradient(
-            135deg,
-            hsl(213 69% 13%) 0%,
-            hsl(213 69% 10%) 25%,
-            hsl(213 69% 13%) 50%,
-            hsl(220 69% 15%) 75%,
-            hsl(213 69% 13%) 100%
-          )`,
           backgroundSize: '200% 200%',
         }}
       />
       
-      {/* Subtle accent overlay */}
-      <div 
-        className="absolute inset-0 opacity-20 animate-gradient-flow"
-        style={{
-          background: `radial-gradient(
-            ellipse at top left,
-            hsl(43 100% 50% / 0.15) 0%,
-            transparent 50%
-          ), radial-gradient(
-            ellipse at bottom right,
-            hsl(45 67% 47% / 0.1) 0%,
-            transparent 50%
-          )`,
-          backgroundSize: '200% 200%',
-        }}
-      />
+      {/* Enhanced accent overlays with blur */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute -bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px]" />
+      </div>
       
       {/* Grid pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5 z-10" />

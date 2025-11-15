@@ -30,8 +30,11 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="py-24 bg-background">
-      <div className="container px-4">
+    <section className="py-24 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-accent opacity-50" />
+      </div>
+      <div className="container px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
             Loved by Recruiters Worldwide
