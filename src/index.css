@@ -35,8 +35,8 @@ All colors MUST be HSL.
     --gold: 45 67% 47%; /* Gold accent */
     --gold-foreground: 213 69% 13%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 213 69% 13%; /* Using Titans Navy for destructive states */
+    --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
@@ -83,7 +83,7 @@ All colors MUST be HSL.
 
     --sidebar-border: 220 13% 91%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 43 100% 50%; /* Titans Amber */
   }
 
   .dark {
@@ -113,7 +113,7 @@ All colors MUST be HSL.
     --gold: 45 67% 47%;
     --gold-foreground: 213 69% 13%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 213 69% 13%; /* Using Titans Navy for destructive states */
     --destructive-foreground: 0 0% 100%;
 
     --border: 213 69% 20%;
@@ -124,7 +124,7 @@ All colors MUST be HSL.
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary: 213 69% 13%; /* Titans Navy */
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
