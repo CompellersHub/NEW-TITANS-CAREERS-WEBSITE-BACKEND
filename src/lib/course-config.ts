@@ -21,7 +21,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'AML/KYC Compliance',
     shortName: 'AML/KYC',
     category: 'compliance',
-    color: '#0B1F3B', // Titans Navy
+    color: '#EF4444', // Red
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-11-16',
@@ -31,7 +31,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Data Analysis',
     shortName: 'Data Analysis',
     category: 'data',
-    color: '#FFB000', // Titans Amber
+    color: '#3B82F6', // Blue
     duration: 10,
     dayOfWeek: 'Saturday',
     baseStartDate: '2025-11-29',
@@ -41,7 +41,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Business Analysis',
     shortName: 'Business Analysis',
     category: 'business',
-    color: '#C9A227', // Titans Gold
+    color: '#22C55E', // Green
     duration: 16,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-02-07',
@@ -51,7 +51,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Cybersecurity',
     shortName: 'Cybersecurity',
     category: 'cybersecurity',
-    color: '#4B5563', // Titans Grey Dark
+    color: '#A855F7', // Purple
     duration: 12,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-12-07',
@@ -61,7 +61,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Data Privacy & GDPR',
     shortName: 'Data Privacy',
     category: 'compliance',
-    color: '#6B7280', // Titans Grey
+    color: '#F97316', // Orange
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-03',
@@ -71,7 +71,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Crypto & Digital Assets',
     shortName: 'Crypto & Digital Assets',
     category: 'compliance',
-    color: 'linear-gradient(135deg, #0B1F3B 0%, #FFB000 100%)', // Navy to Amber
+    color: '#14B8A6', // Teal
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2026-01-04',
@@ -81,7 +81,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Digital Marketing',
     shortName: 'Digital Marketing',
     category: 'marketing',
-    color: 'linear-gradient(135deg, #C9A227 0%, #FFFFFF 100%)', // Gold to White
+    color: '#EC4899', // Pink
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-10',

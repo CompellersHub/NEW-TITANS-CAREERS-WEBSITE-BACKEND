@@ -92,20 +92,10 @@ export function downloadICalendar(event: CalendarEvent, filename: string = 'even
  * Get course color (handle gradients)
  */
 export function getCourseColor(color: string): { background: string; text: string; border: string } {
-  if (color.startsWith('linear-gradient')) {
-    return {
-      background: color,
-      text: '#FFFFFF',
-      border: 'transparent',
-    };
-  }
-
-  // For solid colors, determine if text should be light or dark
-  const isDark = color === '#0B1F3B' || color === '#4B5563' || color === '#6B7280';
-  
+  // All colors should have white text for consistency
   return {
     background: color,
-    text: isDark ? '#FFFFFF' : '#000000',
+    text: '#FFFFFF',
     border: color,
   };
 }
