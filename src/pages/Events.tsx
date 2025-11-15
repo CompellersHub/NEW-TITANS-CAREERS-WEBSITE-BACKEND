@@ -152,7 +152,7 @@ const Events = () => {
                       </h3>
                       <div className="grid gap-6 md:grid-cols-2">
                         {cohorts.map((event) => {
-                          const courseColors = getCourseColor(config?.color || '#0B1F3B');
+                          const courseColors = getCourseColor(config?.color || '#3B82F6');
                           const metadata = event.metadata as Record<string, any> | null;
                           const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
                           const sessionTime = metadata?.session_time || '7-9pm UK';
@@ -161,75 +161,83 @@ const Events = () => {
                           return (
                             <Card
                               key={event.id}
-                              className="group p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden"
-                              style={{ borderColor: courseColors.border, borderWidth: '2px' }}
+                              className="group p-0 hover:shadow-2xl transition-all duration-300 relative overflow-hidden border-0"
                             >
+                              {/* Colored header section */}
                               <div 
-                                className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-bl-full"
+                                className="h-32 flex items-center justify-center relative"
                                 style={{ background: courseColors.background }}
-                              />
+                              >
+                                <div className="text-white text-5xl font-light">
+                                  {/* Icon placeholder - using cohort number as visual */}
+                                  <span className="font-kanit font-bold">{event.cohort_number}</span>
+                                </div>
+                              </div>
                               
-                              <div className="relative z-10">
-                                <div className="flex items-start justify-between mb-4">
+                              {/* White content section */}
+                              <div className="p-6 bg-white">
+                                <div className="flex items-start justify-between mb-3">
                                   <Badge 
                                     style={{ 
                                       background: courseColors.background,
                                       color: courseColors.text,
-                                      borderColor: courseColors.border
+                                      borderColor: 'transparent'
                                     }}
                                   >
                                     Cohort {event.cohort_number}
                                   </Badge>
-                                  <Badge variant="outline" className="capitalize">
+                                  <Badge 
+                                    variant="outline" 
+                                    className="capitalize border-muted-foreground/20"
+                                  >
                                     {event.status}
                                   </Badge>
                                 </div>
 
-                                <h4 className="font-kanit font-bold text-xl text-primary mb-4">
-                                  {event.title}
+                                <h4 className="font-kanit font-bold text-lg text-foreground mb-1">
+                                  {config?.displayName || event.course_slug}
                                 </h4>
+                                
+                                <p className="text-sm text-muted-foreground mb-4">
+                                  {event.title.replace(config?.displayName + ' - ', '')}
+                                </p>
 
-                                <div className="space-y-3 mb-6">
+                                <div className="space-y-2 mb-5">
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Calendar className="h-4 w-4" style={{ color: courseColors.background }} />
-                                    <span>Starts: {format(new Date(event.start_date), "MMMM d, yyyy")}</span>
+                                    <Calendar className="h-4 w-4" />
+                                    <span>Starts: {format(new Date(event.start_date), "MMM d, yyyy")}</span>
                                   </div>
                                   
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Clock className="h-4 w-4" style={{ color: courseColors.background }} />
+                                    <Clock className="h-4 w-4" />
                                     <span>{durationWeeks} weeks • {sessionDay}s • {sessionTime}</span>
                                   </div>
 
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <MapPin className="h-4 w-4" style={{ color: courseColors.background }} />
+                                    <MapPin className="h-4 w-4" />
                                     <span className="capitalize">{event.location}</span>
                                   </div>
                                 </div>
 
-                                <div className="flex flex-col gap-3">
-                                  <div className="flex gap-3">
-                                    <Button 
-                                      className="flex-1" 
-                                      style={{ 
-                                        background: courseColors.background,
-                                        color: courseColors.text
-                                      }}
-                                      asChild
-                                    >
-                                      <Link to={`/course/${event.course_slug}`}>
-                                        Enroll Now <ArrowRight className="ml-2 h-4 w-4" />
-                                      </Link>
-                                    </Button>
-                                    <Button variant="outline" asChild>
-                                      <Link to={`/course/${event.course_slug}`}>Details</Link>
-                                    </Button>
-                                  </div>
+                                <div className="space-y-2">
+                                  <Button 
+                                    className="w-full font-semibold" 
+                                    style={{ 
+                                      background: courseColors.background,
+                                      color: courseColors.text
+                                    }}
+                                    asChild
+                                  >
+                                    <Link to={`/course/${event.course_slug}`}>
+                                      Start Course <ArrowRight className="ml-2 h-4 w-4" />
+                                    </Link>
+                                  </Button>
                                   
-                                  <div className="flex gap-2">
+                                  <div className="grid grid-cols-2 gap-2">
                                     <Button 
                                       variant="outline" 
                                       size="sm"
-                                      className="flex-1"
+                                      className="text-xs"
                                       onClick={() => {
                                         const calendarEvent = {
                                           title: event.title,
@@ -243,12 +251,12 @@ const Events = () => {
                                       }}
                                     >
                                       <Calendar className="h-3 w-3 mr-1" />
-                                      Add to Google
+                                      Google
                                     </Button>
                                     <Button 
                                       variant="outline" 
                                       size="sm"
-                                      className="flex-1"
+                                      className="text-xs"
                                       onClick={() => {
                                         const calendarEvent = {
                                           title: event.title,
@@ -262,7 +270,7 @@ const Events = () => {
                                       }}
                                     >
                                       <Download className="h-3 w-3 mr-1" />
-                                      Download .ics
+                                      .ics
                                     </Button>
                                   </div>
                                 </div>
