@@ -118,6 +118,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/vouchers/analytics" element={<VoucherAnalytics />} />
           <Route path="/admin/vouchers/export" element={<VoucherExport />} />
           <Route path="/admin/vouchers/scheduled" element={<ScheduledCampaigns />} />
+          <Route path="/admin/scheduled-campaigns" element={<ScheduledCampaigns />} />
           <Route path="/admin/vouchers/campaign-analytics" element={<CampaignAnalytics />} />
           <Route path="/admin/campaign-analytics" element={<CampaignAnalytics />} />
           <Route path="/admin/campaign-approval" element={<CampaignApprovalQueue />} />
