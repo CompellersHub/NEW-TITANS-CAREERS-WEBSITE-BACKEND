@@ -64,6 +64,7 @@ import PayL8rInfo from "./pages/PayL8rInfo";
 import RoleManagement from "./pages/RoleManagement";
 import ContentManager from "./pages/admin/ContentManager";
 import Events from "./pages/Events";
+import EventManagement from "./pages/admin/EventManagement";
 
 const queryClient = new QueryClient();
 
@@ -136,6 +137,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/bank-transfers" element={<BankTransferVerification />} />
           <Route path="/admin/payment-analytics" element={<PaymentAnalytics />} />
           <Route path="/admin/payment-management" element={<PaymentManagement />} />
+          <Route path="/admin/event-management" element={<EventManagement />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="*" element={<NotFound />} />
