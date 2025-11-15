@@ -18,6 +18,7 @@ import { CareerConsultationForm } from "@/components/contact/CareerConsultationF
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 import { SEO } from "@/components/SEO";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 
 const Contact = () => {
@@ -376,11 +377,13 @@ const Contact = () => {
 
             {/* Interactive Map */}
             <div className="lg:col-span-3 h-[600px]">
-              <InteractiveMap 
-                latitude={51.5099}
-                longitude={-0.1415}
-                address="45 Albemarle Street, Mayfair, London W1S 4JL"
-              />
+              <ErrorBoundary fallback={<div className="w-full h-full min-h-[400px] bg-muted rounded-lg flex items-center justify-center">Map is currently unavailable.</div>}>
+                <InteractiveMap 
+                  latitude={51.5099}
+                  longitude={-0.1415}
+                  address="45 Albemarle Street, Mayfair, London W1S 4JL"
+                />
+              </ErrorBoundary>
             </div>
           </div>
         </div>
