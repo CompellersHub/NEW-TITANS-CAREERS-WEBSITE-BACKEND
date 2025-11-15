@@ -63,6 +63,7 @@ import PaymentManagement from "./pages/admin/PaymentManagement";
 import PayL8rInfo from "./pages/PayL8rInfo";
 import RoleManagement from "./pages/RoleManagement";
 import ContentManager from "./pages/admin/ContentManager";
+import Events from "./pages/Events";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +90,7 @@ const AnimatedRoutes = () => {
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/testimonials" element={<Testimonials />} />
         <Route path="/resources" element={<Resources />} />
+        <Route path="/events" element={<Events />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/campaigns" element={<CampaignManager />} />

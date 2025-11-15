@@ -43,6 +43,9 @@ export const Navbar = () => {
             <Link to="/courses" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Courses
             </Link>
+            <Link to="/events" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+              Events
+            </Link>
             <Link to="/about" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               About Us
             </Link>
@@ -222,6 +225,9 @@ export const Navbar = () => {
             </Link>
             <Link to="/courses" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Courses
+            </Link>
+            <Link to="/events" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+              Events
             </Link>
             <Link to="/about" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               About Us

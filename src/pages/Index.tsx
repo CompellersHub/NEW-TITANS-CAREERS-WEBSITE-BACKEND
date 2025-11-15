@@ -26,6 +26,7 @@ import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { Sparkles, Download } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
+import { UpcomingEvents } from "@/components/homepage/UpcomingEvents";
 
 const Index = () => {
   const coursesArray = Object.values(courses);
@@ -121,6 +122,8 @@ const Index = () => {
             </div>
           </div>
         </section>
+        
+        <UpcomingEvents />
         
         <div id="how-it-works">
           <HowItWorksSection />

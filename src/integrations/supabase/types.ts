@@ -1349,6 +1349,81 @@ export type Database = {
         }
         Relationships: []
       }
+      events: {
+        Row: {
+          cohort_number: number | null
+          course_slug: string
+          created_at: string | null
+          created_by: string | null
+          current_participants: number | null
+          description: string | null
+          end_date: string | null
+          event_type: string
+          id: string
+          image_url: string | null
+          instructor_name: string | null
+          is_featured: boolean | null
+          location: string | null
+          max_participants: number | null
+          metadata: Json | null
+          price: number | null
+          registration_link: string | null
+          start_date: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          cohort_number?: number | null
+          course_slug: string
+          created_at?: string | null
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          image_url?: string | null
+          instructor_name?: string | null
+          is_featured?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          metadata?: Json | null
+          price?: number | null
+          registration_link?: string | null
+          start_date: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          cohort_number?: number | null
+          course_slug?: string
+          created_at?: string | null
+          created_by?: string | null
+          current_participants?: number | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          image_url?: string | null
+          instructor_name?: string | null
+          is_featured?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          metadata?: Json | null
+          price?: number | null
+          registration_link?: string | null
+          start_date?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       exit_captures: {
         Row: {
           converted: boolean
@@ -2935,6 +3010,14 @@ export type Database = {
         Returns: string
       }
       generate_certificate_number: { Args: never; Returns: string }
+      generate_cohort_events: {
+        Args: {
+          p_course_slug: string
+          p_course_title: string
+          p_months_ahead?: number
+        }
+        Returns: undefined
+      }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
       grant_admin_role: { Args: { user_email: string }; Returns: string }
       has_role: {
@@ -2973,6 +3056,7 @@ export type Database = {
         Returns: undefined
       }
       update_all_engagement_scores: { Args: never; Returns: undefined }
+      update_event_status: { Args: never; Returns: undefined }
       update_lead_score: {
         Args: { p_behavior: string; p_email: string; p_score_change: number }
         Returns: undefined

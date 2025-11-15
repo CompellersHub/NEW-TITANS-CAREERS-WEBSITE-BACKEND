@@ -7,7 +7,7 @@ interface CourseHeroImageProps {
 
 export function CourseHeroImage({ src, alt, title, subtitle }: CourseHeroImageProps) {
   return (
-    <div className="relative h-56 overflow-hidden">
+    <div className="relative h-56 overflow-hidden rounded-t-lg">
       <img 
         src={src} 
         alt={alt} 
