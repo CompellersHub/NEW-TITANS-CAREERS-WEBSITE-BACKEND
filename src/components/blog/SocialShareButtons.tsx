@@ -83,7 +83,7 @@ export const SocialShareButtons = ({ title, url }: SocialShareButtonsProps) => {
           aria-label="Copy link"
         >
           {copied ? (
-            <Check className="w-5 h-5 text-green-500" />
+            <Check className="w-5 h-5 text-success" />
           ) : (
             <Link2 className="w-5 h-5" />
           )}

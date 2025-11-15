@@ -109,7 +109,7 @@ export function PhoneInput({ value, onChange, label = "WhatsApp Number", require
           {!isValidating && isValid !== null && phoneNumber && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               {isValid ? (
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-success to-green-600 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-full bg-success flex items-center justify-center">
                   <Check className="w-4 h-4 text-white font-bold" />
                 </div>
               ) : (

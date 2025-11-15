@@ -184,11 +184,11 @@ export function StripeCheckoutButton({
   return (
     <div className="w-full space-y-3">
       {appliedVoucher ? (
-        <div className="p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
+        <div className="p-3 bg-success/10 border border-success/20 rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Tag className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium text-green-600">
+              <Tag className="h-4 w-4 text-success" />
+              <span className="text-sm font-medium text-success">
                 {appliedVoucher.code} applied
               </span>
             </div>
@@ -207,8 +207,8 @@ export function StripeCheckoutButton({
               <span className="line-through text-muted-foreground">£{price}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-green-600">Discount:</span>
-              <span className="text-green-600 font-medium">-£{appliedVoucher.discountAmount.toFixed(2)}</span>
+              <span className="text-success">Discount:</span>
+              <span className="text-success font-medium">-£{appliedVoucher.discountAmount.toFixed(2)}</span>
             </div>
           </div>
         </div>

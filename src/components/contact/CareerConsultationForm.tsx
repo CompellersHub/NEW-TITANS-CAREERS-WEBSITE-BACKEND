@@ -292,7 +292,7 @@ Looking forward to discussing my career progression!`;
               <>
                 <MessageCircle className="mr-2 h-5 w-5" />
                 Submit & Connect on WhatsApp
-                {isPhoneValid && <CheckCircle2 className="ml-2 h-5 w-5 text-green-500" />}
+                {isPhoneValid && <CheckCircle2 className="ml-2 h-5 w-5 text-success" />}
               </>
             )}
           </Button>
