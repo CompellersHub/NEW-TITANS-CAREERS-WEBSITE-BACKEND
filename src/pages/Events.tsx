@@ -25,7 +25,7 @@ const Events = () => {
         .select("*")
         .in("status", ["upcoming", "ongoing"]) // Exclude archived and completed
         .order("start_date", { ascending: true })
-        .limit(20);
+        .limit(50); // Increased to ensure all 7 courses × 2 cohorts + buffer
 
       if (selectedCourse) {
         query = query.eq("course_slug", selectedCourse);
