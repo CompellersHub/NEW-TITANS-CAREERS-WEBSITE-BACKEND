@@ -36,8 +36,12 @@ const features = [
 
 export const Features = () => {
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="container px-4">
+    <section className="py-24 bg-gradient-to-b from-background via-secondary/20 to-background relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gold/5 rounded-full blur-[100px]" />
+      </div>
+      <div className="container px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
             Everything You Need to Win

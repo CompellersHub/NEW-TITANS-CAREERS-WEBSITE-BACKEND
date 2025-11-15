@@ -50,6 +50,13 @@ All colors MUST be HSL.
     --payment-card-hover: linear-gradient(135deg, hsl(213 69% 16%) 0%, hsl(213 69% 22%) 100%);
     --payment-accent-gradient: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
     
+    /* Smooth Hero Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(213 69% 13%) 0%, hsl(213 69% 18%) 50%, hsl(213 69% 13%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(43 100% 50% / 0.1) 0%, hsl(45 67% 47% / 0.05) 100%);
+    --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
+    --gradient-overlay: linear-gradient(180deg, hsl(213 69% 13% / 0) 0%, hsl(213 69% 13% / 0.8) 100%);
+    
     --shadow-sm: 0 2px 8px -2px hsl(213 69% 13% / 0.08);
     --shadow-md: 0 8px 24px -4px hsl(213 69% 13% / 0.12);
     --shadow-lg: 0 16px 48px -8px hsl(213 69% 13% / 0.2);
