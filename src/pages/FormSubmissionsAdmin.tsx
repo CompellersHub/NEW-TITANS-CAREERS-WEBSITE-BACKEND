@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { NotificationBell } from "@/components/admin/NotificationBell";
 import { AdminDashboardSkeleton } from "@/components/admin/AdminDashboardSkeleton";
 import { format, formatDistanceToNow, differenceInMilliseconds } from "date-fns";
@@ -107,7 +105,6 @@ interface PresenceState {
 
 const FormSubmissionsAdmin = () => {
   const { isAdmin, isLoading: authLoading, user } = useAuth();
-  const navigate = useNavigate();
   const { toast } = useToast();
   
   const [submissions, setSubmissions] = useState<FormSubmission[]>([]);
