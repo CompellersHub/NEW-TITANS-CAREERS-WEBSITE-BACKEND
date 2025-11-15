@@ -14,9 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download, Mail, LineChart } from "lucide-react";
 import { format } from "date-fns";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import { useNavigate } from "react-router-dom";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { BulkVoucherForm } from "@/components/voucher/BulkVoucherForm";
 import { EmailDistributionDialog } from "@/components/voucher/EmailDistributionDialog";
 import { ScheduledCampaignDialog } from "@/components/voucher/ScheduledCampaignDialog";
@@ -49,7 +47,6 @@ export default function VoucherManager() {
   const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
   const [selectedVoucherForSchedule, setSelectedVoucherForSchedule] = useState<Voucher | null>(null);
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { data: vouchers, isLoading } = useQuery({
     queryKey: ['vouchers'],

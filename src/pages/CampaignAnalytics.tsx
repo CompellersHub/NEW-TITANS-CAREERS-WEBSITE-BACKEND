@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,11 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, TrendingUp, Mail, CheckCircle, AlertCircle, Calendar, BarChart3 } from "lucide-react";
+import { TrendingUp, Mail, CheckCircle, AlertCircle, Calendar, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 
 interface CampaignStats {
   totalCampaigns: number;
@@ -46,7 +44,6 @@ interface TrendData {
 const COLORS = ["hsl(var(--primary))", "hsl(var(--secondary))", "hsl(var(--accent))", "hsl(var(--muted))"];
 
 const CampaignAnalytics = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
   const [stats, setStats] = useState<CampaignStats | null>(null);
   const [performance, setPerformance] = useState<CampaignPerformance[]>([]);
@@ -187,19 +184,17 @@ const CampaignAnalytics = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-1 container mx-auto px-4 py-8">
-          <Skeleton className="h-8 w-64 mb-6" />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <Skeleton className="h-32" />
-            <Skeleton className="h-32" />
-            <Skeleton className="h-32" />
-            <Skeleton className="h-32" />
-          </div>
+      <AdminLayout
+        title="Campaign Analytics"
+        description="Track voucher campaign performance and engagement"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
+          <Skeleton className="h-32" />
         </div>
-        <Footer />
-      </div>
+      </AdminLayout>
     );
   }
 
@@ -216,21 +211,12 @@ const CampaignAnalytics = () => {
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <div className="flex-1 container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate("/admin/vouchers/scheduled")}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Campaigns
-            </Button>
-            <h1 className="text-3xl font-bold">Campaign Analytics</h1>
-          </div>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <AdminLayout
+      title="Campaign Analytics"
+      description="Track voucher campaign performance and engagement"
+    >
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Campaigns</CardTitle>
@@ -433,9 +419,7 @@ const CampaignAnalytics = () => {
             </div>
           </TabsContent>
         </Tabs>
-      </div>
-      <Footer />
-    </div>
+    </AdminLayout>
   );
 };
 
