@@ -9,23 +9,23 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary: Amber bg (#FFB000), Navy text (#0B1F3B), bold
-        default: "bg-accent text-accent-foreground rounded-xl shadow-[0_4px_12px_-4px_hsl(var(--accent)/0.3)] hover:bg-accent/90 hover:shadow-[0_6px_16px_-4px_hsl(var(--accent)/0.4)]",
+        // Primary: Amber bg, White text, glossy shadow
+        default: "bg-accent text-white rounded-xl shadow-md hover:shadow-lg hover:bg-accent-hover",
         
         // Navy button variant
-        primary: "bg-primary text-primary-foreground rounded-xl shadow-[0_2px_8px_-2px_hsl(var(--primary)/0.2)] hover:bg-primary-hover",
+        primary: "bg-primary text-primary-foreground rounded-xl shadow-md hover:shadow-lg hover:bg-primary-hover",
         
-        // Secondary/Outline: Border Amber, transparent bg
-        outline: "border-2 border-accent bg-transparent text-accent rounded-xl hover:bg-accent hover:text-accent-foreground",
+        // Secondary/Outline: Border Amber, white bg
+        outline: "border-2 border-accent bg-white text-accent rounded-xl shadow-sm hover:shadow-md hover:bg-accent hover:text-white",
         
-        // Outline white (for dark backgrounds)
-        outlineWhite: "border-2 border-white text-white bg-transparent rounded-xl hover:bg-white hover:text-primary",
+        // Outline white (for dark Navy backgrounds)
+        outlineWhite: "border-2 border-white text-white bg-transparent rounded-xl shadow-sm hover:shadow-md hover:bg-white hover:text-primary",
         
-        destructive: "bg-destructive text-destructive-foreground rounded-xl hover:bg-destructive/90",
+        destructive: "bg-accent text-white rounded-xl shadow-md hover:shadow-lg hover:bg-accent-hover",
         
-        secondary: "bg-secondary text-secondary-foreground rounded-xl hover:bg-secondary/80",
+        secondary: "bg-secondary text-primary rounded-xl shadow-sm hover:shadow-md hover:bg-secondary/80",
         
-        ghost: "rounded-xl hover:bg-accent/10 hover:text-accent",
+        ghost: "rounded-xl hover:bg-secondary hover:text-primary",
         
         link: "text-accent underline-offset-4 hover:underline",
       },

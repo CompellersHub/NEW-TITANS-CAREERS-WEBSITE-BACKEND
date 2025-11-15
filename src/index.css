@@ -8,60 +8,61 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Titans Careers Brand Colors */
-    --background: 0 0% 100%;
-    --foreground: 213 69% 13%;
+    /* Glossy White Design with Titans Colors Only */
+    --background: 0 0% 100%; /* Pure White */
+    --foreground: 213 69% 13%; /* Titans Navy */
 
-    --card: 0 0% 100%;
-    --card-foreground: 213 69% 13%;
+    --card: 0 0% 100%; /* Pure White */
+    --card-foreground: 213 69% 13%; /* Titans Navy */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 213 69% 13%;
+    --popover: 0 0% 100%; /* Pure White */
+    --popover-foreground: 213 69% 13%; /* Titans Navy */
 
-    --primary: 213 69% 13%; /* Navy */
-    --primary-foreground: 0 0% 100%;
-    --primary-hover: 213 69% 20%;
+    --primary: 213 69% 13%; /* Titans Navy */
+    --primary-foreground: 0 0% 100%; /* White */
+    --primary-hover: 213 69% 20%; /* Lighter Navy */
 
-    --secondary: 220 13% 91%; /* Light Grey */
-    --secondary-foreground: 213 69% 13%;
+    --secondary: 0 0% 98%; /* Off-white for subtle contrast */
+    --secondary-foreground: 213 69% 13%; /* Titans Navy */
 
-    --muted: 220 13% 91%;
-    --muted-foreground: 220 14% 46%; /* Titans Grey #6B7280 */
+    --muted: 0 0% 96%; /* Very light grey */
+    --muted-foreground: 213 69% 13%; /* Titans Navy */
 
-    --accent: 43 100% 50%; /* Amber */
-    --accent-foreground: 213 69% 13%;
-    --accent-hover: 43 100% 45%;
+    --accent: 43 100% 50%; /* Titans Amber */
+    --accent-foreground: 0 0% 100%; /* White on Amber */
+    --accent-hover: 43 100% 45%; /* Darker Amber */
     
-    --gold: 45 67% 47%; /* Gold accent */
-    --gold-foreground: 213 69% 13%;
+    --gold: 45 67% 47%; /* Titans Gold */
+    --gold-foreground: 0 0% 100%; /* White on Gold */
 
-    --destructive: 213 69% 13%; /* Using Titans Navy for destructive states */
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 43 100% 50%; /* Titans Amber for errors */
+    --destructive-foreground: 0 0% 100%; /* White */
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 43 100% 50%;
+    --border: 0 0% 90%; /* Light grey border */
+    --input: 0 0% 100%; /* Pure white inputs */
+    --ring: 43 100% 50%; /* Titans Amber for focus */
     
-    --success: 142 76% 36%;
-    --warning: 38 92% 50%;
+    --success: 45 67% 47%; /* Titans Gold for success */
+    --warning: 43 100% 50%; /* Titans Amber for warnings */
     
-    /* Premium Payment Card Styling */
+    /* Glossy Effects */
     --payment-card-gradient: linear-gradient(135deg, hsl(213 69% 13%) 0%, hsl(213 69% 18%) 100%);
     --payment-card-hover: linear-gradient(135deg, hsl(213 69% 16%) 0%, hsl(213 69% 22%) 100%);
     --payment-accent-gradient: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
     
-    /* Smooth Hero Gradients */
-    --gradient-hero: linear-gradient(180deg, hsl(213 69% 13%) 0%, hsl(220 13% 91%) 100%);
+    /* White-based Gradients */
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(43 100% 50% / 0.1) 0%, hsl(45 67% 47% / 0.05) 100%);
-    --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
-    --gradient-overlay: linear-gradient(180deg, hsl(213 69% 13% / 0) 0%, hsl(213 69% 13% / 0.8) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(43 100% 50% / 0.08) 0%, hsl(45 67% 47% / 0.04) 100%);
+    --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%) 0%, hsl(0 0% 99%) 100%);
+    --gradient-overlay: linear-gradient(180deg, hsl(0 0% 100% / 0) 0%, hsl(0 0% 100% / 0.95) 100%);
     
-    --shadow-sm: 0 2px 8px -2px hsl(213 69% 13% / 0.08);
-    --shadow-md: 0 8px 24px -4px hsl(213 69% 13% / 0.12);
-    --shadow-lg: 0 16px 48px -8px hsl(213 69% 13% / 0.2);
-    --shadow-accent: 0 8px 32px -4px hsl(43 100% 50% / 0.3);
-    --shadow-glow: 0 0 40px hsl(43 100% 50% / 0.2);
+    /* Glossy Shadows */
+    --shadow-sm: 0 1px 3px 0 hsl(213 69% 13% / 0.06), 0 1px 2px -1px hsl(213 69% 13% / 0.06);
+    --shadow-md: 0 4px 6px -1px hsl(213 69% 13% / 0.08), 0 2px 4px -2px hsl(213 69% 13% / 0.08);
+    --shadow-lg: 0 10px 15px -3px hsl(213 69% 13% / 0.1), 0 4px 6px -4px hsl(213 69% 13% / 0.1);
+    --shadow-accent: 0 10px 30px -5px hsl(43 100% 50% / 0.25);
+    --shadow-glow: 0 0 30px hsl(43 100% 50% / 0.15);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -139,11 +140,11 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-muted-foreground antialiased;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
     line-height: 1.6;
-    color: hsl(var(--muted-foreground));
+    background: hsl(var(--background));
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -175,7 +176,7 @@ All colors MUST be HSL.
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
     line-height: 1.6;
-    color: hsl(var(--muted-foreground));
+    color: hsl(var(--foreground));
   }
   
   .bg-grid-pattern {
