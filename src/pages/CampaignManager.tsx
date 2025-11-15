@@ -121,7 +121,7 @@ const CampaignManager = () => {
   const [templateName, setTemplateName] = useState("");
   const [templateDescription, setTemplateDescription] = useState("");
   const [templateTags, setTemplateTags] = useState("");
-  const [selectedSendSegment, setSelectedSendSegment] = useState<string>("");
+  const [selectedSendSegment, setSelectedSendSegment] = useState<string>("all");
 
   const form = useForm<CampaignFormValues>({
     resolver: zodResolver(campaignFormSchema),
@@ -133,7 +133,7 @@ const CampaignManager = () => {
       html_content: "",
       is_active: true,
       priority: 0,
-      segment_id: undefined,
+      segment_id: "all",
     },
   });
 
@@ -227,7 +227,7 @@ const CampaignManager = () => {
       html_content: template.html_content,
       is_active: true,
       priority: 50,
-      segment_id: undefined,
+      segment_id: "all",
     });
     setShowTemplateDialog(false);
     toast({
@@ -300,7 +300,7 @@ const CampaignManager = () => {
             html_content: values.html_content,
             is_active: values.is_active,
             priority: values.priority,
-            segment_id: values.segment_id || null,
+            segment_id: values.segment_id && values.segment_id !== "all" ? values.segment_id : null,
           })
           .eq("id", editingCampaign.id);
 
@@ -321,7 +321,7 @@ const CampaignManager = () => {
             html_content: values.html_content,
             is_active: values.is_active,
             priority: values.priority,
-            segment_id: values.segment_id || null,
+            segment_id: values.segment_id && values.segment_id !== "all" ? values.segment_id : null,
           }]);
 
         if (error) throw error;
@@ -355,7 +355,7 @@ const CampaignManager = () => {
       html_content: campaign.html_content,
       is_active: campaign.is_active,
       priority: campaign.priority,
-      segment_id: (campaign as any).segment_id || undefined,
+      segment_id: (campaign as any).segment_id || "all",
     });
   };
 
@@ -392,12 +392,12 @@ const CampaignManager = () => {
     setIsSending(true);
     try {
       const { error } = await supabase.functions.invoke("send-weekly-campaign", {
-        body: { segmentId: selectedSendSegment || null },
+        body: { segmentId: selectedSendSegment && selectedSendSegment !== "all" ? selectedSendSegment : null },
       });
 
       if (error) throw error;
 
-      const message = selectedSendSegment 
+      const message = selectedSendSegment && selectedSendSegment !== "all"
         ? "Campaign is being sent to the selected segment."
         : "Campaign is being sent to all active subscribers.";
 
@@ -693,7 +693,7 @@ const CampaignManager = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">All subscribers (no segment)</SelectItem>
+                              <SelectItem value="all">All subscribers (no segment)</SelectItem>
                               {segments.map((segment: any) => (
                                 <SelectItem key={segment.id} value={segment.id}>
                                   {segment.name} ({segment.subscriber_count || 0} subscribers)
@@ -950,7 +950,7 @@ const CampaignManager = () => {
                         <SelectValue placeholder="All active subscribers" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All active subscribers</SelectItem>
+                        <SelectItem value="all">All active subscribers</SelectItem>
                         {segments.map((segment: any) => (
                           <SelectItem key={segment.id} value={segment.id}>
                             {segment.name} ({segment.subscriber_count || 0} subscribers)
@@ -959,7 +959,7 @@ const CampaignManager = () => {
                       </SelectContent>
                     </Select>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {selectedSendSegment 
+                      {selectedSendSegment && selectedSendSegment !== "all"
                         ? "Campaign will be sent to subscribers in the selected segment"
                         : "Campaign will be sent to all active subscribers"}
                     </p>
