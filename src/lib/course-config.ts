@@ -1,3 +1,6 @@
+import { BarChart3, Briefcase, Bitcoin, Bug, ShieldCheck, TrendingUp, Shield } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
 /**
  * Centralized course configuration
  * Maps database course_type slugs to consistent display names across the entire platform
@@ -13,6 +16,7 @@ export interface CourseConfig {
   duration: number; // Duration in weeks
   dayOfWeek: 'Saturday' | 'Sunday';
   baseStartDate: string; // ISO date string for first cohort
+  icon: LucideIcon; // Course icon
 }
 
 export const COURSE_CONFIG: Record<string, CourseConfig> = {
@@ -25,6 +29,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-11-16',
+    icon: Shield,
   },
   'data-analysis': {
     slug: 'data-analysis',
@@ -35,6 +40,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 10,
     dayOfWeek: 'Saturday',
     baseStartDate: '2025-11-29',
+    icon: BarChart3,
   },
   'business-analysis': {
     slug: 'business-analysis',
@@ -45,6 +51,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 16,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-02-07',
+    icon: Briefcase,
   },
   'cybersecurity': {
     slug: 'cybersecurity',
@@ -55,6 +62,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 12,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-12-07',
+    icon: Bug,
   },
   'data-privacy': {
     slug: 'data-privacy',
@@ -65,6 +73,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-03',
+    icon: ShieldCheck,
   },
   'crypto-compliance': {
     slug: 'crypto-compliance',
@@ -75,6 +84,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2026-01-04',
+    icon: Bitcoin,
   },
   'digital-marketing': {
     slug: 'digital-marketing',
@@ -85,6 +95,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-10',
+    icon: TrendingUp,
   },
 };
 

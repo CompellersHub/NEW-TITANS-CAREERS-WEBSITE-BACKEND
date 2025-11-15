@@ -157,21 +157,21 @@ const Events = () => {
                           const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
                           const sessionTime = metadata?.session_time || '7-9pm UK';
                           const durationWeeks = metadata?.duration_weeks || config?.duration || 8;
+                          const CourseIcon = config?.icon;
                           
                           return (
                             <Card
                               key={event.id}
                               className="group p-0 hover:shadow-2xl transition-all duration-300 relative overflow-hidden border-0"
                             >
-                              {/* Colored header section */}
+                              {/* Colored header section with icon */}
                               <div 
                                 className="h-32 flex items-center justify-center relative"
                                 style={{ background: courseColors.background }}
                               >
-                                <div className="text-white text-5xl font-light">
-                                  {/* Icon placeholder - using cohort number as visual */}
-                                  <span className="font-kanit font-bold">{event.cohort_number}</span>
-                                </div>
+                                {CourseIcon && (
+                                  <CourseIcon className="w-16 h-16 text-white stroke-[1.5]" />
+                                )}
                               </div>
                               
                               {/* White content section */}
