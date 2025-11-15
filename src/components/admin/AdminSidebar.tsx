@@ -21,7 +21,8 @@ import {
   DollarSign,
   Send,
   CheckCircle,
-  History
+  History,
+  Shield
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -94,15 +95,16 @@ const adminRoutes = [
       { title: "Segment Manager", url: "/admin/segment-manager", icon: Users },
     ],
   },
-  {
-    category: "Settings & Notifications",
-    items: [
-      { title: "Notification Settings", url: "/admin/notification-settings", icon: Bell },
-      { title: "Form Alert Settings", url: "/admin/form-alert-settings", icon: AlertCircle },
-      { title: "Recovery Alert Settings", url: "/admin/recovery-alert-settings", icon: AlertCircle },
-    ],
-  },
-];
+    {
+      category: "Settings & Notifications",
+      items: [
+        { title: "Notification Settings", url: "/admin/notification-settings", icon: Bell },
+        { title: "Form Alert Settings", url: "/admin/form-alert-settings", icon: AlertCircle },
+        { title: "Recovery Alert Settings", url: "/admin/recovery-alert-settings", icon: AlertCircle },
+        { title: "Role Management", url: "/admin/role-management", icon: Shield },
+      ],
+    },
+  ];
 
 export function AdminSidebar() {
   const { state } = useSidebar();
