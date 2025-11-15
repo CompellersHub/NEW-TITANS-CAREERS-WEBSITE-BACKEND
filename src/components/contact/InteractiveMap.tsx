@@ -46,7 +46,6 @@ export function InteractiveMap({
   return (
     <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
       <MapContainer
-        key={`map-${latitude}-${longitude}`}
         center={[latitude, longitude]}
         zoom={15}
         scrollWheelZoom={false}
