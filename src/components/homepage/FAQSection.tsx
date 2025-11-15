@@ -7,28 +7,36 @@ import {
 
 const faqs = [
   {
-    question: "Do I need UK work experience to enroll?",
-    answer: "No, you don't need any UK work experience. Our courses are designed to help you build practical skills and a portfolio that UK employers are looking for, regardless of your background.",
+    question: "Do I need UK work experience to join?",
+    answer: "No! That's the point. We help you gain the practical experience and skills UK employers want, even if you've never worked in the UK before. Our courses include real-world projects that go straight on your CV.",
   },
   {
-    question: "Are the courses CPD accredited?",
-    answer: "Yes, all our courses are CPD (Continuing Professional Development) accredited, which means they meet high standards of quality and are recognized by employers across the UK.",
+    question: "How long does it take to see results?",
+    answer: "Most students complete our courses in 8-12 weeks. You'll have a transformed CV and LinkedIn profile within the first 2 weeks. Many students start getting interview calls within 4-6 weeks of starting.",
   },
   {
-    question: "What kind of support do I get?",
-    answer: "You'll get live instruction from expert trainers, peer support from your cohort, hands-on project feedback, career guidance, CV reviews, and ongoing support even after you complete the course.",
+    question: "Can I really get a remote job?",
+    answer: "Absolutely. We focus on remote-friendly roles in high-demand fields like AML/KYC, Data Analysis, Business Analysis, and Cybersecurity. These roles are actively hiring remote workers, especially in the UK market.",
   },
   {
-    question: "How long are the courses?",
-    answer: "Course duration varies by program, typically ranging from 8-12 weeks. Each course includes live sessions, self-paced learning, and practical projects that fit around your schedule.",
+    question: "What's included in the course?",
+    answer: "You get live expert training, hands-on projects, CV & LinkedIn complete overhaul, interview prep, access to industry tools, CPD-accredited certification, and 3+ months of ongoing career mentoring and job support.",
   },
   {
-    question: "Can I pay in installments?",
-    answer: "Yes, we offer flexible payment plans. Contact us to discuss options that work for your situation.",
+    question: "Can I afford this if I'm currently low-paid?",
+    answer: "Yes. We offer flexible instalment plans through our FCA-regulated finance partner, with options from £99/month. We also have 0% APR available for selected courses. No one should be locked out due to their current salary.",
   },
   {
-    question: "What if I can't attend a live session?",
-    answer: "All live sessions are recorded and made available to you. You'll also have access to our learning materials 24/7, so you can learn at your own pace.",
+    question: "What if I don't have time for a full-time course?",
+    answer: "Our courses are designed for working professionals. Live sessions are in the evenings, recordings are available 24/7, and you can work on projects at your own pace. Most students balance it with their current job.",
+  },
+  {
+    question: "Is there a refund policy?",
+    answer: "Yes. If you're not satisfied within the first 7 days, we offer a full refund, no questions asked. We're confident you'll see the value immediately.",
+  },
+  {
+    question: "How is this different from YouTube or free courses?",
+    answer: "Free content doesn't give you: personalized CV/LinkedIn reviews, real projects for your portfolio, interview practice, expert mentoring, or the accountability of a structured program. We're invested in your success, not just providing content.",
   },
 ];
 
