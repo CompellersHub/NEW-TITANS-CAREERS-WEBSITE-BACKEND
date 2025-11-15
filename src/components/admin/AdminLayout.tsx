@@ -1,10 +1,12 @@
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactNode, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AdminSidebar } from "./AdminSidebar";
+import { AdminCommandPalette } from "./AdminCommandPalette";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -13,7 +15,7 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import { Home } from "lucide-react";
+import { Home, Search } from "lucide-react";
 
 interface AdminLayoutProps {
   title: string;
@@ -64,6 +66,7 @@ export function AdminLayout({ title, description, children }: AdminLayoutProps) 
   const { isAdmin, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !isAdmin) {
@@ -89,6 +92,8 @@ export function AdminLayout({ title, description, children }: AdminLayoutProps) 
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
+      <AdminCommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+      
       <SidebarProvider defaultOpen>
         <div className="flex min-h-screen w-full">
           <AdminSidebar />
@@ -99,7 +104,7 @@ export function AdminLayout({ title, description, children }: AdminLayoutProps) 
               <div className="flex h-14 items-center gap-4 px-6">
                 <SidebarTrigger className="-ml-1" />
                 
-                <Breadcrumb>
+                <Breadcrumb className="flex-1">
                   <BreadcrumbList>
                     <BreadcrumbItem>
                       <BreadcrumbLink href="/admin" className="flex items-center gap-1">
@@ -117,6 +122,19 @@ export function AdminLayout({ title, description, children }: AdminLayoutProps) 
                     )}
                   </BreadcrumbList>
                 </Breadcrumb>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCommandPaletteOpen(true)}
+                  className="gap-2"
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="hidden sm:inline">Search</span>
+                  <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+                    <span className="text-xs">⌘</span>K
+                  </kbd>
+                </Button>
               </div>
             </div>
 
