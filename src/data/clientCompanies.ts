@@ -1,17 +1,39 @@
 export const clientCompanies = [
-  // Banking - UK & International
+  // Global Banks & Financial Institutions
+  { name: 'HSBC', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/320px-HSBC_logo_%282018%29.svg.png' },
   { name: 'Barclays', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Barclays_logo.svg/320px-Barclays_logo.svg.png' },
+  { name: 'Lloyds', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Lloyds_Bank_logo.svg/320px-Lloyds_Bank_logo.svg.png' },
+  { name: 'NatWest', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/NatWest_logo.svg/320px-NatWest_logo.svg.png' },
+  { name: 'Santander', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Banco_Santander_Logotipo.svg/320px-Banco_Santander_Logotipo.svg.png' },
+  { name: 'JP Morgan', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/JPMorgan_Chase_logo.svg/320px-JPMorgan_Chase_logo.svg.png' },
+  { name: 'Citi', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Citi.svg/320px-Citi.svg.png' },
+  { name: 'Standard Chartered', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/2/24/Standard_Chartered_logo_%282021%29.svg/320px-Standard_Chartered_logo_%282021%29.svg.png' },
   { name: 'Wells Fargo', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Wells_Fargo_Bank.svg/320px-Wells_Fargo_Bank.svg.png' },
   { name: 'TSB', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1f/TSB_Bank_logo.svg/320px-TSB_Bank_logo.svg.png' },
   { name: 'Tesco Bank', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/b/b0/Tesco_Logo.svg/320px-Tesco_Logo.svg.png' },
   { name: 'Monzo', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Monzo_2022_logo.svg/320px-Monzo_2022_logo.svg.png' },
-  
-  // Nigerian Banks
   { name: 'Zenith Bank', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Zenith_Bank_logo.svg/320px-Zenith_Bank_logo.svg.png' },
   { name: 'UBA', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/UBA-Logo.svg/320px-UBA-Logo.svg.png' },
-  
-  // International Banking
   { name: 'BNP Paribas', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/54/BNP_Paribas.svg/320px-BNP_Paribas.svg.png' },
+  
+  // Big Tech, Data & Cloud
+  { name: 'Microsoft', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/320px-Microsoft_logo.svg.png' },
+  { name: 'Google', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/320px-Google_2015_logo.svg.png' },
+  { name: 'Amazon', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png' },
+  { name: 'IBM', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/320px-IBM_logo.svg.png' },
+  
+  // Consulting & Professional Services
+  { name: 'Deloitte', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Deloitte.svg/320px-Deloitte.svg.png' },
+  { name: 'PwC', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PwC_Logo.svg/320px-PwC_Logo.svg.png' },
+  { name: 'EY', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/EY_logo_2019.svg/320px-EY_logo_2019.svg.png' },
+  { name: 'KPMG', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/KPMG_logo.svg/320px-KPMG_logo.svg.png' },
+  { name: 'Accenture', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/320px-Accenture.svg.png' },
+  
+  // RegTech / FinTech & Payments
+  { name: 'Stripe', category: 'FinTech', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/320px-Stripe_Logo%2C_revised_2016.svg.png' },
+  { name: 'PayPal', category: 'FinTech', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/320px-PayPal.svg.png' },
+  { name: 'Revolut', category: 'FinTech', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Revolut_Logo.svg/320px-Revolut_Logo.svg.png' },
+  { name: 'Wise', category: 'FinTech', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Wise_logo.svg/320px-Wise_logo.svg.png' },
   
   // Energy
   { name: 'Shell', category: 'Energy', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e8/Shell_logo.svg/320px-Shell_logo.svg.png' },
