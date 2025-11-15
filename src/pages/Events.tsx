@@ -107,21 +107,13 @@ const Events = () => {
                     key={course}
                     size="sm"
                     onClick={() => setSelectedCourse(course)}
-                    style={
-                      isSelected
-                        ? {
-                            background: config?.color || '#3B82F6',
-                            color: '#FFFFFF',
-                            borderColor: 'transparent',
-                          }
-                        : {
-                            background: 'transparent',
-                            color: config?.color || '#3B82F6',
-                            borderColor: config?.color || '#3B82F6',
-                            borderWidth: '1px',
-                          }
-                    }
-                    className="hover:opacity-80 transition-opacity"
+                    style={{
+                      background: config?.color || '#3B82F6',
+                      color: '#FFFFFF',
+                      borderColor: 'transparent',
+                      opacity: isSelected ? 1 : 0.7,
+                    }}
+                    className="hover:opacity-100 transition-opacity"
                   >
                     {config?.shortName || course}
                   </Button>
