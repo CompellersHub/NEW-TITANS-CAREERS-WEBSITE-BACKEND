@@ -38,7 +38,7 @@ export function CourseCard({ course }: CourseCardProps) {
       'data-analysis': 'data-analysis-hero.jpg',
       'cybersecurity': 'cybersecurity-hero.jpg',
       'business-analysis': 'business-analysis-hero.jpg',
-      'digital-marketing': 'business-analysis-hero.jpg',
+      'digital-marketing': 'digital-marketing-hero.jpg',
     };
     return images[slug] || 'data-analysis-hero.jpg';
   };
