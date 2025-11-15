@@ -28,7 +28,8 @@ import {
   Ticket,
   CheckCircle,
   Clock,
-  Megaphone
+  Megaphone,
+  Shield
 } from "lucide-react";
 
 const AdminDashboard = () => {
@@ -126,6 +127,7 @@ const AdminDashboard = () => {
         { to: "/admin/notification-settings", label: "Notification Settings", icon: Bell },
         { to: "/admin/form-alert-settings", label: "Form Alert Settings", icon: AlertTriangle },
         { to: "/admin/recovery-alert-settings", label: "Recovery Alert Settings", icon: AlertTriangle },
+        { to: "/admin/role-management", label: "Role Management", icon: Shield },
       ]
     }
   ];
