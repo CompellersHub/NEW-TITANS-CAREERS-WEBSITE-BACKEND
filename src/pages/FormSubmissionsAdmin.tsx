@@ -1603,7 +1603,8 @@ const FormSubmissionsAdmin = () => {
                     </div>
                   </div>
                 </TooltipProvider>
-            )}
+              )}
+            </div>
           </div>
           <div className="flex gap-2">
               <NotificationBell />
