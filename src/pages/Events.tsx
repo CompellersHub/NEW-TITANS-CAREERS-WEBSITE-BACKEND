@@ -92,10 +92,16 @@ const Events = () => {
               <Filter className="h-5 w-5 text-muted-foreground" />
               <span className="text-sm font-medium text-muted-foreground">Filter by course:</span>
               <Button
-                variant={selectedCourse === null ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCourse(null)}
-                className={selectedCourse === null ? "bg-primary text-white" : ""}
+                style={{
+                  background: selectedCourse === null ? '#0B1F3B' : 'transparent',
+                  color: selectedCourse === null ? '#FFFFFF' : '#0B1F3B',
+                  borderColor: '#0B1F3B',
+                  borderWidth: '1px',
+                  opacity: selectedCourse === null ? 1 : 0.7,
+                }}
+                className="hover:opacity-100 transition-opacity"
               >
                 All Courses
               </Button>
@@ -108,9 +114,10 @@ const Events = () => {
                     size="sm"
                     onClick={() => setSelectedCourse(course)}
                     style={{
-                      background: config?.color || '#3B82F6',
-                      color: '#FFFFFF',
-                      borderColor: 'transparent',
+                      background: isSelected ? '#0B1F3B' : 'transparent',
+                      color: isSelected ? '#FFFFFF' : '#0B1F3B',
+                      borderColor: '#0B1F3B',
+                      borderWidth: '1px',
                       opacity: isSelected ? 1 : 0.7,
                     }}
                     className="hover:opacity-100 transition-opacity"
@@ -160,7 +167,6 @@ const Events = () => {
                       </h3>
                       <div className="grid gap-6 md:grid-cols-2">
                         {cohorts.map((event) => {
-                          const courseColors = getCourseColor(config?.color || '#3B82F6');
                           const metadata = event.metadata as Record<string, any> | null;
                           const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
                           const sessionTime = metadata?.session_time || '7-9pm UK';
@@ -170,15 +176,15 @@ const Events = () => {
                           return (
                             <Card
                               key={event.id}
-                              className="group p-0 hover:shadow-2xl transition-all duration-300 relative overflow-hidden border-0"
+                              className="group p-0 hover:shadow-2xl transition-all duration-300 relative overflow-hidden border border-border"
                             >
-                              {/* Colored header section with icon */}
+                              {/* Navy header section with icon */}
                               <div 
                                 className="h-32 flex items-center justify-center relative"
-                                style={{ background: courseColors.background }}
+                                style={{ background: '#0B1F3B' }}
                               >
                                 {CourseIcon && (
-                                  <CourseIcon className="w-16 h-16 text-white stroke-[1.5]" />
+                                  <CourseIcon className="w-16 h-16 text-[#FFB000] stroke-[1.5]" />
                                 )}
                               </div>
                               
@@ -187,8 +193,8 @@ const Events = () => {
                                 <div className="flex items-start justify-between mb-3">
                                   <Badge 
                                     style={{ 
-                                      background: courseColors.background,
-                                      color: courseColors.text,
+                                      background: '#0B1F3B',
+                                      color: '#FFFFFF',
                                       borderColor: 'transparent'
                                     }}
                                   >
@@ -212,17 +218,17 @@ const Events = () => {
 
                                 <div className="space-y-2 mb-5">
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Calendar className="h-4 w-4" />
+                                    <Calendar className="h-4 w-4 text-[#FFB000]" />
                                     <span>Starts: {format(new Date(event.start_date), "MMM d, yyyy")}</span>
                                   </div>
                                   
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Clock className="h-4 w-4" />
+                                    <Clock className="h-4 w-4 text-[#FFB000]" />
                                     <span>{durationWeeks} weeks • {sessionDay}s • {sessionTime}</span>
                                   </div>
 
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <MapPin className="h-4 w-4" />
+                                    <MapPin className="h-4 w-4 text-[#FFB000]" />
                                     <span className="capitalize">{event.location}</span>
                                   </div>
                                 </div>
@@ -231,8 +237,8 @@ const Events = () => {
                                   <Button 
                                     className="w-full font-semibold" 
                                     style={{ 
-                                      background: courseColors.background,
-                                      color: courseColors.text
+                                      background: '#FFB000',
+                                      color: '#0B1F3B'
                                     }}
                                     asChild
                                   >
@@ -246,9 +252,8 @@ const Events = () => {
                                       size="sm"
                                       className="text-xs"
                                       style={{ 
-                                        background: courseColors.background,
-                                        color: courseColors.text,
-                                        opacity: 0.9
+                                        background: '#0B1F3B',
+                                        color: '#FFFFFF',
                                       }}
                                       onClick={() => {
                                         const calendarEvent = {
@@ -269,9 +274,8 @@ const Events = () => {
                                       size="sm"
                                       className="text-xs"
                                       style={{ 
-                                        background: courseColors.background,
-                                        color: courseColors.text,
-                                        opacity: 0.9
+                                        background: '#0B1F3B',
+                                        color: '#FFFFFF',
                                       }}
                                       onClick={() => {
                                         const calendarEvent = {

@@ -25,7 +25,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'AML/KYC Compliance',
     shortName: 'AML/KYC',
     category: 'compliance',
-    color: '#EF4444', // Red
+    color: '#0B1F3B', // Titans Navy
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-11-16',
@@ -36,7 +36,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Data Analysis',
     shortName: 'Data Analysis',
     category: 'data',
-    color: '#3B82F6', // Blue
+    color: '#0B1F3B', // Titans Navy
     duration: 10,
     dayOfWeek: 'Saturday',
     baseStartDate: '2025-11-29',
@@ -47,7 +47,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Business Analysis',
     shortName: 'Business Analysis',
     category: 'business',
-    color: '#22C55E', // Green
+    color: '#0B1F3B', // Titans Navy
     duration: 16,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-02-07',
@@ -58,7 +58,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Cybersecurity',
     shortName: 'Cybersecurity',
     category: 'cybersecurity',
-    color: '#A855F7', // Purple
+    color: '#0B1F3B', // Titans Navy
     duration: 12,
     dayOfWeek: 'Sunday',
     baseStartDate: '2025-12-07',
@@ -69,7 +69,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Data Privacy & GDPR',
     shortName: 'Data Privacy',
     category: 'compliance',
-    color: '#F97316', // Orange
+    color: '#0B1F3B', // Titans Navy
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-03',
@@ -80,7 +80,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Crypto & Digital Assets',
     shortName: 'Crypto & Digital Assets',
     category: 'compliance',
-    color: '#14B8A6', // Teal
+    color: '#0B1F3B', // Titans Navy
     duration: 8,
     dayOfWeek: 'Sunday',
     baseStartDate: '2026-01-04',
@@ -91,7 +91,7 @@ export const COURSE_CONFIG: Record<string, CourseConfig> = {
     displayName: 'Digital Marketing',
     shortName: 'Digital Marketing',
     category: 'marketing',
-    color: '#EC4899', // Pink
+    color: '#0B1F3B', // Titans Navy
     duration: 8,
     dayOfWeek: 'Saturday',
     baseStartDate: '2026-01-10',
