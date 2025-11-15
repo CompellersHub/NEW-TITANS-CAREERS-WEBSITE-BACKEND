@@ -243,9 +243,13 @@ const Events = () => {
                                   
                                   <div className="grid grid-cols-2 gap-2">
                                     <Button 
-                                      variant="outline" 
                                       size="sm"
                                       className="text-xs"
+                                      style={{ 
+                                        background: courseColors.background,
+                                        color: courseColors.text,
+                                        opacity: 0.9
+                                      }}
                                       onClick={() => {
                                         const calendarEvent = {
                                           title: event.title,
@@ -262,9 +266,13 @@ const Events = () => {
                                       Google
                                     </Button>
                                     <Button 
-                                      variant="outline" 
                                       size="sm"
                                       className="text-xs"
+                                      style={{ 
+                                        background: courseColors.background,
+                                        color: courseColors.text,
+                                        opacity: 0.9
+                                      }}
                                       onClick={() => {
                                         const calendarEvent = {
                                           title: event.title,
