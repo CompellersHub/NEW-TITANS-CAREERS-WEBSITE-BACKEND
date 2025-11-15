@@ -20,6 +20,7 @@ import { CourseFinder } from "@/components/marketing/CourseFinder";
 import { LeadMagnetModal } from "@/components/marketing/LeadMagnetModal";
 import { ReferralProgram } from "@/components/marketing/ReferralProgram";
 import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { Sparkles, Download } from "lucide-react";
@@ -52,7 +53,9 @@ const Index = () => {
         <SocialProofNotifications />
         <CourseFinder isOpen={showCourseFinder} onClose={() => setShowCourseFinder(false)} />
         <LeadMagnetModal isOpen={showLeadMagnet} onClose={() => setShowLeadMagnet(false)} />
-        <AICourseAdvisor />
+        <ErrorBoundary fallback={null}>
+          <AICourseAdvisor />
+        </ErrorBoundary>
         
         <HeroSection />
         
