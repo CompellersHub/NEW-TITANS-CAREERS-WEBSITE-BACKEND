@@ -62,6 +62,7 @@ import PaymentAnalytics from "./pages/admin/PaymentAnalytics";
 import PaymentManagement from "./pages/admin/PaymentManagement";
 import PayL8rInfo from "./pages/PayL8rInfo";
 import RoleManagement from "./pages/RoleManagement";
+import ContentManager from "./pages/admin/ContentManager";
 
 const queryClient = new QueryClient();
 
@@ -123,6 +124,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/campaign-analytics" element={<CampaignAnalytics />} />
           <Route path="/admin/campaign-approval" element={<CampaignApprovalQueue />} />
           <Route path="/admin/role-management" element={<RoleManagement />} />
+          <Route path="/admin/content-manager" element={<ContentManager />} />
           <Route path="/admin/recovery-analytics" element={<RecoveryAnalytics />} />
           <Route path="/admin/recovery-alert-settings" element={<RecoveryAlertSettings />} />
           <Route path="/admin/alert-analytics" element={<AlertAnalytics />} />

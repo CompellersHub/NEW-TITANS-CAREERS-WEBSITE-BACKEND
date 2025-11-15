@@ -102,9 +102,10 @@ const adminRoutes = [
         { title: "Form Alert Settings", url: "/admin/form-alert-settings", icon: AlertCircle },
         { title: "Recovery Alert Settings", url: "/admin/recovery-alert-settings", icon: AlertCircle },
         { title: "Role Management", url: "/admin/role-management", icon: Shield },
+        { title: "Content Manager", url: "/admin/content-manager", icon: FileText },
       ],
     },
-  ];
+];
 
 export function AdminSidebar() {
   const { state } = useSidebar();
