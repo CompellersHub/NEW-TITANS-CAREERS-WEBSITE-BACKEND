@@ -208,7 +208,7 @@ const Events = () => {
                                   </Badge>
                                 </div>
 
-                                <h4 className="font-kanit font-bold text-lg text-foreground mb-1">
+                                <h4 className="font-kanit font-bold text-2xl text-foreground mb-2">
                                   {config?.displayName || event.course_slug}
                                 </h4>
                                 
