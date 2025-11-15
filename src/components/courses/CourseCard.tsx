@@ -33,6 +33,8 @@ export function CourseCard({ course }: CourseCardProps) {
   const getCourseImage = (slug: string) => {
     const images: Record<string, string> = {
       'aml-kyc': 'aml-kyc-hero.jpg',
+      'crypto-compliance': 'crypto-compliance-hero.jpg',
+      'data-privacy': 'data-privacy-hero.jpg',
       'data-analysis': 'data-analysis-hero.jpg',
       'cybersecurity': 'cybersecurity-hero.jpg',
       'business-analysis': 'business-analysis-hero.jpg',

@@ -36,7 +36,7 @@ const Events = () => {
     },
   });
 
-  const courses = ["aml-kyc", "data-analysis", "cybersecurity", "business-analysis", "digital-marketing"];
+  const courses = ["aml-kyc", "crypto-compliance", "data-privacy", "data-analysis", "cybersecurity", "business-analysis", "digital-marketing"];
 
   const getNextTwoCohorts = (courseSlug: string) => {
     return events?.filter(e => e.course_slug === courseSlug && e.event_type === "cohort").slice(0, 2) || [];
