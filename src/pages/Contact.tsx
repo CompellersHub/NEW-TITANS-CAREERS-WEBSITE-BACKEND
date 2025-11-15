@@ -3,13 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, Phone, MessageCircle, MapPin, Clock, Send, Navigation, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Mail, Phone, MessageCircle, MapPin, Clock, CheckCircle2, Sparkles, ArrowRight, Navigation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ContactMethodCard } from "@/components/contact/ContactMethodCard";
 import { ProcessStep } from "@/components/contact/ProcessStep";
@@ -20,53 +14,17 @@ import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndica
 import { FeedbackWidget } from "@/components/contact/FeedbackWidget";
 import { SocialProofNotifications } from "@/components/marketing/SocialProofNotifications";
 import { ContactPageSkeleton } from "@/components/contact/ContactPageSkeleton";
+import { CareerConsultationForm } from "@/components/contact/CareerConsultationForm";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { useState, useEffect } from "react";
 import { SEO } from "@/components/SEO";
 
-const contactFormSchema = z.object({
-  name: z.string()
-    .trim()
-    .min(2, { message: "Name must be at least 2 characters" })
-    .max(100, { message: "Name must be less than 100 characters" }),
-  email: z.string()
-    .trim()
-    .email({ message: "Please enter a valid email address" })
-    .max(255, { message: "Email must be less than 255 characters" }),
-  phone: z.string()
-    .trim()
-    .min(10, { message: "Please enter a valid phone number" })
-    .max(20, { message: "Phone number must be less than 20 characters" })
-    .optional()
-    .or(z.literal("")),
-  subject: z.string()
-    .trim()
-    .min(3, { message: "Subject must be at least 3 characters" })
-    .max(200, { message: "Subject must be less than 200 characters" }),
-  message: z.string()
-    .trim()
-    .min(10, { message: "Message must be at least 10 characters" })
-    .max(1000, { message: "Message must be less than 1000 characters" })
-});
-
-type ContactFormData = z.infer<typeof contactFormSchema>;
 
 const Contact = () => {
   const { toast } = useToast();
-  const [charCount, setCharCount] = useState(0);
   const [refreshKey, setRefreshKey] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<ContactFormData>({
-    resolver: zodResolver(contactFormSchema)
-  });
-
-  const message = watch("message");
-  
-  useEffect(() => {
-    setCharCount(message?.length || 0);
-  }, [message]);
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -93,36 +51,6 @@ const Contact = () => {
     onRefresh: handleRefresh,
     threshold: 80,
   });
-
-  const onSubmit = async (data: ContactFormData) => {
-    try {
-      // Sanitize and encode data for WhatsApp
-      const message = encodeURIComponent(
-        `*New Contact Form Submission*\n\n` +
-        `*Name:* ${data.name}\n` +
-        `*Email:* ${data.email}\n` +
-        `*Phone:* ${data.phone || 'Not provided'}\n` +
-        `*Subject:* ${data.subject}\n\n` +
-        `*Message:*\n${data.message}`
-      );
-      
-      // Open WhatsApp with the message
-      window.open(`https://wa.me/447539434403?text=${message}`, '_blank');
-      
-      toast({
-        title: "Message Sent!",
-        description: "We'll get back to you within 24 hours.",
-      });
-      
-      reset();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again or contact us directly.",
-        variant: "destructive"
-      });
-    }
-  };
 
   const contactMethods = [
     {
@@ -270,138 +198,7 @@ const Contact = () => {
         <div className="container max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <div>
-              <div className="mb-8">
-                <Badge className="bg-accent/10 text-primary border-accent/30 mb-4">
-                  <Send className="w-3 h-3 mr-2" />
-                  SEND A MESSAGE
-                </Badge>
-                
-                <h2 className="font-kanit text-3xl md:text-4xl font-bold text-primary mb-4">
-                  Drop Us a Line
-                </h2>
-                
-                <p className="font-sans text-lg text-muted-foreground">
-                  Fill out the form below and we'll get back to you as soon as possible.
-                </p>
-              </div>
-
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="font-sans text-foreground font-semibold">
-                    Full Name *
-                  </Label>
-                  <Input
-                    id="name"
-                    {...register("name")}
-                    placeholder="John Smith"
-                    className="border-2 focus:border-accent"
-                  />
-                  {errors.name && (
-                    <p className="font-sans text-sm text-destructive">{errors.name.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="font-sans text-foreground font-semibold">
-                    Email Address *
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    {...register("email")}
-                    placeholder="john@example.com"
-                    className="border-2 focus:border-accent"
-                  />
-                  {errors.email && (
-                    <p className="font-sans text-sm text-destructive">{errors.email.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="font-sans text-foreground font-semibold">
-                    Phone Number (Optional)
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    {...register("phone")}
-                    placeholder="+44 7XXX XXXXXX"
-                    className="border-2 focus:border-accent"
-                  />
-                  {errors.phone && (
-                    <p className="font-sans text-sm text-destructive">{errors.phone.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="subject" className="font-sans text-foreground font-semibold">
-                    Subject *
-                  </Label>
-                  <Input
-                    id="subject"
-                    {...register("subject")}
-                    placeholder="Course enquiry, career advice, etc."
-                    className="border-2 focus:border-accent"
-                  />
-                  {errors.subject && (
-                    <p className="font-sans text-sm text-destructive">{errors.subject.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="message" className="font-sans text-foreground font-semibold">
-                      Message *
-                    </Label>
-                    <span className="text-xs text-muted-foreground">
-                      {charCount}/1000 characters
-                    </span>
-                  </div>
-                  <Textarea
-                    id="message"
-                    {...register("message")}
-                    onChange={(e) => setCharCount(e.target.value.length)}
-                    placeholder="Tell us about your career goals, current situation, and how we can help you achieve your dreams..."
-                    rows={6}
-                    className="border-2 focus:border-accent resize-none transition-all"
-                  />
-                  {errors.message && (
-                    <p className="font-sans text-sm text-destructive">{errors.message.message}</p>
-                  )}
-                </div>
-
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={isSubmitting}
-                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-bold text-lg py-7 transition-all hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed group"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-5 h-5 mr-2 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin"></div>
-                      Sending Your Message...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform" />
-                      Send Message
-                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-
-                <div className="space-y-3">
-                  <p className="font-sans text-sm text-muted-foreground text-center">
-                    By submitting this form, you agree to our <a href="/privacy-policy" className="text-accent hover:underline">privacy policy</a> and <a href="/terms-conditions" className="text-accent hover:underline">terms of service</a>.
-                  </p>
-                  <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                    <CheckCircle2 className="w-4 h-4 text-accent" />
-                    <span>Your information is secure and will never be shared</span>
-                  </div>
-                </div>
-              </form>
-            </div>
+            <CareerConsultationForm />
 
             {/* Office Info & Hours */}
             <div className="space-y-6">
