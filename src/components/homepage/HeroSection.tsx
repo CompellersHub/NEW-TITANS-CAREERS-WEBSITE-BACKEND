@@ -1,20 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MessageCircle, Star } from "lucide-react";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { WhatsAppCaptureForm } from "@/components/marketing/WhatsAppCaptureForm";
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const HeroSection = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
   return (
-    <section className="relative overflow-hidden bg-primary min-h-screen flex items-center pt-20">
+    <section className="relative overflow-hidden bg-primary min-h-[90vh] flex items-center">
       {/* Smooth animated gradient background */}
       <div 
         className="absolute inset-0 bg-gradient-hero animate-gradient-shift"
@@ -45,18 +35,15 @@ export const HeroSection = () => {
             </div>
             
             {/* H1 - Kanit, bold, 28-48px responsive */}
-            <h1 className="font-kanit font-bold text-primary-foreground leading-tight" style={{ fontSize: 'clamp(32px, 5.5vw, 56px)' }}>
-              Tired of Low Pay and Constant Rejection?
+            <h1 className="font-kanit font-bold text-primary-foreground leading-tight" style={{ fontSize: 'clamp(28px, 5vw, 48px)' }}>
+              Upgrade Your Career with{" "}
+              <span className="text-accent">Practical Tech Training</span>
             </h1>
             
-            <h2 className="font-kanit font-semibold text-accent leading-tight" style={{ fontSize: 'clamp(24px, 4vw, 40px)' }}>
-              We Help You Get Remote, High-Paying Jobs
-            </h2>
-            
-            {/* Body text - Open Sans, 18px */}
-            <p className="font-sans text-lg leading-relaxed text-primary-foreground/90 max-w-xl">
-              Transform your career with practical training, CV/LinkedIn overhaul, and expert mentoring. 
-              No UK experience needed. Land roles in AML, Data Analysis, Cybersecurity & more.
+            {/* Body text - Open Sans, 16px */}
+            <p className="font-sans text-base leading-relaxed text-primary-foreground/90 max-w-xl">
+              Learn in-demand skills through hands-on projects. No UK experience needed. 
+              Get CPD-accredited certification and ongoing career support.
             </p>
             
             {/* CTA Buttons - large touch targets */}
@@ -64,17 +51,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="default"
-                className="font-sans text-lg font-bold shadow-[0_8px_24px_-4px_hsl(var(--accent)/0.4)] hover:shadow-[0_12px_32px_-4px_hsl(var(--accent)/0.6)]"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                Start My CV & Career Upgrade
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              
-              <Button 
-                size="lg" 
-                variant="outlineWhite"
-                className="font-sans text-lg font-bold border-2"
+                className="font-sans text-base font-bold"
                 asChild
               >
                 <a 
@@ -82,40 +59,36 @@ export const HeroSection = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle className="mr-2 w-5 h-5" />
-                  Join Free Live Q&A Session
+                  Join Free Live Session
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </a>
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outlineWhite"
+                className="font-sans text-base font-bold"
+                asChild
+              >
+                <Link to="/courses">
+                  View Courses
+                </Link>
               </Button>
             </div>
             
-            {/* Social Proof */}
-            <div className="flex flex-col sm:flex-row items-center gap-6 pt-6">
-              <div className="flex items-center gap-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-accent text-accent" />
-                ))}
-                <span className="text-primary-foreground/90 font-sans font-semibold ml-2">4.9/5</span>
-              </div>
-              <div className="h-6 w-px bg-primary-foreground/20 hidden sm:block" />
-              <p className="text-primary-foreground/90 font-sans text-sm">
-                <span className="font-bold text-accent">300+</span> professionals trained • 
-                <span className="font-bold text-accent ml-1">85%</span> job placement rate
-              </p>
-            </div>
-            
             {/* Trust indicators */}
-            <div className="flex flex-wrap gap-6 pt-4 text-sm text-primary-foreground/80">
+            <div className="flex flex-wrap gap-6 pt-6 text-sm text-primary-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="font-sans">Free Career Strategy Call</span>
+                <span className="font-sans">No credit card required</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="font-sans">CPD Accredited Courses</span>
+                <span className="font-sans">CPD Accredited</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                <span className="font-sans">Remote Work Ready</span>
+                <span className="font-sans">Practical Projects</span>
               </div>
             </div>
           </div>
@@ -142,20 +115,6 @@ export const HeroSection = () => {
       
       {/* Gradient fade to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-      
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-kanit font-bold">
-              Book Your Free Career Strategy Call
-            </DialogTitle>
-            <DialogDescription className="text-base">
-              Fill out the form below and join our WhatsApp career community. We'll help you map out your path to a high-paying remote role.
-            </DialogDescription>
-          </DialogHeader>
-          <WhatsAppCaptureForm onSuccess={() => setIsDialogOpen(false)} source="hero_cta" />
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };
