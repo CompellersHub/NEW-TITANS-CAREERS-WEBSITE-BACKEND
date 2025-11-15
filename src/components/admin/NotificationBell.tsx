@@ -150,26 +150,26 @@ export const NotificationBell = () => {
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'sla_overdue':
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
+        return <AlertCircle className="h-4 w-4 text-destructive" />;
       case 'sla_approaching':
         return <Clock className="h-4 w-4 text-amber-500" />;
       case 'sla_compliance_low':
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
+        return <AlertCircle className="h-4 w-4 text-destructive" />;
       default:
-        return <Bell className="h-4 w-4 text-blue-500" />;
+        return <Bell className="h-4 w-4 text-primary" />;
     }
   };
 
   const getNotificationBadgeColor = (type: string) => {
     switch (type) {
       case 'sla_overdue':
-        return "bg-red-500/10 text-red-500 border-red-500/20";
+        return "bg-destructive/10 text-destructive border-destructive/20";
       case 'sla_approaching':
         return "bg-amber-500/10 text-amber-500 border-amber-500/20";
       case 'sla_compliance_low':
-        return "bg-red-500/10 text-red-500 border-red-500/20";
+        return "bg-destructive/10 text-destructive border-destructive/20";
       default:
-        return "bg-blue-500/10 text-blue-500 border-blue-500/20";
+        return "bg-primary/10 text-primary border-primary/20";
     }
   };
 
@@ -182,7 +182,7 @@ export const NotificationBell = () => {
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <Badge 
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs"
+              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-destructive text-destructive-foreground text-xs"
             >
               {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
@@ -217,7 +217,7 @@ export const NotificationBell = () => {
                 <div
                   key={notification.id}
                   className={`p-4 hover:bg-muted/50 cursor-pointer transition-colors ${
-                    !notification.read ? 'bg-blue-500/5' : ''
+                    !notification.read ? 'bg-primary/5' : ''
                   }`}
                   onClick={() => handleNotificationClick(notification)}
                 >
@@ -229,7 +229,7 @@ export const NotificationBell = () => {
                       <div className="flex items-start justify-between gap-2 mb-1">
                         <p className="font-semibold text-sm">{notification.title}</p>
                         {!notification.read && (
-                          <div className="h-2 w-2 rounded-full bg-blue-500 flex-shrink-0 mt-1"></div>
+                          <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-1"></div>
                         )}
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-2 mb-2">

@@ -1023,7 +1023,7 @@ export const ContactChatbot = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'up' ? 'text-green-600' : 'text-muted-foreground'}`}
+                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'up' ? 'text-success' : 'text-muted-foreground'}`}
                         onClick={() => rateMessage(message.id!, 'up')}
                         title="Helpful response"
                       >
@@ -1032,7 +1032,7 @@ export const ContactChatbot = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'down' ? 'text-red-600' : 'text-muted-foreground'}`}
+                        className={`h-6 w-6 ${messageRatings.get(message.id) === 'down' ? 'text-destructive' : 'text-muted-foreground'}`}
                         onClick={() => rateMessage(message.id!, 'down')}
                         title="Not helpful"
                       >
@@ -1273,11 +1273,11 @@ export const ContactChatbot = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-4 mt-3 text-sm">
-                    <div className="flex items-center gap-1 text-green-600">
+                    <div className="flex items-center gap-1 text-success">
                       <ThumbsUp className="h-4 w-4" />
                       <span>{analytics.positiveRatings} positive</span>
                     </div>
-                    <div className="flex items-center gap-1 text-red-600">
+                    <div className="flex items-center gap-1 text-destructive">
                       <ThumbsDown className="h-4 w-4" />
                       <span>{analytics.negativeRatings} negative</span>
                     </div>

@@ -125,8 +125,8 @@ export function FeedbackWidget() {
             variant={feedback === "positive" ? "default" : "outline"}
             className={`flex-1 h-12 transition-all ${
               feedback === "positive"
-                ? "bg-green-500 hover:bg-green-600 text-white"
-                : "hover:border-green-500 hover:text-green-500"
+                ? "bg-success hover:bg-success/90 text-white"
+                : "hover:border-success hover:text-success"
             }`}
             onClick={() => handleFeedbackClick("positive")}
           >
