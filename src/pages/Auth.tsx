@@ -12,6 +12,7 @@ import { Footer } from "@/components/Footer";
 import { z } from "zod";
 import { passwordSchema } from "@/lib/formSchemas";
 import { PasswordStrengthIndicator } from "@/components/forms/PasswordStrengthIndicator";
+import { supabase } from "@/integrations/supabase/client";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -22,14 +23,15 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      // Redirect admins to dashboard, regular users to home
+      navigate(isAdmin ? "/admin" : "/");
     }
-  }, [user, navigate]);
+  }, [user, isAdmin, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,10 +46,26 @@ const Auth = () => {
 
     setIsLoading(true);
     const { error } = await signIn(email, password);
-    setIsLoading(false);
-
+    
     if (!error) {
-      navigate("/");
+      // Check if user is admin after successful login
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: roles } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsLoading(false);
+        navigate(roles ? "/admin" : "/");
+      } else {
+        setIsLoading(false);
+        navigate("/");
+      }
+    } else {
+      setIsLoading(false);
     }
   };
 
