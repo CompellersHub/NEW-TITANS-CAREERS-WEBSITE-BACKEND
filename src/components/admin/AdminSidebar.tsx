@@ -38,7 +38,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const adminRoutes = [
+export const adminRoutes = [
   {
     category: "Email Marketing & Campaigns",
     items: [
