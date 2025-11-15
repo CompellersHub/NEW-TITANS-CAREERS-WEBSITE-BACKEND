@@ -135,7 +135,7 @@ export const Navbar = () => {
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Shield className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Subscribers</span>
+                          <span className="font-sans font-medium text-primary">Admin Dashboard</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
