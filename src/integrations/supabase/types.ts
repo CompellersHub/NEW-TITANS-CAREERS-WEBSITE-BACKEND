@@ -441,6 +441,7 @@ export type Database = {
           instructions_sent_at: string | null
           payment_intent_id: string | null
           payment_proof_url: string | null
+          payment_proof_urls: string[] | null
           payment_reference: string
           status: string | null
           updated_at: string | null
@@ -459,6 +460,7 @@ export type Database = {
           instructions_sent_at?: string | null
           payment_intent_id?: string | null
           payment_proof_url?: string | null
+          payment_proof_urls?: string[] | null
           payment_reference: string
           status?: string | null
           updated_at?: string | null
@@ -477,6 +479,7 @@ export type Database = {
           instructions_sent_at?: string | null
           payment_intent_id?: string | null
           payment_proof_url?: string | null
+          payment_proof_urls?: string[] | null
           payment_reference?: string
           status?: string | null
           updated_at?: string | null

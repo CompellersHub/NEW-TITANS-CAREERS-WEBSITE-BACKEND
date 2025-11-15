@@ -2,21 +2,18 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { supabase } from '@/integrations/supabase/client';
-import { CheckCircle, Clock, AlertCircle, Copy, Upload, RefreshCw } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, Copy, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { PaymentProofUploader } from '@/components/payment/PaymentProofUploader';
 
 export default function PaymentStatus() {
   const [searchParams] = useSearchParams();
   const reference = searchParams.get('reference') || searchParams.get('ref');
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
-  const [proofFile, setProofFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -54,52 +51,6 @@ export default function PaymentStatus() {
     setLoading(false);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        toast({ title: 'File too large', description: 'Maximum file size is 5MB', variant: 'destructive' });
-        return;
-      }
-      setProofFile(file);
-    }
-  };
-
-  const handleUploadProof = async () => {
-    if (!proofFile || !reference) return;
-
-    setUploading(true);
-    try {
-      const fileExt = proofFile.name.split('.').pop();
-      const fileName = `${reference}_${Date.now()}.${fileExt}`;
-      
-      const { error: uploadError } = await supabase.storage
-        .from('payment-proofs')
-        .upload(fileName, proofFile);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('payment-proofs')
-        .getPublicUrl(fileName);
-
-      const { error: updateError } = await supabase
-        .from('bank_transfer_orders')
-        .update({ payment_proof_url: publicUrl })
-        .eq('payment_reference', reference);
-
-      if (updateError) throw updateError;
-
-      toast({ title: 'Proof uploaded successfully', description: 'We\'ll verify your payment soon' });
-      fetchOrderStatus();
-    } catch (error: any) {
-      console.error('Upload error:', error);
-      toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
-    } finally {
-      setUploading(false);
-      setProofFile(null);
-    }
-  };
 
   const handleResendInstructions = async () => {
     if (!order) return;
@@ -196,60 +147,60 @@ export default function PaymentStatus() {
 
               {order.status === 'pending' || order.status === 'awaiting_payment' ? (
                 <>
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
-                    <p className="text-sm">
-                      <strong>Next Steps:</strong> Transfer £{(order.amount || order.final_price || 0).toFixed(2)} to our bank account using reference <strong>{reference}</strong>. We'll verify your payment within 1-2 business days.
-                    </p>
-                    
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={handleResendInstructions}
-                      className="w-full"
-                    >
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Resend Bank Details
-                    </Button>
-                  </div>
-
-                  {!order.payment_proof_url && (
-                    <div className="border border-border rounded-lg p-4 space-y-4">
-                      <h3 className="font-semibold">Upload Payment Proof</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Speed up verification by uploading your payment receipt or bank statement.
-                      </p>
-                      
-                      <div className="space-y-2">
-                        <Label htmlFor="proof">Payment Receipt (Max 5MB)</Label>
-                        <Input
-                          id="proof"
-                          type="file"
-                          accept="image/*,.pdf"
-                          onChange={handleFileChange}
-                          disabled={uploading}
-                        />
+                  <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                          <Clock className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Bank Transfer Details</h3>
+                          <p className="text-xs text-muted-foreground">Complete your payment using these details</p>
+                        </div>
                       </div>
 
-                      {proofFile && (
-                        <Button 
-                          onClick={handleUploadProof}
-                          disabled={uploading}
-                          className="w-full"
-                        >
-                          <Upload className="w-4 h-4 mr-2" />
-                          {uploading ? 'Uploading...' : 'Upload Proof'}
-                        </Button>
-                      )}
-                    </div>
-                  )}
+                      <div className="bg-background rounded-lg p-4 space-y-3">
+                        <div className="flex justify-between py-2">
+                          <span className="text-sm text-muted-foreground">Account Name:</span>
+                          <span className="font-semibold">Titans Careers Ltd</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-t">
+                          <span className="text-sm text-muted-foreground">Sort Code:</span>
+                          <span className="font-mono font-semibold">12-34-56</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-t">
+                          <span className="text-sm text-muted-foreground">Account Number:</span>
+                          <span className="font-mono font-semibold">12345678</span>
+                        </div>
+                        <div className="flex justify-between py-3 border-t bg-primary/5 -mx-4 px-4 rounded-b-lg">
+                          <span className="text-sm font-medium">Amount to Transfer:</span>
+                          <span className="font-bold text-xl text-primary">£{(order.amount || order.final_price || 0).toFixed(2)}</span>
+                        </div>
+                      </div>
 
-                  {order.payment_proof_url && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <p className="text-sm text-green-800">
-                        ✓ Payment proof uploaded. We're reviewing your submission.
-                      </p>
+                      <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900 rounded-lg p-4">
+                        <p className="text-sm font-medium mb-1">⚠️ Important:</p>
+                        <p className="text-sm text-muted-foreground">
+                          Use reference <span className="font-mono font-bold text-foreground">{reference}</span> when making your transfer. We'll verify your payment within 1-2 business days.
+                        </p>
+                      </div>
+
+                      <Button 
+                        onClick={handleResendInstructions}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Resend Bank Details to Email
+                      </Button>
                     </div>
-                  )}
+                  </Card>
+
+                  <PaymentProofUploader
+                    reference={reference}
+                    existingProofs={order.payment_proof_urls || (order.payment_proof_url ? [order.payment_proof_url] : [])}
+                    onUploadComplete={fetchOrderStatus}
+                  />
                 </>
               ) : null}
 
