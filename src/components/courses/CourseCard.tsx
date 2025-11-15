@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { CourseEnrollmentButton } from "../payment/CourseEnrollmentButton";
 import { Link } from "react-router-dom";
 import { Clock, BookOpen } from "lucide-react";
+import { CourseHeroImage } from "./CourseHeroImage";
 
 interface CourseCardProps {
   course: {
@@ -29,11 +30,30 @@ export function CourseCard({ course }: CourseCardProps) {
     return colors[category] || "bg-primary/10 text-primary border-primary/20";
   };
 
+  const getCourseImage = (slug: string) => {
+    const images: Record<string, string> = {
+      'aml-kyc': 'aml-kyc-hero.jpg',
+      'data-analysis': 'data-analysis-hero.jpg',
+      'cybersecurity': 'cybersecurity-hero.jpg',
+      'business-analysis': 'business-analysis-hero.jpg',
+      'digital-marketing': 'business-analysis-hero.jpg',
+    };
+    return images[slug] || 'data-analysis-hero.jpg';
+  };
+
   return (
-    <Card className="group p-8 hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-visible">
-      <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
-        {course.category}
-      </Badge>
+    <Card className="group hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-hidden">
+      <CourseHeroImage
+        src={`/src/assets/courses/${getCourseImage(course.slug)}`}
+        alt={course.title}
+        title={course.title}
+        subtitle={course.tagline}
+      />
+      
+      <div className="p-8 flex flex-col flex-grow">
+        <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
+          {course.category}
+        </Badge>
       
       <Link to={`/course/${course.slug}`} className="group/link">
         <h3 className="font-kanit text-2xl font-bold mb-3 group-hover/link:text-accent transition-all duration-300 leading-tight text-primary">
@@ -54,9 +74,9 @@ export function CourseCard({ course }: CourseCardProps) {
         </span>
       </div>
       
-      <p className="font-sans mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
-      
-      <div className="space-y-4 mt-auto pt-6 border-t border-border">
+        <p className="font-sans mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
+        
+        <div className="space-y-4 mt-auto pt-6 border-t border-border">
         {/* Financing Badge */}
         <div className="w-full text-center py-2 px-3 bg-secondary/20 rounded-lg">
           <p className="text-xs font-medium text-muted-foreground">
@@ -79,6 +99,7 @@ export function CourseCard({ course }: CourseCardProps) {
             variant="default"
             size="lg"
           />
+          </div>
         </div>
       </div>
     </Card>
