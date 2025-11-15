@@ -91,27 +91,70 @@ export async function createAcademySSOLink(email: string): Promise<string> {
 }
 
 /**
- * Track user enrollment for Academy sync
+ * Enhanced SSO link creation with activity logging
  */
-export async function trackEnrollment(
+export async function createSecureAcademySSOLink(
+  userId: string,
   email: string,
-  courseSlug: string,
-  courseName: string
-): Promise<void> {
-  await sb.from("user_behaviors").insert({
-    email,
-    behavior_type: "course_enrollment",
-    score_value: 50,
-    behavior_data: {
-      course: courseSlug,
-      name: courseName,
-      enrolled_at: new Date().toISOString(),
-    },
-  });
+  metadata?: any
+): Promise<string> {
+  try {
+    // Generate secure token
+    const token = await generateAcademyToken(email);
+    
+    // Log the LMS access attempt
+    await sb.from("user_activity_log").insert({
+      user_id: userId,
+      email: email,
+      activity_type: "lms_access",
+      description: "Accessed learning platform via SSO",
+      metadata: {
+        timestamp: new Date().toISOString(),
+        ...metadata
+      }
+    });
 
-  // Update lead score to "customer"
-  await sb
-    .from("lead_scores")
-    .update({ status: "customer" })
-    .eq("email", email);
+    // Track behavior for analytics
+    await sb.from("user_behaviors").insert({
+      email,
+      behavior_type: "lms_access",
+      score_value: 5,
+      behavior_data: {
+        timestamp: new Date().toISOString(),
+        source: "profile_page"
+      },
+    });
+    
+    // Create SSO link with return URL
+    const academyDomain = import.meta.env.VITE_ACADEMY_DOMAIN || 
+      "https://academy.titanscareers.com";
+    return `${academyDomain}/sso?token=${token}&return_to=dashboard`;
+  } catch (error) {
+    console.error("Error creating SSO link:", error);
+    throw error;
+  }
+}
+
+/**
+ * Log user activity (generic function for any activity type)
+ */
+export async function logUserActivity(
+  userId: string,
+  email: string,
+  activityType: string,
+  description?: string,
+  metadata?: any
+): Promise<void> {
+  try {
+    await sb.from("user_activity_log").insert({
+      user_id: userId,
+      email: email,
+      activity_type: activityType,
+      description: description,
+      metadata: metadata || {}
+    });
+  } catch (error) {
+    console.error("Error logging activity:", error);
+    // Don't throw - activity logging should not break the main flow
+  }
 }

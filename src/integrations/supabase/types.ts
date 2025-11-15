@@ -1734,6 +1734,51 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_queue: {
+        Row: {
+          created_at: string | null
+          data: Json | null
+          email: string
+          error_message: string | null
+          id: string
+          notification_type: string
+          priority: string | null
+          retry_count: number | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          data?: Json | null
+          email: string
+          error_message?: string | null
+          id?: string
+          notification_type: string
+          priority?: string | null
+          retry_count?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: Json | null
+          email?: string
+          error_message?: string | null
+          id?: string
+          notification_type?: string
+          priority?: string | null
+          retry_count?: number | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       payment_intents: {
         Row: {
           completed_at: string | null
@@ -2368,6 +2413,78 @@ export type Database = {
           },
         ]
       }
+      user_account_preferences: {
+        Row: {
+          course_access_notifications: boolean | null
+          created_at: string | null
+          email_receipts: boolean | null
+          id: string
+          marketing_emails: boolean | null
+          payment_confirmations: boolean | null
+          payment_reminders: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          course_access_notifications?: boolean | null
+          created_at?: string | null
+          email_receipts?: boolean | null
+          id?: string
+          marketing_emails?: boolean | null
+          payment_confirmations?: boolean | null
+          payment_reminders?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          course_access_notifications?: boolean | null
+          created_at?: string | null
+          email_receipts?: boolean | null
+          id?: string
+          marketing_emails?: boolean | null
+          payment_confirmations?: boolean | null
+          payment_reminders?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_activity_log: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          description: string | null
+          email: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          description?: string | null
+          email: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          description?: string | null
+          email?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_behaviors: {
         Row: {
           behavior_data: Json | null
@@ -2772,6 +2889,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_order_history: {
+        Row: {
+          bank_transfer_status: string | null
+          course_slug: string | null
+          course_title: string | null
+          customer_email: string | null
+          display_status: string | null
+          expires_at: string | null
+          final_price: number | null
+          id: string | null
+          installment_plan: Json | null
+          payment_metadata: Json | null
+          payment_method: string | null
+          payment_proof_urls: string[] | null
+          payment_provider_reference: string | null
+          payment_reference: string | null
+          payment_status: string | null
+          price: number | null
+          purchase_date: string | null
+          verified_at: string | null
+          voucher_code: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_engagement_score: {
@@ -2806,6 +2947,16 @@ export type Database = {
       is_enrolled_in_course: {
         Args: { p_course_slug: string; p_user_id: string }
         Returns: boolean
+      }
+      log_user_activity: {
+        Args: {
+          p_activity_type: string
+          p_description?: string
+          p_email: string
+          p_metadata?: Json
+          p_user_id: string
+        }
+        Returns: string
       }
       send_email_notification: {
         Args: {
