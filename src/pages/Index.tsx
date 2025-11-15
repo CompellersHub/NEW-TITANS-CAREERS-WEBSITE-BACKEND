@@ -27,6 +27,8 @@ import { Sparkles, Download } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
 import { UpcomingEvents } from "@/components/homepage/UpcomingEvents";
+import { CompanyLogosCarousel } from "@/components/homepage/CompanyLogosCarousel";
+import { ToolsCarousel } from "@/components/homepage/ToolsCarousel";
 
 const Index = () => {
   const coursesArray = Object.values(courses);
@@ -123,6 +125,8 @@ const Index = () => {
           </div>
         </section>
         
+        <CompanyLogosCarousel />
+        
         <UpcomingEvents />
         
         <div id="how-it-works">
@@ -132,6 +136,8 @@ const Index = () => {
         <div id="success-stories">
           <SuccessStoriesSection />
         </div>
+        
+        <ToolsCarousel />
         
         <div id="faqs">
           <FAQSection />
