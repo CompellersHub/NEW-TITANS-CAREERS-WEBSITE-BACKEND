@@ -4,13 +4,12 @@ import { trackCTA } from "@/lib/analytics";
 
 export const CTA = () => {
   return (
-    <section id="contact" className="py-24 md:py-32 bg-gradient-hero text-white relative overflow-hidden">
+    <section id="contact" className="py-24 md:py-32 bg-primary text-white relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/15 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold/15 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute inset-0 bg-gradient-overlay opacity-30" />
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]" />
       </div>
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
       
       <div className="container px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-10 animate-fade-in">
