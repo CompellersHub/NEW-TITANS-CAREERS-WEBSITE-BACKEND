@@ -5,23 +5,19 @@ import { Link } from "react-router-dom";
 export const HeroSection = () => {
   return (
     <section className="relative overflow-hidden bg-primary min-h-[90vh] flex items-center">
-      {/* Smooth animated gradient background */}
+      {/* Navy background with subtle gradient */}
       <div 
-        className="absolute inset-0 bg-gradient-hero animate-gradient-shift"
-        style={{
-          backgroundSize: '200% 200%',
-        }}
+        className="absolute inset-0 bg-primary"
       />
       
-      {/* Enhanced accent overlays with blur */}
+      {/* Subtle accent overlays */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-accent/10 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute -bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-gold/10 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[150px]" />
+        <div className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]" />
       </div>
       
       {/* Grid pattern */}
-      <div className="absolute inset-0 bg-grid-pattern opacity-5 z-10" />
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02] z-10" />
       
       <div className="container px-4 py-20 md:py-28 relative z-20">
         <div className="grid md:grid-cols-2 gap-16 items-center">
