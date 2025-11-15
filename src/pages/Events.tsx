@@ -95,7 +95,7 @@ const Events = () => {
                 variant={selectedCourse === null ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCourse(null)}
-                className={selectedCourse === null ? "bg-primary" : ""}
+                className={selectedCourse === null ? "bg-primary text-white" : ""}
               >
                 All Courses
               </Button>
