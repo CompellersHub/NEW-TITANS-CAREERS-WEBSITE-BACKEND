@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { NotificationBell } from "@/components/admin/NotificationBell";
 import { AdminDashboardSkeleton } from "@/components/admin/AdminDashboardSkeleton";
 import { format, formatDistanceToNow, differenceInMilliseconds } from "date-fns";
@@ -1556,25 +1555,20 @@ const FormSubmissionsAdmin = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <main className="flex-1 container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4 flex-wrap">
-              <div>
-                <h1 className="text-4xl font-bold mb-2">Form Submissions</h1>
-                <p className="text-muted-foreground">
-                  View and manage all form submissions from your website
-                  {realtimeConnected && (
-                    <span className="ml-2 inline-flex items-center gap-1 text-sm text-green-600">
-                      <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />
-                      Live
-                    </span>
-                  )}
-                </p>
-              </div>
+    <AdminLayout 
+      title="Form Submissions" 
+      description="View and manage all form submissions from your website"
+    >
+      <div className="space-y-8">
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              {realtimeConnected && (
+                <span className="inline-flex items-center gap-1 text-sm text-green-600">
+                  <span className="h-2 w-2 rounded-full bg-green-600 animate-pulse" />
+                  Live
+                </span>
+              )}
               
               {onlineAdmins.length > 0 && (
                 <TooltipProvider>
@@ -1609,9 +1603,9 @@ const FormSubmissionsAdmin = () => {
                     </div>
                   </div>
                 </TooltipProvider>
-              )}
-            </div>
-            <div className="flex gap-2">
+            )}
+          </div>
+          <div className="flex gap-2">
               <NotificationBell />
               <Button
                 variant="outline"
@@ -1645,7 +1639,6 @@ const FormSubmissionsAdmin = () => {
                 <kbd className="px-2 py-1 text-xs font-semibold border rounded bg-muted">?</kbd>
                 <span className="ml-2">Shortcuts</span>
               </Button>
-            </div>
           </div>
         </div>
 
@@ -2241,10 +2234,9 @@ const FormSubmissionsAdmin = () => {
             )}
           </CardContent>
         </Card>
-      </main>
 
-      {/* Detail Modal */}
-      <Dialog open={!!selectedSubmission} onOpenChange={(open) => {
+        {/* Detail Modal */}
+        <Dialog open={!!selectedSubmission} onOpenChange={(open) => {
         if (!open) {
           setSelectedSubmission(null);
           setEditingStatus(false);
@@ -3058,11 +3050,10 @@ const FormSubmissionsAdmin = () => {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
+        </Dialog>
 
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </AdminLayout>
   );
 };
 
