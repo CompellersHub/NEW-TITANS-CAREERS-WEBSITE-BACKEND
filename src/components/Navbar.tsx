@@ -55,7 +55,7 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="center" 
-                className="w-64 bg-card/98 backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] animate-fade-in rounded-xl"
+                className="w-64 bg-card backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] animate-fade-in rounded-xl z-50"
                 sideOffset={12}
               >
                 <DropdownMenuItem asChild>
@@ -65,7 +65,7 @@ export const Navbar = () => {
                   >
                     <Library className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-primary">Resources Hub</span>
+                      <span className="font-sans font-semibold text-card-foreground">Resources Hub</span>
                       <span className="text-xs text-muted-foreground font-sans">Tools & guides</span>
                     </div>
                   </Link>
@@ -78,7 +78,7 @@ export const Navbar = () => {
                   >
                     <BookOpen className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-primary">Blog</span>
+                      <span className="font-sans font-semibold text-card-foreground">Blog</span>
                       <span className="text-xs text-muted-foreground font-sans">Latest insights</span>
                     </div>
                   </Link>
@@ -91,7 +91,7 @@ export const Navbar = () => {
                   >
                     <Trophy className="w-5 h-5 text-accent" />
                     <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-primary">Success Stories</span>
+                      <span className="font-sans font-semibold text-card-foreground">Success Stories</span>
                       <span className="text-xs text-muted-foreground font-sans">Real results</span>
                     </div>
                   </a>
@@ -122,11 +122,11 @@ export const Navbar = () => {
                     Account
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-card/98 backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] rounded-xl">
+                <DropdownMenuContent align="end" className="w-56 bg-card backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] rounded-xl z-50">
                   <DropdownMenuItem asChild>
                     <Link to="/profile" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                       <User className="w-4 h-4 mr-2 text-accent" />
-                      <span className="font-sans font-medium text-primary">My Profile</span>
+                      <span className="font-sans font-medium text-card-foreground">My Profile</span>
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
@@ -135,37 +135,37 @@ export const Navbar = () => {
                       <DropdownMenuItem asChild>
                         <Link to="/admin" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Shield className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Admin Dashboard</span>
+                          <span className="font-sans font-medium text-card-foreground">Admin Dashboard</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/admin/campaigns" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Mail className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Campaigns</span>
+                          <span className="font-sans font-medium text-card-foreground">Campaigns</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/admin/ab-tests" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <TestTube className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">A/B Tests</span>
+                          <span className="font-sans font-medium text-card-foreground">A/B Tests</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/admin/templates" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <FileText className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Templates</span>
+                          <span className="font-sans font-medium text-card-foreground">Templates</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/admin/segments" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <Users className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Segments</span>
+                          <span className="font-sans font-medium text-card-foreground">Segments</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/admin/campaign-approval" className="cursor-pointer flex items-center px-4 py-2.5 rounded-lg hover:bg-accent/10 focus:bg-accent/10 transition-all">
                           <CheckCircle className="w-4 h-4 mr-2 text-accent" />
-                          <span className="font-sans font-medium text-primary">Approval Queue</span>
+                          <span className="font-sans font-medium text-card-foreground">Approval Queue</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
