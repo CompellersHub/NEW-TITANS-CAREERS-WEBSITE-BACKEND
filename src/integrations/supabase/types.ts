@@ -3014,14 +3014,19 @@ export type Database = {
         Returns: string
       }
       generate_certificate_number: { Args: never; Returns: string }
-      generate_cohort_events: {
-        Args: {
-          p_course_slug: string
-          p_course_title: string
-          p_months_ahead?: number
-        }
-        Returns: undefined
-      }
+      generate_cohort_events:
+        | {
+            Args: {
+              p_course_slug: string
+              p_course_title: string
+              p_months_ahead?: number
+            }
+            Returns: undefined
+          }
+        | {
+            Args: { p_course_slug: string; p_months_ahead?: number }
+            Returns: undefined
+          }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
       grant_admin_role: { Args: { user_email: string }; Returns: string }
       has_role: {

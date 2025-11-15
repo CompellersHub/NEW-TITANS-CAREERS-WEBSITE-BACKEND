@@ -5,13 +5,14 @@ import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, ArrowRight, Filter } from "lucide-react";
+import { Calendar, Clock, MapPin, ArrowRight, Filter, Download } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { getCourseConfig } from "@/lib/course-config";
+import { generateGoogleCalendarLink, downloadICalendar, getCourseColor } from "@/lib/calendar-utils";
 
 const Events = () => {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
@@ -150,57 +151,125 @@ const Events = () => {
                         {config?.displayName || courseSlug}
                       </h3>
                       <div className="grid gap-6 md:grid-cols-2">
-                        {cohorts.map((event) => (
-                          <Card
-                            key={event.id}
-                            className="group p-6 hover:shadow-xl transition-all duration-300 border-border bg-card relative overflow-hidden"
-                          >
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-accent opacity-10 rounded-bl-full" />
-                            
-                            <div className="relative z-10">
-                              <div className="flex items-start justify-between mb-4">
-                                <Badge className="bg-accent/10 text-accent border-accent/20">
-                                  Cohort {event.cohort_number}
-                                </Badge>
-                                <Badge variant="outline" className="capitalize">
-                                  {event.status}
-                                </Badge>
-                              </div>
-
-                              <h4 className="font-kanit font-bold text-xl text-primary mb-4">
-                                {event.title}
-                              </h4>
-
-                              <div className="space-y-3 mb-6">
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <Calendar className="h-4 w-4 text-accent" />
-                                  <span>Starts: {format(new Date(event.start_date), "MMMM d, yyyy")}</span>
+                        {cohorts.map((event) => {
+                          const courseColors = getCourseColor(config?.color || '#0B1F3B');
+                          const metadata = event.metadata as Record<string, any> | null;
+                          const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
+                          const sessionTime = metadata?.session_time || '7-9pm UK';
+                          const durationWeeks = metadata?.duration_weeks || config?.duration || 8;
+                          
+                          return (
+                            <Card
+                              key={event.id}
+                              className="group p-6 hover:shadow-xl transition-all duration-300 relative overflow-hidden"
+                              style={{ borderColor: courseColors.border, borderWidth: '2px' }}
+                            >
+                              <div 
+                                className="absolute top-0 right-0 w-32 h-32 opacity-10 rounded-bl-full"
+                                style={{ background: courseColors.background }}
+                              />
+                              
+                              <div className="relative z-10">
+                                <div className="flex items-start justify-between mb-4">
+                                  <Badge 
+                                    style={{ 
+                                      background: courseColors.background,
+                                      color: courseColors.text,
+                                      borderColor: courseColors.border
+                                    }}
+                                  >
+                                    Cohort {event.cohort_number}
+                                  </Badge>
+                                  <Badge variant="outline" className="capitalize">
+                                    {event.status}
+                                  </Badge>
                                 </div>
-                                
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <Clock className="h-4 w-4 text-accent" />
-                                  <span>8 weeks • Weekends</span>
+
+                                <h4 className="font-kanit font-bold text-xl text-primary mb-4">
+                                  {event.title}
+                                </h4>
+
+                                <div className="space-y-3 mb-6">
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Calendar className="h-4 w-4" style={{ color: courseColors.background }} />
+                                    <span>Starts: {format(new Date(event.start_date), "MMMM d, yyyy")}</span>
+                                  </div>
+                                  
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <Clock className="h-4 w-4" style={{ color: courseColors.background }} />
+                                    <span>{durationWeeks} weeks • {sessionDay}s • {sessionTime}</span>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <MapPin className="h-4 w-4" style={{ color: courseColors.background }} />
+                                    <span className="capitalize">{event.location}</span>
+                                  </div>
                                 </div>
 
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <MapPin className="h-4 w-4 text-accent" />
-                                  <span className="capitalize">{event.location}</span>
+                                <div className="flex flex-col gap-3">
+                                  <div className="flex gap-3">
+                                    <Button 
+                                      className="flex-1" 
+                                      style={{ 
+                                        background: courseColors.background,
+                                        color: courseColors.text
+                                      }}
+                                      asChild
+                                    >
+                                      <Link to={`/course/${event.course_slug}`}>
+                                        Enroll Now <ArrowRight className="ml-2 h-4 w-4" />
+                                      </Link>
+                                    </Button>
+                                    <Button variant="outline" asChild>
+                                      <Link to={`/course/${event.course_slug}`}>Details</Link>
+                                    </Button>
+                                  </div>
+                                  
+                                  <div className="flex gap-2">
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      className="flex-1"
+                                      onClick={() => {
+                                        const calendarEvent = {
+                                          title: event.title,
+                                          description: event.description || '',
+                                          startDate: new Date(event.start_date),
+                                          endDate: new Date(event.end_date || event.start_date),
+                                          location: 'Online - Google Meet',
+                                          timezone: 'Europe/London',
+                                        };
+                                        window.open(generateGoogleCalendarLink(calendarEvent), '_blank');
+                                      }}
+                                    >
+                                      <Calendar className="h-3 w-3 mr-1" />
+                                      Add to Google
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      className="flex-1"
+                                      onClick={() => {
+                                        const calendarEvent = {
+                                          title: event.title,
+                                          description: event.description || '',
+                                          startDate: new Date(event.start_date),
+                                          endDate: new Date(event.end_date || event.start_date),
+                                          location: 'Online - Google Meet',
+                                          timezone: 'Europe/London',
+                                        };
+                                        downloadICalendar(calendarEvent, `${event.course_slug}-cohort-${event.cohort_number}.ics`);
+                                      }}
+                                    >
+                                      <Download className="h-3 w-3 mr-1" />
+                                      Download .ics
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
-
-                              <div className="flex gap-3">
-                                <Button className="flex-1" asChild>
-                                  <Link to={`/course/${event.course_slug}`}>
-                                    Enroll Now <ArrowRight className="ml-2 h-4 w-4" />
-                                  </Link>
-                                </Button>
-                                <Button variant="outline" asChild>
-                                  <Link to={`/course/${event.course_slug}`}>Details</Link>
-                                </Button>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
+                            </Card>
+                          );
+                        })}
                       </div>
                     </div>
                   );
