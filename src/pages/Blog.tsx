@@ -303,8 +303,15 @@ const Blog = () => {
             <Button 
               size="lg" 
               className="bg-accent hover:bg-accent/90 text-accent-foreground font-sans font-bold"
+              asChild
             >
-              Join Free Session
+              <a 
+                href="https://wa.me/447539434403"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join Free Session
+              </a>
             </Button>
             
             <Link to="/courses">
