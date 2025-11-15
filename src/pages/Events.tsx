@@ -22,7 +22,7 @@ const Events = () => {
       let query = supabase
         .from("events")
         .select("*")
-        .in("status", ["upcoming", "ongoing"])
+        .in("status", ["upcoming", "ongoing"]) // Exclude archived and completed
         .order("start_date", { ascending: true })
         .limit(20);
 

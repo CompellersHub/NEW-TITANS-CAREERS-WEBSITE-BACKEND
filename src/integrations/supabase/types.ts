@@ -1351,6 +1351,7 @@ export type Database = {
       }
       events: {
         Row: {
+          archived_at: string | null
           cohort_number: number | null
           course_slug: string
           created_at: string | null
@@ -1375,6 +1376,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          archived_at?: string | null
           cohort_number?: number | null
           course_slug: string
           created_at?: string | null
@@ -1399,6 +1401,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          archived_at?: string | null
           cohort_number?: number | null
           course_slug?: string
           created_at?: string | null
@@ -2990,6 +2993,7 @@ export type Database = {
       }
     }
     Functions: {
+      archive_expired_events: { Args: never; Returns: undefined }
       calculate_engagement_score: {
         Args: { subscriber_id: string }
         Returns: number
@@ -3040,6 +3044,11 @@ export type Database = {
           p_user_id: string
         }
         Returns: string
+      }
+      maintain_cohort_pipeline: { Args: never; Returns: undefined }
+      refresh_course_cohorts: {
+        Args: { p_course_slug: string; p_months_ahead?: number }
+        Returns: undefined
       }
       send_email_notification: {
         Args: {

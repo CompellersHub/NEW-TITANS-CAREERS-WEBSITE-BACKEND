@@ -15,8 +15,8 @@ export function UpcomingEvents() {
       const { data, error } = await supabase
         .from("events")
         .select("*")
-        .eq("status", "upcoming")
         .eq("event_type", "cohort")
+        .in("status", ["upcoming", "ongoing"]) // Exclude archived and completed
         .order("start_date", { ascending: true })
         .limit(3);
 
