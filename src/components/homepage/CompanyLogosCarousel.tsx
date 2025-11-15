@@ -29,24 +29,23 @@ export function CompanyLogosCarousel() {
           </p>
         </div>
 
-        {/* First Row - Scrolling Left */}
-        <div className="mb-8">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            plugins={[
-              Autoplay({
-                delay: 2000,
-                stopOnInteraction: false,
-              }),
-            ]}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {clientCompanies.slice(0, 15).map((company, index) => (
-                <CarouselItem key={`row1-${index}`} className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
+        {/* Company Logos Carousel */}
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          plugins={[
+            Autoplay({
+              delay: 2500,
+              stopOnInteraction: false,
+            }),
+          ]}
+          className="w-full"
+        >
+          <CarouselContent className="-ml-4">
+            {clientCompanies.map((company, index) => (
+              <CarouselItem key={index} className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
                   <div className="group relative">
                     <div className="bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-xl hover:border-gold/30 transition-all duration-300 hover:-translate-y-1">
                       {/* Glossy overlay effect */}
@@ -56,7 +55,7 @@ export function CompanyLogosCarousel() {
                         <img 
                           src={company.logo}
                           alt={`${company.name} logo`}
-                          className="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                          className="max-h-full max-w-full object-contain transition-all duration-300"
                           loading="lazy"
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
@@ -74,56 +73,6 @@ export function CompanyLogosCarousel() {
                       </div>
                     </div>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </div>
-
-        {/* Second Row - Scrolling Right (opposite direction) */}
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          plugins={[
-            Autoplay({
-              delay: 2500,
-              stopOnInteraction: false,
-            }),
-          ]}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4" style={{ direction: 'rtl' }}>
-            {clientCompanies.slice(15, 30).map((company, index) => (
-              <CarouselItem key={`row2-${index}`} className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6" style={{ direction: 'ltr' }}>
-                <div className="group relative">
-                  <div className="bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-xl hover:border-gold/30 transition-all duration-300 hover:-translate-y-1">
-                    {/* Glossy overlay effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    <div className="relative flex items-center justify-center h-20">
-                      <img 
-                        src={company.logo}
-                        alt={`${company.name} logo`}
-                        className="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                        }}
-                      />
-                      <div className="hidden text-center">
-                        <div className="text-2xl font-bold text-primary">
-                          {company.name}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {company.category}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
