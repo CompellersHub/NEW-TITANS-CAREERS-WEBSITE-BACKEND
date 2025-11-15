@@ -95,17 +95,33 @@ const Events = () => {
                 variant={selectedCourse === null ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCourse(null)}
+                className={selectedCourse === null ? "bg-primary" : ""}
               >
                 All Courses
               </Button>
               {courses.map((course) => {
                 const config = getCourseConfig(course);
+                const isSelected = selectedCourse === course;
                 return (
                   <Button
                     key={course}
-                    variant={selectedCourse === course ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedCourse(course)}
+                    style={
+                      isSelected
+                        ? {
+                            background: config?.color || '#3B82F6',
+                            color: '#FFFFFF',
+                            borderColor: 'transparent',
+                          }
+                        : {
+                            background: 'transparent',
+                            color: config?.color || '#3B82F6',
+                            borderColor: config?.color || '#3B82F6',
+                            borderWidth: '1px',
+                          }
+                    }
+                    className="hover:opacity-80 transition-opacity"
                   >
                     {config?.shortName || course}
                   </Button>
