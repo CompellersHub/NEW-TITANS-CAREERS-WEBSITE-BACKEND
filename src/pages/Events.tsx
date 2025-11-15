@@ -5,7 +5,7 @@ import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, Users, ArrowRight, Filter } from "lucide-react";
+import { Calendar, Clock, MapPin, ArrowRight, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -185,13 +185,6 @@ const Events = () => {
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                   <MapPin className="h-4 w-4 text-accent" />
                                   <span className="capitalize">{event.location}</span>
-                                </div>
-
-                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                  <Users className="h-4 w-4 text-accent" />
-                                  <span>
-                                    {event.current_participants}/{event.max_participants} spots filled
-                                  </span>
                                 </div>
                               </div>
 
