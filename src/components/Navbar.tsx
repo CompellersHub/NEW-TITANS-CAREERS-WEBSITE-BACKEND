@@ -36,84 +36,42 @@ export const Navbar = () => {
           </Link>
           
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            <Link to="/" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              Home
-            </Link>
+          <div className="hidden lg:flex items-center gap-6">
             <Link to="/courses" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Courses
             </Link>
-            <Link to="/about" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              About Us
-            </Link>
-            
-            {/* Resources Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-primary-foreground hover:text-accent transition-all duration-300 font-sans font-semibold text-sm outline-none group">
-                Resources
-                <ChevronDown className="w-4 h-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="center" 
-                className="w-64 bg-card backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] animate-fade-in rounded-xl z-50"
-                sideOffset={12}
-              >
-                <DropdownMenuItem asChild>
-                  <Link 
-                    to="/resources" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
-                  >
-                    <Library className="w-5 h-5 text-accent" />
-                    <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-card-foreground">Resources Hub</span>
-                      <span className="text-xs text-muted-foreground font-sans">Tools & guides</span>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                
-                <DropdownMenuItem asChild>
-                  <Link 
-                    to="/blog" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
-                  >
-                    <BookOpen className="w-5 h-5 text-accent" />
-                    <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-card-foreground">Blog</span>
-                      <span className="text-xs text-muted-foreground font-sans">Latest insights</span>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-                
-                <DropdownMenuItem asChild>
-                  <a 
-                    href="#success-stories" 
-                    className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"
-                  >
-                    <Trophy className="w-5 h-5 text-accent" />
-                    <div className="flex flex-col">
-                      <span className="font-sans font-semibold text-card-foreground">Success Stories</span>
-                      <span className="text-xs text-muted-foreground font-sans">Real results</span>
-                    </div>
-                  </a>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            
-            <a href="#how-it-works" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <a href="/#how-it-works" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               How It Works
             </a>
-            <a href="#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <a href="/#success-stories" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+              Success Stories
+            </a>
+            <a href="/#pricing" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+              Pricing & Payment Plans
+            </a>
+            <a href="/#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               FAQs
             </a>
             <Link to="/contact" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Contact
             </Link>
+            
+            {/* CTA Button */}
+            <Button
+              variant="default"
+              size="sm"
+              className="ml-4 shadow-[0_4px_12px_-4px_hsl(var(--accent)/0.4)]"
+              asChild
+            >
+              <a href="https://wa.me/447539434403" target="_blank" rel="noopener noreferrer">
+                Book Free Career Strategy Call
+              </a>
+            </Button>
           </div>
           
-          {/* Desktop Buttons */}
-          <div className="hidden lg:flex items-center gap-3">
-            {user ? (
-              <>
+          {/* Desktop User/Admin Buttons */}
+          {user && (
+            <div className="hidden lg:flex items-center gap-3 ml-4">
                 <NotificationBell />
                 <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -177,31 +135,8 @@ export const Navbar = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              </>
-            ) : (
-              <Link to="/auth">
-                <Button variant="ghost" size="sm" className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10 font-sans font-semibold">
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
-                </Button>
-              </Link>
-            )}
-            
-            <Button 
-              variant="default"
-              size="default"
-              className="font-bold"
-              asChild
-            >
-              <a 
-                href="https://wa.me/447539434403"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join Free Session
-              </a>
-            </Button>
-          </div>
+            </div>
+          )}
           
           {/* Mobile Menu Button */}
           <Button 
