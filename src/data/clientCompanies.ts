@@ -94,4 +94,13 @@ export const clientCompanies = [
   // Retail & Automotive
   { name: 'Tesco', category: 'Retail', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Tesco_Logo.svg/320px-Tesco_Logo.svg.png' },
   { name: 'Volkswagen', category: 'Automotive', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/320px-Volkswagen_logo_2019.svg.png' },
+  { name: 'Asda', category: 'Retail', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Asda_logo.svg/320px-Asda_logo.svg.png' },
+  
+  // Energy & Resources
+  { name: 'Shell', category: 'Energy', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Shell_logo.svg/320px-Shell_logo.svg.png' },
+  
+  // African Conglomerates & Banking
+  { name: 'Zenith Bank', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Zenith_Bank_logo.svg/320px-Zenith_Bank_logo.svg.png' },
+  { name: 'Dangote Group', category: 'Conglomerate', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Dangote_Group_logo.svg/320px-Dangote_Group_logo.svg.png' },
+  { name: 'BUA Group', category: 'Conglomerate', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/BUA_Group_logo.svg/320px-BUA_Group_logo.svg.png' },
 ] as const;
