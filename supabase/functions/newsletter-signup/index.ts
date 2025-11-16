@@ -10,6 +10,8 @@ interface NewsletterSignupRequest {
   email: string;
   name?: string;
   whatsapp?: string;
+  interest?: string;
+  consent?: boolean;
   source?: string;
 }
 
@@ -20,9 +22,9 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, whatsapp, source }: NewsletterSignupRequest = await req.json();
+    const { email, name, whatsapp, interest, consent, source }: NewsletterSignupRequest = await req.json();
 
-    console.log("Newsletter signup request:", { email, name, whatsapp, source });
+    console.log("Newsletter signup request:", { email, name, whatsapp, interest, consent, source });
 
     // Validate email
     if (!email || !email.includes("@")) {
@@ -100,6 +102,11 @@ const handler = async (req: Request): Promise<Response> => {
           whatsapp: whatsapp || null,
           source: source || "unknown",
           active: true,
+          metadata: {
+            interest: interest || null,
+            consent: consent || false,
+            consent_date: new Date().toISOString()
+          }
         });
 
       if (insertError) {

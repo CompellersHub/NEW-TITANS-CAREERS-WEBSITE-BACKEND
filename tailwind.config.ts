@@ -19,6 +19,14 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Titans Careers Brand Colors
+        'tc-navy': '#0B1F3B',
+        'tc-amber': '#FFB000',
+        'tc-gold': '#C9A227',
+        'tc-blue': '#1E3A5F',
+        'tc-dark-grey': '#4B5563',
+        'tc-mid-grey': '#6B7280',
+        'tc-light-grey': '#E5E7EB',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

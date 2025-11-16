@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
-import { Mail, Loader2, Send } from "lucide-react";
+import { toast } from "sonner";
 import { z } from "zod";
+import { CheckCircle, AlertCircle } from "lucide-react";
 
 const newsletterSchema = z.object({
-  email: z.string().trim().email({ message: "Please enter a valid email address" }).max(255),
-  name: z.string().trim().max(100).optional(),
-  whatsapp: z.string().trim().max(50).optional(),
+  name: z.string().trim().min(2, "Name is required").max(100, "Name must be less than 100 characters"),
+  email: z.string().trim().email("Please enter a valid email address").max(255, "Email must be less than 255 characters"),
+  whatsapp: z.string().trim().regex(/^\+\d{1,4}\s?\d{6,14}$/, "Please enter a valid WhatsApp number with country code (e.g., +44 7XXX XXXXXX)"),
+  interest: z.enum(["AML/KYC", "Data Analysis", "Business Analysis", "Cybersecurity", "Data Privacy", "Digital Marketing", "Crypto & Digital Assets"], {
+    errorMap: () => ({ message: "Please select an area of interest" })
+  }),
+  consent: z.boolean().refine(val => val === true, "You must agree to receive updates")
 });
 
 interface NewsletterSignupProps {
@@ -27,60 +34,73 @@ export const NewsletterSignup = ({
 }: NewsletterSignupProps) => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [whatsapp, setWhatsApp] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [interest, setInterest] = useState("");
+  const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const [whatsappValid, setWhatsappValid] = useState<boolean | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const validateWhatsApp = (value: string) => {
+    const regex = /^\+\d{1,4}\s?\d{6,14}$/;
+    if (value.length > 5) {
+      setWhatsappValid(regex.test(value));
+    } else {
+      setWhatsappValid(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setShowSuccess(false);
 
-    // Validate inputs
     try {
-      newsletterSchema.parse({ email, name, whatsapp });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation Error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
+      // Validate all fields
+      const validationResult = newsletterSchema.safeParse({
+        name,
+        email,
+        whatsapp,
+        interest,
+        consent
+      });
+
+      if (!validationResult.success) {
+        const firstError = validationResult.error.errors[0];
+        toast.error(firstError.message);
+        setIsLoading(false);
         return;
       }
-    }
 
-    setIsLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke("newsletter-signup", {
-        body: {
+      const { error } = await supabase.functions.invoke("newsletter-signup", {
+        body: { 
           email: email.trim(),
-          name: name.trim() || undefined,
-          whatsapp: whatsapp.trim() || undefined,
-          source,
+          name: name.trim(),
+          whatsapp: whatsapp.trim(),
+          interest,
+          consent,
+          source 
         },
       });
 
       if (error) {
         console.error("Newsletter signup error:", error);
-        throw error;
+        toast.error(error.message || "Failed to subscribe. Please try again.");
+        return;
       }
 
-      toast({
-        title: "Success! 🎉",
-        description: data.message || "You've successfully subscribed to our newsletter!",
-      });
-
-      // Clear form
+      setShowSuccess(true);
       setEmail("");
       setName("");
-      setWhatsApp("");
-    } catch (error: any) {
-      console.error("Error subscribing to newsletter:", error);
-      toast({
-        title: "Subscription Failed",
-        description: error.message || "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+      setWhatsapp("");
+      setInterest("");
+      setConsent(false);
+      setWhatsappValid(null);
+      
+      setTimeout(() => setShowSuccess(false), 5000);
+    } catch (error) {
+      console.error("Newsletter signup error:", error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -88,22 +108,17 @@ export const NewsletterSignup = ({
 
   if (variant === "minimal") {
     return (
-      <form onSubmit={handleSubmit} className="flex gap-2 max-w-md">
+      <form onSubmit={handleSubmit} className="flex gap-2">
         <Input
           type="email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          disabled={isLoading}
           className="flex-1"
         />
-        <Button type="submit" disabled={isLoading} size="sm">
-          {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Send className="w-4 h-4" />
-          )}
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Subscribing..." : "Subscribe"}
         </Button>
       </form>
     );
@@ -111,113 +126,159 @@ export const NewsletterSignup = ({
 
   if (variant === "card") {
     return (
-      <div className="bg-gradient-to-br from-tc-navy to-tc-blue text-white p-8 rounded-xl shadow-xl">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 bg-tc-amber/20 rounded-full flex items-center justify-center">
-            <Mail className="w-6 h-6 text-tc-amber" />
-          </div>
+      <div className="bg-white rounded-2xl shadow-xl p-8 border border-tc-light-grey/50">
+        <h3 className="text-2xl font-bold text-tc-navy mb-2">Get Career Insights</h3>
+        <p className="text-tc-mid-grey mb-6 text-sm">Join our weekly newsletter</p>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <h3 className="text-xl font-bold">Get Career Insights</h3>
-            <p className="text-white/80 text-sm">Weekly tips delivered to your inbox</p>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {showName && (
+            <Label htmlFor="name" className="text-tc-navy font-semibold mb-2">First Name</Label>
             <Input
+              id="name"
               type="text"
-              placeholder="Your name"
+              placeholder="Your first name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled={isLoading}
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+              required
+              className="mt-1"
             />
-          )}
-          <Input
-            type="email"
-            placeholder="Your email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={isLoading}
-            className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-          />
-          {showWhatsApp && (
-            <Input
-              type="tel"
-              placeholder="WhatsApp number (optional)"
-              value={whatsapp}
-              onChange={(e) => setWhatsApp(e.target.value)}
-              disabled={isLoading}
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
-            />
-          )}
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-tc-amber hover:bg-tc-gold text-tc-navy font-bold"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Subscribing...
-              </>
-            ) : (
-              <>
-                <Send className="w-4 h-4 mr-2" />
-                Subscribe Now
-              </>
-            )}
-          </Button>
-        </form>
+          </div>
 
-        <p className="text-xs text-white/60 mt-3 text-center">
-          Free career tips. Unsubscribe anytime.
-        </p>
+          <div>
+            <Label htmlFor="email" className="text-tc-navy font-semibold mb-2">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="your.email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="mt-1"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="whatsapp" className="text-tc-navy font-semibold mb-2">WhatsApp Number</Label>
+            <div className="relative">
+              <Input
+                id="whatsapp"
+                type="tel"
+                placeholder="+44 7XXX XXXXXX"
+                value={whatsapp}
+                onChange={(e) => {
+                  setWhatsapp(e.target.value);
+                  validateWhatsApp(e.target.value);
+                }}
+                required
+                className={`mt-1 pr-10 ${whatsappValid === false ? 'border-red-500' : whatsappValid === true ? 'border-green-500' : ''}`}
+              />
+              {whatsappValid === true && (
+                <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+              )}
+              {whatsappValid === false && (
+                <AlertCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-red-500" />
+              )}
+            </div>
+            {whatsappValid === false && (
+              <p className="text-red-500 text-xs mt-1">Please enter a valid number including country code</p>
+            )}
+          </div>
+
+          <div>
+            <Label htmlFor="interest" className="text-tc-navy font-semibold mb-2">I'm most interested in:</Label>
+            <Select value={interest} onValueChange={setInterest} required>
+              <SelectTrigger className="mt-1">
+                <SelectValue placeholder="Select a course area" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="AML/KYC">AML/KYC</SelectItem>
+                <SelectItem value="Data Analysis">Data Analysis</SelectItem>
+                <SelectItem value="Business Analysis">Business Analysis</SelectItem>
+                <SelectItem value="Cybersecurity">Cybersecurity</SelectItem>
+                <SelectItem value="Data Privacy">Data Privacy</SelectItem>
+                <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                <SelectItem value="Crypto & Digital Assets">Crypto & Digital Assets</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-start gap-2 pt-2">
+            <Checkbox
+              id="consent"
+              checked={consent}
+              onCheckedChange={(checked) => setConsent(checked as boolean)}
+              required
+              className="mt-1"
+            />
+            <Label htmlFor="consent" className="text-tc-mid-grey text-sm leading-tight cursor-pointer">
+              I agree to receive career tips and course updates from Titans Careers.
+            </Label>
+          </div>
+
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="w-full bg-tc-amber hover:bg-tc-amber/90 text-white font-bold py-6 rounded-lg"
+          >
+            {isLoading ? "Subscribing..." : "Get Weekly Career Tips"}
+          </Button>
+
+          {showSuccess && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+              <p className="text-green-700 font-semibold">
+                Thanks! Check your inbox and WhatsApp for your first set of tips.
+              </p>
+            </div>
+          )}
+        </form>
       </div>
     );
   }
 
-  // Inline variant (default)
+  // Default inline variant
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    <form onSubmit={handleSubmit} className="space-y-4">
       {showName && (
-        <Input
-          type="text"
-          placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          disabled={isLoading}
-        />
+        <div>
+          <Label htmlFor="inline-name">Name</Label>
+          <Input
+            id="inline-name"
+            type="text"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
       )}
-      <div className="flex gap-2">
+
+      <div>
+        <Label htmlFor="inline-email">Email</Label>
         <Input
+          id="inline-email"
           type="email"
-          placeholder="Enter your email"
+          placeholder="your.email@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          disabled={isLoading}
-          className="flex-1"
         />
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            "Subscribe"
-          )}
-        </Button>
       </div>
+
       {showWhatsApp && (
-        <Input
-          type="tel"
-          placeholder="WhatsApp number (optional)"
-          value={whatsapp}
-          onChange={(e) => setWhatsApp(e.target.value)}
-          disabled={isLoading}
-          className="text-sm"
-        />
+        <div>
+          <Label htmlFor="inline-whatsapp">WhatsApp (optional)</Label>
+          <Input
+            id="inline-whatsapp"
+            type="tel"
+            placeholder="+44 7XXX XXXXXX"
+            value={whatsapp}
+            onChange={(e) => setWhatsapp(e.target.value)}
+          />
+        </div>
       )}
+
+      <Button type="submit" disabled={isLoading} className="w-full">
+        {isLoading ? "Subscribing..." : "Subscribe"}
+      </Button>
     </form>
   );
 };
