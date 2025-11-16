@@ -51,4 +51,38 @@ export const clientCompanies = [
   { name: 'Allianz', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Allianz_logo.svg/320px-Allianz_logo.svg.png' },
   { name: 'AXA', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/AXA_Logo.svg/320px-AXA_Logo.svg.png' },
   { name: 'Zurich Insurance', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Zurich_Logo.svg/320px-Zurich_Logo.svg.png' },
+  
+  // Big 4 Accounting & Consulting
+  { name: 'Deloitte', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Deloitte.svg/320px-Deloitte.svg.png' },
+  { name: 'PwC', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/PwC_Logo.svg/320px-PwC_Logo.svg.png' },
+  { name: 'EY', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/EY_logo_2019.svg/320px-EY_logo_2019.svg.png' },
+  { name: 'KPMG', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/KPMG_logo.svg/320px-KPMG_logo.svg.png' },
+  
+  // Management Consulting
+  { name: 'McKinsey & Company', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/McKinsey_and_Company_Logo.svg/320px-McKinsey_and_Company_Logo.svg.png' },
+  { name: 'BCG', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Boston_Consulting_Group_2020_logo.svg/320px-Boston_Consulting_Group_2020_logo.svg.png' },
+  { name: 'Bain & Company', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Bain_%26_Company_logo.svg/320px-Bain_%26_Company_logo.svg.png' },
+  { name: 'Accenture', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/320px-Accenture.svg.png' },
+  
+  // Investment & Asset Management
+  { name: 'BlackRock', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Blackrock_Logo.svg/320px-Blackrock_Logo.svg.png' },
+  { name: 'Vanguard', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/The_Vanguard_Group_logo.svg/320px-The_Vanguard_Group_logo.svg.png' },
+  { name: 'Fidelity', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Fidelity_Investments_logo.svg/320px-Fidelity_Investments_logo.svg.png' },
+  { name: 'State Street', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/State_Street_Corporation_logo.svg/320px-State_Street_Corporation_logo.svg.png' },
+  
+  // Tech Companies (Financial Services Focus)
+  { name: 'Microsoft', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/320px-Microsoft_logo.svg.png' },
+  { name: 'Amazon', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png' },
+  { name: 'Google', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/320px-Google_2015_logo.svg.png' },
+  { name: 'Meta', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/320px-Meta_Platforms_Inc._logo.svg.png' },
+  
+  // Trading & Exchanges
+  { name: 'Bloomberg', category: 'Financial Services', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Bloomberg_L.P._%28logo%29.svg/320px-Bloomberg_L.P._%28logo%29.svg.png' },
+  { name: 'Reuters', category: 'Financial Services', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Reuters_Logo.svg/320px-Reuters_Logo.svg.png' },
+  { name: 'Nasdaq', category: 'Exchange', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Nasdaq_Logo.svg/320px-Nasdaq_Logo.svg.png' },
+  
+  // Additional European Banks
+  { name: 'BBVA', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BBVA_2019.svg/320px-BBVA_2019.svg.png' },
+  { name: 'Nordea', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Nordea-logo-blue.svg/320px-Nordea-logo-blue.svg.png' },
+  { name: 'Commerzbank', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Commerzbank_Logo_2024.svg/320px-Commerzbank_Logo_2024.svg.png' },
 ] as const;
