@@ -6,6 +6,13 @@ import { FreeSessionBookingDialog } from "@/components/FreeSessionBookingDialog"
 import { Link } from "react-router-dom";
 import { Clock, Calendar } from "lucide-react";
 import { CourseHeroImage } from "./CourseHeroImage";
+import amlKycHero from "@/assets/courses/aml-kyc-hero.jpg";
+import cryptoComplianceHero from "@/assets/courses/crypto-compliance-hero.jpg";
+import dataPrivacyHero from "@/assets/courses/data-privacy-hero.jpg";
+import dataAnalysisHero from "@/assets/courses/data-analysis-hero.jpg";
+import cybersecurityHero from "@/assets/courses/cybersecurity-hero.jpg";
+import businessAnalysisHero from "@/assets/courses/business-analysis-hero.jpg";
+import digitalMarketingHero from "@/assets/courses/digital-marketing-hero.jpg";
 
 interface CourseCardProps {
   course: {
@@ -34,21 +41,21 @@ export function CourseCard({ course }: CourseCardProps) {
 
   const getCourseImage = (slug: string) => {
     const images: Record<string, string> = {
-      'aml-kyc': 'aml-kyc-hero.jpg',
-      'crypto-compliance': 'crypto-compliance-hero.jpg',
-      'data-privacy': 'data-privacy-hero.jpg',
-      'data-analysis': 'data-analysis-hero.jpg',
-      'cybersecurity': 'cybersecurity-hero.jpg',
-      'business-analysis': 'business-analysis-hero.jpg',
-      'digital-marketing': 'digital-marketing-hero.jpg',
+      'aml-kyc': amlKycHero,
+      'crypto-compliance': cryptoComplianceHero,
+      'data-privacy': dataPrivacyHero,
+      'data-analysis': dataAnalysisHero,
+      'cybersecurity': cybersecurityHero,
+      'business-analysis': businessAnalysisHero,
+      'digital-marketing': digitalMarketingHero,
     };
-    return images[slug] || 'data-analysis-hero.jpg';
+    return images[slug] || dataAnalysisHero;
   };
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-hidden">
       <CourseHeroImage
-        src={`/src/assets/courses/${getCourseImage(course.slug)}`}
+        src={getCourseImage(course.slug)}
         alt={course.title}
         title={course.title}
         subtitle={course.tagline}
