@@ -24,6 +24,7 @@ import { LessonList } from "@/components/course/LessonList";
 import { CertificateView } from "@/components/course/CertificateView";
 import { DiscussionForum } from "@/components/course/DiscussionForum";
 import { createAcademySSOLink } from "@/lib/academy-integration";
+import { FloatingCourseCTA } from "@/components/course/FloatingCourseCTA";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -170,6 +171,7 @@ export default function CourseDetail() {
       />
       <div className="min-h-screen bg-background">
         <Navbar />
+        <FloatingCourseCTA courseSlug={course.slug} courseTitle={course.title} />
         
         <CourseHeroImage 
           src="/placeholder.svg"
