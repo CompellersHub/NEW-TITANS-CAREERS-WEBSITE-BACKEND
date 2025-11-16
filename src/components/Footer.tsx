@@ -26,12 +26,12 @@ export const Footer = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-kanit font-bold text-accent">TITANS CAREERS</span>
-                <span className="text-sm font-sans text-primary-foreground/80">Practical training. Real careers.</span>
+                <span className="text-xl font-kanit font-bold text-accent tracking-tight">TITANS CAREERS</span>
+                <span className="text-sm font-sans text-primary-foreground/80 font-normal">Practical training. Real careers.</span>
               </div>
             </div>
             
-            <p className="text-base font-sans text-primary-foreground/90 leading-relaxed max-w-md">
+            <p className="text-base font-sans font-normal text-primary-foreground/90 leading-relaxed max-w-md">
               Transform your career with practical tech training designed for real-world success. Join 300+ professionals who've successfully switched careers.
             </p>
 
@@ -44,7 +44,7 @@ export const Footer = () => {
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
-                <span className="font-sans">info@titanscareers.com</span>
+                <span className="font-sans font-normal">info@titanscareers.com</span>
               </a>
               
               <a 
@@ -56,14 +56,14 @@ export const Footer = () => {
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
                   <MessageCircle className="w-5 h-5" />
                 </div>
-                <span className="font-sans">+44 7539 434403</span>
+                <span className="font-sans font-normal">+44 7539 434403</span>
               </a>
 
               <div className="flex items-start gap-3 text-sm">
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
                   <MapPin className="w-5 h-5" />
                 </div>
-                <span className="font-sans text-primary-foreground/80">
+                <span className="font-sans font-normal text-primary-foreground/80">
                   3rd Floor, 45 Albemarle Street<br />
                   Mayfair, London, W1S 4JL
                 </span>
@@ -79,27 +79,27 @@ export const Footer = () => {
             </h3>
             <ul className="space-y-3 text-sm font-sans">
               <li>
-                <Link to="/courses" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   AML/KYC Compliance
                 </Link>
               </li>
               <li>
-                <Link to="/courses" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Data Analysis
                 </Link>
               </li>
               <li>
-                <Link to="/courses" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Cybersecurity
                 </Link>
               </li>
               <li>
-                <Link to="/courses" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Business Analysis
                 </Link>
               </li>
               <li>
-                <Link to="/courses" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Digital Marketing
                 </Link>
               </li>
@@ -114,27 +114,27 @@ export const Footer = () => {
             </h3>
             <ul className="space-y-3 text-sm font-sans">
               <li>
-                <Link to="/about" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/about" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/testimonials" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/testimonials" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Success Stories
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/blog" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Blog & News
                 </Link>
               </li>
               <li>
-                <Link to="/resources" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/resources" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Free Resources
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
+                <Link to="/contact" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
                   Contact Us
                 </Link>
               </li>
@@ -246,8 +246,8 @@ export const Footer = () => {
           {/* Full Payl8r Disclaimer */}
           <div className="max-w-4xl mx-auto px-6">
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
-              <p className="text-xs leading-relaxed text-primary-foreground/80 text-center">
-                <strong className="font-semibold">Important Credit Information:</strong> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
+              <p className="text-xs font-sans font-normal leading-relaxed text-primary-foreground/80 text-center">
+                <strong className="font-sans font-semibold">Important Credit Information:</strong> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
               </p>
             </div>
           </div>
@@ -259,52 +259,52 @@ export const Footer = () => {
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-sans">
             <Link 
               to="/privacy-policy" 
-              className="text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
+              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
             >
               Privacy Policy
             </Link>
-            <span className="text-primary-foreground/30">•</span>
+            <span className="font-sans text-primary-foreground/30">•</span>
             <Link 
               to="/refund-policy" 
-              className="text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
+              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
             >
               Refund Policy
             </Link>
-            <span className="text-primary-foreground/30">•</span>
+            <span className="font-sans text-primary-foreground/30">•</span>
             <Link 
               to="/terms-conditions" 
-              className="text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
+              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
             >
               Terms & Conditions
             </Link>
           </div>
 
           {/* Company Registration */}
-          <div className="flex flex-col items-center gap-3 text-xs font-sans text-primary-foreground/70">
+          <div className="flex flex-col items-center gap-3 text-xs font-sans font-normal text-primary-foreground/70">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
               <span className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                Company Number: 16369966
+                <span className="font-sans font-normal">Company Number: 16369966</span>
               </span>
-              <span className="hidden sm:inline text-primary-foreground/30">|</span>
+              <span className="hidden sm:inline font-sans text-primary-foreground/30">|</span>
               <span className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                UKRLP Number: 10098472
+                <span className="font-sans font-normal">UKRLP Number: 10098472</span>
               </span>
-              <span className="hidden sm:inline text-primary-foreground/30">|</span>
+              <span className="hidden sm:inline font-sans text-primary-foreground/30">|</span>
               <span className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                ICO Registered
+                <span className="font-sans font-normal">ICO Registered</span>
               </span>
             </div>
           </div>
 
           {/* Copyright */}
           <div className="text-center pt-6 border-t border-primary-foreground/10">
-            <p className="text-sm font-sans text-primary-foreground/80">
-              © {new Date().getFullYear()} <span className="font-semibold text-accent">TITANS CAREERS</span>. All rights reserved.
+            <p className="text-sm font-sans font-normal text-primary-foreground/80">
+              © {new Date().getFullYear()} <span className="font-kanit font-semibold text-accent">TITANS CAREERS</span>. All rights reserved.
             </p>
-            <p className="text-xs text-primary-foreground/60 mt-2">
+            <p className="text-xs font-sans font-normal text-primary-foreground/60 mt-2">
               Built with passion for career transformation.
             </p>
           </div>
