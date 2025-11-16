@@ -222,36 +222,6 @@ export const Footer = () => {
           </div>
         </div>
         
-        {/* Flexible Payment Options Section */}
-        <div className="bg-primary-foreground/5 backdrop-blur-sm rounded-2xl p-8 mb-10 border border-primary-foreground/10 shadow-lg">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full">
-              <span className="text-sm font-semibold text-accent font-sans tracking-wide">
-                FLEXIBLE PAYMENT OPTIONS AVAILABLE
-              </span>
-            </div>
-            
-            <div className="flex justify-center">
-              <img 
-                src={payl8rLogo} 
-                alt="Payl8r" 
-                className="h-12 object-contain opacity-90"
-              />
-            </div>
-            
-            <div className="bg-accent/5 border border-accent/20 rounded-xl p-5 max-w-3xl mx-auto">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-accent text-sm font-bold">!</span>
-                </div>
-                <p className="text-xs leading-relaxed text-primary-foreground/70 font-sans font-normal text-left">
-                  <span className="font-semibold text-accent">Important Credit Information:</span> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        
         {/* Legal Links */}
         <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-3 mb-8 pb-8 border-b border-primary-foreground/10">
           <Link 
