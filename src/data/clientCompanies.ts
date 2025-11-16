@@ -85,4 +85,13 @@ export const clientCompanies = [
   { name: 'BBVA', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/BBVA_2019.svg/320px-BBVA_2019.svg.png' },
   { name: 'Nordea', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Nordea-logo-blue.svg/320px-Nordea-logo-blue.svg.png' },
   { name: 'Commerzbank', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Commerzbank_Logo_2024.svg/320px-Commerzbank_Logo_2024.svg.png' },
+  
+  // Tech & Social Media
+  { name: 'Apple', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/320px-Apple_logo_black.svg.png' },
+  { name: 'TikTok', category: 'Social Media', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Ionicons_logo-tiktok.svg/320px-Ionicons_logo-tiktok.svg.png' },
+  { name: 'Instagram', category: 'Social Media', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/320px-Instagram_logo_2022.svg.png' },
+  
+  // Retail & Automotive
+  { name: 'Tesco', category: 'Retail', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Tesco_Logo.svg/320px-Tesco_Logo.svg.png' },
+  { name: 'Volkswagen', category: 'Automotive', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/320px-Volkswagen_logo_2019.svg.png' },
 ] as const;
