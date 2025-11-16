@@ -16,10 +16,6 @@ const careerConsultationSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255),
   country: z.string().min(1, "Please select a country"),
   phone: z.string().min(8, "Valid phone number required"),
-  currentRole: z.string().trim().min(2, "Current role required").max(100),
-  currentSalary: z.string().trim().min(1, "Current salary required").max(50),
-  targetRole: z.string().trim().min(2, "Target role required").max(100),
-  targetSalary: z.string().trim().min(1, "Target salary required").max(50),
 });
 
 type CareerConsultationData = z.infer<typeof careerConsultationSchema>;
@@ -81,14 +77,6 @@ Name: ${data.name}
 Email: ${data.email}
 Country: ${countries.find(c => c.code === data.country)?.name}
 Phone: ${data.phone}
-
-*Current Position:*
-Role: ${data.currentRole}
-Salary: ${data.currentSalary}
-
-*Career Goals:*
-Target Role: ${data.targetRole}
-Target Salary: ${data.targetSalary}
 
 Looking forward to discussing my career progression!`;
 
@@ -212,70 +200,6 @@ Looking forward to discussing my career progression!`;
             required
             error={errors.phone?.message}
           />
-
-          {/* Current Role */}
-          <div className="space-y-2">
-            <Label htmlFor="currentRole" className="text-foreground font-semibold">
-              Current Role <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="currentRole"
-              {...register("currentRole")}
-              placeholder="e.g., Software Developer"
-              className="border-2 focus:border-accent"
-            />
-            {errors.currentRole && (
-              <p className="text-sm text-destructive">{errors.currentRole.message}</p>
-            )}
-          </div>
-
-          {/* Current Salary */}
-          <div className="space-y-2">
-            <Label htmlFor="currentSalary" className="text-foreground font-semibold">
-              Current Salary <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="currentSalary"
-              {...register("currentSalary")}
-              placeholder="e.g., £45,000 per year"
-              className="border-2 focus:border-accent"
-            />
-            {errors.currentSalary && (
-              <p className="text-sm text-destructive">{errors.currentSalary.message}</p>
-            )}
-          </div>
-
-          {/* Target Role */}
-          <div className="space-y-2">
-            <Label htmlFor="targetRole" className="text-foreground font-semibold">
-              Target Role <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="targetRole"
-              {...register("targetRole")}
-              placeholder="e.g., Senior Software Engineer"
-              className="border-2 focus:border-accent"
-            />
-            {errors.targetRole && (
-              <p className="text-sm text-destructive">{errors.targetRole.message}</p>
-            )}
-          </div>
-
-          {/* Target Salary */}
-          <div className="space-y-2">
-            <Label htmlFor="targetSalary" className="text-foreground font-semibold">
-              Target Salary <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="targetSalary"
-              {...register("targetSalary")}
-              placeholder="e.g., £65,000 per year"
-              className="border-2 focus:border-accent"
-            />
-            {errors.targetSalary && (
-              <p className="text-sm text-destructive">{errors.targetSalary.message}</p>
-            )}
-          </div>
 
           {/* Submit Button */}
           <Button
