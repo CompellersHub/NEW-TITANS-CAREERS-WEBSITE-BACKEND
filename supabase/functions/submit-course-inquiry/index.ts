@@ -12,7 +12,9 @@ interface InquiryRequest {
   inquiryType: "free_session" | "whatsapp_group";
   name: string;
   email: string;
-  phone: string;
+  phone?: string; // For backward compatibility
+  whatsapp?: string; // New unified field
+  countryCode?: string; // For backward compatibility
 }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -46,7 +48,12 @@ serve(async (req) => {
       name,
       email,
       phone,
+      whatsapp,
+      countryCode,
     }: InquiryRequest = await req.json();
+
+    // Use whatsapp field if provided, otherwise fall back to phone + countryCode
+    const phoneNumber = whatsapp || (countryCode && phone ? `${countryCode} ${phone}` : phone || "");
 
     console.log(`Processing ${inquiryType} inquiry for ${courseTitle} from ${email}`);
 
@@ -107,7 +114,7 @@ serve(async (req) => {
           <p>We've received your request to book a free consultation session.</p>
           <p><strong>What happens next?</strong></p>
           <ul>
-            <li>Our team will contact you within 24 hours on WhatsApp (${phone})</li>
+            <li>Our team will contact you within 24 hours on WhatsApp (${phoneNumber})</li>
             <li>We'll schedule a convenient time for your free session</li>
             <li>You'll get personalized advice about the course and career opportunities</li>
           </ul>
@@ -158,11 +165,11 @@ serve(async (req) => {
         <hr/>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Phone:</strong> ${phoneNumber}</p>
         <hr/>
         <p style="margin: 20px 0;">
           <a href="https://lovable.app" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; margin-right: 10px;">View in Dashboard</a>
-          <a href="https://wa.me/${phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(name)},%20thank%20you%20for%20your%20interest%20in%20${encodeURIComponent(courseTitle)}" style="display: inline-block; background: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Contact on WhatsApp</a>
+          <a href="https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(name)},%20thank%20you%20for%20your%20interest%20in%20${encodeURIComponent(courseTitle)}" style="display: inline-block; background: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Contact on WhatsApp</a>
         </p>
         <p><em>Submitted at ${new Date().toLocaleString()}</em></p>
       `;
