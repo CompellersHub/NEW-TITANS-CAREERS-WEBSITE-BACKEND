@@ -22,13 +22,13 @@ export const Footer = () => {
                 <span className="font-kanit font-bold text-xl text-primary-foreground leading-tight group-hover:text-accent transition-colors tracking-tight">
                   TITANS CAREERS
                 </span>
-                <span className="text-sm text-muted-foreground leading-tight font-sans font-normal">
-                  Practical training. Real careers.
-                </span>
+            <span className="text-sm text-primary-foreground/70 leading-tight font-sans font-normal">
+              Practical training. Real careers.
+            </span>
               </div>
             </Link>
             
-            <p className="text-base text-muted-foreground leading-relaxed font-sans font-normal max-w-sm">
+            <p className="text-base text-primary-foreground/80 leading-relaxed font-sans font-normal max-w-sm">
               Transform your career with practical tech training designed for real-world success. 
               Join 300+ professionals who've successfully switched careers.
             </p>
@@ -37,7 +37,7 @@ export const Footer = () => {
             <div className="space-y-4 pt-2">
               <a 
                 href="mailto:info@titanscareers.co.uk" 
-                className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
+                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
                   <Mail className="w-5 h-5" />
@@ -47,7 +47,7 @@ export const Footer = () => {
               
               <a 
                 href="tel:+442039661548" 
-                className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
+                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
                   <Phone className="w-5 h-5" />
@@ -55,7 +55,7 @@ export const Footer = () => {
                 <span className="text-sm font-sans font-normal">+44 20 3966 1548</span>
               </a>
               
-              <div className="flex items-start gap-3 text-muted-foreground">
+              <div className="flex items-start gap-3 text-primary-foreground/80">
                 <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
@@ -78,7 +78,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/courses/aml-kyc-compliance" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     AML/KYC Compliance
                   </Link>
@@ -86,7 +86,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/courses/data-analysis" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Data Analysis
                   </Link>
@@ -94,7 +94,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/courses/cybersecurity" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Cybersecurity
                   </Link>
@@ -102,7 +102,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/courses/business-analysis" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Business Analysis
                   </Link>
@@ -110,7 +110,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/courses/digital-marketing" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Digital Marketing
                   </Link>
@@ -127,7 +127,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/about" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     About Us
                   </Link>
@@ -135,7 +135,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/testimonials" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Success Stories
                   </Link>
@@ -143,7 +143,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/blog" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Blog & News
                   </Link>
@@ -151,7 +151,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/resources" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Free Resources
                   </Link>
@@ -159,7 +159,7 @@ export const Footer = () => {
                 <li>
                   <Link 
                     to="/contact" 
-                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                    className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                   >
                     Contact Us
                   </Link>
@@ -174,14 +174,14 @@ export const Footer = () => {
               <h3 className="text-accent font-kanit font-bold text-lg tracking-tight">
                 Stay Connected
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed font-sans font-normal">
+              <p className="text-sm text-primary-foreground/80 leading-relaxed font-sans font-normal">
                 Get weekly career tips, course updates, and exclusive job opportunities delivered to your inbox.
               </p>
             </div>
             
             <NewsletterSignup />
             
-            <p className="text-xs text-muted-foreground/80 leading-relaxed font-sans font-normal">
+            <p className="text-xs text-primary-foreground/60 leading-relaxed font-sans font-normal">
               Free forever. Unsubscribe anytime. No spam, ever.
             </p>
             
@@ -208,11 +208,11 @@ export const Footer = () => {
                       aria-label={social.name}
                     >
                       {social.name === "TikTok" ? (
-                        <svg className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                        <svg className="w-5 h-5 text-primary-foreground/70 group-hover:text-accent transition-colors" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                         </svg>
                       ) : IconComponent && (
-                        <IconComponent className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                        <IconComponent className="w-5 h-5 text-primary-foreground/70 group-hover:text-accent transition-colors" />
                       )}
                     </a>
                   );
@@ -244,7 +244,7 @@ export const Footer = () => {
                 <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-accent text-sm font-bold">!</span>
                 </div>
-                <p className="text-xs leading-relaxed text-muted-foreground font-sans font-normal text-left">
+                <p className="text-xs leading-relaxed text-primary-foreground/70 font-sans font-normal text-left">
                   <span className="font-semibold text-accent">Important Credit Information:</span> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
                 </p>
               </div>
@@ -256,21 +256,21 @@ export const Footer = () => {
         <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-3 mb-8 pb-8 border-b border-primary-foreground/10">
           <Link 
             to="/privacy-policy" 
-            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+            className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal"
           >
             Privacy Policy
           </Link>
-          <span className="text-muted-foreground/40">•</span>
+          <span className="text-primary-foreground/40">•</span>
           <Link 
             to="/refund-policy" 
-            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+            className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal"
           >
             Refund Policy
           </Link>
-          <span className="text-muted-foreground/40">•</span>
+          <span className="text-primary-foreground/40">•</span>
           <Link 
             to="/terms-conditions" 
-            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+            className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal"
           >
             Terms & Conditions
           </Link>
@@ -278,13 +278,13 @@ export const Footer = () => {
         
         {/* Registration Numbers */}
         <div className="text-center space-y-4 mb-6">
-          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs text-muted-foreground/70 font-sans font-normal">
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs text-primary-foreground/60 font-sans font-normal">
             <span>Company No. 16017935</span>
-            <span className="text-muted-foreground/40">•</span>
+            <span className="text-primary-foreground/40">•</span>
             <span>FCA No. 675283</span>
-            <span className="text-muted-foreground/40">•</span>
+            <span className="text-primary-foreground/40">•</span>
             <span>UKRLP No. 10104588</span>
-            <span className="text-muted-foreground/40">•</span>
+            <span className="text-primary-foreground/40">•</span>
             <span>ICO Reg. ZB954438</span>
           </div>
         </div>
@@ -293,7 +293,7 @@ export const Footer = () => {
       {/* Bottom Copyright Bar */}
       <div className="border-t border-primary-foreground/10 bg-primary-foreground/5">
         <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-12 py-6">
-          <p className="text-center text-sm text-muted-foreground font-sans font-normal">
+          <p className="text-center text-sm text-primary-foreground/70 font-sans font-normal">
             © 2025 <span className="text-accent font-semibold">TITANS CAREERS</span>. All rights reserved. 
             <span className="hidden sm:inline"> Built with passion for career transformation.</span>
           </p>
