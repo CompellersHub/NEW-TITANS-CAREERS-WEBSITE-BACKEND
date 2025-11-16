@@ -1,313 +1,302 @@
-import { Mail, MessageCircle, Facebook, Instagram, Linkedin, Twitter, Youtube, MapPin, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
-import titansLogo from "@/assets/titans-logo.jpg";
-import payl8rLogo from "@/assets/payl8r-logo.png";
 import { NewsletterSignup } from "./NewsletterSignup";
-import { socialMediaLinks } from "@/config/socialMedia";
+import payl8rLogo from "@/assets/payl8r-logo.png";
+import { socialMediaDisplay } from "@/config/socialMedia";
 
 export const Footer = () => {
   return (
-    <footer className="relative bg-gradient-to-br from-primary via-primary to-primary/95 text-primary-foreground overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE2YzAgMi4yMTItMS43ODggNC00IDRDMTM1Ny43ODggMTYgMTM2MCAxNC4yMTIgMTM2MCAxMnMxLjc4OC00IDQtNCA0IDEuNzg4IDQgNHptMCAyNGMwIDIuMjEyLTEuNzg4IDQtNCA0cy00LTEuNzg4LTQtNCANCjEuNzg4LTQgNC00IDQgMS43ODggNCA0em0wLTI0YzAgMi4yMTItMS43ODggNC00IDRDMTA1Ny43ODggMTYgMTA2MCAxNC4yMTIgMTA2MCAxMnMxLjc4OC00IDQtNCA0IDEuNzg4IDQgNHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40"></div>
-      
-      <div className="container relative px-4 py-16">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-12">
+    <footer className="bg-primary text-primary-foreground border-t border-primary-foreground/10">
+      {/* Main Footer Content */}
+      <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-12 py-12 md:py-16">
+        {/* Top 3-Column Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-16">
           
-          {/* Brand Section - Takes more space */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 rounded-2xl overflow-hidden bg-white flex items-center justify-center shadow-xl ring-4 ring-white/20">
-                <img 
-                  src={titansLogo} 
-                  alt="Titans Careers Logo" 
-                  className="w-full h-full object-cover"
-                />
+          {/* Column 1: Brand & Contact */}
+          <div className="space-y-6">
+            <Link to="/" className="inline-flex items-center gap-3 group">
+              <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-primary font-kanit font-bold text-xl">T</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-kanit font-bold text-accent tracking-tight">TITANS CAREERS</span>
-                <span className="text-sm font-sans text-primary-foreground/80 font-normal">Practical training. Real careers.</span>
+                <span className="font-kanit font-bold text-xl text-primary-foreground leading-tight group-hover:text-accent transition-colors tracking-tight">
+                  TITANS CAREERS
+                </span>
+                <span className="text-sm text-muted-foreground leading-tight font-sans font-normal">
+                  Practical training. Real careers.
+                </span>
               </div>
-            </div>
+            </Link>
             
-            <p className="text-base font-sans font-normal text-primary-foreground/90 leading-relaxed max-w-md">
-              Transform your career with practical tech training designed for real-world success. Join 300+ professionals who've successfully switched careers.
+            <p className="text-base text-muted-foreground leading-relaxed font-sans font-normal max-w-sm">
+              Transform your career with practical tech training designed for real-world success. 
+              Join 300+ professionals who've successfully switched careers.
             </p>
-
-            {/* Contact Info */}
-            <div className="space-y-3">
+            
+            {/* Contact Information */}
+            <div className="space-y-4 pt-2">
               <a 
-                href="mailto:info@titanscareers.com" 
-                className="flex items-center gap-3 text-sm hover:text-accent transition-colors group"
+                href="mailto:info@titanscareers.co.uk" 
+                className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
                   <Mail className="w-5 h-5" />
                 </div>
-                <span className="font-sans font-normal">info@titanscareers.com</span>
+                <span className="text-sm font-sans font-normal">info@titanscareers.co.uk</span>
               </a>
               
               <a 
-                href="https://wa.me/447539434403"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-sm hover:text-accent transition-colors group"
+                href="tel:+442039661548" 
+                className="flex items-center gap-3 text-muted-foreground hover:text-accent transition-colors group"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                  <MessageCircle className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                  <Phone className="w-5 h-5" />
                 </div>
-                <span className="font-sans font-normal">+44 7539 434403</span>
+                <span className="text-sm font-sans font-normal">+44 20 3966 1548</span>
               </a>
-
-              <div className="flex items-start gap-3 text-sm">
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center">
+              
+              <div className="flex items-start gap-3 text-muted-foreground">
+                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5" />
                 </div>
-                <span className="font-sans font-normal text-primary-foreground/80">
-                  3rd Floor, 45 Albemarle Street<br />
-                  Mayfair, London, W1S 4JL
-                </span>
+                <div className="text-sm font-sans font-normal leading-relaxed">
+                  <p>3rd Floor, 45 Albemarle Street</p>
+                  <p>Mayfair, London, W1S 4JL</p>
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Courses */}
-          <div className="lg:col-span-2">
-            <h3 className="font-kanit font-bold mb-6 text-accent text-lg flex items-center gap-2">
-              Our Courses
-              <ArrowRight className="w-4 h-4" />
-            </h3>
-            <ul className="space-y-3 text-sm font-sans">
-              <li>
-                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  AML/KYC Compliance
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Data Analysis
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Cybersecurity
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Business Analysis
-                </Link>
-              </li>
-              <li>
-                <Link to="/courses" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Digital Marketing
-                </Link>
-              </li>
-            </ul>
-          </div>
-          
-          {/* Company */}
-          <div className="lg:col-span-2">
-            <h3 className="font-kanit font-bold mb-6 text-accent text-lg flex items-center gap-2">
-              Company
-              <ArrowRight className="w-4 h-4" />
-            </h3>
-            <ul className="space-y-3 text-sm font-sans">
-              <li>
-                <Link to="/about" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/testimonials" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Success Stories
-                </Link>
-              </li>
-              <li>
-                <Link to="/blog" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Blog & News
-                </Link>
-              </li>
-              <li>
-                <Link to="/resources" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Free Resources
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="font-sans font-normal text-primary-foreground/90 hover:text-accent transition-colors hover:translate-x-1 inline-block">
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div className="lg:col-span-4">
-            <h3 className="font-kanit font-bold mb-4 text-accent text-lg">Stay Connected</h3>
-            <p className="text-sm font-sans text-primary-foreground/90 mb-6 leading-relaxed">
-              Get weekly career tips, course updates, and exclusive job opportunities delivered to your inbox.
-            </p>
-            <NewsletterSignup 
-              variant="minimal" 
-              source="footer" 
-            />
-            <p className="text-xs font-sans text-primary-foreground/60 mt-3">
-              Free forever. Unsubscribe anytime. No spam, ever.
-            </p>
-
-            {/* Social Media */}
-            <div className="mt-8">
-              <p className="text-sm font-sans text-primary-foreground/80 mb-4 font-medium">Follow Our Journey</p>
-              <div className="flex items-center gap-3">
-                <a 
-                  href={socialMediaLinks.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="Facebook"
-                >
-                  <Facebook size={20} />
-                </a>
-                <a 
-                  href={socialMediaLinks.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="Instagram"
-                >
-                  <Instagram size={20} />
-                </a>
-                <a 
-                  href={socialMediaLinks.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin size={20} />
-                </a>
-                <a 
-                  href={socialMediaLinks.twitter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="Twitter"
-                >
-                  <Twitter size={20} />
-                </a>
-                <a 
-                  href={socialMediaLinks.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="YouTube"
-                >
-                  <Youtube size={20} />
-                </a>
-                <a 
-                  href={socialMediaLinks.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-11 h-11 rounded-xl bg-primary-foreground/10 flex items-center justify-center text-primary-foreground hover:text-accent hover:bg-primary-foreground/20 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="TikTok"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                  </svg>
-                </a>
-              </div>
+          {/* Column 2: Navigation Links */}
+          <div className="grid grid-cols-2 gap-8 lg:gap-12">
+            {/* Our Courses */}
+            <div className="space-y-5">
+              <h3 className="text-accent font-kanit font-bold text-lg tracking-tight">
+                Our Courses
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link 
+                    to="/courses/aml-kyc-compliance" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    AML/KYC Compliance
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/courses/data-analysis" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Data Analysis
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/courses/cybersecurity" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Cybersecurity
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/courses/business-analysis" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Business Analysis
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/courses/digital-marketing" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Digital Marketing
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            
+            {/* Company */}
+            <div className="space-y-5">
+              <h3 className="text-accent font-kanit font-bold text-lg tracking-tight">
+                Company
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <Link 
+                    to="/about" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/testimonials" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Success Stories
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/blog" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Blog & News
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/resources" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Free Resources
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    to="/contact" 
+                    className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal inline-block"
+                  >
+                    Contact Us
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-gradient-to-r from-transparent via-primary-foreground/20 to-transparent mb-8"></div>
-
-        {/* Payment Partner Section */}
-        <div className="flex flex-col items-center gap-6 py-8 mb-8 bg-primary-foreground/5 rounded-2xl border border-primary-foreground/10">
-          <div className="text-center space-y-3">
-            <p className="text-xs font-sans text-primary-foreground/70 uppercase tracking-wider font-semibold">
-              Flexible Payment Options Available
-            </p>
-            <a 
-              href="https://www.payl8r.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-block hover:opacity-80 transition-opacity"
-            >
-              <img 
-                src={payl8rLogo}
-                alt="Payl8r - Flexible Payment Partner" 
-                className="h-10 w-auto mx-auto"
-              />
-            </a>
-          </div>
           
-          {/* Full Payl8r Disclaimer */}
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
-              <p className="text-xs font-sans font-normal leading-relaxed text-primary-foreground/80 text-center">
-                <strong className="font-sans font-semibold">Important Credit Information:</strong> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
+          {/* Column 3: Newsletter & Social */}
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-accent font-kanit font-bold text-lg tracking-tight">
+                Stay Connected
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-sans font-normal">
+                Get weekly career tips, course updates, and exclusive job opportunities delivered to your inbox.
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="space-y-6">
-          {/* Legal Links */}
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-sans">
-            <Link 
-              to="/privacy-policy" 
-              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
-            >
-              Privacy Policy
-            </Link>
-            <span className="font-sans text-primary-foreground/30">•</span>
-            <Link 
-              to="/refund-policy" 
-              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
-            >
-              Refund Policy
-            </Link>
-            <span className="font-sans text-primary-foreground/30">•</span>
-            <Link 
-              to="/terms-conditions" 
-              className="font-sans font-normal text-primary-foreground/80 hover:text-accent transition-colors duration-300 hover:underline"
-            >
-              Terms & Conditions
-            </Link>
-          </div>
-
-          {/* Company Registration */}
-          <div className="flex flex-col items-center gap-3 text-xs font-sans font-normal text-primary-foreground/70">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                <span className="font-sans font-normal">Company Number: 16369966</span>
-              </span>
-              <span className="hidden sm:inline font-sans text-primary-foreground/30">|</span>
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                <span className="font-sans font-normal">UKRLP Number: 10098472</span>
-              </span>
-              <span className="hidden sm:inline font-sans text-primary-foreground/30">|</span>
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                <span className="font-sans font-normal">ICO Registered</span>
-              </span>
+            
+            <NewsletterSignup />
+            
+            <p className="text-xs text-muted-foreground/80 leading-relaxed font-sans font-normal">
+              Free forever. Unsubscribe anytime. No spam, ever.
+            </p>
+            
+            {/* Social Media */}
+            <div className="pt-4">
+              <h4 className="text-sm font-semibold text-primary-foreground mb-4 font-sans">
+                Follow Our Journey
+              </h4>
+              <div className="flex flex-wrap gap-3">
+                {socialMediaDisplay.map((social) => {
+                  const IconComponent = social.name === "Facebook" ? Facebook :
+                    social.name === "Instagram" ? Instagram :
+                    social.name === "LinkedIn" ? Linkedin :
+                    social.name === "Twitter" ? Twitter :
+                    social.name === "YouTube" ? Youtube : null;
+                  
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-11 h-11 rounded-lg bg-primary-foreground/5 hover:bg-accent/10 flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg group"
+                      aria-label={social.name}
+                    >
+                      {social.name === "TikTok" ? (
+                        <svg className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                        </svg>
+                      ) : IconComponent && (
+                        <IconComponent className="w-5 h-5 text-muted-foreground group-hover:text-accent transition-colors" />
+                      )}
+                    </a>
+                  );
+                })}
+              </div>
             </div>
           </div>
-
-          {/* Copyright */}
-          <div className="text-center pt-6 border-t border-primary-foreground/10">
-            <p className="text-sm font-sans font-normal text-primary-foreground/80">
-              © {new Date().getFullYear()} <span className="font-kanit font-semibold text-accent">TITANS CAREERS</span>. All rights reserved.
-            </p>
-            <p className="text-xs font-sans font-normal text-primary-foreground/60 mt-2">
-              Built with passion for career transformation.
-            </p>
+        </div>
+        
+        {/* Flexible Payment Options Section */}
+        <div className="bg-primary-foreground/5 backdrop-blur-sm rounded-2xl p-8 mb-10 border border-primary-foreground/10 shadow-lg">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full">
+              <span className="text-sm font-semibold text-accent font-sans tracking-wide">
+                FLEXIBLE PAYMENT OPTIONS AVAILABLE
+              </span>
+            </div>
+            
+            <div className="flex justify-center">
+              <img 
+                src={payl8rLogo} 
+                alt="Payl8r" 
+                className="h-12 object-contain opacity-90"
+              />
+            </div>
+            
+            <div className="bg-accent/5 border border-accent/20 rounded-xl p-5 max-w-3xl mx-auto">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-accent text-sm font-bold">!</span>
+                </div>
+                <p className="text-xs leading-relaxed text-muted-foreground font-sans font-normal text-left">
+                  <span className="font-semibold text-accent">Important Credit Information:</span> TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
+                </p>
+              </div>
+            </div>
           </div>
+        </div>
+        
+        {/* Legal Links */}
+        <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-3 mb-8 pb-8 border-b border-primary-foreground/10">
+          <Link 
+            to="/privacy-policy" 
+            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+          >
+            Privacy Policy
+          </Link>
+          <span className="text-muted-foreground/40">•</span>
+          <Link 
+            to="/refund-policy" 
+            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+          >
+            Refund Policy
+          </Link>
+          <span className="text-muted-foreground/40">•</span>
+          <Link 
+            to="/terms-conditions" 
+            className="text-sm text-muted-foreground hover:text-accent transition-colors font-sans font-normal"
+          >
+            Terms & Conditions
+          </Link>
+        </div>
+        
+        {/* Registration Numbers */}
+        <div className="text-center space-y-4 mb-6">
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs text-muted-foreground/70 font-sans font-normal">
+            <span>Company No. 16017935</span>
+            <span className="text-muted-foreground/40">•</span>
+            <span>FCA No. 675283</span>
+            <span className="text-muted-foreground/40">•</span>
+            <span>UKRLP No. 10104588</span>
+            <span className="text-muted-foreground/40">•</span>
+            <span>ICO Reg. ZB954438</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Bottom Copyright Bar */}
+      <div className="border-t border-primary-foreground/10 bg-primary-foreground/5">
+        <div className="max-w-[1280px] mx-auto px-6 md:px-8 lg:px-12 py-6">
+          <p className="text-center text-sm text-muted-foreground font-sans font-normal">
+            © 2025 <span className="text-accent font-semibold">TITANS CAREERS</span>. All rights reserved. 
+            <span className="hidden sm:inline"> Built with passion for career transformation.</span>
+          </p>
         </div>
       </div>
     </footer>

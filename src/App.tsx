@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { trackPageView } from "./lib/analytics";
+import { TimedCallToAction } from "./components/TimedCallToAction";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -155,6 +156,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <TimedCallToAction />
           <AnimatedRoutes />
         </BrowserRouter>
       </TooltipProvider>
