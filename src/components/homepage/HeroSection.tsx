@@ -57,45 +57,71 @@ export const HeroSection = () => {
               </div>
             </div>
             
-            {/* Enhanced benefits with icons and cards */}
+            {/* Enhanced benefits with premium glassmorphism cards */}
             <div className="grid grid-cols-2 gap-4 pt-6 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-              <div className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-tc-light-grey/50 hover:shadow-md hover:scale-105 transition-all group">
-                <div className="w-10 h-10 bg-gradient-to-br from-tc-amber/20 to-tc-gold/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Award className="w-5 h-5 text-tc-amber" />
+              <div className="relative group overflow-hidden p-4 bg-white/60 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.15)] border border-white/40 hover:shadow-[0_16px_48px_-12px_rgba(251,191,36,0.4)] hover:scale-105 hover:border-tc-amber/50 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-tc-amber/0 to-tc-gold/0 group-hover:from-tc-amber/10 group-hover:to-tc-gold/5 transition-all duration-500 rounded-2xl" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-tc-amber/20 blur-2xl transition-opacity duration-500 -z-10" />
+                <div className="relative flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-tc-amber to-tc-gold rounded-xl shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                    <Award className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-sans font-semibold text-sm text-tc-navy">CPD Accredited</span>
                 </div>
-                <span className="font-sans font-semibold text-sm text-tc-navy">CPD Accredited</span>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-tc-light-grey/50 hover:shadow-md hover:scale-105 transition-all group">
-                <div className="w-10 h-10 bg-gradient-to-br from-tc-amber/20 to-tc-gold/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Target className="w-5 h-5 text-tc-amber" />
+              <div className="relative group overflow-hidden p-4 bg-white/60 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.15)] border border-white/40 hover:shadow-[0_16px_48px_-12px_rgba(30,58,95,0.4)] hover:scale-105 hover:border-tc-navy/50 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-tc-navy/0 to-tc-blue/0 group-hover:from-tc-navy/10 group-hover:to-tc-blue/5 transition-all duration-500 rounded-2xl" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-tc-navy/20 blur-2xl transition-opacity duration-500 -z-10" />
+                <div className="relative flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-tc-navy to-tc-blue rounded-xl shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                    <Target className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-sans font-semibold text-sm text-tc-navy">Practical Tools</span>
                 </div>
-                <span className="font-sans font-semibold text-sm text-tc-navy">Practical Tools</span>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-tc-light-grey/50 hover:shadow-md hover:scale-105 transition-all group">
-                <div className="w-10 h-10 bg-gradient-to-br from-tc-amber/20 to-tc-gold/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-5 h-5 text-tc-amber" />
+              <div className="relative group overflow-hidden p-4 bg-white/60 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.15)] border border-white/40 hover:shadow-[0_16px_48px_-12px_rgba(34,197,94,0.4)] hover:scale-105 hover:border-green-500/50 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/0 to-emerald-600/0 group-hover:from-green-500/10 group-hover:to-emerald-600/5 transition-all duration-500 rounded-2xl" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-green-500/20 blur-2xl transition-opacity duration-500 -z-10" />
+                <div className="relative flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-sans font-semibold text-sm text-tc-navy">12M Support</span>
                 </div>
-                <span className="font-sans font-semibold text-sm text-tc-navy">12M Support</span>
               </div>
-              <div className="flex items-center gap-3 p-3 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm border border-tc-light-grey/50 hover:shadow-md hover:scale-105 transition-all group">
-                <div className="w-10 h-10 bg-gradient-to-br from-tc-amber/20 to-tc-gold/10 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Users className="w-5 h-5 text-tc-amber" />
+              <div className="relative group overflow-hidden p-4 bg-white/60 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_-8px_rgba(0,0,0,0.15)] border border-white/40 hover:shadow-[0_16px_48px_-12px_rgba(168,85,247,0.4)] hover:scale-105 hover:border-purple-500/50 transition-all duration-500">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-violet-600/0 group-hover:from-purple-500/10 group-hover:to-violet-600/5 transition-all duration-500 rounded-2xl" />
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-purple-500/20 blur-2xl transition-opacity duration-500 -z-10" />
+                <div className="relative flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-violet-600 rounded-xl shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-sans font-semibold text-sm text-tc-navy">300+ Trained</span>
                 </div>
-                <span className="font-sans font-semibold text-sm text-tc-navy">300+ Trained</span>
               </div>
             </div>
           </div>
           
-          {/* Right Column - Enhanced 3D Stats Card */}
+          {/* Right Column - Premium Stats Card with Enhanced Effects */}
           <div className="flex justify-center md:justify-end animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <div className="relative group">
-              {/* Glow effect behind card */}
-              <div className="absolute inset-0 bg-gradient-to-br from-tc-amber/20 to-tc-gold/20 rounded-3xl blur-2xl group-hover:blur-3xl transition-all" />
+              {/* Multi-layer glow effects */}
+              <div className="absolute inset-0 bg-gradient-to-br from-tc-amber/30 to-tc-gold/30 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-tc-amber/20 to-tc-gold/20 rounded-3xl blur-3xl group-hover:opacity-80 transition-all duration-500" />
               
-              {/* Main card */}
-              <div className="relative bg-gradient-to-br from-white to-amber-50/50 rounded-3xl shadow-2xl p-10 border-2 border-tc-amber/20 max-w-sm w-full backdrop-blur-sm hover:scale-105 transition-transform duration-300">
-                {/* Decorative corner accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-tc-amber/10 to-transparent rounded-bl-full" />
+              {/* Premium glassmorphism card */}
+              <div className="relative bg-white/70 backdrop-blur-2xl rounded-3xl shadow-[0_30px_90px_-15px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.5)] p-10 border-2 border-white/60 max-w-sm w-full hover:scale-105 hover:shadow-[0_40px_110px_-20px_rgba(0,0,0,0.4)] transition-all duration-500 overflow-hidden">
+                {/* Animated gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-tc-amber/8 via-transparent to-tc-gold/8 animate-gradient-shift" style={{ backgroundSize: '200% 200%' }} />
+                
+                {/* Shimmer effect on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -translate-x-full group-hover:animate-[shimmer-slide_1.5s_ease-in-out]" />
+                </div>
+                
+                {/* Decorative premium corner accent */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-tc-amber/15 to-transparent rounded-bl-full" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-tc-gold/10 to-transparent rounded-tr-full" />
                 
                 <div className="space-y-8 text-center relative z-10">
                   {/* Main stat with gradient */}
