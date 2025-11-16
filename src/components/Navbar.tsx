@@ -19,7 +19,7 @@ export const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
 
   return (
-    <nav className="fixed top-0 w-full bg-primary/95 backdrop-blur-xl border-b border-primary-foreground/10 z-50 shadow-lg">
+    <nav className="fixed top-0 w-full bg-primary/90 backdrop-blur-2xl border-b border-white/10 z-50 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)]">
       <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -35,30 +35,40 @@ export const Navbar = () => {
             </div>
           </Link>
           
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation with Premium Hover Effects */}
           <div className="hidden lg:flex items-center gap-8">
-            <Link to="/" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              Home
+            <Link to="/" className="relative group px-4 py-2 rounded-lg transition-all duration-300">
+              <span className="relative z-10 font-sans font-semibold text-sm text-primary-foreground group-hover:text-accent transition-colors">Home</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-tc-amber/0 via-tc-gold/0 to-tc-amber/0 opacity-0 group-hover:opacity-100 group-hover:from-tc-amber/20 group-hover:via-tc-gold/30 group-hover:to-tc-amber/20 rounded-lg transition-all duration-500" />
+              <div className="absolute inset-0 blur-xl bg-tc-amber/0 group-hover:bg-tc-amber/40 transition-all duration-500 -z-10 rounded-lg" />
             </Link>
-            <Link to="/courses" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              Courses
+            <Link to="/courses" className="relative group px-4 py-2 rounded-lg transition-all duration-300">
+              <span className="relative z-10 font-sans font-semibold text-sm text-primary-foreground group-hover:text-accent transition-colors">Courses</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-tc-amber/0 via-tc-gold/0 to-tc-amber/0 opacity-0 group-hover:opacity-100 group-hover:from-tc-amber/20 group-hover:via-tc-gold/30 group-hover:to-tc-amber/20 rounded-lg transition-all duration-500" />
+              <div className="absolute inset-0 blur-xl bg-tc-amber/0 group-hover:bg-tc-amber/40 transition-all duration-500 -z-10 rounded-lg" />
             </Link>
-            <Link to="/events" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              Events
+            <Link to="/events" className="relative group px-4 py-2 rounded-lg transition-all duration-300">
+              <span className="relative z-10 font-sans font-semibold text-sm text-primary-foreground group-hover:text-accent transition-colors">Events</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-tc-amber/0 via-tc-gold/0 to-tc-amber/0 opacity-0 group-hover:opacity-100 group-hover:from-tc-amber/20 group-hover:via-tc-gold/30 group-hover:to-tc-amber/20 rounded-lg transition-all duration-500" />
+              <div className="absolute inset-0 blur-xl bg-tc-amber/0 group-hover:bg-tc-amber/40 transition-all duration-500 -z-10 rounded-lg" />
             </Link>
-            <Link to="/about" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
-              About Us
+            <Link to="/about" className="relative group px-4 py-2 rounded-lg transition-all duration-300">
+              <span className="relative z-10 font-sans font-semibold text-sm text-primary-foreground group-hover:text-accent transition-colors">About Us</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-tc-amber/0 via-tc-gold/0 to-tc-amber/0 opacity-0 group-hover:opacity-100 group-hover:from-tc-amber/20 group-hover:via-tc-gold/30 group-hover:to-tc-amber/20 rounded-lg transition-all duration-500" />
+              <div className="absolute inset-0 blur-xl bg-tc-amber/0 group-hover:bg-tc-amber/40 transition-all duration-500 -z-10 rounded-lg" />
             </Link>
             
-            {/* Resources Dropdown */}
+            {/* Resources Dropdown with Premium Glassmorphism */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1 text-primary-foreground hover:text-accent transition-all duration-300 font-sans font-semibold text-sm outline-none group">
-                Resources
-                <ChevronDown className="w-4 h-4 transition-transform duration-300 group-data-[state=open]:rotate-180" />
+              <DropdownMenuTrigger className="relative group flex items-center gap-1 px-4 py-2 rounded-lg transition-all duration-300 font-sans font-semibold text-sm outline-none">
+                <span className="relative z-10 text-primary-foreground group-hover:text-accent transition-colors">Resources</span>
+                <ChevronDown className="w-4 h-4 text-primary-foreground group-hover:text-accent transition-all duration-300 group-data-[state=open]:rotate-180" />
+                <div className="absolute inset-0 bg-gradient-to-r from-tc-amber/0 via-tc-gold/0 to-tc-amber/0 opacity-0 group-hover:opacity-100 group-hover:from-tc-amber/20 group-hover:via-tc-gold/30 group-hover:to-tc-amber/20 rounded-lg transition-all duration-500" />
+                <div className="absolute inset-0 blur-xl bg-tc-amber/0 group-hover:bg-tc-amber/40 transition-all duration-500 -z-10 rounded-lg" />
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="center" 
-                className="w-64 bg-card backdrop-blur-xl border-border shadow-[0_8px_24px_-4px_hsl(var(--primary)/0.15)] animate-fade-in rounded-xl z-50"
+                className="w-64 bg-card/95 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.2)] animate-fade-in rounded-xl z-50"
                 sideOffset={12}
               >
                 <DropdownMenuItem asChild>

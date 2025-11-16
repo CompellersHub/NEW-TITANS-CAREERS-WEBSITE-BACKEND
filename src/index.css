@@ -271,6 +271,40 @@ All colors MUST be HSL.
     20%, 40%, 60%, 80% { transform: translateX(4px); }
   }
 
+  @keyframes glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
+                  0 0 40px rgba(251, 191, 36, 0.2),
+                  0 0 60px rgba(251, 191, 36, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(251, 191, 36, 0.5),
+                  0 0 60px rgba(251, 191, 36, 0.3),
+                  0 0 90px rgba(251, 191, 36, 0.2);
+    }
+  }
+
+  @keyframes shimmer-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes float-smooth {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-15px) rotate(2deg);
+    }
+    66% {
+      transform: translateY(-5px) rotate(-2deg);
+    }
+  }
+
   .animate-shake {
     animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
   }
@@ -287,5 +321,46 @@ All colors MUST be HSL.
 
   .nav-link-underline:hover::after {
     @apply w-full;
+  }
+
+  /* Premium glassmorphism utilities */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-card-dark {
+    background: rgba(11, 31, 59, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .premium-shadow {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(0, 0, 0, 0.03);
+  }
+
+  .premium-shadow-glow {
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 10px 15px -3px rgba(0, 0, 0, 0.08),
+      0 20px 40px -10px rgba(251, 191, 36, 0.2);
+  }
+
+  .hover-glow {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 
+      0 8px 16px -4px rgba(0, 0, 0, 0.1),
+      0 16px 48px -12px rgba(251, 191, 36, 0.4);
+    transform: translateY(-2px);
   }
 }
