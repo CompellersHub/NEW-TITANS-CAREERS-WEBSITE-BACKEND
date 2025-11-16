@@ -5,8 +5,40 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef } from 'react';
 
 export function CompanyLogosCarousel() {
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    const validateLogo = (imgEl: HTMLImageElement, brandName: string) => {
+      const remove = (reason: string) => {
+        const slide = imgEl.closest('[data-carousel-item]');
+        if (slide) {
+          slide.remove();
+          console.warn(`Logo removed: ${brandName} – ${reason}`);
+        }
+      };
+
+      imgEl.addEventListener('error', () => remove('image-error'));
+      imgEl.addEventListener('load', () => {
+        const { naturalWidth: w, naturalHeight: h } = imgEl;
+        if (!w || !h) return remove('zero-dimension');
+        const ratioOK = h <= w * 1.2 || imgEl.dataset.isSquare === 'true';
+        if (!ratioOK) return remove('aspect-ratio');
+        // passed basic checks: keep slide
+      });
+    };
+
+    // Apply validation to all logo images
+    const images = carouselRef.current.querySelectorAll<HTMLImageElement>('[data-logo-img]');
+    images.forEach((img) => {
+      const brandName = img.alt.replace(' logo', '');
+      validateLogo(img, brandName);
+    });
+  }, []);
   return (
     <section className="py-20 bg-background relative overflow-hidden">
       {/* Decorative background elements */}
@@ -30,53 +62,48 @@ export function CompanyLogosCarousel() {
         </div>
 
         {/* Company Logos Carousel */}
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          plugins={[
-            Autoplay({
-              delay: 2500,
-              stopOnInteraction: false,
-            }),
-          ]}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {clientCompanies.map((company, index) => (
-              <CarouselItem key={index} className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
-                  <div className="group relative">
-                    <div className="bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-xl hover:border-gold/30 transition-all duration-300 hover:-translate-y-1">
-                      {/* Glossy overlay effect */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      
-                      <div className="relative flex items-center justify-center h-20">
-                        <img 
-                          src={company.logo}
-                          alt={`${company.name} logo`}
-                          className="max-h-full max-w-full object-contain transition-all duration-300"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                          }}
-                        />
-                        <div className="hidden text-center">
-                          <div className="text-2xl font-bold text-primary">
-                            {company.name}
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {company.category}
-                          </div>
+        <div ref={carouselRef}>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 2500,
+                stopOnInteraction: false,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {clientCompanies.map((company, index) => (
+                <CarouselItem 
+                  key={index} 
+                  className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+                  data-carousel-item
+                >
+                    <div className="group relative">
+                      <div className="bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-xl hover:border-gold/30 transition-all duration-300 hover:-translate-y-1">
+                        {/* Glossy overlay effect */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        
+                        <div className="relative flex items-center justify-center h-20">
+                          <img 
+                            src={company.logo}
+                            alt={`${company.name} logo`}
+                            className="max-h-full max-w-full object-contain transition-all duration-300"
+                            loading="lazy"
+                            data-logo-img
+                          />
                         </div>
                       </div>
                     </div>
-                  </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
 
         {/* Trust indicator */}
         <div className="mt-12 text-center">
