@@ -11,10 +11,13 @@ export function CompanyLogosCarousel() {
   const carouselRef = useRef<HTMLDivElement>(null);
   
   const autoplayPlugin = useMemo(() => Autoplay({
-    delay: 3000,
+    delay: 1500,
     stopOnInteraction: false,
     stopOnMouseEnter: false,
   }), []);
+
+  // Duplicate companies for seamless infinite scroll
+  const duplicatedCompanies = useMemo(() => [...clientCompanies, ...clientCompanies], []);
 
   useEffect(() => {
     if (!carouselRef.current) return;
@@ -50,6 +53,13 @@ export function CompanyLogosCarousel() {
       {/* Decorative background elements */}
       <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-accent/5 pointer-events-none" />
       
+      {/* Floating particles animation */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-gold/20 rounded-full animate-[float_6s_ease-in-out_infinite]" />
+        <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-primary/10 rounded-full animate-[float_8s_ease-in-out_infinite_1s]" />
+        <div className="absolute bottom-1/4 left-1/2 w-2 h-2 bg-accent/20 rounded-full animate-[float_7s_ease-in-out_infinite_2s]" />
+      </div>
+      
       <div className="container relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <div className="inline-block mb-6 px-4 py-2 bg-gold/10 rounded-full border border-gold/30">
@@ -68,7 +78,11 @@ export function CompanyLogosCarousel() {
         </div>
 
         {/* Company Logos Carousel */}
-        <div ref={carouselRef}>
+        <div ref={carouselRef} className="relative">
+          {/* Fade gradient masks for infinite scroll effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
+          
           <Carousel
             opts={{
               align: "start",
@@ -79,22 +93,31 @@ export function CompanyLogosCarousel() {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {clientCompanies.map((company, index) => (
+              {duplicatedCompanies.map((company, index) => (
                 <CarouselItem 
-                  key={index} 
-                  className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+                  key={`${company.name}-${index}`}
+                  className="pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 animate-fade-in"
                   data-carousel-item
+                  style={{ animationDelay: `${(index % clientCompanies.length) * 0.1}s` }}
                 >
-                    <div className="group relative">
-                      <div className="bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-xl hover:border-gold/30 transition-all duration-300 hover:-translate-y-1">
+                    <div className="group relative animate-[float_6s_ease-in-out_infinite]" style={{ animationDelay: `${(index % 3) * 0.5}s` }}>
+                      <div className="relative bg-card rounded-2xl p-8 shadow-lg border border-border/50 hover:shadow-2xl hover:shadow-gold/20 hover:border-gold/50 transition-all duration-500 hover:-translate-y-2 hover:scale-105 backdrop-blur-sm will-change-transform">
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gold/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out" />
+                        </div>
+                        
                         {/* Glossy overlay effect */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-transparent rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-gold/0 via-gold/0 to-gold/0 group-hover:from-gold/10 group-hover:via-gold/5 group-hover:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl pointer-events-none" />
                         
                         <div className="relative flex items-center justify-center h-20">
                           <img 
                             src={company.logo}
                             alt={`${company.name} logo`}
-                            className="max-h-full max-w-full object-contain transition-all duration-300"
+                            className="max-h-full max-w-full object-contain transition-all duration-500 group-hover:scale-110 group-hover:brightness-110 will-change-transform"
                             loading="lazy"
                             data-logo-img
                           />
@@ -108,9 +131,9 @@ export function CompanyLogosCarousel() {
         </div>
 
         {/* Trust indicator */}
-        <div className="mt-12 text-center">
+        <div className="mt-12 text-center animate-fade-in" style={{ animationDelay: '0.5s' }}>
           <p className="text-muted-foreground text-sm">
-            <span className="font-semibold text-gold">300+</span> successful career transitions to top companies
+            <span className="font-semibold text-gold animate-[pulse_3s_ease-in-out_infinite]">300+</span> successful career transitions to top companies
           </p>
         </div>
       </div>
