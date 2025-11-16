@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { LogoWithEffects } from "@/components/LogoWithEffects";
 import { NotificationBell } from "@/components/notifications/NotificationBell";
-import { FreeSessionBookingDialog } from "@/components/FreeSessionBookingDialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -116,7 +115,6 @@ export const Navbar = () => {
           
           {/* Desktop Buttons */}
           <div className="hidden lg:flex items-center gap-3">
-            <FreeSessionBookingDialog />
             {user ? (
               <>
                 <NotificationBell />
@@ -191,21 +189,6 @@ export const Navbar = () => {
                 </Button>
               </Link>
             )}
-            
-            <Button 
-              variant="default"
-              size="default"
-              className="font-bold"
-              asChild
-            >
-              <a 
-                href="https://wa.me/447539434403"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join Free Session
-              </a>
-            </Button>
           </div>
           
           {/* Mobile Menu Button */}
@@ -335,10 +318,6 @@ export const Navbar = () => {
                   </Button>
                 </Link>
               )}
-              
-              <div className="w-full">
-                <FreeSessionBookingDialog />
-              </div>
             </div>
           </div>
         )}
