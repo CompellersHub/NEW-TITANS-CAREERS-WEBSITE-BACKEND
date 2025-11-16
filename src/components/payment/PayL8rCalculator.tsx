@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { AlertCircle } from 'lucide-react';
+import { Payl8rDisclaimer } from './Payl8rDisclaimer';
 
 interface PayL8rCalculatorProps {
   coursePrice: number;
@@ -32,7 +32,7 @@ export function PayL8rCalculator({ coursePrice, onApply }: PayL8rCalculatorProps
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="text-xl font-bold mb-1">Payl8r Finance Calculator</h3>
+            <h3 className="text-xl font-bold mb-1">Payl8r Calculator</h3>
             <p className="text-sm text-muted-foreground">
               Spread the cost over 3-12 months with 0% APR
             </p>
@@ -90,7 +90,7 @@ export function PayL8rCalculator({ coursePrice, onApply }: PayL8rCalculatorProps
             </div>
           )}
           <div className="flex justify-between text-sm">
-            <span className="text-muted-foreground">Finance Amount:</span>
+            <span className="text-muted-foreground">Amount to Spread:</span>
             <span className="font-medium">£{financeAmount.toFixed(2)}</span>
           </div>
           <div className="pt-2 border-t border-border">
@@ -135,14 +135,7 @@ export function PayL8rCalculator({ coursePrice, onApply }: PayL8rCalculatorProps
         )}
 
         {/* Disclaimer */}
-        <div className="flex gap-2 p-3 bg-amber-500/10 rounded-lg">
-          <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-          <p className="text-[10px] leading-relaxed text-muted-foreground">
-            Subject to affordability assessments. Payl8r is an Introducer Appointed Representative 
-            of Social Money LTD t/a Payl8r. Missed payments may affect your credit file, future 
-            borrowing and incur fees.
-          </p>
-        </div>
+        <Payl8rDisclaimer />
       </div>
     </Card>
   );

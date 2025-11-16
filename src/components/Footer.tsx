@@ -156,12 +156,14 @@ export const Footer = () => {
               rel="noopener noreferrer"
               className="hover:opacity-80 transition-opacity"
             >
-              <div className="text-primary-foreground font-semibold text-lg tracking-wider">
-                PAYL<span className="text-accent">8</span>R
-              </div>
+              <img 
+                src="/src/assets/payl8r-logo.png" 
+                alt="Payl8r" 
+                className="h-8 w-auto"
+              />
             </a>
             <p className="text-[10px] text-primary-foreground/50 max-w-md text-center">
-              Finance available. 0% APR options. 3-12 month terms.
+              Payl8r Partner
             </p>
           </div>
 
