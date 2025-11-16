@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { blogPosts } from "@/data/blogPosts";
-import { Calendar, Clock, ArrowLeft, Share2, BookOpen } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, BookOpen } from "lucide-react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import { SEO } from "@/components/SEO";
 import { generateBlogPostSchema } from "@/lib/structuredData";
 import { ReadingProgressBar } from "@/components/blog/ReadingProgressBar";
 import { SocialShareButtons } from "@/components/blog/SocialShareButtons";
+import { ShareButton } from "@/components/ShareButton";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -160,15 +161,14 @@ const BlogPost = () => {
                   <span className="text-primary-foreground/80">{post.readTime} min read</span>
                 </div>
                 
-                <Button
+                <ShareButton 
+                  title={post.title}
+                  url={window.location.href}
+                  description={post.excerpt}
                   variant="ghost"
                   size="sm"
-                  onClick={handleShare}
                   className="text-primary-foreground hover:text-accent hover:bg-primary-foreground/10"
-                >
-                  <Share2 className="w-4 h-4 mr-2" />
-                  Share
-                </Button>
+                />
               </div>
               
               <div className="pt-4 border-t border-primary-foreground/20">
