@@ -1,6 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { courses } from "@/data/courses";
-import { StripeCheckoutButton } from "@/components/StripeCheckoutButton";
+import { CourseEnrollmentButton } from "@/components/payment/CourseEnrollmentButton";
 import { CourseHeroImage } from "@/components/events/CourseHeroImage";
 import { EventDetailAccordion } from "@/components/events/EventDetailAccordion";
 import { StatisticsOverview } from "@/components/events/StatisticsOverview";
@@ -285,7 +285,7 @@ export default function CourseDetail() {
                     {generatingSSOLink ? "Generating Link..." : "Access on Titans Academy"}
                   </Button>
                 ) : (
-                  <StripeCheckoutButton
+                  <CourseEnrollmentButton
                     courseSlug={course.slug}
                     courseTitle={course.title}
                     price={course.price}
