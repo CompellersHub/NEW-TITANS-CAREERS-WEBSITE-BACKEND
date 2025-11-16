@@ -1,17 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-import { Mail, Phone, Calendar, Filter } from "lucide-react";
+import { Mail, Eye, MessageSquare, Calendar } from "lucide-react";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CourseInquiries() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [adminNotes, setAdminNotes] = useState("");
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: inquiries, isLoading } = useQuery({
     queryKey: ["course-inquiries", statusFilter],
@@ -31,6 +47,44 @@ export default function CourseInquiries() {
     },
   });
 
+  const updateInquiryMutation = useMutation({
+    mutationFn: async ({ id, status, notes }: { id: string; status: string; notes: string }) => {
+      const updateData: any = {
+        status,
+        admin_notes: notes,
+      };
+
+      if (status === "contacted" && !selectedInquiry.contacted_at) {
+        updateData.contacted_at = new Date().toISOString();
+      }
+      if (status === "completed" && !selectedInquiry.completed_at) {
+        updateData.completed_at = new Date().toISOString();
+      }
+
+      const { error } = await supabase
+        .from("course_inquiries")
+        .update(updateData)
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["course-inquiries"] });
+      toast({
+        title: "Updated",
+        description: "Inquiry has been updated successfully.",
+      });
+      setDetailDialogOpen(false);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update inquiry.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const filteredInquiries = inquiries?.filter(inq => 
     searchTerm === "" || 
     inq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -43,6 +97,30 @@ export default function CourseInquiries() {
     pending: inquiries?.filter(i => i.status === "pending").length || 0,
     contacted: inquiries?.filter(i => i.status === "contacted").length || 0,
     completed: inquiries?.filter(i => i.status === "completed").length || 0,
+  };
+
+  const handleViewDetails = (inquiry: any) => {
+    setSelectedInquiry(inquiry);
+    setAdminNotes(inquiry.admin_notes || "");
+    setDetailDialogOpen(true);
+  };
+
+  const handleUpdateInquiry = () => {
+    if (!selectedInquiry) return;
+    updateInquiryMutation.mutate({
+      id: selectedInquiry.id,
+      status: selectedInquiry.status,
+      notes: adminNotes,
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
+      pending: "default",
+      contacted: "secondary",
+      completed: "outline",
+    };
+    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
   return (
@@ -100,53 +178,162 @@ export default function CourseInquiries() {
       {isLoading ? (
         <div className="text-center py-8">Loading inquiries...</div>
       ) : (
-        <div className="space-y-4">
-          {filteredInquiries?.map((inquiry) => (
-            <Card key={inquiry.id} className="p-4 hover:shadow-md transition-shadow">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold">{inquiry.name}</h3>
-                    <Badge variant={inquiry.status === "pending" ? "default" : "secondary"}>
-                      {inquiry.status}
-                    </Badge>
-                    <Badge variant="outline">
-                      {inquiry.inquiry_type === "free_session" ? "Free Session" : "WhatsApp Group"}
-                    </Badge>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    <div className="font-medium">{inquiry.course_title}</div>
-                    <div className="flex flex-wrap gap-4 mt-1">
-                      <span className="flex items-center gap-1">
-                        <Mail className="h-3 w-3" />
-                        {inquiry.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="h-3 w-3" />
-                        {inquiry.phone}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        {format(new Date(inquiry.created_at), "MMM dd, yyyy HH:mm")}
-                      </span>
+        <Card>
+          <div className="p-6 space-y-4">
+            {filteredInquiries && filteredInquiries.length > 0 ? (
+              filteredInquiries.map((inquiry) => (
+                <div
+                  key={inquiry.id}
+                  className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex-1 space-y-2 md:space-y-0 md:grid md:grid-cols-4 md:gap-4">
+                    <div>
+                      <div className="font-semibold">{inquiry.name}</div>
+                      <div className="text-sm text-muted-foreground">{inquiry.email}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium">{inquiry.course_title}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {inquiry.inquiry_type === "free_session" ? "Free Session" : "WhatsApp Group"}
+                      </div>
+                    </div>
+                    <div>
+                      {getStatusBadge(inquiry.status)}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      <Calendar className="inline-block w-3 h-3 mr-1" />
+                      {format(new Date(inquiry.created_at), "MMM d, yyyy")}
                     </div>
                   </div>
+                  <div className="flex gap-2 mt-4 md:mt-0">
+                    <Button size="sm" variant="outline" onClick={() => handleViewDetails(inquiry)}>
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => window.open(`mailto:${inquiry.email}`, "_blank")}
+                    >
+                      <Mail className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const phone = inquiry.phone.replace(/\D/g, "");
+                        window.open(`https://wa.me/${inquiry.country_code}${phone}`, "_blank");
+                      }}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" asChild>
-                    <a href={`mailto:${inquiry.email}`}>Email</a>
-                  </Button>
-                  <Button variant="outline" size="sm" asChild>
-                    <a href={`https://wa.me/${inquiry.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                      WhatsApp
-                    </a>
-                  </Button>
+              ))
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                No inquiries found
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
+
+      {/* Detail Dialog */}
+      <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Inquiry Details</DialogTitle>
+            <DialogDescription>
+              View and manage course inquiry information
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedInquiry && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-medium">Name</Label>
+                  <p className="text-sm text-muted-foreground">{selectedInquiry.name}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Course</Label>
+                  <p className="text-sm text-muted-foreground">{selectedInquiry.course_title}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Email</Label>
+                  <p className="text-sm text-muted-foreground">{selectedInquiry.email}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Phone</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedInquiry.country_code} {selectedInquiry.phone}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Inquiry Type</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedInquiry.inquiry_type === "free_session"
+                      ? "Free Session"
+                      : "WhatsApp Group"}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-medium">Created</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {format(new Date(selectedInquiry.created_at), "PPp")}
+                  </p>
                 </div>
               </div>
-            </Card>
-          ))}
-        </div>
-      )}
+
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  value={selectedInquiry.status}
+                  onValueChange={(value) =>
+                    setSelectedInquiry({ ...selectedInquiry, status: value })
+                  }
+                >
+                  <SelectTrigger id="status">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="contacted">Contacted</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="notes">Admin Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={adminNotes}
+                  onChange={(e) => setAdminNotes(e.target.value)}
+                  placeholder="Add notes about this inquiry..."
+                  rows={4}
+                />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDetailDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateInquiry}
+              disabled={updateInquiryMutation.isPending}
+            >
+              {updateInquiryMutation.isPending ? "Updating..." : "Update"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
