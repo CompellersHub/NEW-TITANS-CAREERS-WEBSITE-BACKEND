@@ -15,6 +15,8 @@ interface InquiryRequest {
   phone?: string; // For backward compatibility
   whatsapp?: string; // New unified field
   countryCode?: string; // For backward compatibility
+  joinWhatsappGroup?: boolean; // Optional flag to join WhatsApp group
+  whatsappGroupLink?: string; // Optional link to WhatsApp group
 }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
@@ -50,6 +52,8 @@ serve(async (req) => {
       phone,
       whatsapp,
       countryCode,
+      joinWhatsappGroup,
+      whatsappGroupLink,
     }: InquiryRequest = await req.json();
 
     // Use whatsapp field if provided, otherwise fall back to phone + countryCode
@@ -118,6 +122,13 @@ serve(async (req) => {
             <li>We'll schedule a convenient time for your free session</li>
             <li>You'll get personalized advice about the course and career opportunities</li>
           </ul>
+          ${joinWhatsappGroup && whatsappGroupLink ? `
+            <div style="margin: 20px 0; padding: 15px; background-color: #FEF3C7; border-radius: 8px;">
+              <p style="margin: 0;"><strong>📱 Join our WhatsApp Community:</strong></p>
+              <p style="margin: 10px 0;">Get instant access to course updates, free resources, and connect with fellow learners!</p>
+              <a href="${whatsappGroupLink}" style="display: inline-block; padding: 10px 20px; background-color: #25D366; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">Join WhatsApp Group</a>
+            </div>
+          ` : ''}
           <p>If you have any urgent questions, feel free to reach out to us directly.</p>
           <p>Best regards,<br/>The Titans Academy Team</p>
         `
@@ -128,7 +139,7 @@ serve(async (req) => {
           ${whatsappLink 
             ? `<p><strong>Click here to join the group:</strong><br/>
                <a href="${whatsappLink}" style="display: inline-block; background: linear-gradient(135deg, #1a1a1a, #4a4a4a); color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">Join WhatsApp Group</a></p>`
-            : `<p>Our team will send you the WhatsApp group invite link shortly via WhatsApp to ${phone}.</p>`
+            : `<p>Our team will send you the WhatsApp group invite link shortly via WhatsApp to ${phoneNumber}.</p>`
           }
           <p><strong>What to expect in the group:</strong></p>
           <ul>
