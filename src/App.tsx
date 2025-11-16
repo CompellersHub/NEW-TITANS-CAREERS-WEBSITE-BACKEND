@@ -60,6 +60,7 @@ import EmailEngagementDashboard from "./pages/EmailEngagementDashboard";
 import BankTransferVerification from "./pages/admin/BankTransferVerification";
 import PaymentAnalytics from "./pages/admin/PaymentAnalytics";
 import PaymentManagement from "./pages/admin/PaymentManagement";
+import CourseInquiries from "./pages/admin/CourseInquiries";
 import PayL8rInfo from "./pages/PayL8rInfo";
 import RoleManagement from "./pages/RoleManagement";
 import ContentManager from "./pages/admin/ContentManager";
@@ -138,6 +139,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/payment-analytics" element={<PaymentAnalytics />} />
           <Route path="/admin/payment-management" element={<PaymentManagement />} />
           <Route path="/admin/event-management" element={<EventManagement />} />
+          <Route path="/admin/course-inquiries" element={<CourseInquiries />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
           <Route path="*" element={<NotFound />} />

@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 
 const courseInquirySchema = z.object({
   name: z.string()
@@ -55,6 +56,7 @@ export function CourseInquiryForm({
 }: CourseInquiryFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { trackCourseInquiry, trackBehavior } = useBehaviorTracking();
 
   const form = useForm<CourseInquiryFormData>({
     resolver: zodResolver(courseInquirySchema),
@@ -68,10 +70,13 @@ export function CourseInquiryForm({
 
   const onSubmit = async (data: CourseInquiryFormData) => {
     setIsSubmitting(true);
-
+    
     try {
-      // Extract country code from phone number
-      const countryCode = data.phone.split(' ')[0];
+      // Track inquiry type selection
+      trackBehavior("inquiry_type_selected", 10, {
+        course: courseSlug,
+        inquiryType: inquiryType,
+      });
 
       // Insert into database
       const { error: dbError } = await supabase
@@ -83,14 +88,14 @@ export function CourseInquiryForm({
           name: data.name,
           email: data.email,
           phone: data.phone,
-          country_code: countryCode,
+          country_code: "+44", // Default for now
           privacy_accepted: data.privacyAccepted,
         });
 
       if (dbError) throw dbError;
 
       // Call edge function to send emails
-      const { error: functionError } = await supabase.functions.invoke(
+      const { error: emailError } = await supabase.functions.invoke(
         "submit-course-inquiry",
         {
           body: {
@@ -104,21 +109,39 @@ export function CourseInquiryForm({
         }
       );
 
-      if (functionError) {
-        console.error("Email notification error:", functionError);
-        // Don't throw - inquiry was saved successfully
+      if (emailError) {
+        console.error("Email error:", emailError);
+        // Don't throw - inquiry is still saved
       }
 
-      setIsSuccess(true);
+      // Track successful submission
+      trackCourseInquiry(courseSlug, inquiryType, data.email);
+      trackBehavior("course_inquiry_submitted", 25, {
+        course: courseSlug,
+        inquiryType: inquiryType,
+        conversionSource: "floating_cta",
+      });
+
       toast.success(
         inquiryType === "free_session"
           ? "Request submitted! We'll contact you within 24 hours."
           : "Success! Check your email for the WhatsApp group link."
       );
 
-      onSuccess();
+      setIsSuccess(true);
+      setTimeout(() => {
+        onSuccess();
+      }, 3000);
     } catch (error) {
-      console.error("Error submitting inquiry:", error);
+      console.error("Submission error:", error);
+      
+      // Track failure
+      trackBehavior("course_inquiry_failed", 0, {
+        course: courseSlug,
+        inquiryType: inquiryType,
+        error: String(error),
+      });
+      
       toast.error("Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);

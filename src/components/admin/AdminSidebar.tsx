@@ -72,6 +72,7 @@ export const adminRoutes = [
     category: "Customer Support & Forms",
     items: [
       { title: "Form Submissions", url: "/admin/form-submissions", icon: MessageSquare },
+      { title: "Course Inquiries", url: "/admin/course-inquiries", icon: MessageSquare },
       { title: "Response Templates", url: "/admin/templates", icon: FileText },
       { title: "Campaign Approvals", url: "/admin/campaign-approval-queue", icon: CheckCircle },
       { title: "SLA Alert History", url: "/admin/sla-alert-history", icon: AlertCircle },

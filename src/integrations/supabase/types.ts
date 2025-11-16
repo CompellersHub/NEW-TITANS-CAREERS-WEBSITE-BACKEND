@@ -823,6 +823,10 @@ export type Database = {
       }
       course_inquiries: {
         Row: {
+          admin_notes: string | null
+          completed_at: string | null
+          contacted_at: string | null
+          contacted_by: string | null
           country_code: string
           course_slug: string
           course_title: string
@@ -837,6 +841,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          admin_notes?: string | null
+          completed_at?: string | null
+          contacted_at?: string | null
+          contacted_by?: string | null
           country_code: string
           course_slug: string
           course_title: string
@@ -851,6 +859,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          admin_notes?: string | null
+          completed_at?: string | null
+          contacted_at?: string | null
+          contacted_by?: string | null
           country_code?: string
           course_slug?: string
           course_title?: string
@@ -1627,6 +1639,36 @@ export type Database = {
           status?: string | null
           submitted_at?: string
           tags?: string[] | null
+        }
+        Relationships: []
+      }
+      inquiry_rate_limits: {
+        Row: {
+          blocked_until: string | null
+          created_at: string | null
+          first_attempt_at: string | null
+          id: string
+          identifier: string
+          inquiry_count: number | null
+          last_attempt_at: string | null
+        }
+        Insert: {
+          blocked_until?: string | null
+          created_at?: string | null
+          first_attempt_at?: string | null
+          id?: string
+          identifier: string
+          inquiry_count?: number | null
+          last_attempt_at?: string | null
+        }
+        Update: {
+          blocked_until?: string | null
+          created_at?: string | null
+          first_attempt_at?: string | null
+          id?: string
+          identifier?: string
+          inquiry_count?: number | null
+          last_attempt_at?: string | null
         }
         Relationships: []
       }

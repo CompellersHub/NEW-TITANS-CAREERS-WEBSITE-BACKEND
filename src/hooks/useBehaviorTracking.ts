@@ -99,11 +99,24 @@ export function useBehaviorTracking({ email, enableAutoTracking = true }: Tracki
     [trackBehavior]
   );
 
+  // Track course inquiries
+  const trackCourseInquiry = useCallback(
+    (courseSlug: string, inquiryType: string, email: string) => {
+      trackBehavior("course_inquiry", 25, { 
+        course: courseSlug, 
+        type: inquiryType,
+        email: email 
+      });
+    },
+    [trackBehavior]
+  );
+
   return {
     trackBehavior,
     trackCourseView,
     trackCTAClick,
     trackVideoWatch,
     trackDownload,
+    trackCourseInquiry,
   };
 }
