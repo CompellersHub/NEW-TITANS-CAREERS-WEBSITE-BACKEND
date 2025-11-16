@@ -41,4 +41,46 @@ export const skills: Skill[] = [
   { name: 'Vulnerability Scanning', category: 'Cybersecurity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/virustotal.svg', brandColor: '#00C176', description: 'Security vulnerability assessment' },
   { name: 'Penetration Testing', category: 'Cybersecurity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/shieldsdotio.svg', brandColor: '#2596CD', description: 'Ethical hacking and security testing' },
   { name: 'SIEM Tools', category: 'Cybersecurity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/splunk.svg', brandColor: '#1679A7', description: 'Security information and event management' },
+  
+  // AI & Productivity
+  { name: 'ChatGPT', category: 'AI & Productivity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg', brandColor: '#10A37F', description: 'AI-powered conversational assistant' },
+  { name: 'Microsoft Copilot', category: 'AI & Productivity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/microsoftcopilot.svg', brandColor: '#0078D4', description: 'AI assistant for Microsoft 365' },
+  { name: 'Notion', category: 'AI & Productivity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/notion.svg', brandColor: '#000000', description: 'All-in-one workspace and documentation' },
+  { name: 'Gemini', category: 'AI & Productivity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/googlegemini.svg', brandColor: '#4285F4', description: 'Google AI assistant' },
+  { name: 'Claude', category: 'AI & Productivity', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/anthropic.svg', brandColor: '#191919', description: 'Advanced AI assistant by Anthropic' },
+  
+  // Project Management
+  { name: 'Asana', category: 'Project Management', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/asana.svg', brandColor: '#F06A6A', description: 'Work management and task tracking' },
+  { name: 'Monday.com', category: 'Project Management', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/monday.svg', brandColor: '#FF3D57', description: 'Work operating system' },
+  { name: 'ClickUp', category: 'Project Management', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/clickup.svg', brandColor: '#7B68EE', description: 'All-in-one productivity platform' },
+  { name: 'Airtable', category: 'Project Management', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/airtable.svg', brandColor: '#18BFFF', description: 'Spreadsheet-database hybrid' },
+  
+  // Design & Collaboration
+  { name: 'Figma', category: 'Design', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/figma.svg', brandColor: '#F24E1E', description: 'Collaborative design tool' },
+  { name: 'Miro', category: 'Design', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/miro.svg', brandColor: '#050038', description: 'Online whiteboard for collaboration' },
+  { name: 'Canva', category: 'Design', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/canva.svg', brandColor: '#00C4CC', description: 'Graphic design platform' },
+  { name: 'Adobe XD', category: 'Design', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/adobexd.svg', brandColor: '#FF61F6', description: 'UI/UX design and prototyping' },
+  { name: 'Sketch', category: 'Design', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/sketch.svg', brandColor: '#F7B500', description: 'Digital design toolkit' },
+  
+  // Development & DevOps
+  { name: 'Git', category: 'Development', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/git.svg', brandColor: '#F05032', description: 'Version control system' },
+  { name: 'GitHub', category: 'Development', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/github.svg', brandColor: '#181717', description: 'Code hosting and collaboration' },
+  { name: 'Docker', category: 'DevOps', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/docker.svg', brandColor: '#2496ED', description: 'Container platform' },
+  { name: 'VS Code', category: 'Development', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/visualstudiocode.svg', brandColor: '#007ACC', description: 'Code editor' },
+  { name: 'Jenkins', category: 'DevOps', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/jenkins.svg', brandColor: '#D24939', description: 'Automation server' },
+  
+  // CRM & Marketing
+  { name: 'Salesforce', category: 'CRM', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/salesforce.svg', brandColor: '#00A1E0', description: 'Customer relationship management' },
+  { name: 'HubSpot', category: 'Marketing', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/hubspot.svg', brandColor: '#FF7A59', description: 'Inbound marketing and sales' },
+  { name: 'Google Analytics', category: 'Marketing', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/googleanalytics.svg', brandColor: '#E37400', description: 'Web analytics service' },
+  { name: 'Mailchimp', category: 'Marketing', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/mailchimp.svg', brandColor: '#FFE01B', description: 'Email marketing platform' },
+  
+  // Communication
+  { name: 'Zoom', category: 'Communication', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/zoom.svg', brandColor: '#2D8CFF', description: 'Video conferencing platform' },
+  { name: 'Microsoft Outlook', category: 'Communication', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/microsoftoutlook.svg', brandColor: '#0078D4', description: 'Email and calendar client' },
+  { name: 'Google Meet', category: 'Communication', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/googlemeet.svg', brandColor: '#00897B', description: 'Video conferencing by Google' },
+  
+  // Automation
+  { name: 'Zapier', category: 'Automation', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/zapier.svg', brandColor: '#FF4A00', description: 'Workflow automation platform' },
+  { name: 'Power Automate', category: 'Automation', logo: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/powerautomate.svg', brandColor: '#0066FF', description: 'Microsoft workflow automation' },
 ];
