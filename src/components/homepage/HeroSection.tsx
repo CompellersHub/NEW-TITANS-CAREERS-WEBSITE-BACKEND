@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Star, Sparkles, Award, Target, Users, TrendingUp, CheckCircle2 } from "lucide-react";
+import { Star, Sparkles, Award, Target, Users, TrendingUp, CheckCircle2 } from "lucide-react";
+import { FreeSessionBookingDialog } from "@/components/FreeSessionBookingDialog";
 
 export const HeroSection = () => {
   return (
@@ -48,23 +48,7 @@ export const HeroSection = () => {
             
             {/* Enhanced CTA Button with glow effect */}
             <div className="space-y-4 pt-4 animate-fade-in" style={{ animationDelay: '0.2s' }}>
-              <Button 
-                size="lg" 
-                className="font-sans text-base font-bold bg-gradient-to-r from-tc-amber to-tc-gold hover:from-tc-gold hover:to-tc-amber text-white shadow-2xl hover:shadow-tc-amber/50 transition-all hover:scale-105 group relative overflow-hidden px-8 py-6"
-                asChild
-              >
-                <a 
-                  href="https://wa.me/447539434403"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="relative z-10"
-                >
-                  <span className="relative z-10">Join Free Live Session</span>
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
-                  {/* Shine effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                </a>
-              </Button>
+              <FreeSessionBookingDialog />
               
               {/* Enhanced subtext with icon */}
               <div className="flex items-center gap-2 text-sm text-tc-mid-grey font-sans">

@@ -127,9 +127,14 @@ export const FreeSessionBookingDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" size="sm" className="gap-2">
-          <Calendar className="h-4 w-4" />
-          Book Free Session
+        <Button 
+          size="lg" 
+          className="font-sans text-base font-bold bg-gradient-to-r from-tc-amber to-tc-gold hover:from-tc-gold hover:to-tc-amber text-white shadow-2xl hover:shadow-tc-amber/50 transition-all hover:scale-105 group relative overflow-hidden px-8 py-6"
+        >
+          <Calendar className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
+          <span className="relative z-10">Book Free Session</span>
+          {/* Shine effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[540px] max-h-[90vh] overflow-y-auto">

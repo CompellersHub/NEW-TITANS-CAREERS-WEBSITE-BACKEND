@@ -1,8 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CourseEnrollmentButton } from "../payment/CourseEnrollmentButton";
+import { FreeSessionBookingDialog } from "@/components/FreeSessionBookingDialog";
 import { Link } from "react-router-dom";
-import { Clock } from "lucide-react";
+import { Clock, Calendar } from "lucide-react";
 import { CourseHeroImage } from "./CourseHeroImage";
 
 interface CourseCardProps {
@@ -75,6 +77,20 @@ export function CourseCard({ course }: CourseCardProps) {
         <p className="font-sans mb-6 line-clamp-3 text-sm leading-relaxed flex-grow text-muted-foreground">{course.description}</p>
         
         <div className="space-y-4 mt-auto pt-6 border-t border-border">
+          {/* Free Session CTA */}
+          <div className="flex justify-center">
+            <FreeSessionBookingDialog />
+          </div>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground font-sans">or</span>
+            </div>
+          </div>
+          
         <div className="flex items-center justify-between">
           <div>
             <p className="font-sans text-xs text-muted-foreground mb-1">One-time payment</p>
