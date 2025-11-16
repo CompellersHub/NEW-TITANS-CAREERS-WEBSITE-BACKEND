@@ -19,7 +19,7 @@ export const Navbar = () => {
   const { user, isAdmin, signOut } = useAuth();
 
   return (
-    <nav className="fixed top-0 w-full bg-primary/90 backdrop-blur-2xl border-b border-white/10 z-50 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.2)]">
+    <nav className="fixed top-0 w-full backdrop-blur-lg bg-primary/95 border-b border-white/10 z-50 shadow-[0_4px_12px_-4px_hsl(213_69%_13%/0.15)]">
       <div className="container px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -71,7 +71,7 @@ export const Navbar = () => {
                 className="w-64 bg-card/95 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_-4px_rgba(0,0,0,0.2)] animate-fade-in rounded-xl z-50"
                 sideOffset={12}
               >
-                <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="hover:bg-accent/10 transition-colors duration-200">
                   <Link 
                     to="/resources" 
                     className="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all rounded-lg hover:bg-accent/10 focus:bg-accent/10"

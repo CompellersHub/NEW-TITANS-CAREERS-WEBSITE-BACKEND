@@ -14,15 +14,15 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground border-t border-primary-foreground/10">
+    <footer className="bg-tc-navy text-white py-16 border-t border-white/10">
       {/* SECTION 1: Main Footer Content */}
       <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-5 lg:py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 xl:gap-12">
           
           {/* Row 1: Titans Careers Brand */}
           <div className="space-y-3">
-            <h2 className="text-accent font-kanit font-bold text-base leading-tight">Titans Careers</h2>
-            <p className="text-primary-foreground/80 text-sm leading-tight">
+            <h2 className="text-tc-amber font-kanit font-bold text-base leading-tight border-b-2 border-tc-amber/30 pb-2 inline-block">Titans Careers</h2>
+            <p className="text-white/80 text-sm leading-tight">
               Learn what sets professionals apart.
             </p>
             <p className="text-primary-foreground/80 text-sm leading-tight">
@@ -32,11 +32,11 @@ export const Footer = () => {
           
           {/* Row 2: Contact Us */}
           <div className="space-y-3">
-            <h2 className="text-accent font-kanit font-bold text-base leading-tight">Contact Us</h2>
+            <h2 className="text-tc-amber font-kanit font-bold text-base leading-tight border-b-2 border-tc-amber/30 pb-2 inline-block">Contact Us</h2>
             <div className="space-y-2">
               <a
                 href="mailto:support@titanscareers.com"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+              className="flex items-center gap-2 text-white/80 hover:text-tc-amber transition-colors duration-300 group"
                 aria-label="Email Titans Careers"
               >
                 <Mail className="w-4 h-4" />
@@ -45,7 +45,7 @@ export const Footer = () => {
               
               <a
                 href="tel:+442045720475"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+                className="flex items-center gap-2 text-white/80 hover:text-tc-amber transition-colors duration-300 group"
                 aria-label="Call Titans Careers"
               >
                 <Phone className="w-4 h-4" />
@@ -56,7 +56,7 @@ export const Footer = () => {
                 href="https://wa.me/447539434403"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+                className="flex items-center gap-2 text-white/80 hover:text-tc-amber transition-colors duration-300 group"
                 aria-label="WhatsApp Titans Careers"
               >
                 <Phone className="w-4 h-4" />
@@ -67,9 +67,9 @@ export const Footer = () => {
           
           {/* Row 3: Our Office */}
           <div className="space-y-3">
-            <h2 className="text-accent font-kanit font-bold text-base leading-tight">Our Office</h2>
+            <h2 className="text-tc-amber font-kanit font-bold text-base leading-tight border-b-2 border-tc-amber/30 pb-2 inline-block">Our Office</h2>
             <div className="space-y-2">
-              <div className="flex items-start gap-2 text-primary-foreground/80">
+              <div className="flex items-start gap-2 text-white/80">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <div className="text-sm">
                   <p>3rd Floor</p>
@@ -79,7 +79,7 @@ export const Footer = () => {
                 </div>
               </div>
               
-              <div className="flex items-start gap-2 text-primary-foreground/80 pt-1">
+              <div className="flex items-start gap-2 text-white/80 pt-1">
                 <div className="w-4 h-4 mt-0.5 flex-shrink-0 flex items-center justify-center">
                   <div className="w-1 h-1 bg-current rounded-full"></div>
                 </div>
@@ -93,12 +93,12 @@ export const Footer = () => {
           
           {/* Row 4: Quick Links */}
           <nav aria-label="Footer navigation" className="space-y-3">
-            <h2 className="text-accent font-kanit font-bold text-base leading-tight">Quick Links</h2>
+            <h2 className="text-tc-amber font-kanit font-bold text-base leading-tight border-b-2 border-tc-amber/30 pb-2 inline-block">Quick Links</h2>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/courses" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-sm text-white/80 hover:text-tc-amber transition-colors duration-300 font-sans font-normal inline-block"
                 >
                   Our Courses
                 </Link>
@@ -106,7 +106,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-sm text-white/80 hover:text-tc-amber transition-colors duration-300 font-sans font-normal inline-block"
                 >
                   About Us
                 </Link>
@@ -114,7 +114,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/contact" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-sm text-white/80 hover:text-tc-amber transition-colors duration-300 font-sans font-normal inline-block"
                 >
                   Contact
                 </Link>
@@ -122,7 +122,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/terms-conditions" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-sm text-white/80 hover:text-tc-amber transition-colors duration-300 font-sans font-normal inline-block"
                 >
                   Terms & Conditions
                 </Link>
