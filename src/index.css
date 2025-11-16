@@ -65,6 +65,14 @@ All colors MUST be HSL.
     --shadow-glow: 0 0 30px hsl(43 100% 50% / 0.15);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Enhanced Shadows with Navy Tint */
+    --shadow-xs: 0 1px 2px 0 hsl(213 69% 13% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(213 69% 13% / 0.15), 0 8px 10px -6px hsl(213 69% 13% / 0.1);
+    --shadow-2xl: 0 25px 50px -12px hsl(213 69% 13% / 0.25);
+    --shadow-amber-glow: 0 10px 30px -5px hsl(43 100% 50% / 0.3), 0 0 60px hsl(43 100% 50% / 0.15);
 
     --radius: 0.875rem; /* 14px */
     --radius-sm: 0.5rem;
@@ -304,6 +312,54 @@ All colors MUST be HSL.
       transform: translateY(-5px) rotate(-2deg);
     }
   }
+  
+  /* Premium Animations for Style Refresh */
+  @keyframes hover-lift {
+    from { 
+      transform: translateY(0) scale(1); 
+    }
+    to { 
+      transform: translateY(-4px) scale(1.01); 
+    }
+  }
+  
+  @keyframes pulse-glow-effect {
+    0%, 100% { 
+      box-shadow: 0 0 15px hsl(43 100% 50% / 0.3);
+    }
+    50% { 
+      box-shadow: 0 0 25px hsl(43 100% 50% / 0.5), 0 0 40px hsl(43 100% 50% / 0.2);
+    }
+  }
+  
+  @keyframes fade-slide-up {
+    from { 
+      opacity: 0; 
+      transform: translateY(30px);
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes shimmer-effect {
+    0% { 
+      background-position: -200% center; 
+    }
+    100% { 
+      background-position: 200% center; 
+    }
+  }
+  
+  @keyframes border-glow {
+    0%, 100% { 
+      border-color: hsl(43 100% 50% / 0.3); 
+    }
+    50% { 
+      border-color: hsl(43 100% 50% / 0.6); 
+    }
+  }
 
   .animate-shake {
     animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
@@ -362,5 +418,68 @@ All colors MUST be HSL.
       0 8px 16px -4px rgba(0, 0, 0, 0.1),
       0 16px 48px -12px rgba(251, 191, 36, 0.4);
     transform: translateY(-2px);
+  }
+  
+  /* Additional Premium Utilities */
+  .hover-lift {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  .smooth-focus {
+    transition: all 0.3s ease;
+  }
+  
+  .smooth-focus:focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 3px;
+  }
+  
+  .glass-effect {
+    background: hsl(0 0% 100% / 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(0 0% 100% / 0.3);
+  }
+  
+  .glass-effect-dark {
+    background: hsl(213 69% 13% / 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(0 0% 100% / 0.1);
+  }
+  
+  .shimmer-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, hsl(43 100% 50% / 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer-effect 3s infinite;
+    pointer-events: none;
+  }
+  
+  .interactive-scale {
+    transition: transform 0.2s ease;
+  }
+  
+  .interactive-scale:hover {
+    transform: scale(1.02);
+  }
+  
+  .interactive-scale:active {
+    transform: scale(0.98);
   }
 }

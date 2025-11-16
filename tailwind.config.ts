@@ -19,14 +19,11 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // Titans Careers Brand Colors
+        // Titans Careers Brand Colors (Strict)
         'tc-navy': '#0B1F3B',
         'tc-amber': '#FFB000',
         'tc-gold': '#C9A227',
-        'tc-blue': '#1E3A5F',
-        'tc-dark-grey': '#4B5563',
-        'tc-mid-grey': '#6B7280',
-        'tc-light-grey': '#E5E7EB',
+        'tc-grey': '#6B7280',
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -85,11 +82,15 @@ export default {
         sm: "var(--radius-sm)",
       },
       boxShadow: {
+        'xs': 'var(--shadow-xs)',
         'sm': 'var(--shadow-sm)',
         'md': 'var(--shadow-md)',
         'lg': 'var(--shadow-lg)',
+        'xl': 'var(--shadow-xl)',
+        '2xl': 'var(--shadow-2xl)',
         'accent': 'var(--shadow-accent)',
         'glow': 'var(--shadow-glow)',
+        'amber-glow': 'var(--shadow-amber-glow)',
       },
       backgroundImage: {
         'gradient-primary': 'var(--gradient-primary)',
@@ -125,6 +126,26 @@ export default {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-20px)" },
         },
+        "hover-lift": {
+          "from": { transform: "translateY(0) scale(1)" },
+          "to": { transform: "translateY(-4px) scale(1.01)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 15px hsl(43 100% 50% / 0.3)" },
+          "50%": { boxShadow: "0 0 25px hsl(43 100% 50% / 0.5), 0 0 40px hsl(43 100% 50% / 0.2)" },
+        },
+        "fade-slide-up": {
+          "from": { opacity: "0", transform: "translateY(30px)" },
+          "to": { opacity: "1", transform: "translateY(0)" },
+        },
+        "shimmer-effect": {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "border-glow": {
+          "0%, 100%": { borderColor: "hsl(43 100% 50% / 0.3)" },
+          "50%": { borderColor: "hsl(43 100% 50% / 0.6)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -138,6 +159,11 @@ export default {
         "gradient-shift": "gradient-shift 15s ease infinite",
         "gradient-flow": "gradient-flow 20s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
+        "hover-lift": "hover-lift 0.4s ease-out forwards",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "fade-slide-up": "fade-slide-up 0.6s ease-out",
+        "shimmer-effect": "shimmer-effect 3s infinite",
+        "border-glow": "border-glow 2s ease-in-out infinite",
       },
     },
   },

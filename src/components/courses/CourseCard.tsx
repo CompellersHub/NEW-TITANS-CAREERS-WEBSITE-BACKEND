@@ -53,7 +53,7 @@ export function CourseCard({ course }: CourseCardProps) {
   };
 
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border-border bg-card flex flex-col h-full relative overflow-hidden">
+    <Card className="group hover-lift rounded-2xl border border-border/50 shadow-[0_4px_16px_-4px_hsl(213_69%_13%/0.08)] hover:shadow-[0_12px_32px_-8px_hsl(213_69%_13%/0.15)] hover:border-accent/30 bg-card flex flex-col h-full relative overflow-hidden transition-all duration-400 ease-out">
       <CourseHeroImage
         src={getCourseImage(course.slug)}
         alt={course.title}
@@ -62,12 +62,12 @@ export function CourseCard({ course }: CourseCardProps) {
       />
       
       <div className="p-8 flex flex-col flex-grow">
-        <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase ${getCategoryColor(course.category)}`}>
+        <Badge className={`mb-4 w-fit font-sans font-semibold text-xs tracking-wider uppercase transition-all duration-300 group-hover:shadow-[0_0_16px_hsl(43_100%_50%/0.3)] ${getCategoryColor(course.category)}`}>
           {course.category}
         </Badge>
       
       <Link to={`/course/${course.slug}`} className="group/link">
-        <h3 className="font-kanit text-2xl font-bold mb-3 group-hover/link:text-accent transition-all duration-300 leading-tight text-primary">
+        <h3 className="font-kanit text-2xl font-bold mb-3 group-hover/link:text-accent transition-colors duration-300 leading-tight text-primary">
           {course.title}
         </h3>
       </Link>
