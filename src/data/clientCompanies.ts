@@ -19,7 +19,6 @@ export const clientCompanies = [
   
   // US Banks
   { name: 'JPMorgan Chase', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/JPMorgan_Chase_logo.svg/320px-JPMorgan_Chase_logo.svg.png' },
-  { name: 'Citi', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Citi.svg/320px-Citi.svg.png' },
   { name: 'Bank of America', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Bank_of_America_logo_%282024%29.svg/320px-Bank_of_America_logo_%282024%29.svg.png' },
   { name: 'Morgan Stanley', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Morgan_Stanley_Logo_1.svg/320px-Morgan_Stanley_Logo_1.svg.png' },
   { name: 'Goldman Sachs', category: 'Banking', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Goldman_Sachs.svg/320px-Goldman_Sachs.svg.png' },
@@ -36,9 +35,6 @@ export const clientCompanies = [
   { name: 'Stripe', category: 'Payments', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/320px-Stripe_Logo%2C_revised_2016.svg.png' },
   { name: 'Adyen', category: 'Payments', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Adyen_Corporate_Logo.svg/320px-Adyen_Corporate_Logo.svg.png' },
   { name: 'Klarna', category: 'Payments', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Klarna_logo.svg/320px-Klarna_logo.svg.png' },
-  
-  // Crypto
-  { name: 'Coinbase', category: 'FinTech', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Coinbase.svg/320px-Coinbase.svg.png' },
   
   // Data & Analytics
   { name: 'London Stock Exchange Group', category: 'Financial Services', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/London_Stock_Exchange_Group_Logo.svg/320px-London_Stock_Exchange_Group_Logo.svg.png' },
