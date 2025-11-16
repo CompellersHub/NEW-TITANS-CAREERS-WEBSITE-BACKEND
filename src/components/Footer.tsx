@@ -16,62 +16,62 @@ export const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground border-t border-primary-foreground/10">
       {/* SECTION 1: Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-5 lg:py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8 lg:py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 xl:gap-16">
           
           {/* Row 1: Titans Careers Brand */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Titans Careers</h2>
-            <p className="text-primary-foreground/80 text-sm leading-tight">
+            <p className="text-primary-foreground/80 text-base leading-tight">
               Learn what sets professionals apart.
             </p>
-            <p className="text-primary-foreground/80 text-sm leading-tight">
+            <p className="text-primary-foreground/80 text-base leading-tight">
               Specializing in high-impact masterclasses for AML/KYC Compliance, Business Analysis/Project Management, Data Analytics, and Cybersecurity professionals.
             </p>
           </div>
           
           {/* Row 2: Contact Us */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Contact Us</h2>
-            <div className="space-y-1.5">
+            <div className="space-y-3">
               <a
                 href="mailto:support@titanscareers.com"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
                 aria-label="Email Titans Careers"
               >
-                <Mail className="w-4 h-4" />
-                <span className="text-sm">support@titanscareers.com</span>
+                <Mail className="w-5 h-5" />
+                <span className="text-base">support@titanscareers.com</span>
               </a>
               
               <a
                 href="tel:+442045720475"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
                 aria-label="Call Titans Careers"
               >
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">+44 20 4572 0475</span>
+                <Phone className="w-5 h-5" />
+                <span className="text-base">+44 20 4572 0475</span>
               </a>
               
               <a
                 href="https://wa.me/447539434403"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-primary-foreground/80 hover:text-accent transition-colors group"
+                className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
                 aria-label="WhatsApp Titans Careers"
               >
-                <Phone className="w-4 h-4" />
-                <span className="text-sm">WhatsApp: +44 7539 434403</span>
+                <Phone className="w-5 h-5" />
+                <span className="text-base">WhatsApp: +44 7539 434403</span>
               </a>
             </div>
           </div>
           
           {/* Row 3: Our Office */}
-          <div className="space-y-2">
+          <div className="space-y-4">
             <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Our Office</h2>
-            <div className="space-y-1.5">
-              <div className="flex items-start gap-2 text-primary-foreground/80">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <div className="text-sm">
+            <div className="space-y-3">
+              <div className="flex items-start gap-3 text-primary-foreground/80">
+                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                <div className="text-base">
                   <p>3rd Floor</p>
                   <p>45 Albemarle Street</p>
                   <p>Mayfair, London</p>
@@ -79,11 +79,11 @@ export const Footer = () => {
                 </div>
               </div>
               
-              <div className="flex items-start gap-2 text-primary-foreground/80 pt-1">
-                <div className="w-4 h-4 mt-0.5 flex-shrink-0 flex items-center justify-center">
+              <div className="flex items-start gap-3 text-primary-foreground/80 pt-1">
+                <div className="w-5 h-5 mt-0.5 flex-shrink-0 flex items-center justify-center">
                   <div className="w-1 h-1 bg-current rounded-full"></div>
                 </div>
-                <div className="text-sm">
+                <div className="text-base">
                   <p>Mon-Fri: 9AM - 5PM</p>
                   <p>Weekends by appointment</p>
                 </div>
@@ -92,13 +92,13 @@ export const Footer = () => {
           </div>
           
           {/* Row 4: Quick Links */}
-          <nav aria-label="Footer navigation" className="space-y-2">
+          <nav aria-label="Footer navigation" className="space-y-4">
             <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Quick Links</h2>
-            <ul className="space-y-1.5">
+            <ul className="space-y-3">
               <li>
                 <Link 
                   to="/courses" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-base text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                 >
                   Our Courses
                 </Link>
@@ -106,7 +106,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-base text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                 >
                   About Us
                 </Link>
@@ -114,7 +114,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/contact" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-base text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                 >
                   Contact
                 </Link>
@@ -122,7 +122,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/terms-conditions" 
-                  className="text-sm text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
+                  className="text-base text-primary-foreground/80 hover:text-accent transition-colors font-sans font-normal inline-block"
                 >
                   Terms & Conditions
                 </Link>
