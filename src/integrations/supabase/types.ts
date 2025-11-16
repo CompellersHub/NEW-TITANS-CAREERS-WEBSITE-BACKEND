@@ -821,6 +821,51 @@ export type Database = {
         }
         Relationships: []
       }
+      course_inquiries: {
+        Row: {
+          country_code: string
+          course_slug: string
+          course_title: string
+          created_at: string | null
+          email: string
+          id: string
+          inquiry_type: string
+          name: string
+          phone: string
+          privacy_accepted: boolean
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          country_code: string
+          course_slug: string
+          course_title: string
+          created_at?: string | null
+          email: string
+          id?: string
+          inquiry_type: string
+          name: string
+          phone: string
+          privacy_accepted?: boolean
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          country_code?: string
+          course_slug?: string
+          course_title?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          inquiry_type?: string
+          name?: string
+          phone?: string
+          privacy_accepted?: boolean
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       course_lessons: {
         Row: {
           content_type: string | null

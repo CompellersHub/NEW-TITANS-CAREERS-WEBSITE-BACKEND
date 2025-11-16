@@ -1,0 +1,148 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+interface InquiryRequest {
+  courseSlug: string;
+  courseTitle: string;
+  inquiryType: "free_session" | "whatsapp_group";
+  name: string;
+  email: string;
+  phone: string;
+}
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+    );
+
+    const {
+      courseSlug,
+      courseTitle,
+      inquiryType,
+      name,
+      email,
+      phone,
+    }: InquiryRequest = await req.json();
+
+    console.log(`Processing ${inquiryType} inquiry for ${courseTitle} from ${email}`);
+
+    // Get course details to retrieve WhatsApp group link
+    const { data: courseData } = await supabase
+      .from("courses")
+      .select("whatsapp_group_link")
+      .eq("slug", courseSlug)
+      .single();
+
+    const whatsappLink = courseData?.whatsapp_group_link;
+
+    // Send confirmation email to user
+    if (RESEND_API_KEY) {
+      const userEmailHtml = inquiryType === "free_session"
+        ? `
+          <h2>Thank you for your interest in ${courseTitle}!</h2>
+          <p>Hi ${name},</p>
+          <p>We've received your request to book a free consultation session.</p>
+          <p><strong>What happens next?</strong></p>
+          <ul>
+            <li>Our team will contact you within 24 hours on WhatsApp (${phone})</li>
+            <li>We'll schedule a convenient time for your free session</li>
+            <li>You'll get personalized advice about the course and career opportunities</li>
+          </ul>
+          <p>If you have any urgent questions, feel free to reach out to us directly.</p>
+          <p>Best regards,<br/>The Titans Academy Team</p>
+        `
+        : `
+          <h2>Welcome to the ${courseTitle} Community!</h2>
+          <p>Hi ${name},</p>
+          <p>Great to have you interested in joining our WhatsApp group!</p>
+          ${whatsappLink 
+            ? `<p><strong>Click here to join the group:</strong><br/>
+               <a href="${whatsappLink}" style="display: inline-block; background: linear-gradient(135deg, #1a1a1a, #4a4a4a); color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 16px 0;">Join WhatsApp Group</a></p>`
+            : `<p>Our team will send you the WhatsApp group invite link shortly via WhatsApp to ${phone}.</p>`
+          }
+          <p><strong>What to expect in the group:</strong></p>
+          <ul>
+            <li>Connect with fellow students and alumni</li>
+            <li>Get course updates and announcements</li>
+            <li>Ask questions and share insights</li>
+            <li>Access exclusive resources and tips</li>
+          </ul>
+          <p>Looking forward to seeing you in the group!</p>
+          <p>Best regards,<br/>The Titans Academy Team</p>
+        `;
+
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Titans Academy <onboarding@resend.dev>",
+          to: [email],
+          subject: inquiryType === "free_session"
+            ? `Free Session Request: ${courseTitle}`
+            : `Join ${courseTitle} WhatsApp Group`,
+          html: userEmailHtml,
+        }),
+      });
+
+      // Send notification to admin
+      const adminEmailHtml = `
+        <h2>New Course Inquiry</h2>
+        <p><strong>Type:</strong> ${inquiryType === "free_session" ? "Free Session Request" : "WhatsApp Group Join Request"}</p>
+        <p><strong>Course:</strong> ${courseTitle}</p>
+        <hr/>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <hr/>
+        <p><em>Submitted at ${new Date().toLocaleString()}</em></p>
+      `;
+
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: "Titans Academy <onboarding@resend.dev>",
+          to: ["admin@titansacademy.com"],
+          subject: `New ${inquiryType === "free_session" ? "Free Session" : "WhatsApp Group"} Request - ${courseTitle}`,
+          html: adminEmailHtml,
+        }),
+      });
+    }
+
+    return new Response(
+      JSON.stringify({ success: true }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  } catch (error) {
+    console.error("Error processing inquiry:", error);
+    return new Response(
+      JSON.stringify({ error: String(error) }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      }
+    );
+  }
+});

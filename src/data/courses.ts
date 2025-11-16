@@ -32,6 +32,7 @@ export interface Course {
   };
   certifications: string[];
   projectCount: number;
+  whatsappGroupLink?: string;
 }
 
 export const courses: Record<string, Course> = {
