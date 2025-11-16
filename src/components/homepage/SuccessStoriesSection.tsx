@@ -40,8 +40,8 @@ export function SuccessStoriesSection() {
   ];
 
   return (
-    <section className="section-py bg-gradient-to-b from-background to-muted/30">
-      <div className="container max-w-7xl">
+    <section className="py-16 md:py-24 lg:py-32 bg-tc-navy/[0.02]">
+      <div className="container max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16 space-y-4">
           <Badge className="bg-accent/10 text-accent border-accent/30 font-sans font-semibold">
             <Award className="w-3 h-3 mr-2" />
@@ -61,7 +61,7 @@ export function SuccessStoriesSection() {
           {stories.map((story, index) => (
             <Card 
               key={index} 
-              className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 border-transparent hover:border-accent/50"
+              className="group hover-lift border border-border/50 shadow-lg hover:shadow-2xl hover:border-tc-amber/30 transition-all duration-400"
             >
               <CardContent className="p-0">
                 {/* Image Section */}
