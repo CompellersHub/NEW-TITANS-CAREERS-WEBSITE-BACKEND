@@ -30,11 +30,11 @@ const testimonials = [
 
 export const Testimonials = () => {
   return (
-    <section className="py-24 bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+    <section className="py-16 md:py-24 lg:py-32 bg-tc-navy/[0.02] relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-accent opacity-50" />
+        <div className="absolute top-0 left-0 w-full h-full opacity-50" />
       </div>
-      <div className="container px-4 relative z-10">
+      <div className="container max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-16 space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
             Loved by Recruiters Worldwide
@@ -44,17 +44,17 @@ export const Testimonials = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <Card 
               key={index}
-              className="hover:shadow-xl transition-all hover:-translate-y-1 animate-fade-in"
+              className="hover-lift border border-border/50 shadow-md hover:shadow-xl hover:border-tc-amber/20 animate-fade-in"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <CardContent className="pt-8 pb-8">
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+                    <Star key={i} className="w-5 h-5 fill-tc-amber text-tc-amber" />
                   ))}
                 </div>
                 

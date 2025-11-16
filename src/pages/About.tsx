@@ -93,20 +93,24 @@ const About = () => {
         <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-20 md:py-28">
-        <div className="container max-w-7xl">
+      <section className="bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white py-20 md:py-32 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-tc-amber/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-tc-gold/8 rounded-full blur-[140px]" />
+        
+        <div className="container max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-accent/20 text-accent border-accent/30">
+            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30 font-semibold">
               <Heart className="w-3 h-3 mr-2" />
               OUR STORY
             </Badge>
             
-            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
-              We're Building <span className="text-accent">Real Careers</span>,
+            <h1 className="font-kanit text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              We're Building <span className="text-tc-amber">Real Careers</span>,
               Not Just Courses
             </h1>
             
-            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
+            <p className="font-sans text-lg md:text-xl text-white/90 leading-relaxed">
               Titans Careers was born from a simple frustration: too many talented people 
               stuck in low-paying jobs, and too many training programs that promise the world 
               but deliver nothing.

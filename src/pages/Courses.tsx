@@ -115,14 +115,14 @@ export default function Courses() {
         />
       )}
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         <Navbar />
-        <div className="container mx-auto py-32 px-4">
-          <div className="max-w-4xl mx-auto text-center mb-20 animate-fade-in">
-            <h1 className="font-kanit text-5xl md:text-6xl font-bold mb-6 text-primary leading-tight">
+        <div className="container max-w-7xl mx-auto py-24 md:py-32 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20 animate-fade-in">
+            <h1 className="font-kanit text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-tc-navy leading-tight">
               Professional Courses
             </h1>
-            <p className="font-sans text-xl text-muted-foreground leading-relaxed">
+            <p className="font-sans text-lg md:text-xl text-tc-grey leading-relaxed">
               Transform your career with industry-leading training programs designed by experts
             </p>
           </div>

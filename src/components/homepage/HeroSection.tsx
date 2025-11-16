@@ -3,12 +3,12 @@ import { FreeSessionBookingDialog } from "@/components/FreeSessionBookingDialog"
 
 export const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-tc-navy/5 via-white to-amber-50/30 min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden bg-gradient-to-b from-white via-white to-tc-navy/[0.02] min-h-[90vh] flex items-center">
       {/* Enhanced animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Large gradient orbs */}
-        <div className="absolute top-0 -left-1/4 w-[1000px] h-[1000px] bg-gradient-to-br from-tc-amber/10 to-tc-gold/5 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 -right-1/4 w-[1000px] h-[1000px] bg-gradient-to-tl from-tc-navy/5 to-tc-amber/5 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-0 -left-1/4 w-[1000px] h-[1000px] bg-gradient-to-br from-tc-amber/8 to-tc-gold/4 rounded-full blur-[140px] animate-pulse" />
+        <div className="absolute bottom-0 -right-1/4 w-[1000px] h-[1000px] bg-gradient-to-tl from-tc-navy/3 to-tc-amber/3 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '1s' }} />
         
         {/* Floating particles */}
         <div className="absolute top-20 left-[10%] w-2 h-2 bg-tc-amber/30 rounded-full animate-float" />

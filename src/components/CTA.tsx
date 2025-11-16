@@ -4,22 +4,24 @@ import { trackCTA } from "@/lib/analytics";
 
 export const CTA = () => {
   return (
-    <section className="py-6 md:py-8 bg-tc-navy text-white relative overflow-hidden">
-      {/* Subtle grid overlay */}
+    <section className="py-12 md:py-16 bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white relative overflow-hidden">
+      {/* Enhanced background elements */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-tc-amber/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-tc-gold/5 rounded-full blur-[120px]" />
       
-      <div className="container px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-4 animate-fade-in">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-tight">
+      <div className="container max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-kanit font-bold tracking-tight leading-tight">
             Ready to Change Your Career?
           </h2>
           
-          <p className="text-base md:text-lg text-tc-light-grey max-w-2xl mx-auto leading-snug">
+          <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed font-sans">
             Join 300+ professionals who've upgraded their careers with Titans Careers training and 12 months of support.
           </p>
 
           {/* Benefits line with amber dots */}
-          <div className="flex flex-wrap justify-center items-center gap-3 text-tc-light-grey text-sm leading-snug">
+          <div className="flex flex-wrap justify-center items-center gap-3 text-white/80 text-sm leading-snug font-sans">
             <span>8–16 week live cohorts</span>
             <div className="w-1.5 h-1.5 bg-tc-amber rounded-full" />
             <span>12 months career support</span>
@@ -27,10 +29,11 @@ export const CTA = () => {
             <span>Flexible Payl8r instalments (3–12 months)</span>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-3">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              className="text-lg bg-tc-amber hover:bg-tc-amber/90 text-white shadow-lg hover:shadow-xl transition-all"
+              variant="default"
+              className="text-base shadow-amber-glow hover:scale-[1.02] transition-all"
               asChild
             >
               <a 
@@ -46,8 +49,8 @@ export const CTA = () => {
             
             <Button 
               size="lg" 
-              variant="outline"
-              className="text-lg bg-transparent border-2 border-white text-white hover:bg-white hover:text-tc-navy transition-all"
+              variant="outlineWhite"
+              className="text-base"
               asChild
             >
               <a 

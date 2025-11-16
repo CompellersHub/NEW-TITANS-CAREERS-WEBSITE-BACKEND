@@ -128,56 +128,58 @@ const Contact = () => {
       />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary to-primary/90 text-primary-foreground py-24 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzAtMy4zMTQgMi42ODYtNiA2LTZzNi0yLjY4NiA2LTYgMi42ODYtNiA2LTZ2Nmg2djZoLTZ2Nmgtdi02aDE4djZoLTZ2NmgtNnYtNkg0MnYtNmg2di02aDZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
+      <section className="relative bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white py-24 md:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]"></div>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-tc-amber/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-tc-gold/8 rounded-full blur-[140px]" />
         
-        <div className="container max-w-7xl relative z-10">
+        <div className="container max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-            <Badge className="bg-accent/20 text-accent border-accent/30 backdrop-blur-sm px-6 py-2 text-sm font-semibold">
+            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30 backdrop-blur-sm px-6 py-2 text-sm font-semibold">
               <Sparkles className="w-4 h-4 mr-2" />
               GET IN TOUCH
             </Badge>
             
-            <h1 className="font-kanit text-5xl md:text-7xl font-bold leading-tight">
+            <h1 className="font-kanit text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
               Let's Transform <br />
-              <span className="text-accent animate-pulse">Your Career Together</span>
+              <span className="text-tc-amber">Your Career Together</span>
             </h1>
             
-            <p className="font-sans text-xl md:text-2xl text-primary-foreground/90 leading-relaxed max-w-2xl mx-auto">
+            <p className="font-sans text-lg md:text-xl lg:text-2xl text-white/90 leading-relaxed max-w-2xl mx-auto">
               Have questions about our courses? Ready to discuss your career goals? 
               Our expert team is here to guide you every step of the way.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
-                <CheckCircle2 className="w-5 h-5 text-accent" />
+              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+                <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 24-Hour Response
               </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
-                <CheckCircle2 className="w-5 h-5 text-accent" />
+              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+                <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 Free Consultation
               </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-primary-foreground/80">
-                <CheckCircle2 className="w-5 h-5 text-accent" />
+              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+                <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 Expert Guidance
               </div>
             </div>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent"></div>
       </section>
 
       {/* Contact Methods */}
-      <section className="py-24 bg-background">
-        <div className="container max-w-7xl">
-          <div className="text-center mb-20 space-y-6 animate-fade-in">
-            <Badge className="bg-primary/10 text-primary border-primary/20">
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16 md:mb-20 space-y-6 animate-fade-in">
+            <Badge className="bg-tc-navy/10 text-tc-navy border-tc-navy/20 font-semibold">
               <MessageCircle className="w-3 h-3 mr-2" />
               REACH OUT ANYTIME
             </Badge>
-            <h2 className="font-kanit text-4xl md:text-6xl font-bold text-primary">
-              Multiple Ways to <span className="text-accent">Connect</span>
+            <h2 className="font-kanit text-3xl md:text-4xl lg:text-6xl font-bold text-tc-navy">
+              Multiple Ways to <span className="text-tc-amber">Connect</span>
             </h2>
             <p className="font-sans text-xl text-muted-foreground max-w-3xl mx-auto">
               Choose your preferred communication method and get instant access to our expert team
