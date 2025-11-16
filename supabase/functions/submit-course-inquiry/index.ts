@@ -17,6 +17,17 @@ interface InquiryRequest {
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
+// WhatsApp group links mapping
+const whatsappLinks: Record<string, string> = {
+  'aml-kyc': 'https://chat.whatsapp.com/BJnvGHfLUsxKsfAzKUrpxt',
+  'data-analysis': 'https://chat.whatsapp.com/LbqHFDSOHT93o2cK1B4bBy',
+  'cybersecurity': 'https://chat.whatsapp.com/GiQWDogIW5p29EIdNEg7Qp',
+  'crypto-compliance': 'https://chat.whatsapp.com/IlypZPkdoeO01KppJuhP1C',
+  'digital-marketing': 'https://chat.whatsapp.com/HyGI51eHI0928YOHvIm1r0',
+  'data-privacy': 'https://chat.whatsapp.com/KR1MPvX230j4QjJrGVCbh5',
+  'business-analysis': 'https://chat.whatsapp.com/JWOqfCODLD7JgO8RxtY1UH',
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -39,14 +50,53 @@ serve(async (req) => {
 
     console.log(`Processing ${inquiryType} inquiry for ${courseTitle} from ${email}`);
 
-    // Get course details to retrieve WhatsApp group link
-    const { data: courseData } = await supabase
-      .from("courses")
-      .select("whatsapp_group_link")
-      .eq("slug", courseSlug)
-      .single();
+    // Rate limiting check - max 3 inquiries per email per hour
+    const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
+    const { data: rateLimitData, error: rateLimitError } = await supabase
+      .from("inquiry_rate_limits")
+      .select("*")
+      .eq("identifier", email)
+      .gte("first_attempt_at", oneHourAgo)
+      .maybeSingle();
 
-    const whatsappLink = courseData?.whatsapp_group_link;
+    if (rateLimitError) {
+      console.error("Rate limit check error:", rateLimitError);
+    }
+
+    if (rateLimitData && rateLimitData.inquiry_count >= 3) {
+      console.log(`Rate limit exceeded for ${email}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          rateLimited: true 
+        }),
+        { 
+          status: 429, 
+          headers: { ...corsHeaders, "Content-Type": "application/json" } 
+        }
+      );
+    }
+
+    // Update or insert rate limit record
+    if (rateLimitData) {
+      await supabase
+        .from("inquiry_rate_limits")
+        .update({ 
+          inquiry_count: rateLimitData.inquiry_count + 1,
+          last_attempt_at: new Date().toISOString()
+        })
+        .eq("id", rateLimitData.id);
+    } else {
+      await supabase
+        .from("inquiry_rate_limits")
+        .insert({ 
+          identifier: email,
+          inquiry_count: 1 
+        });
+    }
+
+    // Get WhatsApp link from mapping
+    const whatsappLink = whatsappLinks[courseSlug];
 
     // Send confirmation email to user
     if (RESEND_API_KEY) {
@@ -91,7 +141,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Academy <onboarding@resend.dev>",
+          from: "Titans Academy <inquiries@titansacademy.co.uk>",
           to: [email],
           subject: inquiryType === "free_session"
             ? `Free Session Request: ${courseTitle}`
@@ -110,6 +160,10 @@ serve(async (req) => {
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Phone:</strong> ${phone}</p>
         <hr/>
+        <p style="margin: 20px 0;">
+          <a href="https://lovable.app" style="display: inline-block; background: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; margin-right: 10px;">View in Dashboard</a>
+          <a href="https://wa.me/${phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(name)},%20thank%20you%20for%20your%20interest%20in%20${encodeURIComponent(courseTitle)}" style="display: inline-block; background: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px;">Contact on WhatsApp</a>
+        </p>
         <p><em>Submitted at ${new Date().toLocaleString()}</em></p>
       `;
 
@@ -120,8 +174,8 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Academy <onboarding@resend.dev>",
-          to: ["admin@titansacademy.com"],
+          from: "Titans Academy <inquiries@titansacademy.co.uk>",
+          to: ["admin@titansacademy.co.uk"],
           subject: `New ${inquiryType === "free_session" ? "Free Session" : "WhatsApp Group"} Request - ${courseTitle}`,
           html: adminEmailHtml,
         }),
