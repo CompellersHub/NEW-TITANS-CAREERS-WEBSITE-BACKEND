@@ -5,10 +5,16 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 
 export function CompanyLogosCarousel() {
   const carouselRef = useRef<HTMLDivElement>(null);
+  
+  const autoplayPlugin = useMemo(() => Autoplay({
+    delay: 3000,
+    stopOnInteraction: false,
+    stopOnMouseEnter: false,
+  }), []);
 
   useEffect(() => {
     if (!carouselRef.current) return;
@@ -67,13 +73,9 @@ export function CompanyLogosCarousel() {
             opts={{
               align: "start",
               loop: true,
+              dragFree: false,
             }}
-            plugins={[
-              Autoplay({
-                delay: 2500,
-                stopOnInteraction: false,
-              }),
-            ]}
+            plugins={[autoplayPlugin]}
             className="w-full"
           >
             <CarouselContent className="-ml-4">
