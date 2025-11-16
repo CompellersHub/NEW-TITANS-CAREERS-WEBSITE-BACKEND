@@ -165,7 +165,7 @@ export const paymentMethods: PaymentMethodOption[] = [
   },
   {
     id: 'payl8r',
-    name: 'Payl8r Finance',
+    name: 'Payl8r Payment Plan',
     tagline: 'Spread the cost over 3-12 months',
     badge: 'flexible',
     icon: <DollarSign className="w-6 h-6" />,
@@ -176,6 +176,6 @@ export const paymentMethods: PaymentMethodOption[] = [
     ],
     processingTime: '~60 seconds approval',
     monthlyFrom: '£41.58/month',
-    disclaimer: 'Subject to affordability assessments. Payl8r is an Introducer Appointed Representative of Social Money LTD t/a Payl8r. Missed payments may affect your credit file, future borrowing and incur fees.'
+    disclaimer: 'TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%'
   }
 ];

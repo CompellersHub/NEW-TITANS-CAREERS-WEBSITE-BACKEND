@@ -13,9 +13,9 @@ const PayL8rInfo = () => {
   return (
     <>
       <SEO
-        title="PayL8r Financing - Spread the Cost of Your Training"
-        description="Finance your training with 0% APR. Spread the cost over 3, 6, 9, or 12 months with PayL8r. Simple approval process, instant decisions."
-        keywords="payl8r, finance, training finance, 0% apr, spread cost, payment plans"
+        title="PayL8r Payment Options - Spread the Cost of Your Training"
+        description="Spread the cost of your training with 0% APR. Pay over 3, 6, 9, or 12 months with PayL8r. Simple approval process, instant decisions."
+        keywords="payl8r, payment plans, spread cost, 0% apr, installment payments"
       />
       <div className="min-h-screen flex flex-col bg-background">
         <Navbar />
@@ -24,10 +24,10 @@ const PayL8rInfo = () => {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              PayL8r Finance
+              PayL8r Payment Options
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Invest in your future with flexible payment options. Spread the cost of your training with 0% APR finance.
+              Invest in your future with flexible payment plans. Spread the cost of your training with 0% APR options.
             </p>
           </div>
 
@@ -250,13 +250,19 @@ const PayL8rInfo = () => {
             <CardHeader>
               <CardTitle>Important Information</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>• PayL8r is a trading name of Deko Ltd, a company registered in England and Wales (company number 08897271).</p>
-              <p>• Deko Ltd is authorised and regulated by the Financial Conduct Authority (FRN: 728646).</p>
-              <p>• Finance is subject to status and affordability. Terms and conditions apply.</p>
-              <p>• You must be 18 or over to apply. UK residents only.</p>
-              <p>• Missing payments may affect your credit score and ability to obtain credit in the future.</p>
-              <p>• 0% APR representative on finance agreements from 3-12 months.</p>
+            <CardContent className="space-y-4 text-sm text-muted-foreground">
+              <div className="space-y-2">
+                <p>• PayL8r is a trading name of Social Money Limited, who is authorised by the FCA (Ref. Number 675283).</p>
+                <p>• Credit is subject to status and affordability. Terms and conditions apply.</p>
+                <p>• You must be 18 or over to apply. UK residents only.</p>
+                <p>• Missing payments may affect your credit score and ability to obtain credit in the future.</p>
+                <p>• Representative APR 65.5% on payment agreements from 3-12 months.</p>
+              </div>
+              <div className="p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
+                <p className="text-xs text-amber-900 dark:text-amber-100">
+                  TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%
+                </p>
+              </div>
             </CardContent>
           </Card>
         </main>
