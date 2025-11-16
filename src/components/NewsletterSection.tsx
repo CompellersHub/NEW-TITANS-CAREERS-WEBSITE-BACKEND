@@ -1,75 +1,54 @@
 import { NewsletterSignup } from "./NewsletterSignup";
-import { Mail, TrendingUp, Calendar, CheckCircle } from "lucide-react";
+import { Mail, TrendingUp, Calendar } from "lucide-react";
 
 export const NewsletterSection = () => {
   return (
-    <section className="py-20 bg-gradient-to-br from-tc-navy via-tc-blue to-tc-navy text-white relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-grid-pattern"></div>
-      </div>
-
+    <section className="py-20 bg-white relative overflow-hidden">
       <div className="container max-w-6xl relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 bg-tc-amber/20 text-tc-amber px-4 py-2 rounded-full border border-tc-amber/30">
-              <Mail className="w-4 h-4" />
-              <span className="text-sm font-bold">FREE WEEKLY INSIGHTS</span>
+            <div className="inline-flex items-center gap-2 bg-white border border-tc-navy px-4 py-2 rounded-full">
+              <Mail className="w-4 h-4 text-tc-navy" />
+              <span className="text-sm font-bold text-tc-navy">FREE WEEKLY INSIGHTS</span>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-              Get Career Tips Delivered to Your{" "}
-              <span className="text-tc-amber">Inbox & WhatsApp</span>
+            <h2 className="text-4xl md:text-5xl font-bold leading-tight text-tc-navy">
+              Get Career Tips Delivered to Your Inbox & WhatsApp
             </h2>
 
-            <p className="text-xl text-white/80 leading-relaxed">
-              Join 1,000+ career switchers receiving weekly strategies, job alerts, 
-              and insider tips that actually work.
+            <p className="text-lg text-tc-mid-grey leading-relaxed">
+              Weekly guidance on CVs, interviews, compliance and tech roles, plus job alerts and early access to Titans Careers cohorts.
             </p>
 
             <div className="space-y-4 pt-4">
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-tc-amber/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <CheckCircle className="w-4 h-4 text-tc-amber" />
-                </div>
+                <div className="w-2 h-2 bg-tc-amber rounded-full mt-2 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Weekly Career Insights</h3>
-                  <p className="text-white/70">
-                    Practical tips on job hunting, interviews, and salary negotiation
+                  <p className="text-tc-navy font-sans">
+                    Weekly career insights
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-tc-amber/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <TrendingUp className="w-4 h-4 text-tc-amber" />
-                </div>
+                <div className="w-2 h-2 bg-tc-amber rounded-full mt-2 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Exclusive Job Alerts</h3>
-                  <p className="text-white/70">
-                    Be first to know about high-paying opportunities in your field
+                  <p className="text-tc-navy font-sans">
+                    Exclusive job alerts
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-6 h-6 bg-tc-amber/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <Calendar className="w-4 h-4 text-tc-amber" />
-                </div>
+                <div className="w-2 h-2 bg-tc-amber rounded-full mt-2 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Early Course Access</h3>
-                  <p className="text-white/70">
-                    Get notified before cohorts fill up + exclusive discounts
+                  <p className="text-tc-navy font-sans">
+                    Early course access
                   </p>
                 </div>
               </div>
             </div>
-
-            <p className="text-sm text-white/60 italic pt-4">
-              "The weekly tips alone have been worth it. I landed my AML role 
-              using advice from the newsletter!" - Sarah K., AML Analyst
-            </p>
           </div>
 
           {/* Right - Newsletter Form */}
