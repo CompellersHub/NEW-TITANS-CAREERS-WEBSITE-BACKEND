@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Download, FileText, Briefcase, ClipboardList, TrendingUp, BookOpen, CheckCircle } from "lucide-react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { ShareButton } from "@/components/ShareButton";
 
 const Resources = () => {
   const careerGuides = [
@@ -98,13 +99,22 @@ const Resources = () => {
           <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center flex-shrink-0">
             <Icon className="w-6 h-6 text-accent" />
           </div>
-          <Button 
-            size="sm" 
-            className="bg-primary hover:bg-primary-glow text-primary-foreground font-sans"
-          >
-            <Download className="w-4 h-4 mr-2" />
-            Download
-          </Button>
+          <div className="flex gap-2">
+            <ShareButton 
+              title={title}
+              url={window.location.href}
+              description={description}
+              variant="outline"
+              size="sm"
+            />
+            <Button 
+              size="sm" 
+              className="bg-primary hover:bg-primary-glow text-primary-foreground font-sans"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download
+            </Button>
+          </div>
         </div>
         <CardTitle className="font-kanit text-xl mt-4 group-hover:text-accent transition-colors">
           {title}

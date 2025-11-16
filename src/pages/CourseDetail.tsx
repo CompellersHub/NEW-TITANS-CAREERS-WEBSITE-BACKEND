@@ -25,6 +25,7 @@ import { CertificateView } from "@/components/course/CertificateView";
 import { DiscussionForum } from "@/components/course/DiscussionForum";
 import { createAcademySSOLink } from "@/lib/academy-integration";
 import { FloatingCourseCTA } from "@/components/course/FloatingCourseCTA";
+import { ShareButton } from "@/components/ShareButton";
 
 export default function CourseDetail() {
   const { slug } = useParams();
@@ -205,6 +206,14 @@ export default function CourseDetail() {
                     <Users className="h-5 w-5 text-primary" />
                     <span className="text-sm">Expert Instructors</span>
                   </div>
+                  
+                  <ShareButton 
+                    title={course.title}
+                    url={window.location.href}
+                    description={course.description}
+                    variant="outline"
+                    size="sm"
+                  />
                 </div>
               </div>
 

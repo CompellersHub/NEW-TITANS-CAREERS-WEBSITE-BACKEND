@@ -1,9 +1,9 @@
 export const socialMediaLinks = {
-  facebook: 'https://www.facebook.com/profile.php?id=61573103226117',
-  tiktok: 'https://www.tiktok.com/@titans.careers',
+  facebook: 'https://www.facebook.com/profile.php?id=61582875005529',
+  tiktok: 'https://www.tiktok.com/@titanscareers',
   instagram: 'https://www.instagram.com/titans.careers/',
-  linkedin: 'https://www.linkedin.com/in/aml-pro-trainer-22ab41347/',
-  twitter: 'https://x.com/TitansCareers',
+  linkedin: 'https://uk.linkedin.com/in/titans-careers-22ab41347',
+  twitter: 'https://uk.linkedin.com/in/titans-careers-22ab41347',
   youtube: 'https://www.youtube.com/channel/UCNUE2QZemJ4vlsvirzJ71kw'
 };
 
