@@ -121,6 +121,10 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.9)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-20px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -133,6 +137,7 @@ export default {
         "sparkle": "sparkle 1s ease-out forwards",
         "gradient-shift": "gradient-shift 15s ease infinite",
         "gradient-flow": "gradient-flow 20s ease-in-out infinite",
+        "float": "float 3s ease-in-out infinite",
       },
     },
   },
