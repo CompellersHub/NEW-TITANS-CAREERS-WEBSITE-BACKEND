@@ -15,11 +15,11 @@ export const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground border-t border-primary-foreground/10">
       {/* SECTION 1: Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-12 md:py-16 lg:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 xl:gap-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-6 md:py-8 lg:py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 xl:gap-12">
           
           {/* Column 1: Brand & Contact */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <Link to="/" className="inline-flex items-center gap-3 group">
               <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center shadow-lg">
                 <span className="text-primary font-kanit font-bold text-xl">T</span>
@@ -34,55 +34,54 @@ export const Footer = () => {
               </div>
             </Link>
             
-            <p className="text-base text-primary-foreground/80 leading-relaxed font-sans font-normal max-w-sm" style={{ lineHeight: '1.6' }}>
-              Transform your career with practical tech training designed for real-world success. 
-              Join 300+ professionals who've successfully switched careers.
+            <p className="text-primary-foreground/80 text-base leading-snug">
+              Empowering career changers with practical training in AML/KYC Compliance, 
+              Data Analysis, Business Analysis, Cybersecurity, and more. Real skills for real careers.
             </p>
             
             {/* Contact Information */}
-            <div className="space-y-4 pt-2">
-              <a 
-                href="mailto:info@titanscareers.co.uk" 
+            <div className="space-y-2 pt-1">
+              <a
+                href="mailto:info@titanscareers.com"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
                 aria-label="Email Titans Careers"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                  <Mail className="w-5 h-5" />
+                <div className="w-8 h-8 bg-primary-foreground/5 rounded-lg flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                  <Mail className="w-4 h-4" />
                 </div>
-                <span className="text-sm font-sans font-normal">info@titanscareers.co.uk</span>
+                <span className="text-sm">info@titanscareers.com</span>
               </a>
               
-              <a 
-                href="tel:+442039661548" 
+              <a
+                href="tel:+447539434403"
                 className="flex items-center gap-3 text-primary-foreground/80 hover:text-accent transition-colors group"
                 aria-label="Call Titans Careers"
               >
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                  <Phone className="w-5 h-5" />
+                <div className="w-8 h-8 bg-primary-foreground/5 rounded-lg flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                  <Phone className="w-4 h-4" />
                 </div>
-                <span className="text-sm font-sans font-normal">+44 20 3966 1548</span>
+                <span className="text-sm">+44 7539 434403</span>
               </a>
               
-              <div className="flex items-start gap-3 text-primary-foreground/80">
-                <div className="w-10 h-10 rounded-lg bg-primary-foreground/5 flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5" />
+              <div
+                className="flex items-center gap-3 text-primary-foreground/80"
+                aria-label="Titans Careers location"
+              >
+                <div className="w-8 h-8 bg-primary-foreground/5 rounded-lg flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
                 </div>
-                <div className="text-sm font-sans font-normal leading-relaxed">
-                  <p>3rd Floor, 45 Albemarle Street</p>
-                  <p>Mayfair, London, W1S 4JL</p>
-                </div>
+                <span className="text-sm">London, United Kingdom</span>
               </div>
             </div>
           </div>
           
           {/* Column 2: Navigation */}
-          <nav aria-label="Footer navigation" className="space-y-8">
+          <nav aria-label="Footer navigation" className="space-y-5">
+            
             {/* Our Courses Section */}
-            <div className="space-y-5">
-              <h2 className="text-accent font-kanit font-bold text-lg tracking-tight">
-                Our Courses
-              </h2>
-              <ul className="space-y-3">
+            <div className="space-y-3">
+              <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Our Courses</h2>
+              <ul className="space-y-2">
                 <li>
                   <Link 
                     to="/courses/aml-kyc-compliance" 
@@ -143,11 +142,9 @@ export const Footer = () => {
             </div>
 
             {/* Company Section */}
-            <div className="space-y-5">
-              <h2 className="text-accent font-kanit font-bold text-lg tracking-tight">
-                Company
-              </h2>
-              <ul className="space-y-3">
+            <div className="space-y-3">
+              <h2 className="text-accent font-kanit font-bold text-lg leading-tight">Company</h2>
+              <ul className="space-y-2">
                 <li>
                   <Link 
                     to="/about" 
@@ -193,12 +190,12 @@ export const Footer = () => {
           </nav>
           
           {/* Column 3: Stay Connected */}
-          <div className="space-y-6">
-            <h2 className="text-accent font-kanit font-bold text-lg tracking-tight">
+          <div className="space-y-4">
+            <h2 className="text-accent font-kanit font-bold text-lg leading-tight">
               Stay Connected
             </h2>
             
-            <p className="text-sm text-primary-foreground/80 leading-relaxed font-sans font-normal" style={{ lineHeight: '1.6' }}>
+            <p className="text-sm text-primary-foreground/80 leading-snug">
               Get weekly career tips, course updates, and exclusive job opportunities for career changers.
             </p>
             
@@ -212,12 +209,12 @@ export const Footer = () => {
             </p>
             
             {/* Social Media Section */}
-            <div className="space-y-4 pt-2">
-              <h3 className="text-primary-foreground font-sans font-semibold text-sm">
+            <div className="space-y-3 pt-1">
+              <h3 className="text-primary-foreground font-sans font-semibold text-sm leading-tight">
                 Follow Our Journey
               </h3>
               
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 {socialMediaDisplay.map((social) => {
                   const Icon = socialIcons[social.icon as keyof typeof socialIcons];
                   return (
@@ -245,10 +242,10 @@ export const Footer = () => {
 
       {/* SECTION 2: Bottom Bar (Legal + Copyright) */}
       <div className="border-t border-primary-foreground/10 bg-primary-foreground/5">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-4 md:py-5">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 text-center md:text-left">
+        <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-12 py-2 md:py-3">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 text-center md:text-left">
             {/* Legal Links */}
-            <nav aria-label="Legal links" className="flex flex-wrap justify-center md:justify-start items-center gap-x-6 gap-y-2">
+            <nav aria-label="Legal links" className="flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-1">
               <Link 
                 to="/privacy-policy" 
                 className="text-sm text-primary-foreground/70 hover:text-accent transition-colors font-sans font-normal"
@@ -272,11 +269,11 @@ export const Footer = () => {
             </nav>
             
             {/* Copyright + Registration */}
-            <div className="flex flex-col gap-2 text-center md:text-right">
-              <p className="text-sm text-primary-foreground/70 font-sans font-normal">
+            <div className="flex flex-col gap-1 text-center md:text-right">
+              <p className="text-sm text-primary-foreground/70 leading-tight">
                 © {new Date().getFullYear()} <span className="text-accent font-semibold font-kanit tracking-wide">TITANS CAREERS</span>. All rights reserved.
               </p>
-              <p className="text-xs text-primary-foreground/60 font-sans font-normal">
+              <p className="text-xs text-primary-foreground/60 leading-tight">
                 Company No. 16017935 • FCA No. 675283 • UKRLP No. 10104588 • ICO Reg. ZB954438
               </p>
             </div>
