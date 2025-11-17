@@ -2950,6 +2950,18 @@ export type Database = {
       }
     }
     Views: {
+      assignee_workload: {
+        Row: {
+          active_count: number | null
+          assigned_to: string | null
+          assignee_email: string | null
+          avg_resolution_hours: number | null
+          overdue_count: number | null
+          resolved_count: number | null
+          total_assigned: number | null
+        }
+        Relationships: []
+      }
       daily_submission_trends: {
         Row: {
           high_priority_count: number | null
@@ -2979,25 +2991,22 @@ export type Database = {
       }
       form_type_distribution: {
         Row: {
+          avg_resolution_hours: number | null
           form_type: string | null
           in_progress_count: number | null
           new_count: number | null
-          overdue_count: number | null
-          resolution_rate: number | null
           resolved_count: number | null
-          total_count: number | null
+          total_submissions: number | null
         }
         Relationships: []
       }
       submission_metrics_by_assignee: {
         Row: {
           assigned_to: string | null
-          assignee_email: string | null
           avg_resolution_hours: number | null
+          in_progress_count: number | null
           overdue_count: number | null
           resolved_count: number | null
-          sla_compliance_rate: number | null
-          sla_met_count: number | null
           total_assigned: number | null
         }
         Relationships: []
@@ -3032,8 +3041,8 @@ export type Database = {
         Row: {
           avg_resolution_hours: number | null
           resolved_count: number | null
-          tag_name: string | null
-          usage_count: number | null
+          tag: string | null
+          tag_count: number | null
         }
         Relationships: []
       }
@@ -3056,25 +3065,19 @@ export type Database = {
       }
       user_order_history: {
         Row: {
-          bank_transfer_status: string | null
           course_slug: string | null
           course_title: string | null
           customer_email: string | null
           display_status: string | null
           expires_at: string | null
-          final_price: number | null
           id: string | null
-          installment_plan: Json | null
           payment_metadata: Json | null
           payment_method: string | null
           payment_proof_urls: string[] | null
-          payment_provider_reference: string | null
           payment_reference: string | null
-          payment_status: string | null
           price: number | null
           purchase_date: string | null
           verified_at: string | null
-          voucher_code: string | null
         }
         Relationships: []
       }
@@ -3103,15 +3106,15 @@ export type Database = {
       generate_certificate_number: { Args: never; Returns: string }
       generate_cohort_events:
         | {
+            Args: { p_course_slug: string; p_months_ahead?: number }
+            Returns: undefined
+          }
+        | {
             Args: {
               p_course_slug: string
               p_course_title: string
               p_months_ahead?: number
             }
-            Returns: undefined
-          }
-        | {
-            Args: { p_course_slug: string; p_months_ahead?: number }
             Returns: undefined
           }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
