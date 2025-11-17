@@ -157,19 +157,23 @@ const Blog = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-20 md:py-28">
-        <div className="container max-w-7xl">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
-            <Badge className="bg-accent/20 text-accent border-accent/30 font-sans">
-              <BookOpen className="w-3 h-3 mr-2" />
+      <section className="relative bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white py-20 md:py-28 overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.03]"></div>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-tc-amber/8 rounded-full blur-[140px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-tc-gold/8 rounded-full blur-[140px]" />
+        
+        <div className="container max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-3xl mx-auto text-center space-y-8 animate-fade-in">
+            <Badge className="bg-tc-amber/20 text-tc-amber border-tc-amber/30 backdrop-blur-sm px-6 py-2 text-sm font-semibold">
+              <BookOpen className="w-4 h-4 mr-2" />
               CAREER INSIGHTS
             </Badge>
             
-            <h1 className="font-kanit text-4xl md:text-6xl font-bold">
-              Learn. Grow. <span className="text-accent">Succeed.</span>
+            <h1 className="font-kanit text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
+              Learn. Grow. <span className="text-tc-amber">Succeed.</span>
             </h1>
             
-            <p className="font-sans text-xl text-primary-foreground/80 leading-relaxed">
+            <p className="font-sans text-xl md:text-2xl text-white/90 leading-relaxed">
               Practical career advice, industry insights, and expert tips to help you 
               break into high-paying professional roles.
             </p>

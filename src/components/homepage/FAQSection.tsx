@@ -34,14 +34,14 @@ const faqs = [
 
 export const FAQSection = () => {
   return (
-    <section className="py-20 md:py-28 bg-muted/30">
-      <div className="container px-4">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-kanit text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Frequently Asked Questions
+    <section className="py-16 md:py-24 lg:py-32 bg-white">
+      <div className="container max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 md:mb-20 space-y-6 animate-fade-in">
+          <h2 className="font-kanit text-3xl md:text-4xl lg:text-6xl font-bold text-tc-navy">
+            Got <span className="text-tc-amber">Questions?</span>
           </h2>
-          <p className="font-sans text-xl text-muted-foreground max-w-2xl mx-auto">
-            Got questions? We've got answers.
+          <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Find answers to the most common questions about our courses
           </p>
         </div>
         
@@ -51,9 +51,9 @@ export const FAQSection = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="bg-background rounded-2xl border border-border shadow-sm px-6 py-2 data-[state=open]:shadow-md transition-shadow"
+                className="bg-card rounded-2xl border border-border/50 shadow-lg px-6 py-2 data-[state=open]:shadow-2xl data-[state=open]:border-tc-amber/30 transition-all duration-400"
               >
-                <AccordionTrigger className="text-left text-lg font-kanit font-semibold text-primary hover:text-accent hover:no-underline">
+                <AccordionTrigger className="text-left text-lg font-kanit font-semibold text-tc-navy hover:text-tc-amber hover:no-underline transition-colors duration-300">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="font-sans text-muted-foreground leading-relaxed pt-2 pb-4">
