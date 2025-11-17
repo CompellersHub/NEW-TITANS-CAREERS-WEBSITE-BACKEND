@@ -3106,15 +3106,15 @@ export type Database = {
       generate_certificate_number: { Args: never; Returns: string }
       generate_cohort_events:
         | {
-            Args: { p_course_slug: string; p_months_ahead?: number }
-            Returns: undefined
-          }
-        | {
             Args: {
               p_course_slug: string
               p_course_title: string
               p_months_ahead?: number
             }
+            Returns: undefined
+          }
+        | {
+            Args: { p_course_slug: string; p_months_ahead?: number }
             Returns: undefined
           }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
