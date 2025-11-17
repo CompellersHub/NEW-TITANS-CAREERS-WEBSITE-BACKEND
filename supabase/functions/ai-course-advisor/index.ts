@@ -124,28 +124,57 @@ serve(async (req) => {
     ];
 
     // Call Lovable AI
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+
+    // Use Gemini by default, fallback to OpenAI
+    const useGemini = !!GEMINI_API_KEY;
+    const API_KEY = useGemini ? GEMINI_API_KEY : OPENAI_API_KEY;
+    
+    if (!API_KEY) {
+      throw new Error("No AI API key configured");
     }
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: aiMessages,
-        temperature: 0.8,
-        max_tokens: 500,
-      }),
-    });
+    let response;
+    if (useGemini) {
+      // Gemini API format
+      const geminiMessages = aiMessages.slice(1).map((msg: any) => ({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content }]
+      }));
+      
+      response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: COURSES_CONTEXT }] },
+          contents: geminiMessages,
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 500,
+          }
+        }),
+      });
+    } else {
+      // OpenAI API format
+      response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          messages: aiMessages,
+          temperature: 0.8,
+          max_completion_tokens: 500,
+        }),
+      });
+    }
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Lovable AI error:", response.status, errorText);
+      console.error("AI API error:", response.status, errorText);
       
       if (response.status === 429) {
         return new Response(
@@ -165,7 +194,9 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const aiResponse = data.choices[0].message.content;
+    const aiResponse = useGemini 
+      ? data.candidates[0].content.parts[0].text
+      : data.choices[0].message.content;
 
     // Track the conversation
     const userMessage = messages[messages.length - 1].content;
