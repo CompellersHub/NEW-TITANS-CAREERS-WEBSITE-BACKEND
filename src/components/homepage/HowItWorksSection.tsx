@@ -25,13 +25,13 @@ const steps = [
 
 export const HowItWorksSection = () => {
   return (
-    <section className="py-20 md:py-28 bg-background">
-      <div className="container px-4">
-        <div className="text-center mb-16 animate-fade-in">
-          <h2 className="font-kanit text-4xl md:text-5xl font-bold mb-6 text-primary">
-            How It Works
+    <section className="py-16 md:py-24 lg:py-32 bg-tc-navy/[0.02]">
+      <div className="container max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16 md:mb-20 space-y-6 animate-fade-in">
+          <h2 className="font-kanit text-3xl md:text-4xl lg:text-6xl font-bold text-tc-navy">
+            Your Journey to <span className="text-tc-amber">Success</span>
           </h2>
-          <p className="font-sans text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Four simple steps to transform your career with practical training
           </p>
         </div>
@@ -43,19 +43,19 @@ export const HowItWorksSection = () => {
               className="relative group animate-slide-up"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="bg-card rounded-2xl p-8 border border-border shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="bg-card rounded-2xl p-8 border border-border/50 shadow-lg hover:shadow-2xl hover:border-tc-amber/30 transition-all duration-400 h-full">
                 {/* Step Number */}
-                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-accent rounded-full flex items-center justify-center text-white font-kanit font-bold text-lg shadow-accent">
+                <div className="absolute -top-4 -left-4 w-10 h-10 bg-gradient-to-br from-tc-amber to-tc-gold rounded-full flex items-center justify-center text-white font-kanit font-bold text-lg shadow-amber-glow">
                   {index + 1}
                 </div>
                 
                 {/* Icon */}
-                <div className="w-16 h-16 bg-accent/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <step.icon className="w-8 h-8 text-accent" />
+                <div className="w-16 h-16 bg-tc-amber/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-amber-glow transition-all duration-400">
+                  <step.icon className="w-8 h-8 text-tc-amber" />
                 </div>
                 
                 {/* Content */}
-                <h3 className="font-kanit text-xl font-bold mb-3 text-primary">
+                <h3 className="font-kanit text-xl font-bold mb-3 text-tc-navy group-hover:text-tc-amber transition-colors duration-300">
                   {step.title}
                 </h3>
                 <p className="font-sans text-muted-foreground leading-relaxed">

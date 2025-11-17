@@ -28,25 +28,24 @@ export function UpcomingEvents() {
   if (isLoading || !events || events.length === 0) return null;
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-background via-secondary/20 to-background relative overflow-hidden">
+    <section className="py-16 md:py-24 lg:py-32 bg-tc-navy/[0.02] relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute top-20 left-10 w-96 h-96 bg-tc-amber/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-tc-gold/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container mx-auto relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-block mb-6 px-4 py-2 bg-accent/10 rounded-full border border-accent/30">
-            <span className="text-accent font-bold text-sm tracking-wide uppercase">
-              Upcoming Cohorts
-            </span>
-          </div>
+      <div className="container max-w-7xl px-4 sm:px-6 lg:px-8 mx-auto relative z-10">
+        <div className="text-center mb-16 md:mb-20 space-y-6 animate-fade-in">
+          <Badge className="bg-tc-navy/10 text-tc-navy border-tc-navy/20 font-semibold px-6 py-2 text-sm">
+            <Calendar className="w-4 h-4 mr-2" />
+            UPCOMING COHORTS
+          </Badge>
           
-          <h2 className="font-kanit font-bold text-primary mb-4" style={{ fontSize: 'clamp(28px, 4vw, 40px)' }}>
-            Next Intakes Starting Soon
+          <h2 className="font-kanit text-3xl md:text-4xl lg:text-6xl font-bold text-tc-navy">
+            Join Our Next <span className="text-tc-amber">Cohort</span>
           </h2>
           
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+          <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             2 cohorts every month. Secure your spot in the next available intake.
           </p>
         </div>
@@ -58,27 +57,27 @@ export function UpcomingEvents() {
             return (
               <Card
                 key={event.id}
-                className="group p-6 hover:shadow-xl transition-all duration-300 border-border bg-card relative overflow-hidden"
+                className="group hover-lift p-6 border-2 border-border/50 hover:border-tc-amber/30 shadow-lg hover:shadow-2xl transition-all duration-400 bg-card relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-accent opacity-10 rounded-bl-full" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-tc-amber/10 to-tc-gold/5 rounded-bl-full" />
                 
                 <div className="relative z-10">
-                  <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
+                  <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">
                     Cohort {event.cohort_number}
                   </Badge>
 
-                  <h3 className="font-kanit font-bold text-lg text-primary mb-2 line-clamp-2">
+                  <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
                     {config?.displayName || event.title}
                   </h3>
 
                   <div className="space-y-2 mb-6">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 text-accent" />
+                      <Calendar className="h-4 w-4 text-tc-amber" />
                       <span>{format(new Date(event.start_date), "MMM d, yyyy")}</span>
                     </div>
                     
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4 text-accent" />
+                      <Clock className="h-4 w-4 text-tc-amber" />
                       <span>8 weeks</span>
                     </div>
                   </div>

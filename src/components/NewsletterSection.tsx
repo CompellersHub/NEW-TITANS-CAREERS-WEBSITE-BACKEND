@@ -1,23 +1,24 @@
 import { NewsletterSignup } from "./NewsletterSignup";
+import { Badge } from "@/components/ui/badge";
 import { Mail, TrendingUp, Calendar } from "lucide-react";
 
 export const NewsletterSection = () => {
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
-      <div className="container max-w-6xl relative z-10">
+    <section className="py-16 md:py-24 lg:py-32 bg-tc-navy/[0.02] relative overflow-hidden">
+      <div className="container max-w-6xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 bg-white border border-tc-navy px-4 py-2 rounded-full">
-              <Mail className="w-4 h-4 text-tc-navy" />
-              <span className="text-sm font-bold text-tc-navy">FREE WEEKLY INSIGHTS</span>
-            </div>
+          <div className="space-y-6 animate-fade-in">
+            <Badge className="bg-tc-navy/10 text-tc-navy border-tc-navy/20 font-semibold px-4 py-2 inline-flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              FREE WEEKLY INSIGHTS
+            </Badge>
 
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight text-tc-navy">
-              Get Career Tips Delivered to Your Inbox & WhatsApp
+            <h2 className="font-kanit text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-tc-navy">
+              Get Career Tips Delivered to Your <span className="text-tc-amber">Inbox</span>
             </h2>
 
-            <p className="text-lg text-tc-mid-grey leading-relaxed">
+            <p className="font-sans text-lg text-muted-foreground leading-relaxed">
               Weekly guidance on CVs, interviews, compliance and tech roles, plus job alerts and early access to Titans Careers cohorts.
             </p>
 

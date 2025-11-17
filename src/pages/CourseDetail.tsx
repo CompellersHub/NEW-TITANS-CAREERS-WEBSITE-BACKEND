@@ -185,26 +185,26 @@ export default function CourseDetail() {
           <div className="grid lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
               <div>
-                <Badge className="mb-4">{course.category}</Badge>
-                <h1 className="text-5xl font-kanit font-bold mb-4 text-foreground">{course.title}</h1>
-                <p className="text-xl font-sans text-muted-foreground mb-8">{course.tagline}</p>
+                <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">{course.category}</Badge>
+                <h1 className="text-4xl md:text-5xl font-kanit font-bold mb-4 text-tc-navy">{course.title}</h1>
+                <p className="text-xl font-sans text-muted-foreground mb-8 leading-relaxed">{course.tagline}</p>
                 
                 <div className="flex flex-wrap gap-6 mb-8">
                   <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-primary" />
-                    <span className="text-sm">{course.duration}</span>
+                    <Clock className="h-5 w-5 text-tc-amber" />
+                    <span className="text-sm font-medium">{course.duration}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    <span className="text-sm">{course.projectCount} Projects</span>
+                    <BookOpen className="h-5 w-5 text-tc-amber" />
+                    <span className="text-sm font-medium">{course.projectCount} Projects</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Award className="h-5 w-5 text-primary" />
-                    <span className="text-sm">Certificate Included</span>
+                    <Award className="h-5 w-5 text-tc-amber" />
+                    <span className="text-sm font-medium">Certificate Included</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Users className="h-5 w-5 text-primary" />
-                    <span className="text-sm">Expert Instructors</span>
+                    <Users className="h-5 w-5 text-tc-amber" />
+                    <span className="text-sm font-medium">Expert Instructors</span>
                   </div>
                   
                   <ShareButton 
