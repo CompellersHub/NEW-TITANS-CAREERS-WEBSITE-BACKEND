@@ -34,7 +34,6 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const lovableApiKey = Deno.env.get('LOVABLE_API_KEY')!;
     
     const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -73,8 +72,8 @@ serve(async (req) => {
 
     console.log('Historical data prepared, calling ML prediction service...');
 
-    // Use Lovable AI for ML-based predictions
-    const predictions = await generatePredictions(historicalData, lovableApiKey);
+    // Use AI for ML-based predictions
+    const predictions = await generatePredictions(historicalData);
 
     console.log(`Generated ${predictions.length} predictions`);
 
@@ -212,7 +211,18 @@ function prepareHistoricalData(
   };
 }
 
-async function generatePredictions(historicalData: any, lovableApiKey: string): Promise<Prediction[]> {
+async function generatePredictions(historicalData: any): Promise<Prediction[]> {
+  const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
+  const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+
+  // Use Gemini by default for cost-effectiveness
+  const useGemini = !!GEMINI_API_KEY;
+  const API_KEY = useGemini ? GEMINI_API_KEY : OPENAI_API_KEY;
+  
+  if (!API_KEY) {
+    throw new Error("No AI API key configured");
+  }
+
   const prompt = `You are a predictive analytics expert analyzing abandoned checkout recovery campaign performance.
 
 Historical Data Summary:
@@ -253,28 +263,50 @@ Return ONLY a JSON array of predictions with this exact structure:
   }
 ]`;
 
-  const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${lovableApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
-      messages: [
-        { role: 'system', content: 'You are an expert data scientist specializing in predictive analytics for marketing campaigns. Always respond with valid JSON only.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.3,
-    }),
-  });
+  let response;
+  const systemPrompt = "You are an expert data scientist specializing in predictive analytics for marketing campaigns. Always respond with valid JSON only.";
+
+  if (useGemini) {
+    response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [
+          { role: "user", parts: [{ text: prompt }] }
+        ],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 4096,
+        }
+      }),
+    });
+  } else {
+    response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.3,
+      }),
+    });
+  }
 
   if (!response.ok) {
     throw new Error(`ML API error: ${response.status} ${await response.text()}`);
   }
 
   const data = await response.json();
-  const content = data.choices[0].message.content;
+  const content = useGemini 
+    ? data.candidates[0].content.parts[0].text
+    : data.choices[0].message.content;
   
   // Extract JSON from response
   const jsonMatch = content.match(/\[[\s\S]*\]/);
