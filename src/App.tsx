@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { AuthProvider } from "./contexts/AuthContext";
 import { trackPageView } from "./lib/analytics";
 import { TimedCallToAction } from "./components/TimedCallToAction";
+import { Academic3DBackground } from "./components/background/Academic3DBackground";
 import Index from "./pages/Index";
 import Courses from "./pages/Courses";
 import CourseDetail from "./pages/CourseDetail";
@@ -156,8 +157,14 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <TimedCallToAction />
-          <AnimatedRoutes />
+          {/* 3D Academic Background Layer */}
+          <Academic3DBackground intensity="subtle" />
+          
+          {/* Content Layer */}
+          <div className="relative z-10">
+            <TimedCallToAction />
+            <AnimatedRoutes />
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
