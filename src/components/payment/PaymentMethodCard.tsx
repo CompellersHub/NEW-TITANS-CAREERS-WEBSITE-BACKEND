@@ -162,20 +162,7 @@ export const paymentMethods: PaymentMethodOption[] = [
       'UK bank accounts'
     ],
     processingTime: '1-2 business days'
-  },
-  {
-    id: 'payl8r',
-    name: 'Payl8r Payment Plan',
-    tagline: 'Spread the cost over 3-12 months',
-    badge: 'flexible',
-    icon: <DollarSign className="w-6 h-6" />,
-    benefits: [
-      '0% APR available',
-      '3, 6, 9, or 12 month terms',
-      '60 second approval'
-    ],
-    processingTime: '~60 seconds approval',
-    monthlyFrom: '£41.58/month',
-    disclaimer: 'TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a Payl8r who is authorised by the FCA under Ref. Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees. Representative APR 65.5%'
   }
+  // Payl8r temporarily disabled - requires API credentials setup
+  // Uncomment and configure edge function when ready
 ];
