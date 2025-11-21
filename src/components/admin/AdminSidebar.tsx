@@ -126,11 +126,11 @@ export function AdminSidebar() {
       className={isCollapsed ? "w-16" : "w-64"}
       collapsible="icon"
     >
-      <SidebarContent>
+      <SidebarContent className="bg-sidebar">
         {adminRoutes.map((section) => {
           return (
             <SidebarGroup key={section.category}>
-              <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-sidebar-foreground/70"}>
+              <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-white/70 font-semibold"}>
                 {section.category}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -140,11 +140,11 @@ export function AdminSidebar() {
                       <SidebarMenuButton asChild>
                         <NavLink 
                           to={item.url} 
-                          className="hover:bg-sidebar-accent text-sidebar-foreground w-full" 
-                          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                          className="hover:bg-sidebar-accent text-white w-full flex items-center" 
+                          activeClassName="bg-sidebar-accent text-white font-semibold"
                         >
-                          <item.icon className={isCollapsed ? "h-5 w-5" : "mr-2 h-4 w-4"} />
-                          {!isCollapsed && <span className="text-sm">{item.title}</span>}
+                          <item.icon className={isCollapsed ? "h-5 w-5" : "mr-3 h-5 w-5"} />
+                          {!isCollapsed && <span className="text-sm font-medium">{item.title}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
