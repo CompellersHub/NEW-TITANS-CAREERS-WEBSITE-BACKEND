@@ -26,7 +26,7 @@ All colors MUST be HSL.
     --secondary-foreground: 213 69% 13%; /* Titans Navy */
 
     --muted: 0 0% 96%; /* Very light grey */
-    --muted-foreground: 213 69% 13%; /* Titans Navy */
+    --muted-foreground: 220 13% 53%; /* Titans Grey #6B7280 */
 
     --accent: 43 100% 50%; /* Titans Amber */
     --accent-foreground: 0 0% 100%; /* White on Amber */
@@ -78,20 +78,13 @@ All colors MUST be HSL.
     --radius-sm: 0.5rem;
     --radius-lg: 1rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
+    --sidebar-background: 213 69% 13%; /* Titans Navy */
+    --sidebar-foreground: 0 0% 100%; /* White */
+    --sidebar-primary: 43 100% 50%; /* Titans Amber */
+    --sidebar-primary-foreground: 213 69% 13%; /* Navy on Amber */
+    --sidebar-accent: 213 69% 18%; /* Lighter Navy */
+    --sidebar-accent-foreground: 0 0% 100%; /* White */
+    --sidebar-border: 213 69% 20%; /* Navy border */
     --sidebar-ring: 43 100% 50%; /* Titans Amber */
   }
 
@@ -113,7 +106,7 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 100%;
 
     --muted: 213 69% 15%;
-    --muted-foreground: 220 14% 60%; /* Titans Grey lightened for dark mode */
+    --muted-foreground: 220 13% 53%; /* Titans Grey #6B7280 */
 
     --accent: 43 100% 50%;
     --accent-foreground: 213 69% 13%;
@@ -131,14 +124,14 @@ All colors MUST be HSL.
     
     /* Removed gradients - using solid colors only */
     
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 213 69% 13%; /* Titans Navy */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 213 69% 10%; /* Darker Navy */
+    --sidebar-foreground: 0 0% 100%; /* White */
+    --sidebar-primary: 43 100% 50%; /* Titans Amber */
+    --sidebar-primary-foreground: 213 69% 13%; /* Navy on Amber */
+    --sidebar-accent: 213 69% 15%; /* Lighter Navy */
+    --sidebar-accent-foreground: 0 0% 100%; /* White */
+    --sidebar-border: 213 69% 20%; /* Navy border */
+    --sidebar-ring: 43 100% 50%; /* Titans Amber */
   }
 }
 
@@ -281,14 +274,14 @@ All colors MUST be HSL.
 
   @keyframes glow-pulse {
     0%, 100% {
-      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3),
-                  0 0 40px rgba(251, 191, 36, 0.2),
-                  0 0 60px rgba(251, 191, 36, 0.1);
+      box-shadow: 0 0 20px hsl(43 100% 50% / 0.3),
+                  0 0 40px hsl(43 100% 50% / 0.2),
+                  0 0 60px hsl(43 100% 50% / 0.1);
     }
     50% {
-      box-shadow: 0 0 30px rgba(251, 191, 36, 0.5),
-                  0 0 60px rgba(251, 191, 36, 0.3),
-                  0 0 90px rgba(251, 191, 36, 0.2);
+      box-shadow: 0 0 30px hsl(43 100% 50% / 0.5),
+                  0 0 60px hsl(43 100% 50% / 0.3),
+                  0 0 90px hsl(43 100% 50% / 0.2);
     }
   }
 
@@ -381,32 +374,32 @@ All colors MUST be HSL.
 
   /* Premium glassmorphism utilities */
   .glass-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: hsl(0 0% 100% / 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.1);
+    border: 1px solid hsl(0 0% 100% / 0.3);
+    box-shadow: 0 8px 32px -8px hsl(213 69% 13% / 0.1);
   }
 
   .glass-card-dark {
-    background: rgba(11, 31, 59, 0.7);
+    background: hsl(213 69% 13% / 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid hsl(0 0% 100% / 0.1);
   }
 
   .premium-shadow {
     box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.05),
-      0 10px 15px -3px rgba(0, 0, 0, 0.08),
-      0 0 0 1px rgba(0, 0, 0, 0.03);
+      0 4px 6px -1px hsl(213 69% 13% / 0.05),
+      0 10px 15px -3px hsl(213 69% 13% / 0.08),
+      0 0 0 1px hsl(213 69% 13% / 0.03);
   }
 
   .premium-shadow-glow {
     box-shadow: 
-      0 4px 6px -1px rgba(0, 0, 0, 0.05),
-      0 10px 15px -3px rgba(0, 0, 0, 0.08),
-      0 20px 40px -10px rgba(251, 191, 36, 0.2);
+      0 4px 6px -1px hsl(213 69% 13% / 0.05),
+      0 10px 15px -3px hsl(213 69% 13% / 0.08),
+      0 20px 40px -10px hsl(43 100% 50% / 0.2);
   }
 
   .hover-glow {
@@ -415,8 +408,8 @@ All colors MUST be HSL.
 
   .hover-glow:hover {
     box-shadow: 
-      0 8px 16px -4px rgba(0, 0, 0, 0.1),
-      0 16px 48px -12px rgba(251, 191, 36, 0.4);
+      0 8px 16px -4px hsl(213 69% 13% / 0.1),
+      0 16px 48px -12px hsl(43 100% 50% / 0.4);
     transform: translateY(-2px);
   }
   
