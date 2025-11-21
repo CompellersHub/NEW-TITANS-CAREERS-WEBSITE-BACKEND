@@ -69,15 +69,15 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-[#FFB000] font-kanit font-bold text-lg">Our Office</h3>
             <div className="space-y-3">
-              <div className="flex items-start gap-3 text-gray-100">
-                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-gray-100" />
-                <div className="text-sm leading-relaxed text-gray-100">
+              <div className="flex items-start gap-3 text-white">
+                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-white" />
+                <div className="text-sm leading-relaxed text-white">
                   <p>3rd Floor, 45 Albemarle Street</p>
                   <p>Mayfair, London W1S 4JL</p>
                 </div>
               </div>
               
-              <div className="text-gray-100 text-sm leading-relaxed ml-8">
+              <div className="text-white/90 text-sm leading-relaxed ml-8">
                 <p>Mon-Fri: 9AM - 5PM</p>
                 <p>Weekends by appointment</p>
               </div>
