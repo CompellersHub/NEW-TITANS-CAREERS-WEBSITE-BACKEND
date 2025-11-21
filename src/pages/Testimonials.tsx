@@ -1,5 +1,4 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { Button } from "@/components/ui/button";
@@ -80,8 +79,7 @@ const Testimonials = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <PageLayout intensity3D="subtle" show3D={true}>
       
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-20 md:py-28">
@@ -489,10 +487,9 @@ const Testimonials = () => {
         </div>
       </section>
 
-      <Footer />
       <ScrollToTop />
       <KeyboardShortcutsHelper />
-    </div>
+    </PageLayout>
   );
 };
 

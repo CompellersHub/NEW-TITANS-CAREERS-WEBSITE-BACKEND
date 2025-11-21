@@ -1,6 +1,5 @@
 import { PageTransition } from "@/components/PageTransition";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -50,8 +49,7 @@ const Events = () => {
         description="Join our next cohort intake. 2 cohorts every month with flexible scheduling. View upcoming masterclass events and workshop sessions."
         keywords="training events, cohort schedule, masterclass, workshops, online training, professional development"
       />
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <PageLayout intensity3D="medium" show3D={true}>
 
         {/* Hero Section */}
         <section className="relative py-24 px-4 bg-gradient-hero overflow-hidden">
@@ -323,8 +321,7 @@ const Events = () => {
           </div>
         </section>
 
-        <Footer />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 };

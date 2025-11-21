@@ -1,6 +1,5 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { BlogGrid } from "@/components/blog/BlogGrid";
 import { BlogCardSkeleton } from "@/components/blog/BlogCardSkeleton";
 import { PaginationControls } from "@/components/ui/pagination-controls";
@@ -137,12 +136,13 @@ const Blog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageTransition variant="default">
       <SEO 
         title="Career Insights & Training Tips Blog"
         description="Practical career advice, industry insights, and expert tips to help you break into high-paying professional roles. Learn about AML, data analysis, cybersecurity, and more."
         keywords="career blog, professional development tips, AML insights, data analysis advice, cybersecurity news, training tips, career change advice"
       />
+      <PageLayout intensity3D="subtle" show3D={true}>
       
       {/* Pull to Refresh Indicator */}
       {isMobile && (
@@ -153,8 +153,6 @@ const Blog = () => {
           threshold={80}
         />
       )}
-      
-      <Navbar />
       
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white py-20 md:py-28 overflow-hidden">
@@ -327,10 +325,10 @@ const Blog = () => {
         </div>
       </section>
 
-      <Footer />
       <ScrollToTop />
       <KeyboardShortcutsHelper />
-    </div>
+      </PageLayout>
+    </PageTransition>
   );
 };
 
