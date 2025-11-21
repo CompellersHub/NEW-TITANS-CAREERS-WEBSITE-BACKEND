@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { PageLayout } from '@/components/layouts/PageLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { CheckCircle, Clock, AlertCircle, Copy, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -89,8 +88,7 @@ export default function PaymentStatus() {
   }
 
   return (
-    <>
-      <Navbar />
+    <PageLayout intensity3D="subtle" show3D={true}>
       <main className="container py-20">
         <Card className="max-w-2xl mx-auto p-8">
           <h1 className="text-3xl font-bold mb-6">Payment Status</h1>
@@ -237,7 +235,6 @@ export default function PaymentStatus() {
           )}
         </Card>
       </main>
-      <Footer />
-    </>
+    </PageLayout>
   );
 }

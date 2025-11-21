@@ -1,5 +1,4 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -94,7 +93,7 @@ const BlogPost = () => {
     .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-background">
+    <PageLayout intensity3D="subtle" show3D={true}>
       <ReadingProgressBar readTime={post.readTime} />
       <SocialShareButtons 
         title={post.title}
@@ -116,7 +115,6 @@ const BlogPost = () => {
           url: typeof window !== 'undefined' ? window.location.href : ''
         })}
       />
-      <Navbar />
       
       {/* Article Header */}
       <article>
@@ -296,9 +294,7 @@ const BlogPost = () => {
           </section>
         )}
       </article>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
