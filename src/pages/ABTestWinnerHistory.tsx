@@ -8,8 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
 import { TrendingUp, Calendar, Trophy, Users, Download } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
@@ -163,9 +162,8 @@ export default function ABTestWinnerHistory() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8">
         <div className="mb-8 flex justify-between items-start">
           <div>
             <h1 className="text-4xl font-bold mb-2">A/B Test Winner History</h1>
@@ -351,7 +349,6 @@ export default function ABTestWinnerHistory() {
           </CardContent>
         </Card>
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
