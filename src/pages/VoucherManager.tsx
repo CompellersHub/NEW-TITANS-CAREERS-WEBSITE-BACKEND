@@ -14,8 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2, Tag, Calendar, TrendingUp, BarChart3, Sparkles, Download, Mail, LineChart } from "lucide-react";
 import { format } from "date-fns";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { useNavigate } from "react-router-dom";
 import { BulkVoucherForm } from "@/components/voucher/BulkVoucherForm";
 import { EmailDistributionDialog } from "@/components/voucher/EmailDistributionDialog";
@@ -137,10 +136,8 @@ export default function VoucherManager() {
   const isUpcoming = (validFrom: string) => new Date(validFrom) > new Date();
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-20">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8 mt-20">
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-foreground">Voucher Manager</h1>
@@ -361,8 +358,6 @@ export default function VoucherManager() {
         )}
       </main>
       
-      <Footer />
-      
       {selectedVoucherForEmail && (
         <EmailDistributionDialog
           open={emailDialogOpen}
@@ -380,7 +375,7 @@ export default function VoucherManager() {
           voucherCode={selectedVoucherForSchedule.code}
         />
       )}
-    </div>
+    </PageLayout>
   );
 }
 
