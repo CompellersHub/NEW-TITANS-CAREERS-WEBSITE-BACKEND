@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Mail, TrendingUp, Users, MousePointerClick, Loader2, Inbox } from "lucide-react";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useToast } from "@/hooks/use-toast";
@@ -168,8 +167,7 @@ export default function EmailAnalyticsDashboard() {
   if (error && !loading) {
     return (
       <ErrorBoundary onReset={handleRetry}>
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5">
-          <Navbar />
+        <PageLayout intensity3D="subtle" show3D={true}>
           <main className="flex-1 flex items-center justify-center">
             <DataFetchError
               title="Failed to Load Campaign Analytics"
@@ -179,7 +177,7 @@ export default function EmailAnalyticsDashboard() {
               retrying={retrying}
             />
           </main>
-        </div>
+        </PageLayout>
       </ErrorBoundary>
     );
   }
@@ -190,9 +188,8 @@ export default function EmailAnalyticsDashboard() {
 
   return (
     <ErrorBoundary onReset={loadAnalytics}>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+      <PageLayout intensity3D="subtle" show3D={true}>
+        <main className="container mx-auto px-4 py-8 bg-gradient-to-br from-background via-background to-primary/5 animate-fade-in">
         <div className="mb-8 animate-fade-in">
           <h1 className="text-4xl font-kanit font-bold mb-2">Email Campaign Analytics</h1>
           <p className="text-muted-foreground">Monitor your email marketing performance</p>
@@ -370,8 +367,7 @@ export default function EmailAnalyticsDashboard() {
           </CardContent>
         </Card>
       </main>
-      <Footer />
-    </div>
+      </PageLayout>
     </ErrorBoundary>
   );
 }

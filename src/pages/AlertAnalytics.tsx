@@ -4,8 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PageTransition } from "@/components/PageTransition";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -317,15 +316,15 @@ export default function AlertAnalytics() {
   if (!isAdmin) {
     return (
       <PageTransition>
-        <Navbar />
-        <div className="container mx-auto px-4 py-24">
-          <Alert variant="destructive">
-            <AlertDescription>
-              You do not have permission to access this page. Admin access required.
-            </AlertDescription>
-          </Alert>
-        </div>
-        <Footer />
+        <PageLayout intensity3D="subtle" show3D={true}>
+          <div className="container mx-auto px-4 py-24">
+            <Alert variant="destructive">
+              <AlertDescription>
+                You do not have permission to access this page. Admin access required.
+              </AlertDescription>
+            </Alert>
+          </div>
+        </PageLayout>
       </PageTransition>
     );
   }
@@ -334,8 +333,8 @@ export default function AlertAnalytics() {
 
   return (
     <PageTransition>
-      <Navbar />
-      <div className="container mx-auto px-4 py-24">
+      <PageLayout intensity3D="subtle" show3D={true}>
+        <div className="container mx-auto px-4 py-24">
         <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold mb-2">Alert Analytics Dashboard</h1>
@@ -684,7 +683,7 @@ export default function AlertAnalytics() {
           </DialogContent>
         </Dialog>
       </div>
-      <Footer />
+      </PageLayout>
     </PageTransition>
   );
 }
