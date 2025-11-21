@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { ResponseTemplateManager } from "@/components/admin/ResponseTemplateManager";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -30,9 +29,8 @@ const AdminTemplates = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 container py-8">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container py-8">
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -45,8 +43,7 @@ const AdminTemplates = () => {
         </div>
         <ResponseTemplateManager />
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
