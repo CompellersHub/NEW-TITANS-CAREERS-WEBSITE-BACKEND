@@ -22,7 +22,8 @@ import {
   Send,
   CheckCircle,
   History,
-  Shield
+  Shield,
+  HelpCircle
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -39,6 +40,12 @@ import {
 } from "@/components/ui/sidebar";
 
 export const adminRoutes = [
+  {
+    category: "Help & Support",
+    items: [
+      { title: "FAQs", url: "/#faqs", icon: HelpCircle },
+    ],
+  },
   {
     category: "Email Marketing & Campaigns",
     items: [
@@ -123,7 +130,7 @@ export function AdminSidebar() {
         {adminRoutes.map((section) => {
           return (
             <SidebarGroup key={section.category}>
-              <SidebarGroupLabel className={isCollapsed ? "sr-only" : ""}>
+              <SidebarGroupLabel className={isCollapsed ? "sr-only" : "text-sidebar-foreground/70"}>
                 {section.category}
               </SidebarGroupLabel>
               <SidebarGroupContent>
@@ -133,8 +140,8 @@ export function AdminSidebar() {
                       <SidebarMenuButton asChild>
                         <NavLink 
                           to={item.url} 
-                          className="hover:bg-muted/50 w-full" 
-                          activeClassName="bg-muted text-primary font-medium"
+                          className="hover:bg-sidebar-accent text-sidebar-foreground w-full" 
+                          activeClassName="bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                         >
                           <item.icon className={isCollapsed ? "h-5 w-5" : "mr-2 h-4 w-4"} />
                           {!isCollapsed && <span className="text-sm">{item.title}</span>}
