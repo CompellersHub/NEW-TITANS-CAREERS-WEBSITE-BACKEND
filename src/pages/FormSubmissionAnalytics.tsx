@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { NotificationBell } from "@/components/admin/NotificationBell";
 import { AnalyticsPageSkeleton } from "@/components/admin/AnalyticsPageSkeleton";
 import { format, subDays, formatDistanceToNow } from "date-fns";
@@ -321,9 +320,8 @@ const FormSubmissionAnalytics = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
             <Button
@@ -621,9 +619,8 @@ const FormSubmissionAnalytics = () => {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 

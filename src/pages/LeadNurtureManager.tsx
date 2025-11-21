@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -53,7 +54,8 @@ export default function LeadNurtureManager() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <div className="container mx-auto py-8 px-4">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-2">Lead Nurture Automation</h1>
         <p className="text-muted-foreground">
@@ -327,6 +329,7 @@ export default function LeadNurtureManager() {
           </div>
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </PageLayout>
   );
 }

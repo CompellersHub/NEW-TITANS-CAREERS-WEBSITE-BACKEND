@@ -7,8 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Target, TrendingUp, CheckCircle, XCircle, RefreshCw, BarChart3, Brain } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PageTransition } from "@/components/PageTransition";
 import { LineChart, Line, BarChart, Bar, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 import { format } from "date-fns";
@@ -232,8 +231,8 @@ const PredictionAccuracy = () => {
 
   return (
     <PageTransition>
-      <Navbar />
-      <div className="container mx-auto py-8 space-y-6">
+      <PageLayout intensity3D="subtle" show3D={true}>
+        <div className="container mx-auto py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
@@ -487,8 +486,8 @@ const PredictionAccuracy = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
-      <Footer />
+        </div>
+      </PageLayout>
     </PageTransition>
   );
 };
