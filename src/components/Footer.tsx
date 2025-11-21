@@ -22,10 +22,10 @@ export const Footer = () => {
           {/* Column 1: Titans Careers */}
           <div className="space-y-4">
             <h3 className="text-[#FFB000] font-kanit font-bold text-lg">Titans Careers</h3>
-            <p className="text-white/90 text-sm leading-relaxed">
+            <p className="text-white text-sm leading-relaxed">
               Learn what sets professionals apart.
             </p>
-            <p className="text-white/70 text-sm leading-relaxed">
+            <p className="text-gray-300 text-sm leading-relaxed">
               Specializing in high-impact masterclasses for AML/KYC Compliance, Business Analysis/Project Management, Data Analytics, and Cybersecurity professionals.
             </p>
           </div>
@@ -36,7 +36,7 @@ export const Footer = () => {
             <div className="space-y-3">
               <a
                 href="mailto:support@titanscareers.com"
-                className="flex items-center gap-2 text-white/80 hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-[#FFB000] transition-colors group"
                 aria-label="Email Titans Careers"
               >
                 <Mail className="w-4 h-4 flex-shrink-0" />
@@ -45,7 +45,7 @@ export const Footer = () => {
               
               <a
                 href="tel:+442045720475"
-                className="flex items-center gap-2 text-white/80 hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-[#FFB000] transition-colors group"
                 aria-label="Call Titans Careers"
               >
                 <Phone className="w-4 h-4 flex-shrink-0" />
@@ -56,7 +56,7 @@ export const Footer = () => {
                 href="https://wa.me/447539434403"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white/80 hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-2 text-gray-200 hover:text-[#FFB000] transition-colors group"
                 aria-label="WhatsApp Titans Careers"
               >
                 <Phone className="w-4 h-4 flex-shrink-0" />
@@ -69,7 +69,7 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-[#FFB000] font-kanit font-bold text-lg">Our Office</h3>
             <div className="space-y-3">
-              <div className="flex items-start gap-2 text-white/80">
+              <div className="flex items-start gap-2 text-gray-200">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
                 <div className="text-sm leading-relaxed">
                   <p>3rd Floor, 45 Albemarle Street</p>
@@ -77,7 +77,7 @@ export const Footer = () => {
                 </div>
               </div>
               
-              <div className="text-white/70 text-sm leading-relaxed">
+              <div className="text-gray-300 text-sm leading-relaxed">
                 <p>Mon-Fri: 9AM - 5PM</p>
                 <p>Weekends by appointment</p>
               </div>
@@ -91,7 +91,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/courses" 
-                  className="text-sm text-white/80 hover:text-[#FFB000] transition-colors inline-block"
+                  className="text-sm text-gray-200 hover:text-[#FFB000] transition-colors inline-block"
                 >
                   Our Courses
                 </Link>
@@ -99,7 +99,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="text-sm text-white/80 hover:text-[#FFB000] transition-colors inline-block"
+                  className="text-sm text-gray-200 hover:text-[#FFB000] transition-colors inline-block"
                 >
                   About Us
                 </Link>
@@ -107,7 +107,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/contact" 
-                  className="text-sm text-white/80 hover:text-[#FFB000] transition-colors inline-block"
+                  className="text-sm text-gray-200 hover:text-[#FFB000] transition-colors inline-block"
                 >
                   Contact
                 </Link>
@@ -115,7 +115,7 @@ export const Footer = () => {
               <li>
                 <Link 
                   to="/terms-conditions" 
-                  className="text-sm text-white/80 hover:text-[#FFB000] transition-colors inline-block"
+                  className="text-sm text-gray-200 hover:text-[#FFB000] transition-colors inline-block"
                 >
                   Terms & Conditions
                 </Link>
@@ -137,21 +137,21 @@ export const Footer = () => {
               <nav aria-label="Legal links" className="flex flex-wrap justify-center md:justify-start items-center gap-3">
                 <Link 
                   to="/privacy-policy" 
-                  className="text-sm text-white/70 hover:text-[#FFB000] transition-colors"
+                  className="text-sm text-gray-300 hover:text-[#FFB000] transition-colors"
                 >
                   Privacy Policy
                 </Link>
-                <span className="text-white/30">|</span>
+                <span className="text-gray-500">|</span>
                 <Link 
                   to="/refund-policy" 
-                  className="text-sm text-white/70 hover:text-[#FFB000] transition-colors"
+                  className="text-sm text-gray-300 hover:text-[#FFB000] transition-colors"
                 >
                   Refund Policy
                 </Link>
-                <span className="text-white/30">|</span>
+                <span className="text-gray-500">|</span>
                 <Link 
                   to="/terms-conditions" 
-                  className="text-sm text-white/70 hover:text-[#FFB000] transition-colors"
+                  className="text-sm text-gray-300 hover:text-[#FFB000] transition-colors"
                 >
                   Terms & Conditions
                 </Link>
@@ -167,7 +167,7 @@ export const Footer = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[#FFB000]/20 hover:scale-110 transition-all text-white/70 hover:text-[#FFB000]"
+                      className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center hover:bg-[#FFB000]/20 hover:scale-110 transition-all text-gray-300 hover:text-[#FFB000]"
                       aria-label={`Follow Titans Careers on ${social.name}`}
                     >
                       {social.name === "TikTok" ? (
@@ -183,7 +183,7 @@ export const Footer = () => {
             
             {/* FCA Disclosure + PayL8r Logo */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-3 border-t border-white/5">
-              <p className="text-[10px] leading-relaxed text-white/50 max-w-3xl">
+              <p className="text-[10px] leading-relaxed text-gray-400 max-w-3xl">
                 TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a PayL8r who is authorised by the FCA under Ref Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees.
               </p>
               <img 
@@ -196,7 +196,7 @@ export const Footer = () => {
           
           {/* Copyright Strip */}
           <div className="py-3 border-t border-white/5 text-center">
-            <p className="text-xs text-white/50">
+            <p className="text-xs text-gray-400">
               © 2025 Titans Careers. All rights reserved. Built with passion for career transformation.
             </p>
           </div>
