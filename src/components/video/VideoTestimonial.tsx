@@ -24,8 +24,10 @@ export function VideoTestimonial({
   caption
 }: VideoTestimonialProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const handlePlayPause = () => {
+    setHasInteracted(true);
     const video = document.getElementById(`video-${name}`) as HTMLVideoElement;
     if (video) {
       if (isPlaying) {
@@ -44,9 +46,10 @@ export function VideoTestimonial({
           id={`video-${name}`}
           className="w-full h-full object-cover"
           poster={thumbnailUrl}
+          preload={hasInteracted ? 'auto' : 'metadata'}
           onEnded={() => setIsPlaying(false)}
         >
-          <source src={videoUrl} type="video/mp4" />
+          {hasInteracted && <source src={videoUrl} type="video/mp4" />}
         </video>
         
         <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-100 group-hover:opacity-100 transition-opacity">

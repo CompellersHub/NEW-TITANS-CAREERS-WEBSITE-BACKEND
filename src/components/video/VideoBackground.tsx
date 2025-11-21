@@ -16,10 +16,33 @@ export function VideoBackground({
   className = ''
 }: VideoBackgroundProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    // Intersection observer for lazy loading
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '50px' }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+    
     const video = videoRef.current;
     if (!video) return;
 
@@ -33,7 +56,7 @@ export function VideoBackground({
       video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
     };
-  }, []);
+  }, [shouldLoad]);
 
   if (hasError) {
     return (
@@ -49,20 +72,25 @@ export function VideoBackground({
   }
 
   return (
-    <div className={`absolute inset-0 overflow-hidden ${className}`}>
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster={posterUrl}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-          isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        <source src={videoUrl} type="video/mp4" />
-      </video>
+    <div ref={containerRef} className={`absolute inset-0 overflow-hidden ${className}`}>
+      {shouldLoad ? (
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={posterUrl}
+          preload="metadata"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            isLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-gold animate-pulse" />
+      )}
       
       {overlay && (
         <div 
