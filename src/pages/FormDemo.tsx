@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PageTransition } from "@/components/PageTransition";
 import { ValidatedMultiStepForm } from "@/components/forms/ValidatedMultiStepForm";
 import { FormField } from "@/components/forms/FormField";
@@ -257,10 +256,8 @@ export default function FormDemo() {
   };
 
   return (
-    <PageTransition variant="default">
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <PageTransition variant="default">
         <div className="container mx-auto py-16 px-4">
           <div className="max-w-4xl mx-auto space-y-12">
             <div className="text-center space-y-4">
@@ -332,9 +329,7 @@ export default function FormDemo() {
             </div>
           </div>
         </div>
-
-        <Footer />
-      </div>
-    </PageTransition>
+      </PageTransition>
+    </PageLayout>
   );
 }
