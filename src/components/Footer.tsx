@@ -2,7 +2,6 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Twitter, Youtube } 
 import { Link } from "react-router-dom";
 import { NewsletterSignup } from "./NewsletterSignup";
 import { socialMediaDisplay } from "@/config/socialMedia";
-import payl8rLogo from "@/assets/payl8r-logo.png";
 
 export const Footer = () => {
   const socialIcons = {
@@ -186,16 +185,11 @@ export const Footer = () => {
               </div>
             </div>
             
-            {/* FCA Disclosure + PayL8r Logo */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-3 border-t border-white/5">
+            {/* FCA Disclosure */}
+            <div className="pt-3 border-t border-white/5">
               <p className="text-[10px] leading-relaxed text-white/80 max-w-3xl">
                 TITANS CAREERS LIMITED is an Introducer Appointed Representative of Social Money Limited t/a PayL8r who is authorised by the FCA under Ref Number 675283. Credit is subject to creditworthiness and affordability assessments. Missed payments may affect your credit file, future borrowing and incur fees.
               </p>
-              <img 
-                src={payl8rLogo} 
-                alt="PayL8r Finance Partner" 
-                className="h-7 opacity-70 self-center md:self-auto flex-shrink-0" 
-              />
             </div>
           </div>
           
