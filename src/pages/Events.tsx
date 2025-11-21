@@ -23,6 +23,7 @@ const Events = () => {
         .from("events")
         .select("*")
         .in("status", ["upcoming", "ongoing"]) // Exclude archived and completed
+        .gte("start_date", new Date().toISOString()) // Only show future events
         .order("start_date", { ascending: true })
         .limit(50); // Increased to ensure all 7 courses × 2 cohorts + buffer
 
