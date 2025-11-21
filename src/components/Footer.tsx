@@ -69,13 +69,18 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-[#FFB000] font-kanit font-bold text-lg">Our Office</h3>
             <div className="space-y-3">
-              <div className="flex items-start gap-3 text-white">
+              <a
+                href="https://www.google.com/maps?q=3rd+Floor,+45+Albemarle+Street,+Mayfair,+London,+W1S+4JL,+United+Kingdom"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 text-white hover:text-[#FFB000] transition-colors"
+                aria-label="View Titans Careers office on Google Maps"
+              >
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-white" />
                 <div className="text-sm leading-relaxed text-white">
-                  <p>3rd Floor, 45 Albemarle Street</p>
-                  <p>Mayfair, London W1S 4JL</p>
+                  <p>3rd Floor, 45 Albemarle Street, Mayfair, London, W1S 4JL, United Kingdom.</p>
                 </div>
-              </div>
+              </a>
               
               <div className="text-white/90 text-sm leading-relaxed ml-8">
                 <p>Mon-Fri: 9AM - 5PM</p>
