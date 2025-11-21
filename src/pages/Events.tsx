@@ -197,7 +197,7 @@ const Events = () => {
                                       borderColor: 'transparent'
                                     }}
                                   >
-                                    Cohort {event.cohort_number}
+                                    {metadata?.month_name || format(new Date(event.start_date), "MMMM")} Cohort
                                   </Badge>
                                   <Badge 
                                     variant="outline" 
@@ -212,7 +212,7 @@ const Events = () => {
                                 </h4>
                                 
                                 <p className="text-sm text-muted-foreground mb-4">
-                                  {event.title.replace(config?.displayName + ' - ', '')}
+                                  {event.description}
                                 </p>
 
                                 <div className="space-y-2 mb-5">
@@ -223,7 +223,7 @@ const Events = () => {
                                   
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <Clock className="h-4 w-4 text-[#FFB000]" />
-                                    <span>{durationWeeks} weeks • {sessionDay}s • {sessionTime}</span>
+                                    <span>{durationWeeks} weeks • {sessionTime} • {sessionDay}s</span>
                                   </div>
 
                                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
