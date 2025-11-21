@@ -36,31 +36,31 @@ export const Footer = () => {
             <div className="space-y-3">
               <a
                 href="mailto:support@titanscareers.com"
-                className="flex items-center gap-2 text-white hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-3 text-gray-100 hover:text-[#FFB000] transition-colors group"
                 aria-label="Email Titans Careers"
               >
-                <Mail className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">support@titanscareers.com</span>
+                <Mail className="w-5 h-5 flex-shrink-0 text-gray-100" />
+                <span className="text-sm text-gray-100">support@titanscareers.com</span>
               </a>
               
               <a
                 href="tel:+442045720475"
-                className="flex items-center gap-2 text-white hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-3 text-gray-100 hover:text-[#FFB000] transition-colors group"
                 aria-label="Call Titans Careers"
               >
-                <Phone className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">+44 20 4572 0475</span>
+                <Phone className="w-5 h-5 flex-shrink-0 text-gray-100" />
+                <span className="text-sm text-gray-100">+44 20 4572 0475</span>
               </a>
               
               <a
                 href="https://wa.me/447539434403"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-white hover:text-[#FFB000] transition-colors group"
+                className="flex items-center gap-3 text-gray-100 hover:text-[#FFB000] transition-colors group"
                 aria-label="WhatsApp Titans Careers"
               >
-                <Phone className="w-4 h-4 flex-shrink-0" />
-                <span className="text-sm">WhatsApp: +44 7539 434403</span>
+                <Phone className="w-5 h-5 flex-shrink-0 text-gray-100" />
+                <span className="text-sm text-gray-100">WhatsApp: +44 7539 434403</span>
               </a>
             </div>
           </div>
@@ -69,15 +69,15 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-[#FFB000] font-kanit font-bold text-lg">Our Office</h3>
             <div className="space-y-3">
-              <div className="flex items-start gap-2 text-white">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <div className="text-sm leading-relaxed">
+              <div className="flex items-start gap-3 text-gray-100">
+                <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-gray-100" />
+                <div className="text-sm leading-relaxed text-gray-100">
                   <p>3rd Floor, 45 Albemarle Street</p>
                   <p>Mayfair, London W1S 4JL</p>
                 </div>
               </div>
               
-              <div className="text-white/90 text-sm leading-relaxed">
+              <div className="text-gray-100 text-sm leading-relaxed ml-8">
                 <p>Mon-Fri: 9AM - 5PM</p>
                 <p>Weekends by appointment</p>
               </div>
