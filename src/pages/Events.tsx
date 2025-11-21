@@ -197,7 +197,8 @@ const Events = () => {
                                       borderColor: 'transparent'
                                     }}
                                   >
-                                    {metadata?.month_name || format(new Date(event.start_date), "MMMM")} Cohort
+                                    {metadata?.month_name || format(new Date(event.start_date), "MMMM")}
+                                    {metadata?.cohort_suffix || " Cohort"}
                                   </Badge>
                                   <Badge 
                                     variant="outline" 
