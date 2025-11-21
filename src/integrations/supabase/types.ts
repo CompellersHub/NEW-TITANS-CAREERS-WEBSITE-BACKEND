@@ -3140,7 +3140,7 @@ export type Database = {
         }
         Returns: string
       }
-      maintain_cohort_pipeline: { Args: never; Returns: undefined }
+      maintain_cohort_pipeline: { Args: never; Returns: Json }
       refresh_course_cohorts: {
         Args: { p_course_slug: string; p_months_ahead?: number }
         Returns: undefined
