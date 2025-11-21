@@ -9,8 +9,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Download, Filter } from "lucide-react";
 import { format } from "date-fns";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 
 export default function VoucherExport() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -209,10 +208,8 @@ export default function VoucherExport() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-20">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8 mt-20">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground">Export Vouchers</h1>
           <p className="text-muted-foreground mt-2">Download voucher data for distribution and record-keeping</p>
@@ -345,8 +342,6 @@ export default function VoucherExport() {
           </CardContent>
         </Card>
       </main>
-      
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

@@ -3,8 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { TrendingUp, TrendingDown, DollarSign, Ticket, Users, Target } from "lucide-react";
 import { 
   LineChart, 
@@ -142,10 +141,8 @@ export default function VoucherAnalytics() {
   const activeVouchers = voucherStats?.filter(v => v.usage_count > 0).length || 0;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-20">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8 mt-20">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground">Voucher Analytics</h1>
           <p className="text-muted-foreground mt-2">Track performance and insights across all voucher campaigns</p>
@@ -508,8 +505,6 @@ export default function VoucherAnalytics() {
           </TabsContent>
         </Tabs>
       </main>
-      
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
