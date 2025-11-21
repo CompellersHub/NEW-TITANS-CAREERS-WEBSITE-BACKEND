@@ -8,8 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Mail, TrendingUp, Eye, MousePointer, RefreshCw } from "lucide-react";
 
 interface Variant {
@@ -170,10 +169,8 @@ export default function EmailABTestDashboard() {
   const bestPerformer = getBestPerformer();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <main className="flex-1 container mx-auto px-4 py-8 mt-20">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8 mt-20">
         <div className="max-w-6xl mx-auto space-y-8">
           <div>
             <h1 className="text-4xl font-bold mb-2">Email A/B Test Dashboard</h1>
@@ -406,8 +403,6 @@ export default function EmailABTestDashboard() {
           </Card>
         </div>
       </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
