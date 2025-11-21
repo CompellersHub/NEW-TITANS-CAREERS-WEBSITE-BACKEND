@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,8 @@ import { AboutPageSkeleton } from "@/components/admin/AboutPageSkeleton";
 import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
+import { ComparisonInfographic } from "@/components/infographics/ComparisonInfographic";
+import { VideoTestimonial } from "@/components/video/VideoTestimonial";
 
 const About = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -81,6 +82,14 @@ const About = () => {
     }
   ];
 
+  const beforeAfterComparison = [
+    { label: "Career Path", before: "Retail Manager", after: "Compliance Officer" },
+    { label: "Annual Salary", before: "£24,000", after: "£45,000" },
+    { label: "Work-Life Balance", before: false, after: true },
+    { label: "Growth Opportunity", before: false, after: true },
+    { label: "Remote Work", before: false, after: true }
+  ];
+
   return (
     <PageTransition variant="slide">
       <SEO 
@@ -89,8 +98,7 @@ const About = () => {
         keywords="about titans training, training company, career transformation, professional training team, practical education"
         structuredData={organizationSchema}
       />
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <PageLayout intensity3D="medium" show3D={true}>
       
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-tc-navy to-tc-navy/95 text-white py-20 md:py-32 relative overflow-hidden">
@@ -237,8 +245,20 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 bg-background">
+      {/* Success Story Comparison */}
+      <section className="py-20 bg-secondary/30 backdrop-blur-sm">
+        <div className="container max-w-7xl">
+          <ComparisonInfographic
+            title="Real Career Transformations"
+            beforeLabel="Before Titans"
+            afterLabel="After Titans"
+            items={beforeAfterComparison}
+          />
+        </div>
+      </section>
+
+      {/* Team Section with Video Testimonials */}
+      <section className="py-20 bg-background/80 backdrop-blur-sm">
         <div className="container max-w-7xl">
           <div className="text-center mb-16 space-y-4">
             <Badge className="bg-accent/10 text-primary border-accent/30">
@@ -257,28 +277,15 @@ const About = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {team.map((member, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-2xl transition-all group">
-                <CardContent className="p-0">
-                  <div className="relative h-72 overflow-hidden">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
-                    <div className="absolute bottom-4 left-4 right-4 text-primary-foreground">
-                      <h3 className="font-kanit text-xl font-bold mb-1">{member.name}</h3>
-                      <p className="font-sans text-accent font-semibold">{member.role}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <p className="font-sans text-muted-foreground leading-relaxed">
-                      {member.bio}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <VideoTestimonial
+                key={index}
+                videoUrl="https://player.vimeo.com/video/example"
+                thumbnailUrl={member.image}
+                name={member.name}
+                role={member.role}
+                company="Titans Training"
+                caption={member.bio}
+              />
             ))}
           </div>
         </div>
@@ -321,10 +328,9 @@ const About = () => {
         </div>
       </section>
 
-      <Footer />
       <ScrollToTop />
       <KeyboardShortcutsHelper />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 };

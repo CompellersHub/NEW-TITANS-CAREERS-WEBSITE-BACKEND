@@ -5,9 +5,8 @@ import { PullToRefreshIndicator } from "@/components/contact/PullToRefreshIndica
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { KeyboardShortcutsHelper } from "@/components/ui/keyboard-shortcuts-helper";
 import { courses } from "@/data/courses";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { SEO } from "@/components/SEO";
 import { usePagination } from "@/hooks/usePagination";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
@@ -115,8 +114,7 @@ export default function Courses() {
         />
       )}
       
-      <div className="min-h-screen bg-white">
-        <Navbar />
+      <PageLayout intensity3D="subtle" show3D={true}>
         <div className="container max-w-7xl mx-auto py-24 md:py-32 px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20 animate-fade-in">
             <h1 className="font-kanit text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-tc-navy leading-tight">
@@ -183,10 +181,9 @@ export default function Courses() {
             />
           )}
         </div>
-        <Footer />
         <ScrollToTop />
         <KeyboardShortcutsHelper />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 }
