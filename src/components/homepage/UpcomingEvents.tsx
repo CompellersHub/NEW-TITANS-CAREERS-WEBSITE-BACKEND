@@ -63,13 +63,13 @@ export function UpcomingEvents() {
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-tc-amber/10 to-tc-gold/5 rounded-bl-full" />
                 
                 <div className="relative z-10">
-                  <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">
-                    Cohort {event.cohort_number}
-                  </Badge>
+                <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">
+                  {(event.metadata as any)?.month_name || format(new Date(event.start_date), "MMMM")} Cohort
+                </Badge>
 
-                  <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
-                    {config?.displayName || event.title}
-                  </h3>
+                <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
+                  {config?.displayName || event.title}
+                </h3>
 
                   <div className="space-y-2 mb-6">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -77,10 +77,10 @@ export function UpcomingEvents() {
                       <span>{format(new Date(event.start_date), "MMM d, yyyy")}</span>
                     </div>
                     
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4 text-tc-amber" />
-                      <span>8 weeks</span>
-                    </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4 text-tc-amber" />
+                    <span>{(event.metadata as any)?.duration_weeks || 8} weeks • {(event.metadata as any)?.session_time || "Evening session"}</span>
+                  </div>
                   </div>
 
                   <Button className="w-full group/btn" asChild>
