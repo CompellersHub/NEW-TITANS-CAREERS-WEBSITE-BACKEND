@@ -1,15 +1,14 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { courses } from "@/data/courses";
 import { CourseEnrollmentButton } from "@/components/payment/CourseEnrollmentButton";
-import { CourseHeroImage } from "@/components/events/CourseHeroImage";
 import { EventDetailAccordion } from "@/components/events/EventDetailAccordion";
 import { StatisticsOverview } from "@/components/events/StatisticsOverview";
+import { VideoBackground } from "@/components/video/VideoBackground";
 import { SkillLogo } from "@/components/homepage/SkillLogo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
@@ -113,8 +112,7 @@ export default function CourseDetail() {
   if (isLoading) {
     return (
       <PageTransition variant="slideUp">
-        <div className="min-h-screen bg-background">
-          <Navbar />
+        <PageLayout intensity3D="subtle" show3D={true}>
           <div className="container mx-auto py-16 px-4">
             <div className="space-y-8">
               <div className="space-y-4">
@@ -135,8 +133,7 @@ export default function CourseDetail() {
               </div>
             </div>
           </div>
-          <Footer />
-        </div>
+        </PageLayout>
       </PageTransition>
     );
   }
@@ -144,14 +141,12 @@ export default function CourseDetail() {
   if (!course) {
     return (
       <PageTransition variant="slideUp">
-        <div className="min-h-screen bg-background">
-          <Navbar />
+        <PageLayout intensity3D="subtle" show3D={true}>
           <div className="container mx-auto py-16 px-4 text-center">
             <h1 className="text-4xl font-bold mb-4">Course not found</h1>
             <p className="text-muted-foreground">The course you're looking for doesn't exist.</p>
           </div>
-          <Footer />
-        </div>
+        </PageLayout>
       </PageTransition>
     );
   }
@@ -170,16 +165,28 @@ export default function CourseDetail() {
           duration: course.duration
         })}
       />
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <PageLayout intensity3D="subtle" show3D={true}>
         <FloatingCourseCTA courseSlug={course.slug} courseTitle={course.title} />
         
-        <CourseHeroImage 
-          src="/placeholder.svg"
-          alt={course.title}
-          title={course.title}
-          subtitle={course.tagline}
-        />
+        <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
+          <VideoBackground
+            videoUrl="https://player.vimeo.com/external/example.mp4"
+            posterUrl="/placeholder.svg"
+            overlay={true}
+            overlayOpacity={0.6}
+          />
+          <div className="relative z-10 text-center text-primary-foreground space-y-4 px-4">
+            <Badge className="mb-4 bg-accent/90 text-accent-foreground border-accent/30 font-semibold">
+              {course.category}
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-kanit font-bold">
+              {course.title}
+            </h1>
+            <p className="text-xl md:text-2xl font-sans max-w-3xl mx-auto">
+              {course.tagline}
+            </p>
+          </div>
+        </section>
         
         <div className="container mx-auto py-16 px-4">
           <div className="grid lg:grid-cols-3 gap-12">
@@ -327,9 +334,7 @@ export default function CourseDetail() {
             </div>
           </div>
         </div>
-        
-        <Footer />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 }

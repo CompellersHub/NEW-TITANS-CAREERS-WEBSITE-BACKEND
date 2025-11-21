@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Navbar } from "@/components/Navbar";
 import { PageTransition } from "@/components/PageTransition";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { HeroSection } from "@/components/homepage/HeroSection";
 import { HowItWorksSection } from "@/components/homepage/HowItWorksSection";
 import { SuccessStoriesSection } from "@/components/homepage/SuccessStoriesSection";
@@ -23,12 +23,15 @@ import { AICourseAdvisor } from "@/components/marketing/AICourseAdvisor";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { useBehaviorTracking } from "@/hooks/useBehaviorTracking";
 import { useNavigationShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { Sparkles, Download } from "lucide-react";
+import { Sparkles, Download, BookOpen } from "lucide-react";
 import { SEO } from "@/components/SEO";
 import { organizationSchema } from "@/lib/structuredData";
 import { UpcomingEvents } from "@/components/homepage/UpcomingEvents";
 import { CompanyLogosCarousel } from "@/components/homepage/CompanyLogosCarousel";
 import { ToolsCarousel } from "@/components/homepage/ToolsCarousel";
+import { StatsInfographic } from "@/components/infographics/StatsInfographic";
+import { ProcessInfographic } from "@/components/infographics/ProcessInfographic";
+import { TrendingUp, Target, Award, Users } from "lucide-react";
 
 const Index = () => {
   const coursesArray = Object.values(courses);
@@ -41,6 +44,20 @@ const Index = () => {
   // Enable keyboard shortcuts
   useNavigationShortcuts();
 
+  const statsData = [
+    { value: 300, label: "Career Switchers", prefix: "", suffix: "+", color: "primary" as const },
+    { value: 85, label: "Job Placement Rate", prefix: "", suffix: "%", color: "accent" as const },
+    { value: 48, label: "Avg Starting Salary", prefix: "£", suffix: "k", color: "gold" as const },
+    { value: 4.8, label: "Student Rating", prefix: "", suffix: "/5", color: "primary" as const }
+  ];
+
+  const processSteps = [
+    { number: 1, title: "Choose Your Path", description: "Select from our proven courses designed for career switchers" },
+    { number: 2, title: "Learn by Doing", description: "Build real projects that employers actually want to see" },
+    { number: 3, title: "Get Job-Ready", description: "Receive career support, CV reviews, and interview prep" },
+    { number: 4, title: "Land Your Role", description: "Join 300+ graduates now working in their dream careers" }
+  ];
+
   return (
     <PageTransition variant="default">
       <SEO 
@@ -49,8 +66,7 @@ const Index = () => {
         keywords="training courses, professional development, career change, AML training, KYC certification, data analysis courses, cybersecurity training, compliance training, tech training"
         structuredData={organizationSchema}
       />
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <PageLayout intensity3D="subtle" show3D={true}>
         
         <ExitIntentPopup />
         <SocialProofNotifications />
@@ -61,8 +77,14 @@ const Index = () => {
         </ErrorBoundary>
         
         <HeroSection />
+
+        <section className="py-16 px-4 bg-background/80 backdrop-blur-sm relative">
+          <div className="container mx-auto">
+            <StatsInfographic stats={statsData} columns={4} />
+          </div>
+        </section>
         
-        <section className="py-20 md:py-28 px-4 bg-secondary relative overflow-hidden">
+        <section className="py-20 md:py-28 px-4 bg-secondary/50 backdrop-blur-sm relative overflow-hidden">
           <div className="container mx-auto relative z-10">
             <div className="text-center mb-16 animate-fade-in">
               <div className="inline-block mb-6 px-4 py-2 bg-accent/10 rounded-full border border-accent/30">
@@ -129,8 +151,11 @@ const Index = () => {
         
         <UpcomingEvents />
         
-        <div id="how-it-works">
-          <HowItWorksSection />
+        <div id="how-it-works" className="bg-background/80 backdrop-blur-sm">
+          <ProcessInfographic 
+            title="Your Journey to a New Career"
+            steps={processSteps}
+          />
         </div>
         
         <div id="success-stories">
@@ -152,10 +177,9 @@ const Index = () => {
         <NewsletterSection />
         
         <CTA />
-        <Footer />
         <ScrollToTop />
         <KeyboardShortcutsHelper />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 };

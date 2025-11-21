@@ -6,7 +6,7 @@ interface ProcessStep {
   number: number;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
 }
 
 interface ProcessInfographicProps {
