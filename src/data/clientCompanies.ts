@@ -47,9 +47,9 @@ export const clientCompanies = [
   // Insurance
   { name: 'Aviva', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Aviva_Logo.svg/320px-Aviva_Logo.svg.png' },
   { name: 'Legal & General', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Legal_%26_General_logo.svg/320px-Legal_%26_General_logo.svg.png' },
-  { name: 'Prudential', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Prudential_plc_logo.svg/320px-Prudential_plc_logo.svg.png' },
-  { name: 'Allianz', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Allianz_logo.svg/320px-Allianz_logo.svg.png' },
-  { name: 'AXA', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/AXA_Logo.svg/320px-AXA_Logo.svg.png' },
+  { name: 'Prudential', category: 'Insurance', logo: 'https://logo.clearbit.com/prudential.co.uk' },
+  { name: 'Allianz', category: 'Insurance', logo: 'https://logo.clearbit.com/allianz.com' },
+  { name: 'AXA', category: 'Insurance', logo: 'https://logo.clearbit.com/axa.com' },
   { name: 'Zurich Insurance', category: 'Insurance', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Zurich_Logo.svg/320px-Zurich_Logo.svg.png' },
   
   // Big 4 Accounting & Consulting
@@ -59,16 +59,16 @@ export const clientCompanies = [
   { name: 'KPMG', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/KPMG_logo.svg/320px-KPMG_logo.svg.png' },
   
   // Management Consulting
-  { name: 'McKinsey & Company', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/McKinsey_and_Company_Logo.svg/320px-McKinsey_and_Company_Logo.svg.png' },
-  { name: 'BCG', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Boston_Consulting_Group_2020_logo.svg/320px-Boston_Consulting_Group_2020_logo.svg.png' },
-  { name: 'Bain & Company', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Bain_%26_Company_logo.svg/320px-Bain_%26_Company_logo.svg.png' },
+  { name: 'McKinsey & Company', category: 'Consulting', logo: 'https://logo.clearbit.com/mckinsey.com' },
+  { name: 'BCG', category: 'Consulting', logo: 'https://logo.clearbit.com/bcg.com' },
+  { name: 'Bain & Company', category: 'Consulting', logo: 'https://logo.clearbit.com/bain.com' },
   { name: 'Accenture', category: 'Consulting', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/320px-Accenture.svg.png' },
   
   // Investment & Asset Management
-  { name: 'BlackRock', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Blackrock_Logo.svg/320px-Blackrock_Logo.svg.png' },
-  { name: 'Vanguard', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/The_Vanguard_Group_logo.svg/320px-The_Vanguard_Group_logo.svg.png' },
-  { name: 'Fidelity', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Fidelity_Investments_logo.svg/320px-Fidelity_Investments_logo.svg.png' },
-  { name: 'State Street', category: 'Asset Management', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/State_Street_Corporation_logo.svg/320px-State_Street_Corporation_logo.svg.png' },
+  { name: 'BlackRock', category: 'Asset Management', logo: 'https://logo.clearbit.com/blackrock.com' },
+  { name: 'Vanguard', category: 'Asset Management', logo: 'https://logo.clearbit.com/vanguard.com' },
+  { name: 'Fidelity', category: 'Asset Management', logo: 'https://logo.clearbit.com/fidelity.com' },
+  { name: 'State Street', category: 'Asset Management', logo: 'https://logo.clearbit.com/statestreet.com' },
   
   // Tech Companies (Financial Services Focus)
   { name: 'Microsoft', category: 'Technology', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/320px-Microsoft_logo.svg.png' },
