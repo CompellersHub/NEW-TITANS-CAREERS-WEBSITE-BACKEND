@@ -79,6 +79,22 @@ const AnimatedRoutes = () => {
     const title = document.title || 'Titans Training Group';
     trackPageView(location.pathname, title);
   }, [location]);
+
+  // Handle hash scrolling
+  useEffect(() => {
+    if (location.hash) {
+      // Small delay to ensure content is rendered
+      setTimeout(() => {
+        const element = document.querySelector(location.hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    } else {
+      // Scroll to top if no hash
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location]);
   
   return (
     <AnimatePresence mode="wait" initial={false}>
