@@ -139,7 +139,7 @@ const Contact = () => {
               GET IN TOUCH
             </Badge>
             
-            <h1 className="font-kanit text-4xl md:text-5xl lg:text-7xl font-bold leading-tight">
+            <h1 className="font-kanit text-4xl md:text-5xl lg:text-7xl font-bold leading-tight text-white">
               Let's Transform <br />
               <span className="text-tc-amber">Your Career Together</span>
             </h1>
@@ -149,16 +149,18 @@ const Contact = () => {
               Our expert team is here to guide you every step of the way.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4">
+              <div className="flex items-center gap-2 text-sm font-semibold text-white">
                 <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 24-Hour Response
               </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+              <div className="hidden sm:block w-px h-4 bg-white/30"></div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-white">
                 <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 Free Consultation
               </div>
-              <div className="flex items-center gap-2 text-sm font-semibold text-white/80">
+              <div className="hidden sm:block w-px h-4 bg-white/30"></div>
+              <div className="flex items-center gap-2 text-sm font-semibold text-white">
                 <CheckCircle2 className="w-5 h-5 text-tc-amber" />
                 Expert Guidance
               </div>
