@@ -1,5 +1,4 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -133,8 +132,7 @@ const Resources = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <PageLayout intensity3D="subtle" show3D={true}>
       
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-20 md:py-28">
@@ -311,9 +309,7 @@ const Resources = () => {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

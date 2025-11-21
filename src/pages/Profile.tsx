@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { SEO } from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -181,12 +180,12 @@ export default function Profile() {
 
   return (
     <ErrorBoundary>
-      <SEO 
-        title="My Account"
-        description="Manage your account, view orders, and access your courses"
-      />
-      <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20 flex flex-col">
-        <Navbar />
+      <PageLayout intensity3D="subtle" show3D={true}>
+        <SEO 
+          title="My Account"
+          description="Manage your account, view orders, and access your courses"
+        />
+        <div className="bg-gradient-to-b from-background to-secondary/20 flex flex-col">
         
         <div className="flex-1 py-12 px-4">
           <div className="container max-w-6xl mx-auto">
@@ -330,9 +329,8 @@ export default function Profile() {
             </Tabs>
           </div>
         </div>
-
-        <Footer />
-      </div>
+        </div>
+      </PageLayout>
     </ErrorBoundary>
   );
 }

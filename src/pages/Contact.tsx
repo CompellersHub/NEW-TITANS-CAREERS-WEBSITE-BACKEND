@@ -1,5 +1,4 @@
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -111,13 +110,13 @@ const Contact = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 md:pb-0" key={refreshKey}>
-      <SEO 
-        title="Contact Us - Get in Touch with Titans Training Group"
-        description="Have questions about our training courses? Contact Titans Training Group via email, phone, or WhatsApp. We're here to help you start your career transformation journey."
-        keywords="contact titans training, training enquiries, course questions, career advice contact, training support"
-      />
-      <Navbar />
+    <PageLayout intensity3D="medium" show3D={true}>
+      <div className="pb-20 md:pb-0" key={refreshKey}>
+        <SEO 
+          title="Contact Us - Get in Touch with Titans Training Group"
+          description="Have questions about our training courses? Contact Titans Training Group via email, phone, or WhatsApp. We're here to help you start your career transformation journey."
+          keywords="contact titans training, training enquiries, course questions, career advice contact, training support"
+        />
       
       {/* Pull-to-Refresh Indicator */}
       <PullToRefreshIndicator
@@ -455,12 +454,12 @@ const Contact = () => {
         </div>
       </section>
 
-      <Footer />
       <ContactChatbot />
       <MobileContactBar />
       <FeedbackWidget />
       <SocialProofNotifications />
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 
