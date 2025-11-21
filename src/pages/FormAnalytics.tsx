@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PageTransition } from "@/components/PageTransition";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -71,22 +70,18 @@ export default function FormAnalytics() {
   if (loading) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background">
-          <Navbar />
+        <PageLayout intensity3D="subtle" show3D={true}>
           <div className="container mx-auto py-16 px-4">
             <p className="text-center text-muted-foreground">Loading analytics...</p>
           </div>
-          <Footer />
-        </div>
+        </PageLayout>
       </PageTransition>
     );
   }
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        
+      <PageLayout intensity3D="subtle" show3D={true}>
         <div className="container mx-auto py-16 px-4">
           <div className="mb-8">
             <h1 className="text-4xl font-kanit font-bold mb-2">Form Analytics Dashboard</h1>
@@ -319,9 +314,7 @@ export default function FormAnalytics() {
             </Tabs>
           )}
         </div>
-
-        <Footer />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 }
