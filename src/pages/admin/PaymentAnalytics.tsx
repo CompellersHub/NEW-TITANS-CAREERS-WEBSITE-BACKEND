@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import { PageLayout } from '@/components/layouts/PageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { CreditCard, TrendingUp, AlertCircle, DollarSign } from 'lucide-react';
@@ -94,9 +93,8 @@ export default function PaymentAnalytics() {
   });
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="container mx-auto px-4 py-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Payment Analytics</h1>
@@ -283,7 +281,6 @@ export default function PaymentAnalytics() {
           </Card>
         </div>
       </main>
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }
