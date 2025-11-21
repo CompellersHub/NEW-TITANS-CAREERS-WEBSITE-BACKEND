@@ -31,6 +31,7 @@ import { CompanyLogosCarousel } from "@/components/homepage/CompanyLogosCarousel
 import { ToolsCarousel } from "@/components/homepage/ToolsCarousel";
 import { StatsInfographic } from "@/components/infographics/StatsInfographic";
 import { ProcessInfographic } from "@/components/infographics/ProcessInfographic";
+import { LazyInfographic } from "@/components/infographics/LazyInfographic";
 import { TrendingUp, Target, Award, Users } from "lucide-react";
 
 const Index = () => {
@@ -80,7 +81,10 @@ const Index = () => {
 
         <section className="py-16 px-4 bg-background/80 backdrop-blur-sm relative">
           <div className="container mx-auto">
-            <StatsInfographic stats={statsData} columns={4} />
+            <LazyInfographic 
+              component={StatsInfographic}
+              componentProps={{ stats: statsData, columns: 4 }}
+            />
           </div>
         </section>
         
@@ -151,10 +155,10 @@ const Index = () => {
         
         <UpcomingEvents />
         
-        <div id="how-it-works" className="bg-background/80 backdrop-blur-sm">
-          <ProcessInfographic 
-            title="Your Journey to a New Career"
-            steps={processSteps}
+        <div id="how-it-works" className="bg-background/80 backdrop-blur-sm py-16">
+          <LazyInfographic
+            component={ProcessInfographic}
+            componentProps={{ title: "Your Journey to a New Career", steps: processSteps }}
           />
         </div>
         
