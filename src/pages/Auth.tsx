@@ -7,8 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2, LogIn, UserPlus } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { z } from "zod";
 import { passwordSchema } from "@/lib/formSchemas";
 import { PasswordStrengthIndicator } from "@/components/forms/PasswordStrengthIndicator";
@@ -90,10 +89,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
-      
-      <div className="flex-1 flex items-center justify-center py-12 px-4">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <div className="flex flex-col">
+        <div className="flex-1 flex items-center justify-center py-12 px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-tc-navy">Welcome Back</CardTitle>
@@ -205,10 +203,9 @@ const Auth = () => {
             </Tabs>
           </CardContent>
         </Card>
+        </div>
       </div>
-      
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 
