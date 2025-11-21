@@ -12,7 +12,7 @@ export const CTA = () => {
       
       <div className="container max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-kanit font-bold tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-4xl font-kanit font-bold tracking-tight leading-tight text-primary-foreground">
             Ready to Change Your Career?
           </h2>
           
@@ -21,7 +21,7 @@ export const CTA = () => {
           </p>
 
           {/* Benefits line with amber dots */}
-          <div className="flex flex-wrap justify-center items-center gap-3 text-white/80 text-sm leading-snug font-sans">
+          <div className="flex flex-wrap justify-center items-center gap-3 text-primary-foreground text-sm leading-snug font-sans">
             <span>8–16 week live cohorts</span>
             <div className="w-1.5 h-1.5 bg-tc-amber rounded-full" />
             <span>12 months career support</span>
@@ -64,7 +64,7 @@ export const CTA = () => {
           </div>
           
           <div className="pt-3">
-            <p className="text-sm text-tc-light-grey leading-snug">
+            <p className="text-sm text-primary-foreground leading-snug">
               Contact us today to discuss your goals in AML/KYC, Data, Business Analysis, Cybersecurity and more.
             </p>
           </div>
