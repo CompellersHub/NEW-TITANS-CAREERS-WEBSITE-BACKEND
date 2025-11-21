@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { LegalPageSkeleton } from "@/components/admin/LegalPageSkeleton";
 
 const PrivacyPolicy = () => {
@@ -17,10 +16,8 @@ const PrivacyPolicy = () => {
     return <LegalPageSkeleton />;
   }
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
-      
-      <main className="flex-grow pt-24 pb-16">
+    <PageLayout intensity3D="subtle" show3D={true}>
+      <main className="pt-24 pb-16">
         <div className="container px-4 max-w-4xl mx-auto">
           <h1 className="font-kanit font-bold text-4xl md:text-5xl text-primary mb-4">
             Privacy Policy
@@ -143,9 +140,7 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

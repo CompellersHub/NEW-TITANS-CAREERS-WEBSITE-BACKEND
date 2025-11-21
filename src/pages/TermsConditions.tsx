@@ -2,16 +2,17 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { PageLayout } from "@/components/layouts/PageLayout";
 
 export default function TermsConditions() {
   return (
-    <>
+    <PageLayout intensity3D="subtle" show3D={true}>
       <SEO 
         title="Terms and Conditions | Titans Careers"
         description="Read Titans Careers terms and conditions, covering service usage, subscriptions, content policies, intellectual property, and user responsibilities."
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-20">
+      <div className="py-20">
         <div className="container max-w-5xl mx-auto px-4">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Terms and Conditions</h1>
@@ -277,6 +278,6 @@ export default function TermsConditions() {
           </div>
         </div>
       </div>
-    </>
+    </PageLayout>
   );
 }

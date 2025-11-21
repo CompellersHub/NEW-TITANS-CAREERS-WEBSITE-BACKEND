@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -11,16 +10,13 @@ const PayL8rInfo = () => {
   const [exampleCourse] = useState({ price: 1500, title: "Professional Development Course" });
 
   return (
-    <>
+    <PageLayout intensity3D="subtle" show3D={true}>
       <SEO
         title="PayL8r Payment Options - Spread the Cost of Your Training"
         description="Spread the cost of your training with 0% APR. Pay over 3, 6, 9, or 12 months with PayL8r. Simple approval process, instant decisions."
         keywords="payl8r, payment plans, spread cost, 0% apr, installment payments"
       />
-      <div className="min-h-screen flex flex-col bg-background">
-        <Navbar />
-        
-        <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -266,10 +262,7 @@ const PayL8rInfo = () => {
             </CardContent>
           </Card>
         </main>
-
-        <Footer />
-      </div>
-    </>
+    </PageLayout>
   );
 };
 

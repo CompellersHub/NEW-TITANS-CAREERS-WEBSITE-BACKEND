@@ -2,16 +2,17 @@ import { SEO } from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { PageLayout } from "@/components/layouts/PageLayout";
 
 export default function RefundPolicy() {
   return (
-    <>
+    <PageLayout intensity3D="subtle" show3D={true}>
       <SEO 
         title="Refund Policy | Titans Careers"
         description="Learn about Titans Careers refund policy, including your rights to cancel, digital course refunds, and subscription cancellations."
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-20">
+      <div className="py-20">
         <div className="container max-w-4xl mx-auto px-4">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-2">Refund Policy</h1>
@@ -164,6 +165,6 @@ export default function RefundPolicy() {
           </div>
         </div>
       </div>
-    </>
+    </PageLayout>
   );
 }
