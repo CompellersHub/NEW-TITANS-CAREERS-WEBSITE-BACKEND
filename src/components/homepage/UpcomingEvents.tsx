@@ -64,7 +64,8 @@ export function UpcomingEvents() {
                 
                 <div className="relative z-10">
                 <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">
-                  {(event.metadata as any)?.month_name || format(new Date(event.start_date), "MMMM")} Cohort
+                  {(event.metadata as any)?.month_name || format(new Date(event.start_date), "MMMM")}
+                  {(event.metadata as any)?.cohort_suffix || " Cohort"}
                 </Badge>
 
                 <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
