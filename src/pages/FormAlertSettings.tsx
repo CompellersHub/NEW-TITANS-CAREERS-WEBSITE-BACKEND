@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { PageLayout } from "@/components/layouts/PageLayout";
 import { PageTransition } from "@/components/PageTransition";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -66,8 +65,7 @@ export default function FormAlertSettings() {
   if (!isAdmin) {
     return (
       <PageTransition>
-        <div className="min-h-screen bg-background">
-          <Navbar />
+        <PageLayout intensity3D="subtle" show3D={true}>
           <div className="container mx-auto py-16 px-4">
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
@@ -76,17 +74,14 @@ export default function FormAlertSettings() {
               </AlertDescription>
             </Alert>
           </div>
-          <Footer />
-        </div>
+        </PageLayout>
       </PageTransition>
     );
   }
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-background">
-        <Navbar />
-        
+      <PageLayout intensity3D="subtle" show3D={true}>
         <div className="container mx-auto py-16 px-4 max-w-4xl">
           <div className="mb-8">
             <h1 className="text-4xl font-kanit font-bold mb-2 flex items-center gap-2">
@@ -273,9 +268,7 @@ export default function FormAlertSettings() {
             </Alert>
           </div>
         </div>
-
-        <Footer />
-      </div>
+      </PageLayout>
     </PageTransition>
   );
 }
