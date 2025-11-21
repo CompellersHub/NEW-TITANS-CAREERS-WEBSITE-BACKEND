@@ -112,12 +112,12 @@ export const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
             
-            <a href="#how-it-works" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            <Link to="/#how-it-works" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               How It Works
-            </a>
-            <a href="#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
+            </Link>
+            <Link to="/#faqs" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               FAQs
-            </a>
+            </Link>
             <Link to="/contact" className="nav-link-underline text-primary-foreground hover:text-accent transition-colors duration-300 font-sans font-semibold text-sm">
               Contact
             </Link>
@@ -265,12 +265,12 @@ export const Navbar = () => {
               )}
             </div>
             
-            <a href="#how-it-works" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            <Link to="/#how-it-works" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               How It Works
-            </a>
-            <a href="#faqs" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
+            </Link>
+            <Link to="/#faqs" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               FAQs
-            </a>
+            </Link>
             <Link to="/contact" className="block text-primary-foreground hover:text-accent transition-colors font-sans font-semibold text-base py-2">
               Contact
             </Link>
