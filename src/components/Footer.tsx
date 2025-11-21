@@ -73,12 +73,12 @@ export const Footer = () => {
                 href="https://www.google.com/maps?q=3rd+Floor,+45+Albemarle+Street,+Mayfair,+London,+W1S+4JL,+United+Kingdom"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-3 text-white hover:text-[#FFB000] transition-colors"
+                className="flex items-start gap-3 hover:text-[#FFB000] transition-colors"
                 aria-label="View Titans Careers office on Google Maps"
               >
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-white" />
-                <div className="text-sm leading-relaxed text-white">
-                  <p>3rd Floor, 45 Albemarle Street, Mayfair, London, W1S 4JL, United Kingdom.</p>
+                <div className="text-sm leading-relaxed">
+                  <p className="text-white font-medium">3rd Floor, 45 Albemarle Street, Mayfair, London, W1S 4JL, United Kingdom.</p>
                 </div>
               </a>
               
