@@ -51,7 +51,7 @@ All colors MUST be HSL.
     --payment-accent-gradient: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
     
     /* White-based Gradients */
-    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 98%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(213 69% 13%) 0%, hsl(213 69% 18%) 100%);
     --gradient-primary: linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(45 67% 47%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(43 100% 50% / 0.08) 0%, hsl(45 67% 47% / 0.04) 100%);
     --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%) 0%, hsl(0 0% 99%) 100%);
