@@ -77,7 +77,7 @@ export const Footer = () => {
               >
                 <MapPin className="w-5 h-5 mt-0.5 flex-shrink-0 text-white" />
                 <div className="text-sm leading-relaxed">
-                  <p className="text-white font-medium">3rd Floor, 45 Albemarle Street, Mayfair, London, W1S 4JL, United Kingdom.</p>
+                  <p className="text-white">3rd Floor, 45 Albemarle Street, Mayfair, London, W1S 4JL, United Kingdom.</p>
                 </div>
               </a>
               
