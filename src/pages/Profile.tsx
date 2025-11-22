@@ -22,6 +22,7 @@ import {
 import { OrderHistoryTable } from "@/components/profile/OrderHistoryTable";
 import { ActivityLogViewer } from "@/components/profile/ActivityLogViewer";
 import { AccountPreferences } from "@/components/profile/AccountPreferences";
+import { MFAManagement } from "@/components/profile/MFAManagement";
 import { createSecureAcademySSOLink } from "@/lib/academy-integration";
 
 interface Profile {
@@ -296,35 +297,39 @@ export default function Profile() {
               </TabsContent>
 
               <TabsContent value="settings">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Account Settings</CardTitle>
-                    <CardDescription>Manage your account preferences and security</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium">Full Name</label>
-                        <p className="text-lg mt-1">{profile?.full_name || "Not set"}</p>
+                <div className="space-y-6">
+                  <MFAManagement />
+                  
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Account Information</CardTitle>
+                      <CardDescription>Your personal account details</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium">Full Name</label>
+                          <p className="text-lg mt-1">{profile?.full_name || "Not set"}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Phone</label>
+                          <p className="text-lg mt-1">{profile?.phone || "Not set"}</p>
+                        </div>
                       </div>
-                      <div>
-                        <label className="text-sm font-medium">Phone</label>
-                        <p className="text-lg mt-1">{profile?.phone || "Not set"}</p>
-                      </div>
-                    </div>
 
-                    <div className="pt-6 border-t">
-                      <Button
-                        variant="destructive"
-                        onClick={handleSignOut}
-                        className="w-full sm:w-auto"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Sign Out
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <div className="pt-6 border-t">
+                        <Button
+                          variant="destructive"
+                          onClick={handleSignOut}
+                          className="w-full sm:w-auto"
+                        >
+                          <LogOut className="w-4 h-4 mr-2" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
               </TabsContent>
             </Tabs>
           </div>
