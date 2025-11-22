@@ -17,7 +17,8 @@ const Events = () => {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
   const { data: events, isLoading } = useQuery({
-    queryKey: ["events", selectedCourse],
+    // Bump query key version to force fresh fetch of updated cohort dates
+    queryKey: ["events-v2", selectedCourse],
     queryFn: async () => {
       let query = supabase
         .from("events")
