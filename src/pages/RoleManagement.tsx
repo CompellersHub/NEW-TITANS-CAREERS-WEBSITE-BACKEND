@@ -55,10 +55,12 @@ const RoleManagement = () => {
     marketer: "bg-green-500",
   };
 
+  const availableRoles = ["admin", "developer", "support", "marketer"];
+
   const roleDescriptions: Record<string, string> = {
     admin: "Full system access, can manage all users and roles",
+    developer: "Can manage integrations, technical settings, and development features",
     support: "Can manage content and handle user inquiries",
-    developer: "Can manage integrations and technical settings",
     marketer: "Can manage campaigns and marketing content",
   };
 

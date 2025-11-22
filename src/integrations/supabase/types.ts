@@ -3030,6 +3030,14 @@ export type Database = {
         }
         Relationships: []
       }
+      role_descriptions: {
+        Row: {
+          color_scheme: string | null
+          description: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+        }
+        Relationships: []
+      }
       submission_metrics_by_assignee: {
         Row: {
           assigned_to: string | null
@@ -3197,7 +3205,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "developer" | "support" | "marketer"
       discount_type: "percentage" | "fixed_amount"
     }
     CompositeTypes: {
@@ -3326,7 +3334,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "developer", "support", "marketer"],
       discount_type: ["percentage", "fixed_amount"],
     },
   },
