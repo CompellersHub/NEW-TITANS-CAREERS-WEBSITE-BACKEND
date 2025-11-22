@@ -99,3 +99,53 @@ export function getCourseColor(color: string): { background: string; text: strin
     border: color,
   };
 }
+
+/**
+ * Get cohort urgency level and styling based on proximity to start date
+ */
+export function getCohortUrgency(startDate: Date | string) {
+  const now = new Date();
+  const start = new Date(startDate);
+  const daysUntil = Math.ceil((start.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (daysUntil <= 14) {
+    return {
+      level: 'urgent' as const,
+      daysUntil,
+      message: 'Starting Soon!',
+      badgeColor: 'hsl(43 100% 50%)', // Amber
+      badgeBg: 'hsl(43 100% 96%)', // Light amber
+      headerBg: 'linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(39 100% 50%) 100%)', // Amber gradient
+      borderColor: 'hsl(43 100% 50%)',
+      glowEffect: true,
+      ctaBg: 'hsl(39 100% 50%)',
+      ctaText: 'Enroll Now - Limited Spots!'
+    };
+  } else if (daysUntil <= 28) {
+    return {
+      level: 'soon' as const,
+      daysUntil,
+      message: 'Enrolling Now',
+      badgeColor: 'hsl(213 69% 13%)', // Navy
+      badgeBg: 'hsl(0 0% 96%)', // Light grey
+      headerBg: 'hsl(213 69% 13%)', // Standard navy
+      borderColor: 'hsl(213 69% 13%)',
+      glowEffect: false,
+      ctaBg: 'hsl(43 100% 50%)',
+      ctaText: 'Start Course'
+    };
+  } else {
+    return {
+      level: 'future' as const,
+      daysUntil,
+      message: 'Upcoming',
+      badgeColor: 'hsl(220 13% 53%)', // Gray
+      badgeBg: 'hsl(0 0% 96%)', // Light gray
+      headerBg: 'hsl(220 9% 46%)', // Dark gray
+      borderColor: 'hsl(0 0% 82%)',
+      glowEffect: false,
+      ctaBg: 'hsl(43 100% 50%)',
+      ctaText: 'View Details'
+    };
+  }
+}

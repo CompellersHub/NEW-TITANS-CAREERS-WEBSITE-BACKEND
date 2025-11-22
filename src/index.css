@@ -475,4 +475,24 @@ All colors MUST be HSL.
   .interactive-scale:active {
     transform: scale(0.98);
   }
+  
+  /* Urgency Animations for Cohorts */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 4px 6px -1px hsl(43 100% 50% / 0.1);
+    }
+    50% {
+      transform: scale(1.02);
+      box-shadow: 0 10px 15px -3px hsl(43 100% 50% / 0.2);
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+
+  .shadow-amber-200 {
+    box-shadow: 0 4px 6px -1px hsl(43 100% 50% / 0.2), 0 2px 4px -1px hsl(43 100% 50% / 0.1);
+  }
 }
