@@ -47,7 +47,7 @@ export function UpcomingEvents() {
           </h2>
           
           <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            2 cohorts every month. Secure your spot in the next available intake.
+            1 cohort per month. Secure your spot in the next available intake.
           </p>
         </div>
 

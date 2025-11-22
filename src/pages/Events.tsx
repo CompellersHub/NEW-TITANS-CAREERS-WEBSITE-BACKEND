@@ -39,15 +39,15 @@ const Events = () => {
 
   const courses = ["aml-kyc", "crypto-compliance", "data-privacy", "data-analysis", "cybersecurity", "business-analysis", "digital-marketing"];
 
-  const getNextTwoCohorts = (courseSlug: string) => {
-    return events?.filter(e => e.course_slug === courseSlug && e.event_type === "cohort").slice(0, 2) || [];
+  const getNextCohort = (courseSlug: string) => {
+    return events?.filter(e => e.course_slug === courseSlug && e.event_type === "cohort").slice(0, 1) || [];
   };
 
   return (
     <PageTransition>
       <SEO
         title="Upcoming Events & Cohort Schedule | Titans Careers"
-        description="Join our next cohort intake. 2 cohorts every month with flexible scheduling. View upcoming masterclass events and workshop sessions."
+        description="Join our next cohort intake. 1 cohort per month with flexible scheduling. View upcoming masterclass events and workshop sessions."
         keywords="training events, cohort schedule, masterclass, workshops, online training, professional development"
       />
       <PageLayout intensity3D="medium" show3D={true}>
@@ -134,10 +134,10 @@ const Events = () => {
           <div className="container mx-auto">
             <div className="text-center mb-16">
               <h2 className="font-kanit font-bold text-primary mb-4" style={{ fontSize: 'clamp(28px, 4vw, 40px)' }}>
-                Next 2 Cohort Intakes
+                Upcoming Cohorts
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                We run 2 cohorts every month. Secure your spot in the next available intake.
+                We run 1 cohort per month. Secure your spot in the next available intake.
               </p>
             </div>
 
@@ -154,7 +154,7 @@ const Events = () => {
             ) : (
               <div className="space-y-12">
                 {courses.map((courseSlug) => {
-                  const cohorts = getNextTwoCohorts(courseSlug);
+                  const cohorts = getNextCohort(courseSlug);
                   if (cohorts.length === 0) return null;
 
                   const config = getCourseConfig(courseSlug);
@@ -164,7 +164,7 @@ const Events = () => {
                       <h3 className="font-kanit font-bold text-2xl text-primary mb-6">
                         {config?.displayName || courseSlug}
                       </h3>
-                      <div className="grid gap-6 md:grid-cols-2">
+                      <div className="grid gap-6 md:grid-cols-1 max-w-2xl">
                         {cohorts.map((event) => {
                           const metadata = event.metadata as Record<string, any> | null;
                           const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
