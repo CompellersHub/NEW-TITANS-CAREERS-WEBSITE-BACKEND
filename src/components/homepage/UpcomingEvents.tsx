@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { getCourseConfig } from "@/lib/course-config";
+import { getCohortUrgency } from "@/lib/calendar-utils";
 
 export function UpcomingEvents() {
   const { data: allEvents, isLoading } = useQuery({
@@ -26,14 +27,21 @@ export function UpcomingEvents() {
     },
   });
 
-  // Group events by course and take first 2 cohorts per course
+  // Group events by course and take first 2 cohorts per course, sorted by urgency
   const events = allEvents?.reduce((acc, event) => {
     const courseEvents = acc.filter(e => e.course_slug === event.course_slug);
     if (courseEvents.length < 2) {
       acc.push(event);
     }
     return acc;
-  }, [] as typeof allEvents).slice(0, 10); // Max 10 events (5 courses × 2 cohorts)
+  }, [] as typeof allEvents)
+    .sort((a, b) => {
+      const urgencyA = getCohortUrgency(a.start_date);
+      const urgencyB = getCohortUrgency(b.start_date);
+      const urgencyOrder = { urgent: 0, soon: 1, future: 2 };
+      return urgencyOrder[urgencyA.level] - urgencyOrder[urgencyB.level];
+    })
+    .slice(0, 10); // Max 10 events (5 courses × 2 cohorts)
 
   if (isLoading || !events || events.length === 0) return null;
 
@@ -63,23 +71,41 @@ export function UpcomingEvents() {
         <div className="grid gap-6 md:grid-cols-3 mb-8">
           {events.map((event) => {
             const config = getCourseConfig(event.course_slug);
+            const urgency = getCohortUrgency(event.start_date);
             
             return (
               <Card
                 key={event.id}
-                className="group hover-lift p-6 border-2 border-border/50 hover:border-tc-amber/30 shadow-lg hover:shadow-2xl transition-all duration-400 bg-card relative overflow-hidden"
+                className={`group hover-lift p-6 border-2 shadow-lg hover:shadow-2xl transition-all duration-400 bg-card relative overflow-hidden ${
+                  urgency.glowEffect ? 'animate-pulse-subtle shadow-amber-200' : ''
+                }`}
+                style={{
+                  borderColor: urgency.borderColor,
+                  backgroundColor: urgency.level === 'urgent' ? 'hsl(43 100% 96%)' : 'white'
+                }}
               >
+                {urgency.level === 'urgent' && (
+                  <div className="absolute -top-2 -right-2 bg-amber-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-20">
+                    🔥 {urgency.daysUntil} days
+                  </div>
+                )}
+                
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-tc-amber/10 to-tc-gold/5 rounded-bl-full" />
                 
                 <div className="relative z-10">
-                <Badge className="mb-4 bg-tc-amber/10 text-tc-amber border-tc-amber/30 font-semibold">
-                  {(event.metadata as any)?.month_name || format(new Date(event.start_date), "MMMM")}
-                  {(event.metadata as any)?.cohort_suffix || " Cohort"}
-                </Badge>
+                  <Badge 
+                    className={`mb-4 font-semibold ${
+                      urgency.level === 'urgent' 
+                        ? 'bg-amber-500 text-white border-amber-600' 
+                        : 'bg-tc-amber/10 text-tc-amber border-tc-amber/30'
+                    }`}
+                  >
+                    {urgency.message}
+                  </Badge>
 
-                <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
-                  {config?.displayName || event.title}
-                </h3>
+                  <h3 className="font-kanit font-bold text-lg text-tc-navy mb-2 line-clamp-2 group-hover:text-tc-amber transition-colors duration-300">
+                    {config?.displayName || event.title}
+                  </h3>
 
                   <div className="space-y-2 mb-6">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -87,15 +113,20 @@ export function UpcomingEvents() {
                       <span>{format(new Date(event.start_date), "MMM d, yyyy")}</span>
                     </div>
                     
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4 text-tc-amber" />
-                    <span>{(event.metadata as any)?.duration_weeks || 8} weeks • {(event.metadata as any)?.session_time || "Evening session"}</span>
-                  </div>
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-4 w-4 text-tc-amber" />
+                      <span>{(event.metadata as any)?.duration_weeks || 8} weeks • {(event.metadata as any)?.session_time || "Evening session"}</span>
+                    </div>
                   </div>
 
-                  <Button className="w-full group/btn" asChild>
+                  <Button 
+                    className={`w-full group/btn ${
+                      urgency.level === 'urgent' ? 'animate-pulse-subtle' : ''
+                    }`}
+                    asChild
+                  >
                     <Link to={`/course/${event.course_slug}`}>
-                      Enroll Now
+                      {urgency.level === 'urgent' ? 'Enroll Now!' : 'Enroll Now'}
                       <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
