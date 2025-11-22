@@ -103,6 +103,13 @@ export const adminRoutes = [
       { title: "Segment Manager", url: "/admin/segment-manager", icon: Users },
     ],
   },
+  {
+    category: "Events & Cohorts",
+    items: [
+      { title: "Event Management", url: "/admin/event-management", icon: Calendar },
+      { title: "Automation Settings", url: "/admin/automation-settings", icon: Settings },
+    ],
+  },
     {
       category: "Settings & Notifications",
       items: [

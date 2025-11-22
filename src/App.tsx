@@ -68,6 +68,7 @@ import RoleManagement from "./pages/RoleManagement";
 import ContentManager from "./pages/admin/ContentManager";
 import Events from "./pages/Events";
 import EventManagement from "./pages/admin/EventManagement";
+import AutomationSettings from "./pages/admin/AutomationSettings";
 
 const queryClient = new QueryClient();
 
@@ -157,6 +158,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/payment-analytics" element={<PaymentAnalytics />} />
           <Route path="/admin/payment-management" element={<PaymentManagement />} />
           <Route path="/admin/event-management" element={<EventManagement />} />
+          <Route path="/admin/automation-settings" element={<AutomationSettings />} />
           <Route path="/admin/course-inquiries" element={<CourseInquiries />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/payment-status" element={<PaymentStatus />} />
