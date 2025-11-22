@@ -12,6 +12,7 @@ import { z } from "zod";
 import { passwordSchema } from "@/lib/formSchemas";
 import { PasswordStrengthIndicator } from "@/components/forms/PasswordStrengthIndicator";
 import { supabase } from "@/integrations/supabase/client";
+import { MFAVerification } from "@/components/auth/MFAVerification";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -22,7 +23,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, signUp, user, isAdmin } = useAuth();
+  const { signIn, signUp, user, isAdmin, mfaRequired, mfaFactorId, completeMFAVerification } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,7 +45,13 @@ const Auth = () => {
     }
 
     setIsLoading(true);
-    const { error } = await signIn(email, password);
+    const { error, mfaRequired: needsMFA } = await signIn(email, password);
+    
+    if (needsMFA) {
+      // MFA verification will be shown automatically
+      setIsLoading(false);
+      return;
+    }
     
     if (!error) {
       // Check if user is admin after successful login
@@ -68,6 +75,25 @@ const Auth = () => {
     }
   };
 
+  const handleMFAComplete = async () => {
+    completeMFAVerification();
+    
+    // Check if user is admin after successful MFA
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: roles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .single();
+      
+      navigate(roles ? "/admin" : "/");
+    } else {
+      navigate("/");
+    }
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -87,6 +113,27 @@ const Auth = () => {
       navigate("/");
     }
   };
+
+  // Show MFA verification if required
+  if (mfaRequired && mfaFactorId) {
+    return (
+      <PageLayout intensity3D="subtle" show3D={true}>
+        <div className="flex flex-col">
+          <div className="flex-1 flex items-center justify-center py-12 px-4">
+            <MFAVerification 
+              factorId={mfaFactorId}
+              onVerificationComplete={handleMFAComplete}
+              onCancel={() => {
+                completeMFAVerification();
+                setEmail("");
+                setPassword("");
+              }}
+            />
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout intensity3D="subtle" show3D={true}>
