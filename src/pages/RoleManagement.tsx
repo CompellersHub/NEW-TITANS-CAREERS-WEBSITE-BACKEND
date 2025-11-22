@@ -83,27 +83,34 @@ const RoleManagement = () => {
   };
 
   const fetchUsers = async () => {
-    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-    
-    if (authError) throw authError;
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('Not authenticated');
 
-    const usersWithRoles = await Promise.all(
-      authUsers.users.map(async (user) => {
-        const { data: roles } = await supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", user.id);
-        
-        return {
-          id: user.id,
-          email: user.email || "",
-          created_at: user.created_at,
-          roles: roles?.map((r) => r.role) || [],
-        };
-      })
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-user-roles`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ action: 'list_users' }),
+      }
     );
 
-    setUsers(usersWithRoles);
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch users');
+    }
+
+    const { users: usersWithRoles } = await response.json();
+    
+    setUsers(usersWithRoles.map((user: any) => ({
+      id: user.id,
+      email: user.email || "",
+      created_at: user.created_at,
+      roles: user.roles || [],
+    })));
   };
 
   const fetchPermissions = async () => {
@@ -118,28 +125,57 @@ const RoleManagement = () => {
   };
 
   const fetchAuditLog = async () => {
-    const { data, error } = await (supabase as any)
-      .from("role_audit_log")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) throw new Error('Not authenticated');
 
-    if (error) throw error;
-    setAuditLog(data || []);
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-user-roles`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ action: 'get_audit_log' }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch audit log');
+    }
+
+    const { auditLog } = await response.json();
+    setAuditLog(auditLog || []);
   };
 
   const handleGrantRole = async () => {
     if (!selectedUser || !selectedRole) return;
 
     try {
-      const { error } = await (supabase as any)
-        .from("user_roles")
-        .insert({
-          user_id: selectedUser.id,
-          role: selectedRole,
-        });
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
 
-      if (error) throw error;
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-user-roles`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            action: 'grant_role',
+            userId: selectedUser.id,
+            role: selectedRole,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to grant role');
+      }
 
       toast.success(`${selectedRole} role granted to ${selectedUser.email}`);
       setShowGrantDialog(false);
@@ -155,13 +191,29 @@ const RoleManagement = () => {
     if (!userToRevoke) return;
 
     try {
-      const { error} = await (supabase as any)
-        .from("user_roles")
-        .delete()
-        .eq("user_id", userToRevoke.user.id)
-        .eq("role", userToRevoke.role);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error('Not authenticated');
 
-      if (error) throw error;
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/manage-user-roles`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            action: 'revoke_role',
+            userId: userToRevoke.user.id,
+            role: userToRevoke.role,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to revoke role');
+      }
 
       toast.success(`${userToRevoke.role} role revoked from ${userToRevoke.user.email}`);
       setShowRevokeDialog(false);
