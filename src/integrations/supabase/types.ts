@@ -428,6 +428,39 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_config: {
+        Row: {
+          config_key: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_enabled: boolean
+          last_run_at: string | null
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          config_key: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          last_run_at?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          config_key?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_enabled?: boolean
+          last_run_at?: string | null
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bank_transfer_orders: {
         Row: {
           amount: number
@@ -1403,6 +1436,63 @@ export type Database = {
           payment_status?: string | null
           price?: number
           stripe_session_id?: string | null
+        }
+        Relationships: []
+      }
+      event_templates: {
+        Row: {
+          course_slug: string
+          created_at: string
+          day_of_week: number
+          description: string | null
+          duration_minutes: number
+          event_type: string
+          generate_weeks_ahead: number
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          recurrence_pattern: string
+          speaker_name: string | null
+          speaker_role: string | null
+          template_name: string
+          time: string
+          updated_at: string
+        }
+        Insert: {
+          course_slug: string
+          created_at?: string
+          day_of_week: number
+          description?: string | null
+          duration_minutes?: number
+          event_type: string
+          generate_weeks_ahead?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          recurrence_pattern?: string
+          speaker_name?: string | null
+          speaker_role?: string | null
+          template_name: string
+          time: string
+          updated_at?: string
+        }
+        Update: {
+          course_slug?: string
+          created_at?: string
+          day_of_week?: number
+          description?: string | null
+          duration_minutes?: number
+          event_type?: string
+          generate_weeks_ahead?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          recurrence_pattern?: string
+          speaker_name?: string | null
+          speaker_role?: string | null
+          template_name?: string
+          time?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -3137,6 +3227,7 @@ export type Database = {
       can_view_template_performance: { Args: never; Returns: boolean }
       check_and_send_sla_alerts: { Args: never; Returns: undefined }
       check_team_sla_compliance: { Args: never; Returns: undefined }
+      cleanup_old_events: { Args: never; Returns: Json }
       create_test_admin: {
         Args: { test_email?: string; test_password?: string }
         Returns: string
@@ -3155,6 +3246,7 @@ export type Database = {
             Args: { p_course_slug: string; p_months_ahead?: number }
             Returns: undefined
           }
+      generate_weekly_events: { Args: never; Returns: Json }
       get_segment_count: { Args: { segment_id: string }; Returns: number }
       grant_admin_role: { Args: { user_email: string }; Returns: string }
       has_role: {
@@ -3164,6 +3256,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_date_excluded: { Args: { check_date: string }; Returns: boolean }
       is_enrolled_in_course: {
         Args: { p_course_slug: string; p_user_id: string }
         Returns: boolean
