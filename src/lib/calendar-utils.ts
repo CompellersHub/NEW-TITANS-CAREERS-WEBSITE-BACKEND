@@ -113,12 +113,12 @@ export function getCohortUrgency(startDate: Date | string) {
       level: 'urgent' as const,
       daysUntil,
       message: 'Starting Soon!',
-      badgeColor: 'hsl(43 100% 50%)', // Amber
-      badgeBg: 'hsl(43 100% 96%)', // Light amber
-      headerBg: 'linear-gradient(135deg, hsl(43 100% 50%) 0%, hsl(39 100% 50%) 100%)', // Amber gradient
-      borderColor: 'hsl(43 100% 50%)',
-      glowEffect: true,
-      ctaBg: 'hsl(39 100% 50%)',
+      badgeColor: 'hsl(220 13% 53%)', // Medium grey
+      badgeBg: 'hsl(0 0% 96%)', // Light grey
+      headerBg: 'linear-gradient(135deg, hsl(220 10% 75%) 0%, hsl(220 10% 65%) 100%)', // Light grey gradient
+      borderColor: 'hsl(220 10% 70%)',
+      glowEffect: false,
+      ctaBg: 'hsl(220 10% 70%)',
       ctaText: 'Enroll Now - Limited Spots!'
     };
   } else if (daysUntil <= 28) {
