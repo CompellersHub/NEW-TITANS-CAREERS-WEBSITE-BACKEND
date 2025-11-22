@@ -40,7 +40,7 @@ const Events = () => {
   const courses = ["aml-kyc", "crypto-compliance", "data-privacy", "data-analysis", "cybersecurity", "business-analysis", "digital-marketing"];
 
   const getNextCohort = (courseSlug: string) => {
-    return events?.filter(e => e.course_slug === courseSlug && e.event_type === "cohort").slice(0, 1) || [];
+    return events?.filter(e => e.course_slug === courseSlug && e.event_type === "cohort").slice(0, 2) || [];
   };
 
   return (
@@ -137,7 +137,7 @@ const Events = () => {
                 Upcoming Cohorts
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                We run 1 cohort per month. Secure your spot in the next available intake.
+                We run 2 cohorts per course. Secure your spot in the next available intake.
               </p>
             </div>
 
@@ -164,7 +164,7 @@ const Events = () => {
                       <h3 className="font-kanit font-bold text-2xl text-primary mb-6">
                         {config?.displayName || courseSlug}
                       </h3>
-                      <div className="grid gap-6 md:grid-cols-1 max-w-2xl">
+                      <div className="grid gap-6 md:grid-cols-2 max-w-5xl">
                         {cohorts.map((event) => {
                           const metadata = event.metadata as Record<string, any> | null;
                           const sessionDay = metadata?.session_day || config?.dayOfWeek || 'Weekends';
