@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { getCourseConfig } from "@/lib/course-config";
 
 export function UpcomingEvents() {
-  const { data: events, isLoading } = useQuery({
+  const { data: allEvents, isLoading } = useQuery({
     queryKey: ["upcoming-events"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -19,12 +19,21 @@ export function UpcomingEvents() {
         .in("status", ["upcoming", "ongoing"]) // Exclude archived and completed
         .gte("start_date", new Date().toISOString()) // Only show future events
         .order("start_date", { ascending: true })
-        .limit(3);
+        .limit(20); // Increased to accommodate 2 cohorts per course
 
       if (error) throw error;
       return data;
     },
   });
+
+  // Group events by course and take first 2 cohorts per course
+  const events = allEvents?.reduce((acc, event) => {
+    const courseEvents = acc.filter(e => e.course_slug === event.course_slug);
+    if (courseEvents.length < 2) {
+      acc.push(event);
+    }
+    return acc;
+  }, [] as typeof allEvents).slice(0, 10); // Max 10 events (5 courses × 2 cohorts)
 
   if (isLoading || !events || events.length === 0) return null;
 
@@ -47,7 +56,7 @@ export function UpcomingEvents() {
           </h2>
           
           <p className="font-sans text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            1 cohort per month. Secure your spot in the next available intake.
+            2 cohorts per course. Secure your spot in the next available intake.
           </p>
         </div>
 
