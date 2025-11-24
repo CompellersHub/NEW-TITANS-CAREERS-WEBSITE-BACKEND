@@ -159,7 +159,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Careers <support@titanscareers.com>",
+          from: "Titans Careers <onboarding@resend.dev>",
           to: [email],
           subject: inquiryType === "free_session"
             ? `Free Session Request: ${courseTitle}`
@@ -169,11 +169,18 @@ serve(async (req) => {
       });
 
       const userEmailText = await userEmailResponse.text();
-      console.log("submit-course-inquiry user email response", userEmailResponse.status, userEmailText);
+      console.log(
+        "submit-course-inquiry user email response",
+        userEmailResponse.status,
+        userEmailText,
+      );
 
       if (!userEmailResponse.ok) {
-        console.error("submit-course-inquiry user email failed", userEmailResponse.status, userEmailText);
-        throw new Error("Failed to send confirmation email");
+        console.error(
+          "submit-course-inquiry user email failed",
+          userEmailResponse.status,
+          userEmailText,
+        );
       }
 
       // Send notification to admin
@@ -200,7 +207,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Careers <support@titanscareers.com>",
+          from: "Titans Careers <onboarding@resend.dev>",
           to: ["info@titanscareers.com", "support@titanscareers.com"],
           subject: `New ${inquiryType === "free_session" ? "Free Session" : "WhatsApp Group"} Request - ${courseTitle}`,
           html: adminEmailHtml,
@@ -208,10 +215,18 @@ serve(async (req) => {
       });
 
       const adminEmailText = await adminEmailResponse.text();
-      console.log("submit-course-inquiry admin email response", adminEmailResponse.status, adminEmailText);
+      console.log(
+        "submit-course-inquiry admin email response",
+        adminEmailResponse.status,
+        adminEmailText,
+      );
 
       if (!adminEmailResponse.ok) {
-        console.error("submit-course-inquiry admin email failed", adminEmailResponse.status, adminEmailText);
+        console.error(
+          "submit-course-inquiry admin email failed",
+          adminEmailResponse.status,
+          adminEmailText,
+        );
       }
     }
 
