@@ -74,7 +74,7 @@ serve(async (req) => {
       console.error("Rate limit check error:", rateLimitError);
     }
 
-    if (rateLimitData && rateLimitData.inquiry_count >= 3) {
+    if (rateLimitData && rateLimitData.inquiry_count >= 10) {
       console.log(`Rate limit exceeded for ${email}`);
       return new Response(
         JSON.stringify({ 
