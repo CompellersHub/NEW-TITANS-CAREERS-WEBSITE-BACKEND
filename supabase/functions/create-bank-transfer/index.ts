@@ -92,7 +92,7 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'Titans Careers <noreply@titanscareers.com>',
+          from: 'Titans Careers <payments@titanscareers.com>',
           to: [email],
           subject: `Bank Transfer Details - ${courseTitle}`,
           html: `

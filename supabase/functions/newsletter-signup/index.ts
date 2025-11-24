@@ -131,7 +131,7 @@ const handler = async (req: Request): Promise<Response> => {
         body: JSON.stringify({
           sender: {
             name: "Titans Careers",
-            email: "noreply@titanscareer.com", // Replace with your verified sender email
+            email: "newsletter@titanscareers.com",
           },
           to: [
             {

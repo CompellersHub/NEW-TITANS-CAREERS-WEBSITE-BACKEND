@@ -231,7 +231,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           // Send email via Resend
           const { data: resendData, error: resendError } = await resend.emails.send({
-            from: "Titans Careers <onboarding@resend.dev>",
+            from: "Titans Careers <courses@titanscareers.com>",
             to: [recipientEmail],
             subject: subject || `Your Exclusive Voucher Code: ${voucher.code}`,
             html: htmlContent,

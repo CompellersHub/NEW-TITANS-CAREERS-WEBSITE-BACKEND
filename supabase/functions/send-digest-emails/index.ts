@@ -203,7 +203,7 @@ const handler = async (req: Request): Promise<Response> => {
 
       // Send email
       const emailResponse = await resend.emails.send({
-        from: "Titans Careers <notifications@resend.dev>",
+        from: "Titans Careers <community@titanscareers.com>",
         to: [userData.user.email],
         subject: `Your ${pref.frequency === "daily" ? "Daily" : "Weekly"} Discussion Digest - ${notifications.length} New Notifications`,
         html: emailHtml,

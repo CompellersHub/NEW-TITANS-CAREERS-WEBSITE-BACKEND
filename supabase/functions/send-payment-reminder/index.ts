@@ -51,7 +51,7 @@ const handler = async (req: Request): Promise<Response> => {
 
         try {
           await resend.emails.send({
-            from: "Titans Training <onboarding@resend.dev>",
+            from: "Titans Careers <payments@titanscareers.com>",
             to: [intent.customer_email],
             subject: `⏰ Payment Reminder - ${intent.course_title}`,
             html: `

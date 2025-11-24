@@ -56,7 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
       for (const intent of expiredIntents) {
         try {
           await resend.emails.send({
-            from: "Titans Training <onboarding@resend.dev>",
+            from: "Titans Careers <payments@titanscareers.com>",
             to: [intent.customer_email],
             subject: `Payment Expired - ${intent.course_title}`,
             html: `

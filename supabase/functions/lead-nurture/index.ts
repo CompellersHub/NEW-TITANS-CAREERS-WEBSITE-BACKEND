@@ -183,7 +183,7 @@ serve(async (req) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            sender: { name: "Titans Academy", email: "noreply@titans-academy.com" },
+            sender: { name: "Titans Careers", email: "newsletter@titanscareers.com" },
             to: [{ email: lead.email, name: lead.name || "" }],
             subject: subject,
             htmlContent: htmlContent,
