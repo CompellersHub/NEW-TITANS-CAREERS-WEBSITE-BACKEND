@@ -160,7 +160,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           from: "Titans Careers <onboarding@resend.dev>",
-          to: [email],
+          to: ["marketing@titanscareers.com"],
           subject: inquiryType === "free_session"
             ? `Free Session Request: ${courseTitle}`
             : `Join ${courseTitle} WhatsApp Group`,
@@ -208,7 +208,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           from: "Titans Careers <onboarding@resend.dev>",
-          to: ["info@titanscareers.com", "support@titanscareers.com"],
+          to: ["marketing@titanscareers.com"],
           subject: `New ${inquiryType === "free_session" ? "Free Session" : "WhatsApp Group"} Request - ${courseTitle}`,
           html: adminEmailHtml,
         }),
