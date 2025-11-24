@@ -67,7 +67,7 @@ const handler = async (req: Request): Promise<Response> => {
     const preferencesUrl = `${trackingBaseUrl}?email=${encodeURIComponent(to)}&link_type=preferences&email_type=instant_notification&redirect_to=${encodeURIComponent("/profile?tab=notifications")}`;
 
     const emailResponse = await resend.emails.send({
-      from: "Titans Careers <notifications@resend.dev>",
+      from: "Titans Careers <community@titanscareers.com>",
       to: [to],
       subject: subject,
       html: `

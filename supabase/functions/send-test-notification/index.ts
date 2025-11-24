@@ -178,11 +178,11 @@ const handler = async (req: Request): Promise<Response> => {
         "api-key": brevoApiKey,
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        sender: {
-          name: "Titans Training Hub",
-          email: "notifications@titans-training.com",
-        },
+        body: JSON.stringify({
+          sender: {
+            name: "Titans Careers",
+            email: "newsletter@titanscareers.com",
+          },
         to: [{ email, name: adminName }],
         subject,
         htmlContent,

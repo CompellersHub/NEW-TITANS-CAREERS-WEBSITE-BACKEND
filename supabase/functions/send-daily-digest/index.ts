@@ -213,7 +213,7 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          sender: { name: "Form Submissions Digest", email: "noreply@yourdomain.com" },
+          sender: { name: "Titans Careers", email: "alerts@titanscareers.com" },
           to: [{ email: admin.email }],
           subject: `Daily Digest: ${filteredSubmissions.length} Form Submission${filteredSubmissions.length !== 1 ? 's' : ''}`,
           htmlContent: emailHtml,

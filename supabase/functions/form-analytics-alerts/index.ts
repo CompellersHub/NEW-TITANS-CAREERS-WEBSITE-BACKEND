@@ -160,37 +160,39 @@ for (const [formName, metrics] of entries) {
       console.error("Error fetching admins:", adminsError);
     }
 
-    // For now, send to a default admin email (you can update this)
-    const adminEmail = "admin@yourdomain.com"; // TODO: Update with actual admin email
+    // Send to the configured admin emails
+    const adminEmails = ["info@titanscareers.com", "support@titanscareers.com"];
 
     // Generate email content
     const emailHtml = generateAlertEmail(alerts);
 
 // Send email alert via Resend REST API
-try {
-  if (!RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY secret");
-  const emailResponse = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "Form Analytics <onboarding@resend.dev>",
-      to: [adminEmail],
-      subject: `⚠️ Form Analytics Alert: ${alerts.length} Issue${alerts.length > 1 ? "s" : ""} Detected`,
-      html: emailHtml,
-    }),
-  });
-  const emailResult = await emailResponse.json();
-  if (!emailResponse.ok) {
-    console.error("Resend API error:", emailResult);
-  } else {
-    console.log("Alert email sent successfully:", emailResult);
+for (const email of adminEmails) {
+  try {
+    if (!RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY secret");
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Titans Careers <alerts@titanscareers.com>",
+        to: [email],
+        subject: `⚠️ Form Analytics Alert: ${alerts.length} Issue${alerts.length > 1 ? "s" : ""} Detected`,
+        html: emailHtml,
+      }),
+    });
+    const emailResult = await emailResponse.json();
+    if (!emailResponse.ok) {
+      console.error("Resend API error:", emailResult);
+    } else {
+      console.log(`Alert email sent successfully to ${email}:`, emailResult);
+    }
+  } catch (emailError: any) {
+    console.error(`Error sending email to ${email}:`, emailError);
+    // Don't throw - we still want to return success if analytics check worked
   }
-} catch (emailError: any) {
-  console.error("Error sending email:", emailError);
-  // Don't throw - we still want to return success if analytics check worked
 }
 
     return new Response(

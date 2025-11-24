@@ -189,7 +189,7 @@ const handler = async (req: Request): Promise<Response> => {
         "api-key": BREVO_API_KEY,
       },
       body: JSON.stringify({
-        sender: { name: "Form Management System", email: "noreply@yourdomain.com" },
+        sender: { name: "Titans Careers", email: "alerts@titanscareers.com" },
         to: [{ email: admin_email }],
         subject: subject,
         htmlContent: htmlContent,
