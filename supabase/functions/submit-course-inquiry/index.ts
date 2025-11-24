@@ -152,7 +152,7 @@ serve(async (req) => {
           <p>Best regards,<br/>The Titans Academy Team</p>
         `;
 
-      await fetch("https://api.resend.com/emails", {
+      const userEmailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -167,6 +167,14 @@ serve(async (req) => {
           html: userEmailHtml,
         }),
       });
+
+      const userEmailText = await userEmailResponse.text();
+      console.log("submit-course-inquiry user email response", userEmailResponse.status, userEmailText);
+
+      if (!userEmailResponse.ok) {
+        console.error("submit-course-inquiry user email failed", userEmailResponse.status, userEmailText);
+        throw new Error("Failed to send confirmation email");
+      }
 
       // Send notification to admin
       const adminEmailHtml = `
@@ -185,7 +193,7 @@ serve(async (req) => {
         <p><em>Submitted at ${new Date().toLocaleString()}</em></p>
       `;
 
-      await fetch("https://api.resend.com/emails", {
+      const adminEmailResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -198,6 +206,13 @@ serve(async (req) => {
           html: adminEmailHtml,
         }),
       });
+
+      const adminEmailText = await adminEmailResponse.text();
+      console.log("submit-course-inquiry admin email response", adminEmailResponse.status, adminEmailText);
+
+      if (!adminEmailResponse.ok) {
+        console.error("submit-course-inquiry admin email failed", adminEmailResponse.status, adminEmailText);
+      }
     }
 
     return new Response(
