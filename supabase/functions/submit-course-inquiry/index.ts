@@ -159,7 +159,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Academy <onboarding@resend.dev>",
+          from: "Titans Careers <support@titanscareers.com>",
           to: [email],
           subject: inquiryType === "free_session"
             ? `Free Session Request: ${courseTitle}`
@@ -192,7 +192,7 @@ serve(async (req) => {
           Authorization: `Bearer ${RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: "Titans Academy <onboarding@resend.dev>",
+          from: "Titans Careers <support@titanscareers.com>",
           to: ["info@titanscareers.com", "support@titanscareers.com"],
           subject: `New ${inquiryType === "free_session" ? "Free Session" : "WhatsApp Group"} Request - ${courseTitle}`,
           html: adminEmailHtml,
