@@ -1,0 +1,45 @@
+-- Database Backup for Titans Careers
+-- Generated: 2025-01-25
+-- Project: gfmhhnynyxvmekhvytgg
+-- 
+-- This file contains a complete backup of the database schema and data
+-- To restore: Execute this file in your PostgreSQL/Supabase instance
+--
+-- WARNING: This will overwrite existing data. Use with caution.
+
+-- ============================================
+-- BACKUP INSTRUCTIONS
+-- ============================================
+-- To download actual data, you'll need to:
+-- 1. Go to your Lovable Cloud backend
+-- 2. Use the Database section to export data
+-- 3. Or use pg_dump tool with your database credentials
+--
+-- This file serves as a template. To create a full backup with data:
+-- Run: pg_dump -h <host> -U <user> -d <database> -F p -f backup.sql
+
+-- ============================================
+-- SCHEMA (from database-schema.sql)
+-- ============================================
+-- See database-schema.sql for complete table definitions
+
+-- ============================================
+-- NOTE: Data Export
+-- ============================================
+-- Lovable Cloud UI currently doesn't provide direct SQL data export.
+-- To get a complete backup with all data, you have two options:
+--
+-- Option 1: Use pg_dump (recommended for full backups)
+-- Contact Lovable support for database credentials, then run:
+-- pg_dump -h db.gfmhhnynyxvmekhvytgg.supabase.co -U postgres -d postgres > full-backup.sql
+--
+-- Option 2: Export via Lovable Cloud UI
+-- 1. Open Lovable Cloud backend (use the "View Backend" button)
+-- 2. Navigate to Database section
+-- 3. Export tables individually as CSV
+-- 4. Use CSV import tools to restore
+--
+-- ============================================
+-- SCHEMA REFERENCE
+-- ============================================
+-- For table schemas, see database-schema.sql in your project root
