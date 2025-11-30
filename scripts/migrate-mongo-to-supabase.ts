@@ -10,11 +10,11 @@ dotenv.config();
 // MongoDB Config - Try multiple connection options
 const MONGO_URI_OPTIONS = [
     // Option 1: Standard SRV (recommended)
-    "mongodb+srv://titans:TitansCareer@cluster0.tu1atbz.mongodb.net/titans?retryWrites=true&w=majority",
+    "mongodb+srv://@cluster0.tu1atbz.mongodb.net/titans?retryWrites=true&w=majority",
     // Option 2: Direct connection (with fixes)
-    "mongodb://titans:TitansCareer@cluster0-shard-00-00.tu1atbz.mongodb.net:27017,cluster0-shard-00-01.tu1atbz.mongodb.net:27017,cluster0-shard-00-02.tu1atbz.mongodb.net:27017/titans?ssl=true&replicaSet=atlas-tu1atbz-shard-0&authSource=admin&retryWrites=true&w=majority",
+    "mongodb://@cluster0-shard-00-00.tu1atbz.mongodb.net:27017,cluster0-shard-00-01.tu1atbz.mongodb.net:27017,cluster0-shard-00-02.tu1atbz.mongodb.net:27017/titans?ssl=true&replicaSet=atlas-tu1atbz-shard-0&authSource=admin&retryWrites=true&w=majority",
     // Option 3: Simple direct connection to primary
-    "mongodb://titans:TitansCareer@cluster0-shard-00-00.tu1atbz.mongodb.net:27017/titans?ssl=true&authSource=admin&retryWrites=true&w=majority"
+    "mongodb://@cluster0-shard-00-00.tu1atbz.mongodb.net:27017/titans?ssl=true&authSource=admin&retryWrites=true&w=majority"
 ];
 
 async function testMongoConnection(uri: string, optionName: string) {
