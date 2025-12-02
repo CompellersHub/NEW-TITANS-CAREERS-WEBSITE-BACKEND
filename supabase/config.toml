@@ -104,3 +104,57 @@ verify_jwt = false
 
 [functions.submit-course-inquiry]
 verify_jwt = false
+
+[functions.swagger-ui]
+verify_jwt = false
+
+[functions.get-courses]
+verify_jwt = false
+
+[functions.get-course]
+verify_jwt = false
+
+[functions.get-jobs]
+verify_jwt = false
+
+[functions.get-job]
+verify_jwt = false
+
+[functions.get-blogs]
+verify_jwt = false
+
+[functions.get-blog]
+verify_jwt = false
+
+[functions.get-consultations]
+verify_jwt = false
+
+[functions.get-registrations]
+verify_jwt = false
+
+[functions.get-events]
+verify_jwt = false
+
+[functions.get-monitoring-alerts]
+verify_jwt = false
+
+[functions.get-monitoring-cases]
+verify_jwt = false
+
+[functions.get-modules]
+verify_jwt = false
+
+[functions.get-course-library]
+verify_jwt = false
+
+[functions.get-quiz-questions]
+verify_jwt = false
+
+[functions.get-users]
+verify_jwt = false
+
+[functions.get-teachers]
+verify_jwt = false
+
+[functions.get-course-progress]
+verify_jwt = false

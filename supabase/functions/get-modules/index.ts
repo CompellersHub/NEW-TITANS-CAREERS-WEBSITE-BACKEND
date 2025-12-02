@@ -1,0 +1,55 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { corsHeaders, jsonResponse, errorResponse } from "../_shared/cors.ts";
+
+const handler = async (req: Request): Promise<Response> => {
+    if (req.method === "OPTIONS") {
+        return new Response(null, { headers: corsHeaders });
+    }
+
+    try {
+        const supabase = createClient(
+            Deno.env.get("SUPABASE_URL")!,
+            Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+        );
+
+        const url = new URL(req.url);
+        const courseId = url.searchParams.get("course_id");
+        const search = url.searchParams.get("search");
+        const limit = parseInt(url.searchParams.get("limit") || "50");
+        const offset = parseInt(url.searchParams.get("offset") || "0");
+
+        let query = supabase
+            .from("modules")
+            .select("*")
+            .order("order", { ascending: true })
+            .range(offset, offset + limit - 1);
+
+        if (courseId) {
+            query = query.eq("course_id", courseId);
+        }
+
+        if (search) {
+            query = query.ilike("title", `%${search}%`);
+        }
+
+        const { data: modules, error, count } = await query;
+
+        if (error) {
+            console.error("Error fetching modules:", error);
+            return errorResponse(error.message, 500);
+        }
+
+        return jsonResponse({
+            modules,
+            total: count,
+            limit,
+            offset,
+        });
+    } catch (error: any) {
+        console.error("Error in get-modules:", error);
+        return errorResponse(error.message || "Internal server error", 500);
+    }
+};
+
+serve(handler);
