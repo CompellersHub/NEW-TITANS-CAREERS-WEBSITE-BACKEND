@@ -1067,6 +1067,142 @@ export const openApiSpec = {
                 },
             },
         },
+        "/create-course": {
+            post: {
+                tags: ["Courses"],
+                summary: "Create course",
+                description: "Create a new course (Admin only)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["title"],
+                                properties: {
+                                    title: { type: "string" },
+                                    description: { type: "string" },
+                                    // Add other properties as needed based on schema
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "201": { description: "Course created" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
+        "/update-course": {
+            put: {
+                tags: ["Courses"],
+                summary: "Update course",
+                description: "Update an existing course (Admin only)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["id"],
+                                properties: {
+                                    id: { type: "string" },
+                                    title: { type: "string" },
+                                    // Add other properties
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "200": { description: "Course updated" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
+        "/delete-course": {
+            delete: {
+                tags: ["Courses"],
+                summary: "Delete course",
+                description: "Delete a course (Admin only)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "query", schema: { type: "string" }, required: true },
+                ],
+                responses: {
+                    "200": { description: "Course deleted" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
+        "/create-job": {
+            post: {
+                tags: ["Jobs"],
+                summary: "Create job",
+                description: "Create a new job (Admin only)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["title"],
+                                properties: {
+                                    title: { type: "string" },
+                                    // Add other properties
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "201": { description: "Job created" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
+        "/update-job": {
+            put: {
+                tags: ["Jobs"],
+                summary: "Update job",
+                description: "Update an existing job (Admin only)",
+                security: [{ bearerAuth: [] }],
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["id"],
+                                properties: {
+                                    id: { type: "string" },
+                                    // Add other properties
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "200": { description: "Job updated" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
+        "/delete-job": {
+            delete: {
+                tags: ["Jobs"],
+                summary: "Delete job",
+                description: "Delete a job (Admin only)",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "id", in: "query", schema: { type: "string" }, required: true },
+                ],
+                responses: {
+                    "200": { description: "Job deleted" },
+                    "401": { description: "Unauthorized" },
+                },
+            },
+        },
         "/academy-integration": {
             post: {
                 tags: ["User Management"],

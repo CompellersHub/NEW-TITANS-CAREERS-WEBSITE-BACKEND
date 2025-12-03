@@ -158,3 +158,21 @@ verify_jwt = false
 
 [functions.get-course-progress]
 verify_jwt = false
+
+[functions.create-course]
+verify_jwt = true
+
+[functions.update-course]
+verify_jwt = true
+
+[functions.delete-course]
+verify_jwt = true
+
+[functions.create-job]
+verify_jwt = true
+
+[functions.update-job]
+verify_jwt = true
+
+[functions.delete-job]
+verify_jwt = true

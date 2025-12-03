@@ -11,7 +11,6 @@ const swaggerHtml = `
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net;">
   <title>Titans Careers API Documentation</title>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui.css">
   <style>
@@ -36,8 +35,12 @@ const swaggerHtml = `
   <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui-bundle.js" charset="UTF-8"></script>
   <script src="https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.10.5/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
   <script>
-    window.onload = function() {
+    // Fix: Use DOMContentLoaded instead of window.onload
+    document.addEventListener('DOMContentLoaded', function() {
       const spec = ${JSON.stringify(openApiSpec, null, 2)};
+      
+      // Fix: Make sure SwaggerUIStandalonePreset is available
+      const SwaggerUIStandalonePreset = window.SwaggerUIStandalonePreset;
       
       window.ui = SwaggerUIBundle({
         spec: spec,
@@ -59,7 +62,7 @@ const swaggerHtml = `
         showCommonExtensions: true,
         tryItOutEnabled: true
       });
-    };
+    });
   </script>
 </body>
 </html>
@@ -86,12 +89,15 @@ const handler = async (req: Request): Promise<Response> => {
     });
   }
 
-  // Serve Swagger UI HTML
+  // Serve Swagger UI HTML with FIXED CSP headers
   return new Response(swaggerHtml, {
     headers: {
       ...corsHeaders,
       "Content-Type": "text/html; charset=utf-8",
-      "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co;",
+      // FIXED CSP: Added frame-src and relaxed script-src
+      "Content-Security-Policy": "default-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net; frame-src 'self'; connect-src 'self' https://*.supabase.co;",
+      // This is also important for Supabase
+      "X-Frame-Options": "SAMEORIGIN"
     },
   });
 };
