@@ -91,6 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
     headers: {
       ...corsHeaders,
       "Content-Type": "text/html; charset=utf-8",
+      "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; img-src 'self' data: https:; font-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co;",
     },
   });
 };
