@@ -80,8 +80,8 @@ const handler = async (req: Request): Promise<Response> => {
   if (url.pathname.endsWith("/openapi.json") || url.searchParams.get("format") === "json") {
     return new Response(JSON.stringify(openApiSpec, null, 2), {
       headers: {
-        "Content-Type": "application/json",
         ...corsHeaders,
+        "Content-Type": "application/json; charset=utf-8",
       },
     });
   }
@@ -89,8 +89,8 @@ const handler = async (req: Request): Promise<Response> => {
   // Serve Swagger UI HTML
   return new Response(swaggerHtml, {
     headers: {
-      "Content-Type": "text/html",
       ...corsHeaders,
+      "Content-Type": "text/html; charset=utf-8",
     },
   });
 };
