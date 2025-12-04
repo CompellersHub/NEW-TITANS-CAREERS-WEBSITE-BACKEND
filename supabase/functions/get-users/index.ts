@@ -22,7 +22,7 @@ const handler = async (req: Request): Promise<Response> => {
         let query = supabase
             .from("users")
             .select("*")
-            .order("user_id", { ascending: true })
+            .order("id", { ascending: true })
             .range(offset, offset + limit - 1);
 
         if (role) {
@@ -30,7 +30,8 @@ const handler = async (req: Request): Promise<Response> => {
         }
 
         if (search) {
-            query = query.or(`username.ilike.%${search}%,email.ilike.%${search}%`);
+            // Search in both direct columns and JSONB data field
+            query = query.or(`username.ilike.%${search}%,email.ilike.%${search}%,data->>username.ilike.%${search}%,data->>email.ilike.%${search}%`);
         }
 
         const { data: users, error, count } = await query;

@@ -29,21 +29,25 @@ const handler = async (req: Request): Promise<Response> => {
             .order("created_at", { ascending: false })
             .range(offset, offset + limit - 1);
 
-        // Apply filters
+        // Apply filters - check both direct columns and JSONB data field
         if (status === "active") {
-            query = query.eq("is_active", true);
+            // Filter for active jobs in the JSONB data field
+            query = query.or("type.eq.active,data->>is_active.eq.true");
         }
 
         if (type) {
-            query = query.eq("type", type);
+            // Check both direct type column and JSONB data field
+            query = query.or(`type.eq.${type},data->>type.eq.${type}`);
         }
 
         if (location) {
-            query = query.ilike("location", `%${location}%`);
+            // Check both direct location column and JSONB data field
+            query = query.or(`location.ilike.%${location}%,data->>location.ilike.%${location}%`);
         }
 
         if (search) {
-            query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,company_name.ilike.%${search}%`);
+            // Search in both direct columns and JSONB data field
+            query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%,company_name.ilike.%${search}%,data->>title.ilike.%${search}%,data->>description.ilike.%${search}%,data->>company_name.ilike.%${search}%`);
         }
 
         const { data: jobs, error, count } = await query;
