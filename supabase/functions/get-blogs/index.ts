@@ -23,19 +23,22 @@ const handler = async (req: Request): Promise<Response> => {
         let query = supabase
             .from("blogs")
             .select("*")
-            .order("createdAt", { ascending: false })
+            .order("created_at", { ascending: false })
             .range(offset, offset + limit - 1);
 
         if (status) {
-            query = query.eq("status", status);
+            // Check both direct status column and JSONB data field
+            query = query.or(`status.eq.${status},data->>status.eq.${status}`);
         }
 
         if (category) {
-            query = query.eq("category", category);
+            // Check both direct category column and JSONB data field
+            query = query.or(`category.eq.${category},data->>category.eq.${category}`);
         }
 
         if (search) {
-            query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
+            // Search in both direct columns and JSONB data field
+            query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%,data->>title.ilike.%${search}%,data->>excerpt.ilike.%${search}%,data->>content.ilike.%${search}%`);
         }
 
         const { data: blogs, error, count } = await query;

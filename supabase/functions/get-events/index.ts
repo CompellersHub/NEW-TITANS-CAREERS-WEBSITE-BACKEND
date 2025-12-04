@@ -21,11 +21,12 @@ const handler = async (req: Request): Promise<Response> => {
         let query = supabase
             .from("events")
             .select("*")
-            .order("date", { ascending: true })
             .range(offset, offset + limit - 1);
 
         if (isActive !== null) {
-            query = query.eq("is_active", isActive === "true");
+            // Check both direct is_active column and JSONB data field
+            const activeValue = isActive === "true";
+            query = query.or(`data->>is_active.eq.${activeValue}`);
         }
 
         const { data: events, error, count } = await query;

@@ -14,33 +14,33 @@ const handler = async (req: Request): Promise<Response> => {
         );
 
         const url = new URL(req.url);
-        const slug = url.searchParams.get("slug");
+        const id = url.searchParams.get("id");
 
-        if (!slug) {
-            return errorResponse("Blog slug is required", 400);
+        if (!id) {
+            return errorResponse("Event ID is required", 400);
         }
 
-        // Query for blog by slug - check both direct column and JSONB data field
-        const { data: blogs, error } = await supabase
-            .from("blogs")
+        // Query for event by id - check both direct id column and JSONB data field
+        const { data: events, error } = await supabase
+            .from("events")
             .select("*")
-            .or(`slug.eq.${slug},data->>slug.eq.${slug}`)
+            .eq("id", id)
             .limit(1);
 
         if (error) {
-            console.error("Error fetching blog:", error);
+            console.error("Error fetching event:", error);
             return errorResponse(error.message, 500);
         }
 
-        if (!blogs || blogs.length === 0) {
-            return errorResponse("Blog not found", 404);
+        if (!events || events.length === 0) {
+            return errorResponse("Event not found", 404);
         }
 
-        const blog = blogs[0];
+        const event = events[0];
 
-        return jsonResponse({ blog });
+        return jsonResponse({ event });
     } catch (error: any) {
-        console.error("Error in get-blog:", error);
+        console.error("Error in get-event:", error);
         return errorResponse(error.message || "Internal server error", 500);
     }
 };
