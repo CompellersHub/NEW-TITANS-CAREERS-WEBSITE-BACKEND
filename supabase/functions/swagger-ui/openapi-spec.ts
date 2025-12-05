@@ -44,6 +44,7 @@ export const openApiSpec = {
         { name: "Registrations", description: "Course registrations" },
         { name: "Events", description: "Event management" },
         { name: "Monitoring", description: "AML/KYC monitoring" },
+        { name: "Authentication", description: "User authentication and authorization" },
     ],
     paths: {
         "/newsletter-signup": {
@@ -1210,6 +1211,122 @@ export const openApiSpec = {
                 description: "Integrate with academy platform",
                 responses: {
                     "200": { description: "Integration successful" },
+                },
+            },
+        },
+        "/login": {
+            post: {
+                tags: ["Authentication"],
+                summary: "User login",
+                description: "Authenticate user with email and password, returns JWT token",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["email", "password"],
+                                properties: {
+                                    email: { type: "string", format: "email", example: "user@example.com" },
+                                    password: { type: "string", format: "password", example: "your-password" },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "200": {
+                        description: "Login successful",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        success: { type: "boolean", example: true },
+                                        token: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
+                                        user: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: "string", format: "uuid" },
+                                                email: { type: "string", format: "email" },
+                                                username: { type: "string" },
+                                                role: { type: "string" },
+                                                userType: { type: "string", example: "bloguser" },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "401": { description: "Invalid email or password" },
+                    "400": { description: "Missing required fields" },
+                },
+            },
+        },
+        "/me": {
+            get: {
+                tags: ["Authentication"],
+                summary: "Get current user",
+                description: "Get authenticated user information (requires JWT token)",
+                security: [{ BearerAuth: [] }],
+                responses: {
+                    "200": {
+                        description: "User information",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        message: { type: "string" },
+                                        user: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: "string", format: "uuid" },
+                                                email: { type: "string", format: "email" },
+                                                username: { type: "string" },
+                                                role: { type: "string" },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "401": { description: "Unauthorized - Invalid or missing token" },
+                },
+            },
+        },
+        "/get-event": {
+            get: {
+                tags: ["Events"],
+                summary: "Get event by ID",
+                description: "Retrieve a single event by its ID",
+                parameters: [
+                    {
+                        name: "id",
+                        in: "query",
+                        required: true,
+                        schema: { type: "string", format: "uuid" },
+                        description: "Event ID",
+                    },
+                ],
+                responses: {
+                    "200": {
+                        description: "Event details",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        event: { type: "object" },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "404": { description: "Event not found" },
+                    "400": { description: "Event ID is required" },
                 },
             },
         },
