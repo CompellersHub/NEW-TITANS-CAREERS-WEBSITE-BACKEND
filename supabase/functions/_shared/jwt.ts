@@ -21,10 +21,14 @@ export async function generateToken(
     username?: string,
     expirationHours: number = 24
 ): Promise<string> {
-    const jwtSecret = Deno.env.get("SUPABASE_JWT_SECRET");
+    // Debug: Log all environment variables
+    console.log("Available env vars:", Object.keys(Deno.env.toObject()));
+
+    const jwtSecret = Deno.env.get("JWT_SECRET");
+    console.log("JWT_SECRET value:", jwtSecret ? "Found (length: " + jwtSecret.length + ")" : "NOT FOUND");
 
     if (!jwtSecret) {
-        throw new Error("SUPABASE_JWT_SECRET not configured");
+        throw new Error("JWT_SECRET not configured");
     }
 
     const key = await crypto.subtle.importKey(
@@ -52,10 +56,10 @@ export async function generateToken(
  */
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
     try {
-        const jwtSecret = Deno.env.get("SUPABASE_JWT_SECRET");
+        const jwtSecret = Deno.env.get("JWT_SECRET");
 
         if (!jwtSecret) {
-            throw new Error("SUPABASE_JWT_SECRET not configured");
+            throw new Error("JWT_SECRET not configured");
         }
 
         const key = await crypto.subtle.importKey(
