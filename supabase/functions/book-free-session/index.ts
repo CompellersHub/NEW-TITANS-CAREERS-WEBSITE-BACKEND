@@ -111,7 +111,7 @@ serve(async (req) => {
         const { data: courseData, error: courseError } = await supabase
             .from("courses")
             .select("id")
-            .eq("data->slug", courseSlug)
+            .eq("data->>slug", courseSlug)
             .maybeSingle();
 
         if (courseError) {
@@ -146,62 +146,64 @@ serve(async (req) => {
 
         console.log("Booking created successfully:", bookingData.id);
 
-        // Send confirmation email to user
-        if (RESEND_API_KEY) {
-            const userEmailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
-            .highlight { background-color: #FEF3C7; padding: 15px; border-radius: 8px; margin: 20px 0; }
-            ul { padding-left: 20px; }
-            li { margin: 10px 0; }
-            .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1 style="margin: 0;">🎓 Free Session Booked!</h1>
-            </div>
-            <div class="content">
-              <h2>Thank you for your interest in ${courseTitle}!</h2>
-              <p>Hi ${fullName},</p>
-              <p>We've received your request to book a free consultation session. We're excited to help you explore this career opportunity!</p>
-              
-              <div class="highlight">
-                <p style="margin: 0;"><strong>📋 Booking Details:</strong></p>
-                <ul style="margin: 10px 0;">
-                  <li><strong>Course:</strong> ${courseTitle}</li>
-                  <li><strong>Your Email:</strong> ${email}</li>
-                  <li><strong>WhatsApp:</strong> ${whatsappNumber}</li>
-                </ul>
-              </div>
+        // Add contact to Brevo
+        const brevoApiKey = Deno.env.get("BREVO_API_KEY");
 
-              <p><strong>What happens next?</strong></p>
-              <ul>
-                <li>Our team will contact you within 24 hours on WhatsApp (${whatsappNumber})</li>
-                <li>We'll schedule a convenient time for your free consultation session</li>
-                <li>You'll get personalized advice about the course, career opportunities, and learning path</li>
-                <li>We'll answer all your questions about enrollment, certification, and job prospects</li>
-              </ul>
+        if (brevoApiKey) {
+            try {
+                console.log("Adding contact to Brevo...");
 
-              <p>If you have any urgent questions, feel free to reach out to us directly at <a href="mailto:support@titanscareers.com">support@titanscareers.com</a>.</p>
+                // Split name into first and last
+                const nameParts = fullName.trim().split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
 
-              <div class="footer">
-                <p>Best regards,<br/>
-                <strong>The Titans Careers Team</strong></p>
-                <p style="font-size: 12px; color: #9ca3af;">This is an automated confirmation email. Please do not reply to this email.</p>
-              </div>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
+                const brevoResponse = await fetch("https://api.brevo.com/v3/contacts", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                        "api-key": brevoApiKey,
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        attributes: {
+                            FIRSTNAME: firstName,
+                            LASTNAME: lastName,
+                            WHATSAPP: whatsappNumber,
+                            COURSE_INTEREST: courseTitle,
+                            COURSE_SLUG: courseSlug,
+                            BOOKING_DATE: new Date().toISOString().split('T')[0],
+                            LEAD_SOURCE: "free_session_booking",
+                            BOOKING_ID: bookingData.id
+                        },
+                        listIds: [24], // Free Session Leads list
+                        updateEnabled: true // Update contact if already exists
+                    }),
+                });
+
+                if (!brevoResponse.ok) {
+                    const errorText = await brevoResponse.text();
+                    console.error("Brevo contact creation error:", errorText);
+                    // Don't fail the booking if Brevo fails - just log the error
+                } else {
+                    // Brevo returns 201 Created with JSON or 204 No Content with no body
+                    if (brevoResponse.status === 204) {
+                        console.log("Contact added to Brevo successfully (204 No Content)");
+                    } else {
+                        const brevoData = await brevoResponse.json();
+                        console.log("Contact added to Brevo successfully:", brevoData);
+                    }
+                }
+            } catch (brevoError) {
+                console.error("Error adding contact to Brevo:", brevoError);
+                // Don't fail the booking if Brevo fails - continue with email sending
+            }
+        } else {
+            console.warn("BREVO_API_KEY not configured - skipping Brevo contact creation");
+        }
+
+        
 
             const userEmailResponse = await fetch("https://api.resend.com/emails", {
                 method: "POST",
@@ -231,59 +233,6 @@ serve(async (req) => {
                     userEmailText
                 );
             }
-
-            // Send notification to admin
-            const adminEmailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #2563eb; color: white; padding: 20px; border-radius: 8px 8px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
-            .info-box { background: white; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0; }
-            .actions { margin: 20px 0; }
-            .button { display: inline-block; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin-right: 10px; font-weight: bold; }
-            .btn-primary { background: #2563eb; color: white; }
-            .btn-success { background: #25D366; color: white; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h2 style="margin: 0;">🔔 New Free Session Booking</h2>
-            </div>
-            <div class="content">
-              <div class="info-box">
-                <p><strong>📚 Course:</strong> ${courseTitle}</p>
-                <p><strong>🔗 Course Slug:</strong> ${courseSlug}</p>
-              </div>
-
-              <div class="info-box">
-                <p><strong>👤 Name:</strong> ${fullName}</p>
-                <p><strong>📧 Email:</strong> <a href="mailto:${email}">${email}</a></p>
-                <p><strong>📱 WhatsApp:</strong> ${whatsappNumber}</p>
-              </div>
-
-              <div class="info-box">
-                <p><strong>🆔 Booking ID:</strong> ${bookingData.id}</p>
-                <p><strong>📅 Submitted:</strong> ${new Date().toLocaleString()}</p>
-                <p><strong>📊 Status:</strong> Pending</p>
-              </div>
-
-              <div class="actions">
-                <a href="https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(fullName)},%20thank%20you%20for%20booking%20a%20free%20session%20for%20${encodeURIComponent(courseTitle)}.%20When%20would%20be%20a%20good%20time%20for%20your%20consultation?" class="button btn-success">Contact on WhatsApp</a>
-              </div>
-
-              <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">
-                <em>Please follow up with this lead within 24 hours for best conversion rates.</em>
-              </p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
 
             const adminEmailResponse = await fetch("https://api.resend.com/emails", {
                 method: "POST",
