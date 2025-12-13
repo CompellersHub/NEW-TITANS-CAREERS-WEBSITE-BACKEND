@@ -829,6 +829,33 @@ export const openApiSpec = {
                 },
             },
         },
+        "/get-course-by-slug": {
+            get: {
+                tags: ["Courses"],
+                summary: "Get course by slug",
+                description: "Retrieve details for a specific course by its slug identifier",
+                parameters: [
+                    { name: "slug", in: "query", required: true, schema: { type: "string" }, description: "Course slug (e.g., 'aml-compliance-course')" },
+                ],
+                responses: {
+                    "200": {
+                        description: "Course details",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        course: { type: "object" },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "404": { description: "Course not found" },
+                    "400": { description: "Course slug is required" },
+                },
+            },
+        },
         "/get-jobs": {
             get: {
                 tags: ["Jobs"],
