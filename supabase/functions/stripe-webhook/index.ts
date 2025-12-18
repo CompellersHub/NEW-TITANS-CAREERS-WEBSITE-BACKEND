@@ -13,7 +13,8 @@ serve(async (req) => {
   }
 
   try {
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+    let stripeKey = Deno.env.get('STRIPE_SECRET_KEY') || Deno.env.get('SECRETE_KEY');
+    if (stripeKey) stripeKey = stripeKey.trim();
     const resendKey = Deno.env.get('RESEND_API_KEY');
     const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET');
     const supabaseUrl = Deno.env.get('SUPABASE_URL');
@@ -28,7 +29,7 @@ serve(async (req) => {
     });
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    
+
     const signature = req.headers.get('stripe-signature');
     const body = await req.text();
 
@@ -53,7 +54,7 @@ serve(async (req) => {
     // Handle the checkout.session.completed event
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
-      
+
       console.log('Checkout session completed:', {
         sessionId: session.id,
         customerEmail: session.customer_details?.email,

@@ -1,4 +1,4 @@
-project_id = "gfmhhnynyxvmekhvytgg"
+project_id = "bzxzsidcifkhedydujqb"
 
 [functions.create-checkout-session]
 verify_jwt = false
@@ -112,6 +112,9 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.get-course]
+verify_jwt = false
+
+[functions.get-course-by-slug]
 verify_jwt = false
 
 [functions.get-jobs]

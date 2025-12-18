@@ -18,10 +18,12 @@ serve(async (req) => {
       throw new Error('Missing required fields: courseSlug, courseTitle, or price');
     }
 
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY');
+    let stripeKey = Deno.env.get('STRIPE_SECRET_KEY') || Deno.env.get('SECRETE_KEY');
     if (!stripeKey) {
-      throw new Error('Stripe secret key not configured');
+      console.error('Available env vars:', Deno.env.toObject());
+      throw new Error('Stripe secret key not configured (checked STRIPE_SECRET_KEY and SECRETE_KEY)');
     }
+    stripeKey = stripeKey.trim();
 
     const stripe = new Stripe(stripeKey, {
       apiVersion: '2023-10-16',
@@ -55,7 +57,7 @@ serve(async (req) => {
         if (now >= validFrom && now <= validUntil) {
           // Check usage limits
           const withinUsageLimit = !voucher.usage_limit || voucher.usage_count < voucher.usage_limit;
-          
+
           let withinPerUserLimit = true;
           if (voucher.per_user_limit && userEmail) {
             const { count } = await supabase
@@ -67,8 +69,8 @@ serve(async (req) => {
           }
 
           // Check applicable courses
-          const courseApplicable = !voucher.applicable_courses || 
-            voucher.applicable_courses.length === 0 || 
+          const courseApplicable = !voucher.applicable_courses ||
+            voucher.applicable_courses.length === 0 ||
             voucher.applicable_courses.includes(courseSlug);
 
           // Check minimum purchase
@@ -94,7 +96,7 @@ serve(async (req) => {
               originalPrice: price,
               finalPrice
             };
-            
+
             console.log('Voucher applied:', voucherData);
           }
         }
@@ -149,7 +151,7 @@ serve(async (req) => {
             currency: 'gbp',
             product_data: {
               name: courseTitle,
-              description: voucherData 
+              description: voucherData
                 ? `Enroll in ${courseTitle} course (Discount: £${discountAmount.toFixed(2)})`
                 : `Enroll in ${courseTitle} course`,
             },

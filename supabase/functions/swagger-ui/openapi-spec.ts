@@ -1241,6 +1241,68 @@ export const openApiSpec = {
                 },
             },
         },
+        "/register": {
+            post: {
+                tags: ["Authentication"],
+                summary: "Register new user",
+                description: "Register a new user account with optional profile details",
+                requestBody: {
+                    required: true,
+                    content: {
+                        "application/json": {
+                            schema: {
+                                type: "object",
+                                required: ["email", "password", "username"],
+                                properties: {
+                                    email: { type: "string", format: "email", example: "user@example.com" },
+                                    password: { type: "string", format: "password", example: "strong-password" },
+                                    username: { type: "string", example: "johndoe" },
+                                    userType: {
+                                        type: "string",
+                                        enum: ["customusers", "bloguser", "teacherprofiles"],
+                                        default: "customusers",
+                                        description: "Type of user profile to create"
+                                    },
+                                    firstName: { type: "string", example: "John" },
+                                    lastName: { type: "string", example: "Doe" },
+                                    role: { type: "string", description: "Specific role override (optional)" },
+                                },
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    "201": {
+                        description: "User registered successfully",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        success: { type: "boolean", example: true },
+                                        message: { type: "string", example: "User registered successfully" },
+                                        token: { type: "string" },
+                                        user: {
+                                            type: "object",
+                                            properties: {
+                                                id: { type: "string", format: "uuid" },
+                                                email: { type: "string" },
+                                                username: { type: "string" },
+                                                role: { type: "string" },
+                                                userType: { type: "string" },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "400": { description: "Missing required fields or invalid input" },
+                    "409": { description: "Email already registered" },
+                    "500": { description: "Internal server error" },
+                },
+            },
+        },
         "/login": {
             post: {
                 tags: ["Authentication"],

@@ -13,8 +13,12 @@ GET /functions/v1/get-course-by-slug?slug={course-slug}
 
 ## Example Request
 ```bash
-curl "https://bzxzsidcifkhedydujqb.supabase.co/functions/v1/get-course-by-slug?slug=aml-compliance-course"
+# You need to include the Supabase anon key in the apikey header
+curl "https://bzxzsidcifkhedydujqb.supabase.co/functions/v1/get-course-by-slug?slug=aml-compliance-course" \
+  -H "apikey: YOUR_SUPABASE_ANON_KEY"
 ```
+
+**Note**: While the function itself doesn't require user authentication, Supabase's API Gateway requires the `apikey` header with your project's anon key. This is a public key and safe to use in client-side code.
 
 ## Example Response
 ```json

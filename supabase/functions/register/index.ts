@@ -7,7 +7,7 @@ interface RegisterRequest {
     email: string;
     password: string;
     username: string;
-    userType: "customusers" | "bloguser" | "teacherprofiles";
+    userType?: "customusers" | "bloguser" | "teacherprofiles";
     firstName?: string;
     lastName?: string;
     role?: string;
@@ -79,11 +79,12 @@ const handler = async (req: Request): Promise<Response> => {
         );
 
         const body: RegisterRequest = await req.json();
-        const { email, password, username, userType, firstName, lastName, role } = body;
+        const { email, password, username, firstName, lastName, role } = body;
+        const userType = body.userType || "customusers";
 
         // Validate required fields
-        if (!email || !password || !username || !userType) {
-            return errorResponse("Email, password, username, and userType are required", 400);
+        if (!email || !password || !username) {
+            return errorResponse("Email, password, and username are required", 400);
         }
 
         if (!["customusers", "bloguser", "teacherprofiles"].includes(userType)) {
@@ -121,10 +122,10 @@ const handler = async (req: Request): Promise<Response> => {
         // Prepare user data
         const now = new Date().toISOString();
         const userData: any = {
-            email,
-            username,
-            password: hashedPassword,
-            role: role || (userType === "customusers" ? "user" : userType === "bloguser" ? "user" : "teacher"),
+            email, // Assuming email exists as column based on login query
+            username, // Assuming username exists
+            // password: hashedPassword, // Removed: Column does not exist
+            // role: ... // Removed: likely in data only
             created_at: now,
             data: {
                 email,
@@ -132,6 +133,7 @@ const handler = async (req: Request): Promise<Response> => {
                 password: hashedPassword,
                 role: role || (userType === "customusers" ? "user" : userType === "bloguser" ? "user" : "teacher"),
                 created_at: now,
+                userType // Adding userType to data for reference
             }
         };
 

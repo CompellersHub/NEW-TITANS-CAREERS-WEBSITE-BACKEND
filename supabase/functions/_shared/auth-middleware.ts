@@ -15,19 +15,16 @@ export interface AuthenticatedUser {
  * Verify JWT token from request and return user info
  * Returns null if token is invalid or missing
  */
-export async function verifyAuthToken(req: Request): Promise<AuthenticatedUser | null> {
+export async function verifyAuthToken(req: Request): Promise<AuthenticatedUser> {
     const authHeader = req.headers.get("Authorization");
     const token = extractToken(authHeader);
 
     if (!token) {
-        return null;
+        throw new Error("Missing or invalid Authorization header");
     }
 
+    // verifyToken now throws if verification fails
     const payload = await verifyToken(token);
-
-    if (!payload) {
-        return null;
-    }
 
     return {
         id: payload.sub,
@@ -42,13 +39,13 @@ export async function verifyAuthToken(req: Request): Promise<AuthenticatedUser |
  * Returns error response if authentication fails
  */
 export async function requireAuth(req: Request): Promise<AuthenticatedUser | Response> {
-    const user = await verifyAuthToken(req);
-
-    if (!user) {
-        return errorResponse("Unauthorized - Invalid or missing token", 401);
+    try {
+        const user = await verifyAuthToken(req);
+        return user;
+    } catch (error) {
+        console.error("Auth failed:", error);
+        return errorResponse(`Unauthorized - ${error instanceof Error ? error.message : "Unknown error"}`, 401);
     }
-
-    return user;
 }
 
 /**

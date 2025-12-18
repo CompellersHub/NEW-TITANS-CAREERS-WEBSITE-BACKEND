@@ -24,7 +24,19 @@ export async function generateToken(
     // Debug: Log all environment variables
     console.log("Available env vars:", Object.keys(Deno.env.toObject()));
 
-    const jwtSecret = Deno.env.get("JWT_SECRET");
+    // Try to get JWT_SECRET, handling potential whitespace/newline issues
+    let jwtSecret = Deno.env.get("JWT_SECRET");
+
+    // If not found, try with newline (Supabase sometimes adds \n to env var names)
+    if (!jwtSecret) {
+        jwtSecret = Deno.env.get("JWT_SECRET\n");
+    }
+
+    // Trim any whitespace from the value itself
+    if (jwtSecret) {
+        jwtSecret = jwtSecret.trim();
+    }
+
     console.log("JWT_SECRET value:", jwtSecret ? "Found (length: " + jwtSecret.length + ")" : "NOT FOUND");
 
     if (!jwtSecret) {
@@ -54,28 +66,34 @@ export async function generateToken(
 /**
  * Verify and decode a JWT token
  */
-export async function verifyToken(token: string): Promise<JWTPayload | null> {
-    try {
-        const jwtSecret = Deno.env.get("JWT_SECRET");
+export async function verifyToken(token: string): Promise<JWTPayload> {
+    // Try to get JWT_SECRET, handling potential whitespace/newline issues
+    let jwtSecret = Deno.env.get("JWT_SECRET");
 
-        if (!jwtSecret) {
-            throw new Error("JWT_SECRET not configured");
-        }
-
-        const key = await crypto.subtle.importKey(
-            "raw",
-            new TextEncoder().encode(jwtSecret),
-            { name: "HMAC", hash: "SHA-256" },
-            false,
-            ["sign", "verify"]
-        );
-
-        const payload = await verify(token, key);
-        return payload as JWTPayload;
-    } catch (error) {
-        console.error("Token verification failed:", error);
-        return null;
+    // If not found, try with newline (Supabase sometimes adds \n to env var names)
+    if (!jwtSecret) {
+        jwtSecret = Deno.env.get("JWT_SECRET\n");
     }
+
+    // Trim any whitespace from the value itself
+    if (jwtSecret) {
+        jwtSecret = jwtSecret.trim();
+    }
+
+    if (!jwtSecret) {
+        throw new Error("JWT_SECRET not configured");
+    }
+
+    const key = await crypto.subtle.importKey(
+        "raw",
+        new TextEncoder().encode(jwtSecret),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign", "verify"]
+    );
+
+    const payload = await verify(token, key);
+    return payload as JWTPayload;
 }
 
 /**
